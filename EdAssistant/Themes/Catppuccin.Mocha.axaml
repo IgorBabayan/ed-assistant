@@ -1,0 +1,54 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<!-- Core palette (Catppuccin Mocha) -->
+	<Color x:Key="ctp.base">#1E1E2E</Color>
+	<Color x:Key="ctp.mantle">#181825</Color>
+	<Color x:Key="ctp.crust">#11111B</Color>
+	<Color x:Key="ctp.text">#CDD6F4</Color>
+	<Color x:Key="ctp.subtext0">#A6ADC8</Color>
+	<Color x:Key="ctp.overlay0">#6C7086</Color>
+	<Color x:Key="ctp.surface0">#313244</Color>
+	<Color x:Key="ctp.surface1">#45475A</Color>
+	<Color x:Key="ctp.surface2">#585B70</Color>
+
+	<!-- Accents -->
+	<Color x:Key="ctp.lavender">#B4BEFE</Color>
+	<Color x:Key="ctp.blue">#89B4FA</Color>
+	<Color x:Key="ctp.sapphire">#74C7EC</Color>
+	<Color x:Key="ctp.sky">#89DCEB</Color>
+	<Color x:Key="ctp.teal">#94E2D5</Color>
+	<Color x:Key="ctp.green">#A6E3A1</Color>
+	<Color x:Key="ctp.yellow">#F9E2AF</Color>
+	<Color x:Key="ctp.peach">#FAB387</Color>
+	<Color x:Key="ctp.maroon">#EBA0AC</Color>
+	<Color x:Key="ctp.red">#F38BA8</Color>
+	<Color x:Key="ctp.mauve">#CBA6F7</Color>
+	<Color x:Key="ctp.pink">#F5C2E7</Color>
+	<Color x:Key="ctp.flamingo">#F2CDCD</Color>
+	<Color x:Key="ctp.rosewater">#F5E0DC</Color>
+
+	<!-- Pick your global accent here -->
+	<SolidColorBrush x:Key="AccentBrush" Color="{StaticResource ctp.lavender}"/>
+	<SolidColorBrush x:Key="AccentBrush2" Color="{StaticResource ctp.blue}"/>
+
+	<!-- System/Theme brushes (override Fluent defaults) -->
+	<SolidColorBrush x:Key="ThemeBackgroundBrush" Color="{StaticResource ctp.base}"/>
+	<SolidColorBrush x:Key="ThemeForegroundBrush" Color="{StaticResource ctp.text}"/>
+	<SolidColorBrush x:Key="ThemeBorderLowBrush" Color="{StaticResource ctp.surface2}" Opacity="0.6"/>
+	<SolidColorBrush x:Key="ThemeBorderMidBrush" Color="{StaticResource ctp.surface1}"/>
+	<SolidColorBrush x:Key="ThemeControlLowBrush" Color="{StaticResource ctp.surface0}"/>
+	<SolidColorBrush x:Key="ThemeControlMidBrush" Color="{StaticResource ctp.surface1}"/>
+	<SolidColorBrush x:Key="ThemeControlHighBrush" Color="{StaticResource ctp.surface2}"/>
+
+	<!-- Text roles -->
+	<SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="{StaticResource ctp.text}"/>
+	<SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="{StaticResource ctp.subtext0}"/>
+
+    <!-- Hyperlink & selection -->
+    <SolidColorBrush x:Key="HyperlinkForegroundBrush" Color="{StaticResource ctp.blue}"/>
+    <SolidColorBrush x:Key="SelectionBrush" Color="{StaticResource ctp.lavender}" Opacity="0.33"/>
+
+    <!-- Window chrome -->
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{StaticResource ctp.base}"/>
+    <SolidColorBrush x:Key="WindowBorderBrush" Color="{StaticResource ctp.surface1}"/>
+</ResourceDictionary>

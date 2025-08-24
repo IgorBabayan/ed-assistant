@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:EdAssistant.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="EdAssistant.Views.MainView"
+             xmlns:views="clr-namespace:EdAssistant.Views"
+             Background="{StaticResource ctp.base}"
+             x:DataType="vm:MainViewModel">
+  <Design.DataContext>
+    <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+    <vm:MainViewModel />
+  </Design.DataContext>
+
+	<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="48"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="Transparent"
+                PointerPressed="OnPointPressed" DoubleTapped="OnDoubleTapped">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="24"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Source="../Assets/avalonia-logo.ico" Margin="5,0,0,0"></Image>
+                <TextBlock Grid.Column="1" Text="{Binding WindowTitle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button Click="OnMinimizeClick" Margin="0,0,5,0">
+                        <Image Source="../Assets/Icons/window-minimize-solid-full.png"></Image>
+                    </Button>
+                    <Button Click="OnMaximizeClick" Margin="0,0,5,0">
+                        <Image Source="../Assets/Icons/window-maximize-regular-full.png"></Image>
+                    </Button>
+                    <Button Click="OnCloseClick">
+                        <Image Source="../Assets/Icons/xmark-solid-full.png"></Image>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+		<views:Dock Grid.Row="2" HorizontalContentAlignment="Center"></views:Dock>
+    </Grid>
+</UserControl>

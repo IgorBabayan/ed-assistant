@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:EdAssistant.ViewModels"
+             mc:Ignorable="d"
+             x:Class="EdAssistant.Views.Dock">
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <viewModels:DockViewModel />
+    </Design.DataContext>
+	<Border CornerRadius="5,0" Padding="10" Background="{StaticResource ThemeBorderMidBrush}">
+        <StackPanel Orientation="Horizontal">
+            <Button Content="1"></Button>
+            <Button Content="2"></Button>
+            <Button Content="3"></Button>
+            <Button Content="4"></Button>
+            <Button Content="5"></Button>
+            <Button Content="6"></Button>
+            <Button Content="7"></Button>
+            <Button Content="8"></Button>
+            <Button Content="9"></Button>
+            <Button Content="0"></Button>
+        </StackPanel>
+    </Border>
+</UserControl>
