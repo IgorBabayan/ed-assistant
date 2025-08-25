@@ -1,9 +1,9 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<Style Selector="Button">
-        <Setter Property="Background" Value="{DynamicResource ThemeControlLowBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource ctp.base}"/>
         <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderMidBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ctp.base}"/>
     </Style>
     <Style Selector="Button:pointerover">
         <Setter Property="Background" Value="{DynamicResource ThemeControlMidBrush}"/>
@@ -14,5 +14,17 @@
     </Style>
     <Style Selector="Button:focus">
         <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+    </Style>
+
+    <Style Selector="Border.separator">
+        <Setter Property="Width" Value="1"/>
+        <Setter Property="Margin" Value="8,0"/>
+        <Setter Property="Background" Value="{DynamicResource ctp.rosewater}"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+    </Style>
+
+    <Style Selector="Button.dock-btn">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
     </Style>
 </Styles>

@@ -28,21 +28,39 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Image Grid.Column="0" Source="../Assets/avalonia-logo.ico" Margin="5,0,0,0"></Image>
+                <Image Grid.Column="0" Source="../Assets/logo.ico" Margin="5,0,0,0"></Image>
                 <TextBlock Grid.Column="1" Text="{Binding WindowTitle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <Button Click="OnMinimizeClick" Margin="0,0,5,0">
-                        <Image Source="../Assets/Icons/window-minimize-solid-full.png"></Image>
+                    <Button Click="OnMinimizeClick" Margin="0,0,5,0"
+                            Width="32" Height="32">
+                        <Path Data="M64 480C64 462.3 78.3 448 96 448L544 448C561.7 448 576 462.3 576 480C576 497.7 561.7 512 544 512L96 512C78.3 512 64 497.7 64 480z"
+                              Fill="{StaticResource ctp.blue}"
+                              Stretch="Uniform"
+                              VerticalAlignment="Bottom"
+                              HorizontalAlignment="Center"/>
                     </Button>
-                    <Button Click="OnMaximizeClick" Margin="0,0,5,0">
-                        <Image Source="../Assets/Icons/window-maximize-regular-full.png"></Image>
+                    <Button Click="OnMaximizeClick" Margin="0,0,5,0"
+                            Width="32" Height="32">
+                        <Path
+                            Data="M128 128C92.7 128 64 156.7 64 192L64 448C64 483.3 92.7 512 128 512L512 512C547.3 512 576 483.3 576 448L576 192C576 156.7 547.3 128 512 128L128 128zM152 192L488 192C501.3 192 512 202.7 512 216C512 229.3 501.3 240 488 240L152 240C138.7 240 128 229.3 128 216C128 202.7 138.7 192 152 192z"
+                            Fill="{StaticResource ctp.blue}"
+                            Stretch="Uniform"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Center"/>
                     </Button>
-                    <Button Click="OnCloseClick">
-                        <Image Source="../Assets/Icons/xmark-solid-full.png"></Image>
-                    </Button>
+                    <Button Click="OnCloseClick"
+                            Width="32" Height="32">
+						<Path
+                            Data="M55.1 73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L147.2 256 9.9 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192.5 301.3 329.9 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.8 256 375.1 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192.5 210.7 55.1 73.4z"
+                            Fill="{StaticResource ctp.blue}"
+                            Stretch="Uniform"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Center"/>
+					</Button>
                 </StackPanel>
             </Grid>
         </Border>
+        <ContentPresenter Grid.Row="1" />
 		<views:Dock Grid.Row="2" HorizontalContentAlignment="Center"></views:Dock>
     </Grid>
 </UserControl>

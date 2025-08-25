@@ -1,5 +1,15 @@
 {
   "MainWindow": {
     "Title": "Welcome"
+  },
+  "Dock": {
+    "Home": "Home",
+    "Materials": "Materials",
+    "Shiplocker": "Shiplocker",
+    "System": "System",
+    "Planet": "Planet",
+    "MarketConnector": "Market connector",
+    "Log": "Logs",
+    "Settings": "Settings"
   }
 }
