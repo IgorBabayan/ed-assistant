@@ -1,0 +1,234 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:EdAssistant.Controls">
+	<Styles.Resources>
+		<Color x:Key="Ed.Accent.Color">#FF7A00</Color>
+		<SolidColorBrush x:Key="Ed.Accent" Color="{StaticResource Ed.Accent.Color}"/>
+		<SolidColorBrush x:Key="Ed.Accent.Glow" Color="#FF9A3C"/>
+
+		<SolidColorBrush x:Key="Ed.Bg" Color="#0B0C0E"/>
+		<SolidColorBrush x:Key="Ed.Bg.Panel" Color="#111216"/>
+		<SolidColorBrush x:Key="Ed.Border.Mid" Color="#23262B"/>
+		<SolidColorBrush x:Key="Ed.Border.Light" Color="#2D3138"/>
+		<SolidColorBrush x:Key="Ed.Text" Color="#F2F2F2"/>
+		<SolidColorBrush x:Key="Ed.Text.Dim" Color="#A0A5AD"/>
+
+		<SolidColorBrush x:Key="Ed.Accent.Secondary" Color="#19FFFF"/>
+
+		<FontFamily x:Key="Ed.Font">Michroma, Orbitron, Segoe UI, Ubuntu, Arial</FontFamily>
+
+		<CornerRadius x:Key="Ed.Radius.Small">4</CornerRadius>
+		<CornerRadius x:Key="Ed.Radius.Mid">6</CornerRadius>
+		<Thickness x:Key="Ed.Padding">12,8</Thickness>
+
+		<LinearGradientBrush x:Key="Ed.Grad.AccentLine" StartPoint="0,0" EndPoint="1,0">
+			<GradientStop Color="#FF7A00" Offset="0"/>
+			<GradientStop Color="#D06000" Offset="1"/>
+		</LinearGradientBrush>
+
+        <DropShadowEffect x:Key="Ed.PanelShadow" BlurRadius="28" Opacity="0.4" OffsetX="0" OffsetY="0"
+                          Color="#0D0E12"/>
+	</Styles.Resources>
+
+	<!-- Global typography/foreground -->
+    <Style Selector="TextBlock, TextBox">
+        <Setter Property="TextElement.FontFamily" Value="{DynamicResource Ed.Font}"/>
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource Ed.Text}"/>
+    </Style>
+	<Style Selector="Button, ToggleButton, ListBoxItem, ComboBoxItem, CheckBox, RadioButton">
+		<Setter Property="Foreground" Value="{DynamicResource Ed.Text}"/>
+	</Style>
+
+	<!-- GroupBox -->
+	<Style Selector="controls|GroupBox">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+
+					<!-- Header -->
+					<Border ZIndex="1"
+							Background="{DynamicResource Ed.Bg}"
+							Padding="5,0,5,0"
+							Margin="10,0,0,0">
+						<TextBlock Text="{TemplateBinding Header}"
+								   FontWeight="Bold"
+								   Foreground="{DynamicResource Ed.Text}"/>
+					</Border>
+
+					<!-- Content Area -->
+					<Border Grid.RowSpan="2"
+							Grid.ColumnSpan="2"
+							Padding="0,5,0,0"
+							CornerRadius="4"
+							Margin="0,10,0,0"
+							BorderBrush="{DynamicResource Ed.Border.Mid}"
+							BorderThickness="1"
+							Background="{DynamicResource Ed.Bg.Panel}">
+						<ContentPresenter Name="PART_ContentPresenter"
+										  Padding="8"
+										  Content="{TemplateBinding Content}"/>
+					</Border>
+				</Grid>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+
+	<!-- Panels -->
+	<Style Selector="Border.hud-panel">
+		<Setter Property="Background" Value="{DynamicResource Ed.Bg.Panel}"/>
+		<Setter Property="CornerRadius" Value="{DynamicResource Ed.Radius.Mid}"/>
+		<Setter Property="Padding" Value="{DynamicResource Ed.Padding}"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource Ed.Border.Mid}"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="BoxShadow" Value="0 0 0 1 #2A2C31, 0 0 28 0 #0D0E12"/>
+	</Style>
+
+	<!-- Buttons -->
+	<Style Selector="Button.hud">
+		<Setter Property="Background" Value="{DynamicResource Ed.Bg}"/>
+		<Setter Property="Foreground" Value="{DynamicResource Ed.Text}"/>
+		<Setter Property="BorderThickness" Value="1.5"/>
+		<Setter Property="CornerRadius" Value="{DynamicResource Ed.Radius.Small}"/>
+		<Setter Property="Padding" Value="{DynamicResource Ed.Padding}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+	</Style>
+	<Style Selector="Button.hud:pointerover">
+		<Setter Property="Effect" Value="{DynamicResource Ed.PanelShadow}"/>
+		<Setter Property="Background" Value="#0E0F12"/>
+	</Style>
+    <Style Selector="Button.hud:pressed">
+		<Setter Property="Background" Value="#0B0C0E"/>
+		<Setter Property="BorderBrush" Value="#FF9A3C"/>
+	</Style>
+	<Style Selector="Button.hud:disabled">
+		<Setter Property="Opacity" Value="0.5"/>
+	</Style>
+	<Style Selector="Button.hud > Path">
+        <Setter Property="Fill">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#FF7A00" Offset="0"/>
+                    <GradientStop Color="#D06000" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+		</Setter>
+    </Style>
+	<Style Selector="Button.hud > Path.glyph">
+        <Setter Property="Stretch" Value="UniformToFill"/>
+        <Setter Property="Width" Value="16"/>
+        <Setter Property="Height" Value="16"/>
+    </Style>
+    <Style Selector="Button.hud.icon">
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+	<!-- ToggleButton -->
+	<Style Selector="ToggleButton.hud">
+		<Setter Property="Background" Value="#141518"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource Ed.Border.Light}"/>
+		<Setter Property="BorderThickness" Value="1.5"/>
+		<Setter Property="CornerRadius" Value="{DynamicResource Ed.Radius.Small}"/>
+		<Setter Property="Padding" Value="{DynamicResource Ed.Padding}"/>
+	</Style>
+	<Style Selector="ToggleButton.hud:checked">
+		<Setter Property="BorderBrush" Value="{DynamicResource Ed.Accent}"/>
+		<Setter Property="Background" Value="#101115"/>
+        <Setter Property="Effect" Value="{DynamicResource Ed.PanelShadow}"/>
+	</Style>
+
+	<!-- TextBox -->
+	<Style Selector="TextBox.hud">
+		<Setter Property="Background" Value="#0B0C0E"/>
+		<Setter Property="Foreground" Value="{DynamicResource Ed.Text}"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource Ed.Border.Mid}"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="CornerRadius" Value="{DynamicResource Ed.Radius.Small}"/>
+		<Setter Property="Padding" Value="10,6"/>
+		<Setter Property="CaretBrush" Value="{DynamicResource Ed.Accent}"/>
+		<Setter Property="SelectionBrush" Value="#40FF7A00"/>
+	</Style>
+    <Style Selector="TextBox.hud:focus">
+		<Setter Property="BorderBrush" Value="{DynamicResource Ed.Accent}"/>
+        <Setter Property="Effect" Value="{DynamicResource Ed.PanelShadow}"/>
+	</Style>
+
+	<!-- ProgressBar -->
+	<Style Selector="ProgressBar.hud">
+		<Setter Property="Foreground" Value="{DynamicResource Ed.Accent}"/>
+		<Setter Property="Background" Value="#181A1F"/>
+		<Setter Property="Height" Value="6"/>
+	</Style>
+
+    <!-- Checkbox -->
+    <Style Selector="CheckBox.hud">
+        <Setter Property="Foreground" Value="{DynamicResource Ed.Text}"/>
+        <Setter Property="Background" Value="#141518"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Ed.Border.Mid}"/>
+        <Setter Property="Padding" Value="2,0"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid ColumnDefinitions="Auto,*">
+                    <Border x:Name="Box"
+                            Width="16" Height="16"
+                            CornerRadius="3"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1">
+                        <!-- This one appears when checked -->
+                        <Rectangle x:Name="CheckedMark"
+                                   Width="10" Height="10"
+                                   Fill="{DynamicResource Ed.Accent}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   IsVisible="False"/>
+                    </Border>
+
+                    <ContentPresenter Grid.Column="1"
+                                      Margin="8,0,0,0"
+                                      VerticalAlignment="Center"
+                                      Content="{TemplateBinding Content}"
+                                      Foreground="{TemplateBinding Foreground}"/>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+	<Style Selector="CheckBox.hud:pointerover /template/ Border#Box">
+        <Setter Property="BorderBrush" Value="{DynamicResource Ed.Accent}"/>
+    </Style>
+    <Style Selector="CheckBox.hud:pressed /template/ Border#Box">
+        <Setter Property="Background" Value="#0B0C0E"/>
+    </Style>
+    <Style Selector="CheckBox.hud:checked">
+        <Setter Property="Background" Value="#101115"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Ed.Accent}"/>
+    </Style>
+    <Style Selector="CheckBox.hud:checked /template/ Rectangle#CheckMark">
+        <Setter Property="IsVisible" Value="True"/>
+    </Style>
+    <Style Selector="CheckBox.hud:disabled">
+        <Setter Property="Opacity" Value="0.5"/>
+    </Style>
+    <Style Selector="CheckBox.hud /template/ Rectangle#CheckedMark">
+        <Setter Property="Opacity" Value="0"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.12"/>
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="CheckBox.hud:checked /template/ Rectangle#CheckedMark">
+        <Setter Property="Opacity" Value="1"/>
+        <Setter Property="IsVisible" Value="True"/>
+    </Style>
+</Styles>

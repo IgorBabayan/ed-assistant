@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="EdAssistant.Views.MainView"
              xmlns:views="clr-namespace:EdAssistant.Views"
-             Background="{StaticResource ctp.base}"
+             Background="{DynamicResource Ed.Bg}"
              x:DataType="vm:MainViewModel">
 	<Grid>
         <Grid.RowDefinitions>
@@ -26,30 +26,19 @@
                 <TextBlock Grid.Column="1" Text="{Binding WindowTitle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <Button Click="OnMinimizeClick" Margin="0,0,5,0"
-                            Width="32" Height="32">
-                        <Path Data="M64 480C64 462.3 78.3 448 96 448L544 448C561.7 448 576 462.3 576 480C576 497.7 561.7 512 544 512L96 512C78.3 512 64 497.7 64 480z"
-                              Fill="{StaticResource ctp.blue}"
-                              Stretch="Uniform"
-                              VerticalAlignment="Bottom"
-                              HorizontalAlignment="Center"/>
+                            Width="32" Height="32" Classes="hud icon">
+                        <Path Data="M4,15 L12,15 C12.5128358,15 12.9355072,15.3860402 12.9932723,15.8833789 L13,16 L13,24 C13,24.5522847 12.5522847,25 12,25 C11.4871642,25 11.0644928,24.6139598 11.0067277,24.1166211 L11,24 L11,18.413 L3.70710678,25.7071068 C3.31658249,26.0976311 2.68341751,26.0976311 2.29289322,25.7071068 C1.93240926,25.3466228 1.90467972,24.7793918 2.20970461,24.3871006 L2.29289322,24.2928932 L9.585,17 L4,17 C3.48716416,17 3.06449284,16.6139598 3.00672773,16.1166211 L3,16 C3,15.4871642 3.38604019,15.0644928 3.88337887,15.0067277 L4,15 L12,15 L4,15 Z M25.7071068,2.29289322 C26.0675907,2.65337718 26.0953203,3.22060824 25.7902954,3.61289944 L25.7071068,3.70710678 L18.413,11 L24,11 C24.5128358,11 24.9355072,11.3860402 24.9932723,11.8833789 L25,12 C25,12.5128358 24.6139598,12.9355072 24.1166211,12.9932723 L24,13 L16,13 C15.4871642,13 15.0644928,12.6139598 15.0067277,12.1166211 L15,12 L15,4 C15,3.44771525 15.4477153,3 16,3 C16.5128358,3 16.9355072,3.38604019 16.9932723,3.88337887 L17,4 L17,9.585 L24.2928932,2.29289322 C24.6834175,1.90236893 25.3165825,1.90236893 25.7071068,2.29289322 Z"
+                              Classes="glyph"/>
                     </Button>
                     <Button Click="OnMaximizeClick" Margin="0,0,5,0"
-                            Width="32" Height="32">
-                        <Path
-                            Data="M128 128C92.7 128 64 156.7 64 192L64 448C64 483.3 92.7 512 128 512L512 512C547.3 512 576 483.3 576 448L576 192C576 156.7 547.3 128 512 128L128 128zM152 192L488 192C501.3 192 512 202.7 512 216C512 229.3 501.3 240 488 240L152 240C138.7 240 128 229.3 128 216C128 202.7 138.7 192 152 192z"
-                            Fill="{StaticResource ctp.blue}"
-                            Stretch="Uniform"
-                            VerticalAlignment="Bottom"
-                            HorizontalAlignment="Center"/>
+                            Width="32" Height="32" Classes="hud icon">
+						<Path Data="M10.71,14.71,5.41,20H10a1,1,0,0,1,0,2H4a2,2,0,0,1-1.38-.56l0,0s0,0,0,0A2,2,0,0,1,2,20V14a1,1,0,0,1,2,0v4.59l5.29-5.3a1,1,0,0,1,1.42,1.42ZM21.44,2.62s0,0,0,0l0,0A2,2,0,0,0,20,2H14a1,1,0,0,0,0,2h4.59l-5.3,5.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L20,5.41V10a1,1,0,0,0,2,0V4A2,2,0,0,0,21.44,2.62Z"
+                              Classes="glyph"/>
                     </Button>
-                    <Button Click="OnCloseClick"
+                    <Button Click="OnCloseClick" Classes="hud icon"
                             Width="32" Height="32">
-						<Path
-                            Data="M55.1 73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L147.2 256 9.9 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192.5 301.3 329.9 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.8 256 375.1 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192.5 210.7 55.1 73.4z"
-                            Fill="{StaticResource ctp.blue}"
-                            Stretch="Uniform"
-                            VerticalAlignment="Bottom"
-                            HorizontalAlignment="Center"/>
+						<Path Data="M55.1 73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L147.2 256 9.9 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192.5 301.3 329.9 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.8 256 375.1 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192.5 210.7 55.1 73.4z"
+                              Classes="glyph"/>
 					</Button>
                 </StackPanel>
             </Grid>

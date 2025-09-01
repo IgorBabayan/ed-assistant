@@ -34,10 +34,4 @@
   <ItemGroup>
     <Folder Include="Assets\Icons\" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Views\MarketConnectorView.axaml.cs">
-      <DependentUpon>MarketConnectorView.axaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
 </Project>

@@ -24,14 +24,14 @@
             <WrapPanel Orientation="Vertical"
                        helpers:WrapPanelHelper.SpacingX="12"
                        helpers:WrapPanelHelper.SpacingY="8">
-                <CheckBox Content="{Binding [Settings.Home], Source={x:Static translations:Localization.Instance}}" IsEnabled="False" IsChecked="True"></CheckBox>
-                <CheckBox Content="{Binding [Settings.Materials], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Materials}"></CheckBox>
-				<CheckBox Content="{Binding [Settings.Storage], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Storage}"></CheckBox>
-                <CheckBox Content="{Binding [Settings.System], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding System}"></CheckBox>
-				<CheckBox Content="{Binding [Settings.Planet], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Planet}"></CheckBox>
-				<CheckBox Content="{Binding [Settings.MarketConnector], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding MarketConnector}"></CheckBox>
-                <CheckBox Content="{Binding [Settings.Log], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Log}"></CheckBox>
-                <CheckBox Content="{Binding [Settings.Settings], Source={x:Static translations:Localization.Instance}}" IsEnabled="False" IsChecked="True"></CheckBox>
+                <CheckBox Classes="hud" Content="{Binding [Settings.Home], Source={x:Static translations:Localization.Instance}}" IsEnabled="False" IsChecked="True"></CheckBox>
+                <CheckBox Classes="hud" Content="{Binding [Settings.Materials], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Materials}"></CheckBox>
+				<CheckBox Classes="hud" Content="{Binding [Settings.Storage], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Storage}"></CheckBox>
+                <CheckBox Classes="hud" Content="{Binding [Settings.System], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding System}"></CheckBox>
+				<CheckBox Classes="hud" Content="{Binding [Settings.Planet], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Planet}"></CheckBox>
+				<CheckBox Classes="hud" Content="{Binding [Settings.MarketConnector], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding MarketConnector}"></CheckBox>
+                <CheckBox Classes="hud" Content="{Binding [Settings.Log], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Log}"></CheckBox>
+                <CheckBox Classes="hud" Content="{Binding [Settings.Settings], Source={x:Static translations:Localization.Instance}}" IsEnabled="False" IsChecked="True"></CheckBox>
             </WrapPanel>
         </controls:GroupBox>
 

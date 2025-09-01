@@ -7,16 +7,11 @@
              RequestedThemeVariant="Dark">
     <Application.Styles>
         <FluentTheme />
-        <StyleInclude Source="avares://EdAssistant/Themes/Generic.axaml"/>
-        <StyleInclude Source="avares://EdAssistant/Themes/Catppuccin.Mocha.Styles.axaml"/>
+        <StyleInclude Source="avares://EdAssistant/Themes/EliteDangerous.axaml"/>
     </Application.Styles>
 
     <Application.Resources>
 		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="avares://EdAssistant/Themes/Catppuccin.Mocha.axaml"/>
-            </ResourceDictionary.MergedDictionaries>
-
             <converters:DockEqualsConverter x:Key="DockEqualsConverter"/>
         </ResourceDictionary>
     </Application.Resources>

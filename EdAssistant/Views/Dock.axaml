@@ -40,26 +40,26 @@
 
         <Style Selector="ToggleButton.dock-btn > Path">
             <Setter Property="Stretch" Value="UniformToFill"/>
-            <Setter Property="Fill" Value="{DynamicResource ctp.blue}"/>
+            <Setter Property="Fill" Value="{DynamicResource Ed.Accent.Secondary}"/>
         </Style>
         
         <Style Selector="ToggleButton.dock-btn:pointerover > Path">
-            <Setter Property="Fill" Value="{DynamicResource ctp.peach}"/>
+            <Setter Property="Fill" Value="{DynamicResource Ed.Accent.Color}"/>
         </Style>
 
         <Style Selector="Border.separator">
             <Setter Property="Width" Value="1"/>
             <Setter Property="Margin" Value="8,0"/>
-            <Setter Property="Background" Value="{DynamicResource ctp.rosewater}"/>
+            <Setter Property="Background" Value="{DynamicResource Ed.Accent.Secondary}"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
         </Style>
 
         <Style Selector="ToggleButton.dock-btn:checked Path">
-            <Setter Property="Fill" Value="{DynamicResource ctp.peach}"/>
+            <Setter Property="Fill" Value="{DynamicResource Ed.Accent.Color}"/>
         </Style>
     </UserControl.Styles>
 
-    <Border CornerRadius="5,5,0,0" Padding="10" Background="{StaticResource ThemeBorderMidBrush}">
+    <Border CornerRadius="5,5,0,0" Padding="10" Background="{DynamicResource Ed.Border.Light}">
         <StackPanel Orientation="Horizontal" MaxHeight="48"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
