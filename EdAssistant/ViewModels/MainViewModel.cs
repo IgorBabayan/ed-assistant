@@ -1,8 +1,68 @@
-﻿using EdAssistant.Translations;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using EdAssistant.Models.Enums;
+using EdAssistant.Services.Navigate;
+using EdAssistant.Translations;
+using EdAssistant.ViewModels.Pages;
 
 namespace EdAssistant.ViewModels;
 
-public partial class MainViewModel : ViewModelBase
+public partial class MainViewModel : ObservableObject
 {
+    private readonly INavigationService _navigationService;
+
     public string WindowTitle => Localization.Instance["MainWindow.Title"];
+
+    public DockEnum CurrentDock
+    {
+        get
+        {
+            return CurrentViewModel switch
+            {
+                HomeViewModel => DockEnum.Home,
+                MaterialsViewModel => DockEnum.Materials,
+                StorageViewModel => DockEnum.Storage,
+                SystemViewModel => DockEnum.System,
+                PlanetViewModel => DockEnum.Planet,
+                MarketConnectorViewModel => DockEnum.MarketConnector,
+                LogViewModel => DockEnum.Log,
+                SettingsViewModel => DockEnum.Settings,
+                _ => default
+            };
+        }
+    }
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(NavigateToCommand))]
+    private PageViewModel? currentViewModel;
+
+    public MainViewModel(INavigationService navigationService)
+    {
+        _navigationService = navigationService;
+        CurrentViewModel = _navigationService.Current;
+    }
+
+    partial void OnCurrentViewModelChanged(PageViewModel? oldValue, PageViewModel? newValue)
+        => OnPropertyChanged(nameof(CurrentDock));
+
+    [RelayCommand(CanExecute = nameof(CanNavigateTo))]
+    private void NavigateTo(DockEnum dock)
+    {
+        _navigationService.NavigateTo(dock);
+        CurrentViewModel = _navigationService.Current;
+    }
+
+    private bool CanNavigateTo(DockEnum dock)
+        => dock switch
+        {
+            DockEnum.Home => CurrentViewModel is not HomeViewModel,
+            DockEnum.Materials => CurrentViewModel is not MaterialsViewModel,
+            DockEnum.Storage => CurrentViewModel is not StorageViewModel,
+            DockEnum.System => CurrentViewModel is not SystemViewModel,
+            DockEnum.Planet => CurrentViewModel is not PlanetViewModel,
+            DockEnum.MarketConnector => CurrentViewModel is not MarketConnectorViewModel,
+            DockEnum.Log => CurrentViewModel is not LogViewModel,
+            DockEnum.Settings => CurrentViewModel is not SettingsViewModel,
+            _ => true
+        };
 }

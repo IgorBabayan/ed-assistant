@@ -8,12 +8,6 @@
              xmlns:views="clr-namespace:EdAssistant.Views"
              Background="{StaticResource ctp.base}"
              x:DataType="vm:MainViewModel">
-  <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-    <vm:MainViewModel />
-  </Design.DataContext>
-
 	<Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="32"></RowDefinition>
@@ -60,7 +54,7 @@
                 </StackPanel>
             </Grid>
         </Border>
-        <ContentPresenter Grid.Row="1" />
+        <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}" />
 		<views:Dock Grid.Row="2" HorizontalContentAlignment="Center"></views:Dock>
     </Grid>
 </UserControl>

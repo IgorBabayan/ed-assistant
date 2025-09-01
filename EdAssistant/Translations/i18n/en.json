@@ -5,7 +5,19 @@
   "Dock": {
     "Home": "Home",
     "Materials": "Materials",
-    "Shiplocker": "Shiplocker",
+    "Storage": "Storage",
+    "System": "System",
+    "Planet": "Planet",
+    "MarketConnector": "Market connector",
+    "Log": "Logs",
+    "Settings": "Settings"
+  },
+  "Settings": {
+    "DockGroup": "Dock buttons",
+    "AppGroup": "Application settings",
+    "Home": "Home",
+    "Materials": "Materials",
+    "Storage": "Storage",
     "System": "System",
     "Planet": "Planet",
     "MarketConnector": "Market connector",

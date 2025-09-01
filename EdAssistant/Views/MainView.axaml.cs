@@ -10,7 +10,10 @@ public partial class MainView : UserControl
 {
     private MainWindow MainWindow => (this.GetVisualRoot() as MainWindow)!;
 
-    public MainView() => InitializeComponent();
+    public MainView()
+    {
+        InitializeComponent();
+    }
 
     private void OnMinimizeClick(object? sender, RoutedEventArgs e) =>
         MainWindow.WindowState = MainWindow.WindowState == WindowState.Minimized

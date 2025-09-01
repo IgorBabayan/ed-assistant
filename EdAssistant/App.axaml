@@ -1,11 +1,13 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:EdAssistant.ViewModels.Pages"
+             xmlns:views="clr-namespace:EdAssistant.Views"
+             xmlns:converters="clr-namespace:EdAssistant.Helpers.Converters"
              x:Class="EdAssistant.App"
              RequestedThemeVariant="Dark">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-
     <Application.Styles>
         <FluentTheme />
+        <StyleInclude Source="avares://EdAssistant/Themes/Generic.axaml"/>
         <StyleInclude Source="avares://EdAssistant/Themes/Catppuccin.Mocha.Styles.axaml"/>
     </Application.Styles>
 
@@ -14,6 +16,35 @@
 			<ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="avares://EdAssistant/Themes/Catppuccin.Mocha.axaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <converters:DockEqualsConverter x:Key="DockEqualsConverter"/>
         </ResourceDictionary>
     </Application.Resources>
+
+    <Application.DataTemplates>
+        <DataTemplate DataType="{x:Type vm:HomeViewModel}">
+            <views:HomeView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:MaterialsViewModel}">
+			<views:MaterialsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:StorageViewModel}">
+			<views:StorageView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SystemViewModel}">
+			<views:SystemView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PlanetViewModel}">
+			<views:PlanetView/>
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type vm:MarketConnectorViewModel}">
+			<views:MarketConnectorView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:LogViewModel}">
+			<views:LogView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+			<views:SettingsView/>
+        </DataTemplate>
+    </Application.DataTemplates>
 </Application>
