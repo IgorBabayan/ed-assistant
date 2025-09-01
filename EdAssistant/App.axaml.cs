@@ -10,7 +10,8 @@ using EdAssistant.ViewModels.Pages;
 using EdAssistant.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
+using EdAssistant.Services.Storage;
+using Microsoft.Extensions.Logging;
 
 namespace EdAssistant;
 
@@ -61,21 +62,30 @@ public partial class App : Application
         _host = Host.CreateDefaultBuilder()
             .ConfigureServices(services =>
             {
+                services.AddLogging(x =>
+                {
+                    x.ClearProviders();
+                    x.AddDebug();
+                    x.SetMinimumLevel(LogLevel.Warning);
+                    x.AddFilter("Avalonia", LogLevel.Warning);
+                });
+
                 services.AddSingleton<INavigationService, NavigationService>();
+                services.AddSingleton<IFolderPickerService, FolderPickerService>();
 
                 services.AddSingleton<MainViewModel>();
-                services.AddTransient<HomeViewModel>();
-                services.AddTransient<MaterialsViewModel>();
-                services.AddTransient<StorageViewModel>();
-                services.AddTransient<SystemViewModel>();
-                services.AddTransient<PlanetViewModel>();
-                services.AddTransient<MarketConnectorViewModel>();
-                services.AddTransient<LogViewModel>();
-                services.AddTransient<SettingsViewModel>();
+                services.AddSingleton<HomeViewModel>();
+                services.AddSingleton<MaterialsViewModel>();
+                services.AddSingleton<StorageViewModel>();
+                services.AddSingleton<SystemViewModel>();
+                services.AddSingleton<PlanetViewModel>();
+                services.AddSingleton<MarketConnectorViewModel>();
+                services.AddSingleton<LogViewModel>();
+                services.AddSingleton<SettingsViewModel>();
 
                 services.AddSingleton<MainWindow>();
-                services.AddTransient<HomeView>();
-                services.AddTransient<MaterialsView>();
+                services.AddSingleton<HomeView>();
+                services.AddSingleton<MaterialsView>();
             })
             .Build();
     }

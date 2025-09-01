@@ -1,0 +1,11 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style Selector="Border.hud-panel">
+        <Setter Property="Background" Value="{DynamicResource Ed.Bg.Panel}"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource Ed.Radius.Mid}"/>
+        <Setter Property="Padding" Value="{DynamicResource Ed.Padding}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Ed.Border.Mid}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BoxShadow" Value="0 0 0 1 #2A2C31, 0 0 28 0 #0D0E12"/>
+    </Style>
+</Styles>

@@ -1,4 +1,7 @@
 {
+  "Common": {
+    "SelectFolderTitle": "Select a folder"
+  },
   "MainWindow": {
     "Title": "Welcome"
   },
@@ -22,6 +25,13 @@
     "Planet": "Planet",
     "MarketConnector": "Market connector",
     "Log": "Logs",
-    "Settings": "Settings"
+    "Settings": "Settings",
+    "PathToJournals": "Path to Elite Dangerous journals:",
+    "ReadAll": "Read all"
+  },
+  "Exceptions": {
+    "NoStorageProvider": "No StorageProvider available.",
+    "FailedGettingFolder": "Failed to get local path for folder {FolderName} ({FolderType})",
+    "OSNotSupported": "Operation system is not supported"
   }
 }

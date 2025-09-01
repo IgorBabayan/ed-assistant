@@ -1,0 +1,15 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style Selector="ToggleButton.hud">
+        <Setter Property="Background" Value="#141518"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Ed.Border.Light}"/>
+        <Setter Property="BorderThickness" Value="1.5"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource Ed.Radius.Small}"/>
+        <Setter Property="Padding" Value="{DynamicResource Ed.Padding}"/>
+    </Style>
+    <Style Selector="ToggleButton.hud:checked">
+        <Setter Property="BorderBrush" Value="{DynamicResource Ed.Accent}"/>
+        <Setter Property="Background" Value="#101115"/>
+        <Setter Property="Effect" Value="{DynamicResource Ed.PanelShadow}"/>
+    </Style>
+</Styles>

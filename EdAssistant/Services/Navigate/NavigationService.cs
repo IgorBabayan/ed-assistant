@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EdAssistant.Services.Navigate;
 
-public sealed class NavigationService(IServiceProvider _serviceProvider) : INavigationService
+sealed class NavigationService(IServiceProvider _serviceProvider) : INavigationService
 {
     public event EventHandler? CurrentChanged;
     public PageViewModel? Current { get; private set; } = _serviceProvider.GetRequiredService<HomeViewModel>();

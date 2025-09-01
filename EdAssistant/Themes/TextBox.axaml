@@ -1,0 +1,58 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Style Selector="TextBox.hud">
+		<Setter Property="Background" Value="#0B0C0E"/>
+		<Setter Property="Foreground" Value="{DynamicResource Ed.Text}"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource Ed.Border.Mid}"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="CornerRadius" Value="{DynamicResource Ed.Radius.Small}"/>
+		<Setter Property="Padding" Value="10,6"/>
+		<Setter Property="CaretBrush" Value="{DynamicResource Ed.Accent}"/>
+		<Setter Property="SelectionBrush" Value="#66FF7A00"/>
+		<Setter Property="Cursor" Value="IBeam"/>
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border x:Name="border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+					<ScrollViewer x:Name="PART_ScrollViewer"
+								  HorizontalScrollBarVisibility="Hidden"
+								  VerticalScrollBarVisibility="Hidden"
+								  Padding="{TemplateBinding Padding}">
+						<TextPresenter x:Name="PART_TextPresenter"
+									   Text="{TemplateBinding Text}"
+									   CaretBrush="{TemplateBinding CaretBrush}"
+									   SelectionBrush="{TemplateBinding SelectionBrush}"
+                                       CaretIndex="{TemplateBinding CaretIndex}"
+                                       SelectionStart="{TemplateBinding SelectionStart}"
+                                       SelectionEnd="{TemplateBinding SelectionEnd}"
+                                       TextAlignment="{TemplateBinding TextAlignment}"
+                                       TextWrapping="{TemplateBinding TextWrapping}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       LetterSpacing="{TemplateBinding LetterSpacing}"
+                                       PasswordChar="{TemplateBinding PasswordChar}"
+                                       RevealPassword="{TemplateBinding RevealPassword}"/>
+					</ScrollViewer>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+    <Style Selector="TextBox.hud /template/ Border#border, TextBox.hud /template/ Border#border">
+        <Setter Property="BorderBrush" Value="{DynamicResource Ed.Border.Mid}"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.12"/>
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="TextBox.hud:pointerover:not(:disabled) /template/ Border#border,
+                 TextBox.hud:pointerover:not(:disabled) /template/ Border#border">
+        <Setter Property="BorderBrush" Value="{DynamicResource Ed.Accent}"/>
+    </Style>
+    <Style Selector="TextBox.hud:focus:not(:disabled) /template/ Border#border,
+                 TextBox.hud:focus:not(:disabled) /template/ Border#border">
+        <Setter Property="BorderBrush" Value="{DynamicResource Ed.Accent}"/>
+    </Style>
+</Styles>
