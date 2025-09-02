@@ -32,6 +32,7 @@
   "Exceptions": {
     "NoStorageProvider": "No StorageProvider available.",
     "FailedGettingFolder": "Failed to get local path for folder {FolderName} ({FolderType})",
-    "OSNotSupported": "Operation system is not supported"
+    "OSNotSupported": "Operation system is not supported",
+    "DirectoryNotFound": "Directory not found: {0}"
   }
 }

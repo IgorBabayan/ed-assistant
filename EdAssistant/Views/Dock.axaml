@@ -76,7 +76,9 @@
                     Data="M341.8 72.6C329.5 61.2 310.5 61.2 298.3 72.6L74.3 280.6C64.7 289.6 61.5 303.5 66.3 315.7C71.1 327.9 82.8 336 96 336L112 336L112 512C112 547.3 140.7 576 176 576L464 576C499.3 576 528 547.3 528 512L528 336L544 336C557.2 336 569 327.9 573.8 315.7C578.6 303.5 575.4 289.5 565.8 280.6L341.8 72.6zM304 384L336 384C362.5 384 384 405.5 384 432L384 528L256 528L256 432C256 405.5 277.5 384 304 384z"/>
 			</ToggleButton>
             <!-- Materials -->
-			<ToggleButton Classes="dock-btn" IsVisible="True" Command="{Binding NavigateToCommand}"
+			<ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
+                          IsVisible="{Binding IsMaterial}" 
+                          IsEnabled="{Binding IsMaterial}"
                           CommandParameter="{x:Static local:DockEnum.Materials}"
                           IsChecked="{Binding CurrentDock,
                                       Converter={StaticResource DockEqualsConverter},
@@ -87,7 +89,9 @@
                     Data="M288 64L288 128C288 136.8 295.2 144 304 144L336 144C344.8 144 352 136.8 352 128L352 64L384 64C419.3 64 448 92.7 448 128L448 256C448 261.5 447.3 266.9 446 272L194 272C192.7 266.9 192 261.5 192 256L192 128C192 92.7 220.7 64 256 64L288 64zM384 576C372.8 576 362.2 573.1 353 568C362.5 551.5 368 532.4 368 512L368 384C368 363.6 362.5 344.5 353 328C362.2 322.9 372.7 320 384 320L416 320L416 384C416 392.8 423.2 400 432 400L464 400C472.8 400 480 392.8 480 384L480 320L512 320C547.3 320 576 348.7 576 384L576 512C576 547.3 547.3 576 512 576L384 576zM64 384C64 348.7 92.7 320 128 320L160 320L160 384C160 392.8 167.2 400 176 400L208 400C216.8 400 224 392.8 224 384L224 320L256 320C291.3 320 320 348.7 320 384L320 512C320 547.3 291.3 576 256 576L128 576C92.7 576 64 547.3 64 512L64 384z"/>
 			</ToggleButton>
             <!-- Storage -->
-			<ToggleButton Classes="dock-btn" IsVisible="True" Command="{Binding NavigateToCommand}"
+			<ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
+                          IsVisible="{Binding IsStorage}"
+                          IsEnabled="{Binding IsStorage}"
                           CommandParameter="{x:Static local:DockEnum.Storage}"
                           IsChecked="{Binding CurrentDock,
                                       Converter={StaticResource DockEqualsConverter},
@@ -98,9 +102,11 @@
                     Data="M64 64C46.3 64 32 78.3 32 96C32 113.7 46.3 128 64 128L80 128C88.8 128 96 135.2 96 144L96 432C96 471.8 125.1 504.8 163.1 511C161.1 516.3 160 522 160 528C160 554.5 181.5 576 208 576C234.5 576 256 554.5 256 528C256 522.4 255 517 253.3 512L450.8 512C449 517 448.1 522.4 448.1 528C448.1 554.5 469.6 576 496.1 576C522.6 576 544.1 554.5 544.1 528C544.1 522.4 543.1 517 541.4 512L576.1 512C593.8 512 608.1 497.7 608.1 480C608.1 462.3 593.8 448 576.1 448L176.1 448C167.3 448 160.1 440.8 160.1 432L160.1 144C160 99.8 124.2 64 80 64L64 64zM256 128C229.5 128 208 149.5 208 176L208 352C208 378.5 229.5 400 256 400L496 400C522.5 400 544 378.5 544 352L544 176C544 149.5 522.5 128 496 128L256 128z"/>
 			</ToggleButton>
 
-			<Border Classes="separator"/>
+			<Border Classes="separator" IsVisible="{Binding IsPlanetarySystem}"/>
 			<!-- System -->
-			<ToggleButton Classes="dock-btn" IsVisible="True" Command="{Binding NavigateToCommand}"
+			<ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
+                          IsVisible="{Binding IsSystem}"
+                          IsEnabled="{Binding IsSystem}"
                           CommandParameter="{x:Static local:DockEnum.System}"
                           IsChecked="{Binding CurrentDock,
                                       Converter={StaticResource DockEqualsConverter},
@@ -111,7 +117,9 @@
                     Data="M415.9 344L225 344C227.9 408.5 242.2 467.9 262.5 511.4C273.9 535.9 286.2 553.2 297.6 563.8C308.8 574.3 316.5 576 320.5 576C324.5 576 332.2 574.3 343.4 563.8C354.8 553.2 367.1 535.8 378.5 511.4C398.8 467.9 413.1 408.5 416 344zM224.9 296L415.8 296C413 231.5 398.7 172.1 378.4 128.6C367 104.2 354.7 86.8 343.3 76.2C332.1 65.7 324.4 64 320.4 64C316.4 64 308.7 65.7 297.5 76.2C286.1 86.8 273.8 104.2 262.4 128.6C242.1 172.1 227.8 231.5 224.9 296zM176.9 296C180.4 210.4 202.5 130.9 234.8 78.7C142.7 111.3 74.9 195.2 65.5 296L176.9 296zM65.5 344C74.9 444.8 142.7 528.7 234.8 561.3C202.5 509.1 180.4 429.6 176.9 344L65.5 344zM463.9 344C460.4 429.6 438.3 509.1 406 561.3C498.1 528.6 565.9 444.8 575.3 344L463.9 344zM575.3 296C565.9 195.2 498.1 111.3 406 78.7C438.3 130.9 460.4 210.4 463.9 296L575.3 296z"/>
 			</ToggleButton>
             <!-- Planet -->
-			<ToggleButton Classes="dock-btn" IsVisible="True" Command="{Binding NavigateToCommand}"
+			<ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
+                          IsVisible="{Binding IsPlanet}"
+                          IsEnabled="{Binding IsPlanet}"
                           CommandParameter="{x:Static local:DockEnum.Planet}"
                           IsChecked="{Binding CurrentDock,
                                       Converter={StaticResource DockEqualsConverter},
@@ -124,7 +132,9 @@
 
             <Border Classes="separator"/>
             <!-- Market connector -->
-			<ToggleButton Classes="dock-btn" IsVisible="True" Command="{Binding NavigateToCommand}"
+			<ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
+                          IsVisible="{Binding IsMarketConnector}"
+                          IsEnabled="{Binding IsMarketConnector}"
                           CommandParameter="{x:Static local:DockEnum.MarketConnector}"
                           IsChecked="{Binding CurrentDock,
                                       Converter={StaticResource DockEqualsConverter},
@@ -135,7 +145,9 @@
                     Data="M94.7 136.3C101.6 112.4 123.5 96 148.4 96L492.4 96C517.3 96 539.2 112.4 546.2 136.3L569.6 216.5C582.4 260.2 549.5 304 504 304C477.7 304 454.6 289.1 443.2 266.9C431.6 288.8 408.6 304 381.8 304C355.2 304 332.1 289 320.5 267C308.9 289 285.8 304 259.2 304C232.4 304 209.4 288.9 197.8 266.9C186.4 289 163.3 304 137 304C91.4 304 58.6 260.3 71.4 216.5L94.7 136.3zM160.4 416L480.4 416L480.4 349.6C488 351.2 495.9 352 503.9 352C518.2 352 531.9 349.4 544.4 344.8L544.4 496C544.4 522.5 522.9 544 496.4 544L144.4 544C117.9 544 96.4 522.5 96.4 496L96.4 344.8C108.9 349.4 122.5 352 136.9 352C145 352 152.8 351.2 160.4 349.6L160.4 416z"/>
 			</ToggleButton>
 			<!-- Log -->
-			<ToggleButton Classes="dock-btn" IsVisible="True" Command="{Binding NavigateToCommand}"
+			<ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
+                          IsVisible="{Binding IsLog}"
+                          IsEnabled="{Binding IsLog}"
                           CommandParameter="{x:Static local:DockEnum.Log}"
                           IsChecked="{Binding CurrentDock,
                                       Converter={StaticResource DockEqualsConverter},
