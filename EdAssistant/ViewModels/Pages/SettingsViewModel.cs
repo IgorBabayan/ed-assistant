@@ -1,58 +1,103 @@
 ﻿using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+using EdAssistant.Helpers.Attributes;
+using EdAssistant.Models.Enums;
+using EdAssistant.Services.DockVisibility;
 using EdAssistant.Services.Storage;
 using EdAssistant.Translations;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using EdAssistant.Models.Enums;
+using EdAssistant.Services.Settings;
 using Path = System.IO.Path;
 
 namespace EdAssistant.ViewModels.Pages;
 
+[DockMapping(DockEnum.Settings)]
 public sealed partial class SettingsViewModel : PageViewModel
 {
     private readonly IFolderPickerService _picker;
+    private readonly ISettingsService _settingsService;
+    private readonly IDockVisibilityService _dockVisibilityService;
     private readonly ILogger<SettingsViewModel> _logger;
 
-    [ObservableProperty]
-    private bool materials;
+    public bool Materials
+    {
+        get => _dockVisibilityService.GetVisibility(DockEnum.Materials);
+        set
+        {
+            _dockVisibilityService.SetVisibility(DockEnum.Materials, value);
+            _settingsService.SetSetting("Materials", value);
+        }
+    }
 
-    [ObservableProperty]
-    private bool storage;
+    public bool Storage
+    {
+        get => _dockVisibilityService.GetVisibility(DockEnum.Storage);
+        set
+        {
+            _dockVisibilityService.SetVisibility(DockEnum.Storage, value);
+            _settingsService.SetSetting("Storage", value);
+        }
+    }
 
-    [ObservableProperty]
-    private bool system;
+    public bool System
+    {
+        get => _dockVisibilityService.GetVisibility(DockEnum.System);
+        set
+        {
+            _dockVisibilityService.SetVisibility(DockEnum.System, value);
+            _settingsService.SetSetting("System", value);
+        }
+    }
 
-    [ObservableProperty]
-    private bool planet;
+    public bool Planet
+    {
+        get => _dockVisibilityService.GetVisibility(DockEnum.Planet);
+        set
+        {
+            _dockVisibilityService.SetVisibility(DockEnum.Planet, value);
+            _settingsService.SetSetting("Planet", value);
+        }
+    }
 
-    [ObservableProperty]
-    private bool marketConnector;
+    public bool MarketConnector
+    {
+        get => _dockVisibilityService.GetVisibility(DockEnum.MarketConnector);
+        set
+        {
+            _dockVisibilityService.SetVisibility(DockEnum.MarketConnector, value);
+            _settingsService.SetSetting("MarketConnector", value);
+        }
+    }
 
-    [ObservableProperty]
-    private bool log;
+    public bool Log
+    {
+        get => _dockVisibilityService.GetVisibility(DockEnum.Log);
+        set
+        {
+            _dockVisibilityService.SetVisibility(DockEnum.Log, value);
+            _settingsService.SetSetting("Log", value);
+        }
+    }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ReadAllCommand))]
     private string? journalsFolderPath;
 
-    public SettingsViewModel(IFolderPickerService picker, ILogger<SettingsViewModel> logger)
+    public SettingsViewModel(IFolderPickerService picker, ILogger<SettingsViewModel> logger, IDockVisibilityService dockVisibilityService, ISettingsService settingsService)
     {
         _picker = picker;
         _logger = logger;
-
-        Materials = true;
-        Storage = true;
-        System = true;
-        Planet = true;
-        MarketConnector = true;
-        Log = true;
+        _dockVisibilityService = dockVisibilityService;
+        _settingsService = settingsService;
 
         PrepareDefaultJournalsPath();
+        LoadSettings();
+
+        _dockVisibilityService.VisibilityChanged += OnDockVisibilityChanged;
     }
 
     private void PrepareDefaultJournalsPath()
@@ -88,6 +133,22 @@ public sealed partial class SettingsViewModel : PageViewModel
         }
     }
 
+    private void LoadSettings()
+    {
+        _dockVisibilityService.SetVisibility(DockEnum.Materials,
+            _settingsService.GetSetting("Materials", true));
+        _dockVisibilityService.SetVisibility(DockEnum.Storage,
+            _settingsService.GetSetting("Storage", true));
+        _dockVisibilityService.SetVisibility(DockEnum.System,
+            _settingsService.GetSetting("System", true));
+        _dockVisibilityService.SetVisibility(DockEnum.Planet,
+            _settingsService.GetSetting("Planet", true));
+        _dockVisibilityService.SetVisibility(DockEnum.MarketConnector,
+            _settingsService.GetSetting("MarketConnector", true));
+        _dockVisibilityService.SetVisibility(DockEnum.Log,
+            _settingsService.GetSetting("Log", true));
+    }
+
     [RelayCommand]
     private async Task BrowseFolderAsync()
     {
@@ -118,10 +179,15 @@ public sealed partial class SettingsViewModel : PageViewModel
 
     private bool CanReadAll() => !string.IsNullOrWhiteSpace(JournalsFolderPath) && Directory.Exists(JournalsFolderPath);
 
-    partial void OnMaterialsChanged(bool oldValue, bool newValue) => WeakReferenceMessenger.Default.Send(new DockVisibilityChanged(DockEnum.Materials, newValue));
-    partial void OnStorageChanged(bool oldValue, bool newValue) => WeakReferenceMessenger.Default.Send(new DockVisibilityChanged(DockEnum.Storage, newValue));
-    partial void OnSystemChanged(bool oldValue, bool newValue) => WeakReferenceMessenger.Default.Send(new DockVisibilityChanged(DockEnum.System, newValue));
-    partial void OnPlanetChanged(bool oldValue, bool newValue) => WeakReferenceMessenger.Default.Send(new DockVisibilityChanged(DockEnum.Planet, newValue));
-    partial void OnMarketConnectorChanged(bool oldValue, bool newValue) => WeakReferenceMessenger.Default.Send(new DockVisibilityChanged(DockEnum.MarketConnector, newValue));
-    partial void OnLogChanged(bool oldValue, bool newValue) => WeakReferenceMessenger.Default.Send(new DockVisibilityChanged(DockEnum.Log, newValue));
+    private void OnDockVisibilityChanged(object? sender, DockVisibilityChangedEventArgs e) =>
+        OnPropertyChanged(e.Dock switch
+        {
+            DockEnum.Materials => nameof(Materials),
+            DockEnum.Storage => nameof(Storage),
+            DockEnum.System => nameof(System),
+            DockEnum.Planet => nameof(Planet),
+            DockEnum.MarketConnector => nameof(MarketConnector),
+            DockEnum.Log => nameof(Log),
+            _ => string.Empty
+        });
 }

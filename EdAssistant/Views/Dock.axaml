@@ -77,8 +77,8 @@
 			</ToggleButton>
             <!-- Materials -->
 			<ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
-                          IsVisible="{Binding IsMaterial}" 
-                          IsEnabled="{Binding IsMaterial}"
+                          IsVisible="{Binding IsMaterials}" 
+                          IsEnabled="{Binding IsMaterials}"
                           CommandParameter="{x:Static local:DockEnum.Materials}"
                           IsChecked="{Binding CurrentDock,
                                       Converter={StaticResource DockEqualsConverter},

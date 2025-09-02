@@ -3,14 +3,16 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
+using EdAssistant.Services.DockVisibility;
 using EdAssistant.Services.Navigate;
+using EdAssistant.Services.Settings;
+using EdAssistant.Services.Storage;
 using EdAssistant.Translations;
 using EdAssistant.ViewModels;
 using EdAssistant.ViewModels.Pages;
 using EdAssistant.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using EdAssistant.Services.Storage;
 using Microsoft.Extensions.Logging;
 
 namespace EdAssistant;
@@ -72,6 +74,8 @@ public partial class App : Application
 
                 services.AddSingleton<INavigationService, NavigationService>();
                 services.AddSingleton<IFolderPickerService, FolderPickerService>();
+                services.AddSingleton<IDockVisibilityService, DockVisibilityService>();
+                services.AddSingleton<ISettingsService, JsonSettingsService>();
 
                 services.AddSingleton<MainViewModel>();
                 services.AddSingleton<HomeViewModel>();
