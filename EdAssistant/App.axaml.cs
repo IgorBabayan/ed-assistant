@@ -3,7 +3,9 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
+using EdAssistant.Services.Desktop;
 using EdAssistant.Services.DockVisibility;
+using EdAssistant.Services.GameData;
 using EdAssistant.Services.Navigate;
 using EdAssistant.Services.Settings;
 using EdAssistant.Services.Storage;
@@ -72,10 +74,14 @@ public partial class App : Application
                     x.AddFilter("Avalonia", LogLevel.Warning);
                 });
 
+                services.AddMemoryCache();
+
+                services.AddSingleton<IDesktopService, DesktopService>();
                 services.AddSingleton<INavigationService, NavigationService>();
                 services.AddSingleton<IFolderPickerService, FolderPickerService>();
                 services.AddSingleton<IDockVisibilityService, DockVisibilityService>();
                 services.AddSingleton<ISettingsService, JsonSettingsService>();
+                services.AddSingleton<IGameDataService, GameDataService>();
 
                 services.AddSingleton<MainViewModel>();
                 services.AddSingleton<HomeViewModel>();

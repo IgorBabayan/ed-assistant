@@ -3,14 +3,17 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EdAssistant.Helpers.Attributes;
 using EdAssistant.Models.Enums;
+using EdAssistant.Models.ShipLocker;
 using EdAssistant.Services.DockVisibility;
+using EdAssistant.Services.GameData;
+using EdAssistant.Services.Settings;
 using EdAssistant.Services.Storage;
 using EdAssistant.Translations;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
-using EdAssistant.Services.Settings;
 using Path = System.IO.Path;
 
 namespace EdAssistant.ViewModels.Pages;
@@ -21,6 +24,7 @@ public sealed partial class SettingsViewModel : PageViewModel
     private readonly IFolderPickerService _picker;
     private readonly ISettingsService _settingsService;
     private readonly IDockVisibilityService _dockVisibilityService;
+    private readonly IGameDataService _gameDataService;
     private readonly ILogger<SettingsViewModel> _logger;
 
     public bool Materials
@@ -87,12 +91,13 @@ public sealed partial class SettingsViewModel : PageViewModel
     [NotifyCanExecuteChangedFor(nameof(ReadAllCommand))]
     private string? journalsFolderPath;
 
-    public SettingsViewModel(IFolderPickerService picker, ILogger<SettingsViewModel> logger, IDockVisibilityService dockVisibilityService, ISettingsService settingsService)
+    public SettingsViewModel(IFolderPickerService picker, ILogger<SettingsViewModel> logger, IDockVisibilityService dockVisibilityService, ISettingsService settingsService, IGameDataService gameDataService)
     {
         _picker = picker;
         _logger = logger;
         _dockVisibilityService = dockVisibilityService;
         _settingsService = settingsService;
+        _gameDataService = gameDataService;
 
         PrepareDefaultJournalsPath();
         LoadSettings();
@@ -172,10 +177,7 @@ public sealed partial class SettingsViewModel : PageViewModel
     }
 
     [RelayCommand(CanExecute = nameof(CanReadAll))]
-    private async Task ReadAllAsync()
-    {
-
-    }
+    private async Task ReadAllAsync() => await _gameDataService.LoadAllGameDataAsync(JournalsFolderPath!);
 
     private bool CanReadAll() => !string.IsNullOrWhiteSpace(JournalsFolderPath) && Directory.Exists(JournalsFolderPath);
 

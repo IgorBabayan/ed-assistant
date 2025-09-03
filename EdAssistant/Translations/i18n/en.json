@@ -3,7 +3,11 @@
     "SelectFolderTitle": "Select a folder"
   },
   "MainWindow": {
-    "Title": "Welcome"
+    "Title": "Welcome",
+    "DesktopFile": "Create a desktop file",
+    "Minimize": "Minimize window",
+    "Maximize": "Maximize window",
+    "Close": "Close window"
   },
   "Dock": {
     "Home": "Home",
@@ -27,12 +31,15 @@
     "Log": "Logs",
     "Settings": "Settings",
     "PathToJournals": "Path to Elite Dangerous journals:",
-    "ReadAll": "Read all"
+    "ReadAll": "Read all",
+    "SuccessfullyLoadFileData": "Successfully loaded {DataType} from {FilePath}"
   },
   "Exceptions": {
     "NoStorageProvider": "No StorageProvider available.",
     "FailedGettingFolder": "Failed to get local path for folder {FolderName} ({FolderType})",
     "OSNotSupported": "Operation system is not supported",
-    "DirectoryNotFound": "Directory not found: {0}"
+    "DirectoryNotFound": "Directory not found: {0}",
+    "FileNotFound": "File not found: {FilePath}",
+    "FailedToLoadFileData": "Failed to load data from {FilePath}"
   }
 }

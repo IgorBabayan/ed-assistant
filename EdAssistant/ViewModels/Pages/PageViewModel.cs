@@ -10,8 +10,6 @@ public abstract partial class PageViewModel : ObservableObject { }
 public sealed partial class HomeViewModel : PageViewModel { }
 [DockMapping(DockEnum.Materials)]
 public sealed partial class MaterialsViewModel : PageViewModel { }
-[DockMapping(DockEnum.Storage)]
-public sealed partial class StorageViewModel : PageViewModel { }
 [DockMapping(DockEnum.System)]
 public sealed partial class SystemViewModel : PageViewModel { }
 [DockMapping(DockEnum.Planet)]

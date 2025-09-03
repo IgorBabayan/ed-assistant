@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using EdAssistant.Helpers.Attributes;
 using EdAssistant.Models.Enums;
+using EdAssistant.Services.Desktop;
 using EdAssistant.Services.DockVisibility;
 using EdAssistant.Services.Navigate;
 using EdAssistant.Translations;
@@ -17,6 +18,8 @@ public partial class MainViewModel : ObservableObject
 {
     private readonly INavigationService _navigationService;
     private readonly IDockVisibilityService _dockVisibilityService;
+    private readonly IDesktopService _desktopService;
+
     private static readonly Dictionary<Type, DockEnum> _viewModelToDockCache = new();
     private static readonly Dictionary<DockEnum, Type> _dockToViewModelCache = new();
 
@@ -44,15 +47,17 @@ public partial class MainViewModel : ObservableObject
     public bool IsPlanet => _dockVisibilityService.GetVisibility(DockEnum.Planet);
     public bool IsMarketConnector => _dockVisibilityService.GetVisibility(DockEnum.MarketConnector);
     public bool IsLog => _dockVisibilityService.GetVisibility(DockEnum.Log);
+    public bool CanCreateDesktopFile => OperatingSystem.IsLinux();
 
     public bool IsPlanetarySystem => IsSystem || IsPlanet;
 
     static MainViewModel() => InitializeMappings();
 
-    public MainViewModel(INavigationService navigationService, IDockVisibilityService dockVisibilityService)
+    public MainViewModel(INavigationService navigationService, IDockVisibilityService dockVisibilityService, IDesktopService desktopService)
     {
         _navigationService = navigationService;
         _dockVisibilityService = dockVisibilityService;
+        _desktopService = desktopService;
         CurrentViewModel = _navigationService.Current;
 
         _dockVisibilityService.VisibilityChanged += OnDockVisibilityChanged;
@@ -114,5 +119,12 @@ public partial class MainViewModel : ObservableObject
         {
             OnPropertyChanged(nameof(IsPlanetarySystem));
         }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanCreateDesktopFile))]
+    private void CreateDesktopFile()
+    {
+        _desktopService.CreateDesktopFile();
+        _desktopService.Save();
     }
 }
