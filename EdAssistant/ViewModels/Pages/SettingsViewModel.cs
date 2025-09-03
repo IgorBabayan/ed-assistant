@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EdAssistant.Helpers.Attributes;
 using EdAssistant.Models.Enums;
-using EdAssistant.Models.ShipLocker;
 using EdAssistant.Services.DockVisibility;
 using EdAssistant.Services.GameData;
 using EdAssistant.Services.Settings;
@@ -12,7 +11,6 @@ using EdAssistant.Translations;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Path = System.IO.Path;
 
@@ -27,6 +25,16 @@ public sealed partial class SettingsViewModel : PageViewModel
     private readonly IGameDataService _gameDataService;
     private readonly ILogger<SettingsViewModel> _logger;
 
+    public bool Cargo
+    {
+        get => _dockVisibilityService.GetVisibility(DockEnum.Cargo);
+        set
+        {
+            _dockVisibilityService.SetVisibility(DockEnum.Cargo, value);
+            _settingsService.SetSetting("Cargo", value);
+        }
+    }
+
     public bool Materials
     {
         get => _dockVisibilityService.GetVisibility(DockEnum.Materials);
@@ -39,11 +47,11 @@ public sealed partial class SettingsViewModel : PageViewModel
 
     public bool Storage
     {
-        get => _dockVisibilityService.GetVisibility(DockEnum.Storage);
+        get => _dockVisibilityService.GetVisibility(DockEnum.ShipLocker);
         set
         {
-            _dockVisibilityService.SetVisibility(DockEnum.Storage, value);
-            _settingsService.SetSetting("Storage", value);
+            _dockVisibilityService.SetVisibility(DockEnum.ShipLocker, value);
+            _settingsService.SetSetting("ShipLocker", value);
         }
     }
 
@@ -140,10 +148,12 @@ public sealed partial class SettingsViewModel : PageViewModel
 
     private void LoadSettings()
     {
+        _dockVisibilityService.SetVisibility(DockEnum.Cargo,
+            _settingsService.GetSetting("Cargo", true));
         _dockVisibilityService.SetVisibility(DockEnum.Materials,
             _settingsService.GetSetting("Materials", true));
-        _dockVisibilityService.SetVisibility(DockEnum.Storage,
-            _settingsService.GetSetting("Storage", true));
+        _dockVisibilityService.SetVisibility(DockEnum.ShipLocker,
+            _settingsService.GetSetting("ShipLocker", true));
         _dockVisibilityService.SetVisibility(DockEnum.System,
             _settingsService.GetSetting("System", true));
         _dockVisibilityService.SetVisibility(DockEnum.Planet,
@@ -184,8 +194,9 @@ public sealed partial class SettingsViewModel : PageViewModel
     private void OnDockVisibilityChanged(object? sender, DockVisibilityChangedEventArgs e) =>
         OnPropertyChanged(e.Dock switch
         {
+            DockEnum.Cargo => nameof(Cargo),
             DockEnum.Materials => nameof(Materials),
-            DockEnum.Storage => nameof(Storage),
+            DockEnum.ShipLocker => nameof(Storage),
             DockEnum.System => nameof(System),
             DockEnum.Planet => nameof(Planet),
             DockEnum.MarketConnector => nameof(MarketConnector),

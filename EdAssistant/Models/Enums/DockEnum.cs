@@ -3,8 +3,9 @@
 public enum DockEnum
 {
     Home,
+    Cargo,
     Materials,
-    Storage,
+    ShipLocker,
     System,
     Planet,
     MarketConnector,

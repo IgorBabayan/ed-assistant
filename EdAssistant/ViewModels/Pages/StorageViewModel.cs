@@ -11,7 +11,7 @@ using EdAssistant.Translations;
 
 namespace EdAssistant.ViewModels.Pages;
 
-[DockMapping(DockEnum.Storage)]
+[DockMapping(DockEnum.ShipLocker)]
 public sealed partial class StorageViewModel : PageViewModel
 {
     private readonly IGameDataService _gameDataService;

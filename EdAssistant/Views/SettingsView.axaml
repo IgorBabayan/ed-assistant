@@ -25,6 +25,7 @@
                        helpers:WrapPanelHelper.SpacingX="12"
                        helpers:WrapPanelHelper.SpacingY="8">
                 <CheckBox Classes="hud" Content="{Binding [Settings.Home], Source={x:Static translations:Localization.Instance}}" IsEnabled="False" IsChecked="True"></CheckBox>
+                <CheckBox Classes="hud" Content="{Binding [Settings.Cargo], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Cargo}"></CheckBox>
                 <CheckBox Classes="hud" Content="{Binding [Settings.Materials], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Materials}"></CheckBox>
 				<CheckBox Classes="hud" Content="{Binding [Settings.Storage], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Storage}"></CheckBox>
                 <CheckBox Classes="hud" Content="{Binding [Settings.System], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding System}"></CheckBox>

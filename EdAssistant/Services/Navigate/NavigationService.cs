@@ -15,8 +15,9 @@ sealed class NavigationService(IServiceProvider _serviceProvider) : INavigationS
         Current = dock switch
         {
             DockEnum.Home => _serviceProvider.GetRequiredService<HomeViewModel>(),
+            DockEnum.Cargo => _serviceProvider.GetRequiredService<CargoViewModel>(),
             DockEnum.Materials => _serviceProvider.GetRequiredService<MaterialsViewModel>(),
-            DockEnum.Storage => _serviceProvider.GetRequiredService<StorageViewModel>(),
+            DockEnum.ShipLocker => _serviceProvider.GetRequiredService<StorageViewModel>(),
             DockEnum.System => _serviceProvider.GetRequiredService<SystemViewModel>(),
             DockEnum.Planet => _serviceProvider.GetRequiredService<PlanetViewModel>(),
             DockEnum.MarketConnector => _serviceProvider.GetRequiredService<MarketConnectorViewModel>(),

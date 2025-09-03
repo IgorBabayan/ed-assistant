@@ -41,8 +41,9 @@ public partial class MainViewModel : ObservableObject
     [NotifyCanExecuteChangedFor(nameof(NavigateToCommand))]
     private PageViewModel? currentViewModel;
 
+    public bool IsCargo => _dockVisibilityService.GetVisibility(DockEnum.Cargo);
     public bool IsMaterials => _dockVisibilityService.GetVisibility(DockEnum.Materials);
-    public bool IsStorage => _dockVisibilityService.GetVisibility(DockEnum.Storage);
+    public bool IsStorage => _dockVisibilityService.GetVisibility(DockEnum.ShipLocker);
     public bool IsSystem => _dockVisibilityService.GetVisibility(DockEnum.System);
     public bool IsPlanet => _dockVisibilityService.GetVisibility(DockEnum.Planet);
     public bool IsMarketConnector => _dockVisibilityService.GetVisibility(DockEnum.MarketConnector);
@@ -50,6 +51,7 @@ public partial class MainViewModel : ObservableObject
     public bool CanCreateDesktopFile => OperatingSystem.IsLinux();
 
     public bool IsPlanetarySystem => IsSystem || IsPlanet;
+    public bool IsInventory => IsCargo || IsMaterials || IsStorage;
 
     static MainViewModel() => InitializeMappings();
 
@@ -106,8 +108,9 @@ public partial class MainViewModel : ObservableObject
     {
         OnPropertyChanged(e.Dock switch
         {
+            DockEnum.Cargo => nameof(IsCargo),
             DockEnum.Materials => nameof(IsMaterials),
-            DockEnum.Storage => nameof(IsStorage),
+            DockEnum.ShipLocker => nameof(IsStorage),
             DockEnum.System => nameof(IsSystem),
             DockEnum.Planet => nameof(IsPlanet),
             DockEnum.MarketConnector => nameof(IsMarketConnector),
@@ -118,6 +121,11 @@ public partial class MainViewModel : ObservableObject
         if (e.Dock is DockEnum.System or DockEnum.Planet)
         {
             OnPropertyChanged(nameof(IsPlanetarySystem));
+        }
+
+        if (e.Dock is DockEnum.Cargo or DockEnum.Materials or DockEnum.ShipLocker)
+        {
+            OnPropertyChanged(nameof(IsInventory));
         }
     }
 

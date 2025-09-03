@@ -28,7 +28,7 @@ class JsonSettingsService : ISettingsService
             {
                 try
                 {
-                    return JsonSerializer.Deserialize<T>(jsonElement.GetRawText());
+                    return JsonSerializer.Deserialize<T>(jsonElement.GetRawText())!;
                 }
                 catch
                 {

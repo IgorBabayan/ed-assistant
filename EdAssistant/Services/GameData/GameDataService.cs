@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using EdAssistant.Models.Cargo;
 using EdAssistant.Translations;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -16,7 +17,7 @@ public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache
     private readonly Dictionary<Type, string> _fileMapping = new()
     {
         { typeof(ShipLockerEvent), "ShipLocker.json" },
-        //{ typeof(MaterialsEvent), "Materials.json" },
+        { typeof(CargoEvent), "Cargo.json" },
     };
 
     private static string GetCacheKey<T>() => $"GameData_{typeof(T).Name}";

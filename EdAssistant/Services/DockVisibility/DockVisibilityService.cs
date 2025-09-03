@@ -10,8 +10,9 @@ class DockVisibilityService : IDockVisibilityService
 {
     private readonly Dictionary<DockEnum, bool> _dockVisibility = new()
     {
+        [DockEnum.Cargo] = true,
         [DockEnum.Materials] = true,
-        [DockEnum.Storage] = true,
+        [DockEnum.ShipLocker] = true,
         [DockEnum.System] = true,
         [DockEnum.Planet] = true,
         [DockEnum.MarketConnector] = true,

@@ -11,6 +11,7 @@
   },
   "Dock": {
     "Home": "Home",
+    "Cargo": "Cargo",
     "Materials": "Materials",
     "Storage": "Storage",
     "System": "System",
@@ -23,6 +24,7 @@
     "DockGroup": "Dock buttons",
     "AppGroup": "Application settings",
     "Home": "Home",
+    "Cargo": "Cargo",
     "Materials": "Materials",
     "Storage": "Storage",
     "System": "System",
