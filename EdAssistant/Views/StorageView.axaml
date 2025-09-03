@@ -5,6 +5,7 @@
              xmlns:vm="clr-namespace:EdAssistant.ViewModels.Pages"
              xmlns:shipLocker="clr-namespace:EdAssistant.Models.ShipLocker"
              xmlns:translations="clr-namespace:EdAssistant.Translations"
+             xmlns:local="clr-namespace:EdAssistant.Helpers.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="EdAssistant.Views.StorageView"
              x:CompileBindings="False"
@@ -82,7 +83,7 @@
                                                FontWeight="SemiBold"
                                                TextWrapping="Wrap"
                                                MaxWidth="120"/>
-                                    <TextBlock Text="{Binding Category}"
+                                    <TextBlock Text="{Binding Category, Converter={x:Static local:EnumLocalizationConverter.Instance}}"
                                                Foreground="{DynamicResource Ed.Text.Dim}"
                                                FontSize="11"/>
                                 </StackPanel>

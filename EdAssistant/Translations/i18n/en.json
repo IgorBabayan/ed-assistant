@@ -44,9 +44,15 @@
   },
   "StorageWindow": {
     "Watermark": "Search items...",
-    "Items": "Items ({0})",
-    "Components": "Components ({0})",
+    "Items": "Goods ({0})",
+    "Components": "Assets ({0})",
     "Consumables": "Consumables ({0})",
-    "Data": "Data ({0})"
+    "Data": "Data ({0})",
+    "Categories": {
+      "Items": "Goods",
+      "Components": "Assets",
+      "Consumables": "Consumables",
+      "Data": "Data"
+    }
   }
 }
