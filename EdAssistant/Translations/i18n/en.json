@@ -41,5 +41,12 @@
     "DirectoryNotFound": "Directory not found: {0}",
     "FileNotFound": "File not found: {FilePath}",
     "FailedToLoadFileData": "Failed to load data from {FilePath}"
+  },
+  "StorageWindow": {
+    "Watermark": "Search items...",
+    "Items": "Items ({0})",
+    "Components": "Components ({0})",
+    "Consumables": "Consumables ({0})",
+    "Data": "Data ({0})"
   }
 }

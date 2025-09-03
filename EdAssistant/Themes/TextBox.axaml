@@ -17,24 +17,37 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}">
-					<ScrollViewer x:Name="PART_ScrollViewer"
-								  HorizontalScrollBarVisibility="Hidden"
-								  VerticalScrollBarVisibility="Hidden"
-								  Padding="{TemplateBinding Padding}">
-						<TextPresenter x:Name="PART_TextPresenter"
-									   Text="{TemplateBinding Text}"
-									   CaretBrush="{TemplateBinding CaretBrush}"
-									   SelectionBrush="{TemplateBinding SelectionBrush}"
-                                       CaretIndex="{TemplateBinding CaretIndex}"
-                                       SelectionStart="{TemplateBinding SelectionStart}"
-                                       SelectionEnd="{TemplateBinding SelectionEnd}"
-                                       TextAlignment="{TemplateBinding TextAlignment}"
-                                       TextWrapping="{TemplateBinding TextWrapping}"
-                                       LineHeight="{TemplateBinding LineHeight}"
-                                       LetterSpacing="{TemplateBinding LetterSpacing}"
-                                       PasswordChar="{TemplateBinding PasswordChar}"
-                                       RevealPassword="{TemplateBinding RevealPassword}"/>
-					</ScrollViewer>
+					<Grid>
+						<ScrollViewer x:Name="PART_ScrollViewer"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden"
+                                      Padding="{TemplateBinding Padding}">
+							<TextPresenter x:Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text}"
+                                           CaretBrush="{TemplateBinding CaretBrush}"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextAlignment="{TemplateBinding TextAlignment}"
+                                           TextWrapping="{TemplateBinding TextWrapping}"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           LetterSpacing="{TemplateBinding LetterSpacing}"
+                                           PasswordChar="{TemplateBinding PasswordChar}"
+                                           RevealPassword="{TemplateBinding RevealPassword}"/>
+						</ScrollViewer>
+
+						<TextBlock x:Name="PART_Watermark"
+                                   Text="{TemplateBinding Watermark}"
+                                   Foreground="#80FFFFFF"
+                                   FontStyle="Italic"
+                                   Opacity="0.6"
+                                   Margin="{TemplateBinding Padding}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   IsHitTestVisible="False"
+                                   IsVisible="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
+					</Grid>
 				</Border>
 			</ControlTemplate>
 		</Setter>
@@ -54,5 +67,15 @@
     <Style Selector="TextBox.hud:focus:not(:disabled) /template/ Border#border,
                  TextBox.hud:focus:not(:disabled) /template/ Border#border">
         <Setter Property="BorderBrush" Value="{DynamicResource Ed.Accent}"/>
+    </Style>
+    <Style Selector="TextBox.hud /template/ TextBlock#PART_Watermark">
+        <Setter Property="IsVisible" Value="False"/>
+    </Style>
+    <Style Selector="TextBox.hud[Text=''] /template/ TextBlock#PART_Watermark,
+                     TextBox.hud[Text={x:Null}] /template/ TextBlock#PART_Watermark">
+        <Setter Property="IsVisible" Value="True"/>
+    </Style>
+    <Style Selector="TextBox.hud:focus /template/ TextBlock#PART_Watermark">
+        <Setter Property="IsVisible" Value="False"/>
     </Style>
 </Styles>
