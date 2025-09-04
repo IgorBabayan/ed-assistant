@@ -4,10 +4,10 @@
 public sealed partial class StorageViewModel : PageViewModel
 {
     private readonly IGameDataService _gameDataService;
-    private readonly List<CategorizedInventoryItem> _allItems = new();
+    private readonly List<CategorizedInventoryItemDTO> _allItems = new();
 
     [ObservableProperty]
-    private ObservableCollection<CategorizedInventoryItem> filteredItems = new();
+    private ObservableCollection<CategorizedInventoryItemDTO> filteredItems = new();
 
     [ObservableProperty]
     private bool showItems = true;
@@ -59,51 +59,39 @@ public sealed partial class StorageViewModel : PageViewModel
     {
         _allItems.Clear();
 
-        _allItems.AddRange(shipData.Items.Select(item => new CategorizedInventoryItem
+        _allItems.AddRange(shipData.Items.Select(item => new CategorizedInventoryItemDTO
         {
             Name = item.Name,
             NameLocalised = string.IsNullOrWhiteSpace(item.NameLocalised)
                 ? $"{item.Name.Capitalize()} ({item.Count})"
                 : $"{item.NameLocalised} ({item.Count})",
-            OwnerID = item.OwnerID,
-            MissionID = item.MissionID,
-            Count = item.Count,
             Category = ItemCategory.Items
         }));
 
-        _allItems.AddRange(shipData.Components.Select(component => new CategorizedInventoryItem
+        _allItems.AddRange(shipData.Components.Select(component => new CategorizedInventoryItemDTO
         {
             Name = component.Name,
             NameLocalised = string.IsNullOrWhiteSpace(component.NameLocalised)
                 ? $"{component.Name.Capitalize()} ({component.Count})"
                 : $"{component.NameLocalised} ({component.Count})",
-            OwnerID = component.OwnerID,
-            MissionID = component.MissionID,
-            Count = component.Count,
             Category = ItemCategory.Components
         }));
 
-        _allItems.AddRange(shipData.Consumables.Select(consumable => new CategorizedInventoryItem
+        _allItems.AddRange(shipData.Consumables.Select(consumable => new CategorizedInventoryItemDTO
         {
             Name = consumable.Name,
             NameLocalised = string.IsNullOrWhiteSpace(consumable.NameLocalised)
                 ? $"{consumable.Name.Capitalize()} ({consumable.Count})"
                 : $"{consumable.NameLocalised} ({consumable.Count})",
-            OwnerID = consumable.OwnerID,
-            MissionID = consumable.MissionID,
-            Count = consumable.Count,
             Category = ItemCategory.Consumables
         }));
 
-        _allItems.AddRange(shipData.Data.Select(dataItem => new CategorizedInventoryItem
+        _allItems.AddRange(shipData.Data.Select(dataItem => new CategorizedInventoryItemDTO
         {
             Name = dataItem.Name,
             NameLocalised = string.IsNullOrWhiteSpace(dataItem.NameLocalised)
                 ? $"{dataItem.Name.Capitalize()} ({dataItem.Count})"
                 : $"{dataItem.NameLocalised} ({dataItem.Count})",
-            OwnerID = dataItem.OwnerID,
-            MissionID = dataItem.MissionID,
-            Count = dataItem.Count,
             Category = ItemCategory.Data
         }));
 
@@ -134,8 +122,8 @@ public sealed partial class StorageViewModel : PageViewModel
             }
 
             return true;
-        }).OrderBy(item => item.Category).ThenBy(item => item.NameLocalised);
+        }).OrderBy(item => item.NameLocalised).ThenBy(item => item.Category);
 
-        FilteredItems = new ObservableCollection<CategorizedInventoryItem>(filtered);
+        FilteredItems = new ObservableCollection<CategorizedInventoryItemDTO>(filtered);
     }
 }

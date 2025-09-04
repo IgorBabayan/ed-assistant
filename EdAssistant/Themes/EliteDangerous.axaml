@@ -14,6 +14,7 @@
 		<SolidColorBrush x:Key="Ed.Text.Dim" Color="#A0A5AD"/>
 
 		<SolidColorBrush x:Key="Ed.Accent.Secondary" Color="#19FFFF"/>
+		<SolidColorBrush x:Key="Ed.Color" Color="#210E00"/>
 
 		<FontFamily x:Key="Ed.Font">Michroma, Orbitron, Segoe UI, Ubuntu, Arial</FontFamily>
 

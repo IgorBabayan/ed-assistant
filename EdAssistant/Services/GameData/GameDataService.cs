@@ -1,3 +1,5 @@
+using EdAssistant.Models.Market;
+
 namespace EdAssistant.Services.GameData;
 
 public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache) : IGameDataService
@@ -6,6 +8,7 @@ public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache
     {
         { typeof(ShipLockerEvent), "ShipLocker.json" },
         { typeof(CargoEvent), "Cargo.json" },
+        { typeof(MarketData), "Market.json" },
     };
 
     private static string GetCacheKey<T>() => $"GameData_{typeof(T).Name}";

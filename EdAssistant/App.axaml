@@ -1,7 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:EdAssistant.ViewModels.Pages"
-             xmlns:views="clr-namespace:EdAssistant.Views"
+             xmlns:views="clr-namespace:EdAssistant.Views.Pages"
              xmlns:converters="clr-namespace:EdAssistant.Helpers.Converters"
              x:Class="EdAssistant.App"
              RequestedThemeVariant="Dark">
@@ -21,6 +21,8 @@
 		<ResourceDictionary>
             <converters:DockEqualsConverter x:Key="DockEqualsConverter"/>
         </ResourceDictionary>
+		<converters:BoolToYesNoConverter x:Key="BoolToYesNoConverter" />
+		<converters:EnumLocalizationConverter x:Key="EnumLocalizationConverter" />
     </Application.Resources>
 
     <Application.DataTemplates>

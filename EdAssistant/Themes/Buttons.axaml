@@ -1,21 +1,28 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style Selector="Button.hud">
-        <Setter Property="Background" Value="{DynamicResource Ed.Bg}"/>
-        <Setter Property="Foreground" Value="{DynamicResource Ed.Text}"/>
+        <Setter Property="Background" Value="{DynamicResource Ed.Color}"/>
         <Setter Property="BorderThickness" Value="1.5"/>
         <Setter Property="CornerRadius" Value="{DynamicResource Ed.Radius.Small}"/>
         <Setter Property="Padding" Value="{DynamicResource Ed.Padding}"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+		<Setter Property="Foreground">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#FF7A00" Offset="0"/>
+                    <GradientStop Color="#D06000" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
     </Style>
-    <Style Selector="Button.hud:pointerover">
+    <Style Selector="Button.hud:pointerover /template/ ContentPresenter">
         <Setter Property="Effect" Value="{DynamicResource Ed.PanelShadow}"/>
-        <Setter Property="Background" Value="#0E0F12"/>
+        <Setter Property="Background" Value="{DynamicResource Ed.Accent.Glow}"/>
     </Style>
-    <Style Selector="Button.hud:pressed">
-        <Setter Property="Background" Value="#0B0C0E"/>
-        <Setter Property="BorderBrush" Value="#FF9A3C"/>
+    <Style Selector="Button.hud:pressed /template/ ContentPresenter">
+        <Setter Property="Effect" Value="{DynamicResource Ed.PanelShadow}"/>
+        <Setter Property="Background" Value="{DynamicResource Ed.Accent.Glow}"/>
     </Style>
     <Style Selector="Button.hud:disabled">
         <Setter Property="Opacity" Value="0.5"/>

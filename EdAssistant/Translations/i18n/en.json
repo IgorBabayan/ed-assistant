@@ -1,6 +1,9 @@
 {
   "Common": {
-    "SelectFolderTitle": "Select a folder"
+    "SelectFolderTitle": "Select a folder",
+    "Yes": "Yes",
+    "No": "No",
+    "Watermark": "Search items..."
   },
   "MainWindow": {
     "Title": "Welcome",
@@ -17,7 +20,7 @@
     "System": "System",
     "Planet": "Planet",
     "MarketConnector": "Market connector",
-    "Log": "Logs",
+    "Logs": "Logs",
     "Settings": "Settings"
   },
   "Settings": {
@@ -45,7 +48,6 @@
     "FailedToLoadFileData": "Failed to load data from {FilePath}"
   },
   "StorageWindow": {
-    "Watermark": "Search items...",
     "Items": "Goods ({0})",
     "Components": "Assets ({0})",
     "Consumables": "Consumables ({0})",
@@ -56,5 +58,8 @@
       "Consumables": "Consumables",
       "Data": "Data"
     }
+  },
+  "CargoWindow": {
+    "IsStolen": "Stolen: "
   }
 }

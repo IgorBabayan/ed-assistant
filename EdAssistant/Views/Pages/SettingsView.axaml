@@ -7,7 +7,7 @@
              xmlns:helpers="clr-namespace:EdAssistant.Helpers"
              xmlns:vm="clr-namespace:EdAssistant.ViewModels.Pages"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="EdAssistant.Views.SettingsView"
+             x:Class="EdAssistant.Views.Pages.SettingsView"
              x:DataType="vm:SettingsViewModel">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -54,11 +54,12 @@
                     <TextBlock Text="{Binding [Settings.PathToJournals], Source={x:Static translations:Localization.Instance}}"/>
                     <TextBox Classes="hud" Text="{Binding JournalsFolderPath}"></TextBox>
                 </StackPanel>
-                <Button Grid.Column="1" Grid.Row="0"
+                <Button Grid.Column="1" Grid.Row="0" Classes="hud"
                         Content="..." VerticalAlignment="Bottom"
                         Command="{Binding BrowseFolderCommand}"
                         Margin="5,0,0,0"></Button>
                 <Button Grid.Column="1" Grid.Row="1"
+                        Classes="hud"
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Right"
                         Command="{Binding ReadAllCommand}"

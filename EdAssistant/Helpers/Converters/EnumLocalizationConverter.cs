@@ -2,8 +2,6 @@
 
 public class EnumLocalizationConverter : IValueConverter
 {
-    public static readonly EnumLocalizationConverter Instance = new();
-
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is Enum enumValue)
