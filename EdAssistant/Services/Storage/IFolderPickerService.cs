@@ -1,7 +1,4 @@
-﻿using Avalonia.Platform.Storage;
-using System.Threading.Tasks;
-
-namespace EdAssistant.Services.Storage;
+﻿namespace EdAssistant.Services.Storage;
 
 public interface IFolderPickerService
 {

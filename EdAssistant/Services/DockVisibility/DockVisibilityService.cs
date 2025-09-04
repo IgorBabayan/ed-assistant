@@ -1,10 +1,4 @@
-﻿using EdAssistant.Models.Enums;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-
-namespace EdAssistant.Services.DockVisibility;
+﻿namespace EdAssistant.Services.DockVisibility;
 
 class DockVisibilityService : IDockVisibilityService
 {

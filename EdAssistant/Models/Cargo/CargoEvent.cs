@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
-
-namespace EdAssistant.Models.Cargo;
+﻿namespace EdAssistant.Models.Cargo;
 
 public class CargoEvent
 {

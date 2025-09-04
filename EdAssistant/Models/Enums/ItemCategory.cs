@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EdAssistant.Models.Enums;
+﻿namespace EdAssistant.Models.Enums;
 
 public enum ItemCategory
 {

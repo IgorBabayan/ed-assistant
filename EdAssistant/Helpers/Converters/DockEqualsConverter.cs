@@ -1,7 +1,4 @@
-﻿using Avalonia.Data.Converters;
-using System;
-
-namespace EdAssistant.Helpers.Converters;
+﻿namespace EdAssistant.Helpers.Converters;
 
 public sealed class DockEqualsConverter : IValueConverter
 {

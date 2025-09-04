@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace EdAssistant.Models.Cargo;
+﻿namespace EdAssistant.Models.Cargo;
 
 public class InventoryItem
 {

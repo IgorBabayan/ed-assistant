@@ -1,7 +1,4 @@
-﻿using EdAssistant.Models.Enums;
-using System;
-
-namespace EdAssistant.Helpers.Attributes;
+﻿namespace EdAssistant.Helpers.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class DockMappingAttribute(DockEnum dock) : Attribute

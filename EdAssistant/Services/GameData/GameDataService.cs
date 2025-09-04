@@ -1,15 +1,3 @@
-using EdAssistant.Models.ShipLocker;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using EdAssistant.Models.Cargo;
-using EdAssistant.Translations;
-using Microsoft.Extensions.Caching.Memory;
-
 namespace EdAssistant.Services.GameData;
 
 public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache) : IGameDataService

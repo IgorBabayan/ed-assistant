@@ -1,9 +1,4 @@
-﻿using EdAssistant.Translations;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
-
-namespace EdAssistant.Helpers.Extensions;
+﻿namespace EdAssistant.Helpers.Extensions;
 
 public static class EnumExtensions
 {

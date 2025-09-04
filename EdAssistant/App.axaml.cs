@@ -1,17 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core.Plugins;
-using Avalonia.Markup.Xaml;
-using Avalonia.Styling;
-using EdAssistant.Helpers.Extensions;
-using EdAssistant.Translations;
-using EdAssistant.ViewModels;
-using EdAssistant.Views;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-
-namespace EdAssistant;
+﻿namespace EdAssistant;
 
 public partial class App : Application
 {

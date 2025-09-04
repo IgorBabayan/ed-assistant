@@ -1,6 +1,4 @@
-﻿using Avalonia.Controls;
-
-namespace EdAssistant.Views;
+﻿namespace EdAssistant.Views;
 
 public partial class MainWindow : Window
 {

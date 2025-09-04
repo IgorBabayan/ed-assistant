@@ -1,9 +1,4 @@
-﻿using EdAssistant.Models.Enums;
-using EdAssistant.ViewModels.Pages;
-using System;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace EdAssistant.Services.Navigate;
+﻿namespace EdAssistant.Services.Navigate;
 
 sealed class NavigationService(IServiceProvider _serviceProvider) : INavigationService
 {

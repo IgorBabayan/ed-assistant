@@ -1,8 +1,4 @@
-﻿using EdAssistant.Models.Enums;
-using System;
-using EdAssistant.ViewModels.Pages;
-
-namespace EdAssistant.Services.Navigate;
+﻿namespace EdAssistant.Services.Navigate;
 
 public interface INavigationService
 {

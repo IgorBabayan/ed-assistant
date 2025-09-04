@@ -1,15 +1,4 @@
-﻿using EdAssistant.Services.Desktop;
-using EdAssistant.Services.DockVisibility;
-using EdAssistant.Services.GameData;
-using EdAssistant.Services.Navigate;
-using EdAssistant.Services.Settings;
-using EdAssistant.Services.Storage;
-using EdAssistant.ViewModels;
-using EdAssistant.ViewModels.Pages;
-using EdAssistant.Views;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace EdAssistant.Helpers.Extensions;
+﻿namespace EdAssistant.Helpers.Extensions;
 
 public static class ServiceExtensions
 {

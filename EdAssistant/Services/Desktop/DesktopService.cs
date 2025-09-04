@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-
-namespace EdAssistant.Services.Desktop;
+﻿namespace EdAssistant.Services.Desktop;
 
 class DesktopService : IDesktopService
 {

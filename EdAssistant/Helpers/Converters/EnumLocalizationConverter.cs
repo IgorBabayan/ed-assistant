@@ -1,9 +1,4 @@
-﻿using Avalonia.Data.Converters;
-using System;
-using System.Globalization;
-using EdAssistant.Helpers.Extensions;
-
-namespace EdAssistant.Helpers.Converters;
+﻿namespace EdAssistant.Helpers.Converters;
 
 public class EnumLocalizationConverter : IValueConverter
 {

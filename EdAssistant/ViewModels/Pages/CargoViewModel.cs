@@ -1,9 +1,4 @@
-﻿using EdAssistant.Helpers.Attributes;
-using EdAssistant.Models.Cargo;
-using EdAssistant.Models.Enums;
-using EdAssistant.Services.GameData;
-
-namespace EdAssistant.ViewModels.Pages;
+﻿namespace EdAssistant.ViewModels.Pages;
 
 [DockMapping(DockEnum.Cargo)]
 public sealed partial class CargoViewModel : PageViewModel

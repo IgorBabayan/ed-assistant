@@ -1,7 +1,4 @@
-﻿using EdAssistant.Models.Enums;
-using System.Text.Json.Serialization;
-
-namespace EdAssistant.Models.ShipLocker;
+﻿namespace EdAssistant.Models.ShipLocker;
 
 public class InventoryItem
 {

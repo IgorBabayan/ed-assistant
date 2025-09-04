@@ -1,5 +1,3 @@
-﻿using Avalonia.Controls.Primitives;
-
-namespace EdAssistant.Controls;
+﻿namespace EdAssistant.Controls;
 
 public class GroupBox : HeaderedContentControl { }

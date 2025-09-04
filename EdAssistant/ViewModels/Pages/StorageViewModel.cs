@@ -1,15 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using EdAssistant.Helpers.Attributes;
-using EdAssistant.Models.Enums;
-using EdAssistant.Models.ShipLocker;
-using EdAssistant.Services.GameData;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using EdAssistant.Helpers.Extensions;
-using EdAssistant.Translations;
-
-namespace EdAssistant.ViewModels.Pages;
+﻿namespace EdAssistant.ViewModels.Pages;
 
 [DockMapping(DockEnum.ShipLocker)]
 public sealed partial class StorageViewModel : PageViewModel

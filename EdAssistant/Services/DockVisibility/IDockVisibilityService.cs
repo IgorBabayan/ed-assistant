@@ -1,7 +1,4 @@
-﻿using EdAssistant.Models.Enums;
-using System;
-
-namespace EdAssistant.Services.DockVisibility;
+﻿namespace EdAssistant.Services.DockVisibility;
 
 public interface IDockVisibilityService
 {

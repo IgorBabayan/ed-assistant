@@ -1,5 +1,3 @@
-using System;
-
 namespace EdAssistant.Services.GameData;
 
 public class GameDataLoadedEventArgs(Type dataType, object data) : EventArgs

@@ -1,13 +1,4 @@
-﻿using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Platform.Storage;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Avalonia;
-using EdAssistant.Translations;
-
-namespace EdAssistant.Services.Storage;
+﻿namespace EdAssistant.Services.Storage;
 
 class FolderPickerService : IFolderPickerService
 {

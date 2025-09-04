@@ -1,18 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using EdAssistant.Helpers.Attributes;
-using EdAssistant.Models.Enums;
-using EdAssistant.Services.Desktop;
-using EdAssistant.Services.DockVisibility;
-using EdAssistant.Services.Navigate;
-using EdAssistant.Translations;
-using EdAssistant.ViewModels.Pages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-
-namespace EdAssistant.ViewModels;
+﻿namespace EdAssistant.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {

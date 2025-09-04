@@ -1,20 +1,4 @@
-﻿using Avalonia.Platform.Storage;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using EdAssistant.Helpers.Attributes;
-using EdAssistant.Models.Enums;
-using EdAssistant.Services.DockVisibility;
-using EdAssistant.Services.GameData;
-using EdAssistant.Services.Settings;
-using EdAssistant.Services.Storage;
-using EdAssistant.Translations;
-using Microsoft.Extensions.Logging;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Path = System.IO.Path;
-
-namespace EdAssistant.ViewModels.Pages;
+﻿namespace EdAssistant.ViewModels.Pages;
 
 [DockMapping(DockEnum.Settings)]
 public sealed partial class SettingsViewModel : PageViewModel
@@ -180,10 +164,10 @@ public sealed partial class SettingsViewModel : PageViewModel
         {
             _logger.LogError(exception,
                 Localization.Instance["Exceptions.FailedGettingFolder"],
-                folder!.Name, folder!.GetType().Name);
+                folder.Name, folder.GetType().Name);
         }
 
-        JournalsFolderPath = path ?? folder!.Name;
+        JournalsFolderPath = path ?? folder.Name;
     }
 
     [RelayCommand(CanExecute = nameof(CanReadAll))]

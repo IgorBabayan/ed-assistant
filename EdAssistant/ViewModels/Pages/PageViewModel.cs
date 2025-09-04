@@ -1,8 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using EdAssistant.Helpers.Attributes;
-using EdAssistant.Models.Enums;
-
-namespace EdAssistant.ViewModels.Pages;
+﻿namespace EdAssistant.ViewModels.Pages;
 
 public abstract partial class PageViewModel : ObservableObject { }
 

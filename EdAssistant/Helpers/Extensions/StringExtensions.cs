@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EdAssistant.Helpers.Extensions;
+﻿namespace EdAssistant.Helpers.Extensions;
 
 public static class StringExtensions
 {

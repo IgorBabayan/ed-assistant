@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using Avalonia;
-using Avalonia.Controls;
-
-namespace EdAssistant.Helpers;
+﻿namespace EdAssistant.Helpers;
 
 public static class WrapPanelHelper
 {

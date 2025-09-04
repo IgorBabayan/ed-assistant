@@ -1,10 +1,4 @@
-﻿using System;
-using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Interactivity;
-using Avalonia.VisualTree;
-
-namespace EdAssistant.Views;
+﻿namespace EdAssistant.Views;
 
 public partial class MainView : UserControl
 {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-
-namespace EdAssistant.Services.Settings;
+﻿namespace EdAssistant.Services.Settings;
 
 class JsonSettingsService : ISettingsService
 {

@@ -1,14 +1,4 @@
-﻿using Avalonia.Platform;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Globalization;
-using System.IO;
-using System.Text.Json;
-using System.Threading;
-
-namespace EdAssistant.Translations;
+﻿namespace EdAssistant.Translations;
 
 public sealed partial class Localization : ObservableObject
 {
