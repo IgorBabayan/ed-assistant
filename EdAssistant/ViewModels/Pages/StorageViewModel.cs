@@ -1,4 +1,6 @@
-﻿namespace EdAssistant.ViewModels.Pages;
+﻿using ShipLockerEvent = EdAssistant.Models.ShipLocker.ShipLockerEvent;
+
+namespace EdAssistant.ViewModels.Pages;
 
 [DockMapping(DockEnum.ShipLocker)]
 public sealed partial class StorageViewModel : PageViewModel

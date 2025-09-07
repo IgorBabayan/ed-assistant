@@ -1,4 +1,4 @@
-using EdAssistant.Models.Market;
+using ShipLockerEvent = EdAssistant.Models.ShipLocker.ShipLockerEvent;
 
 namespace EdAssistant.Services.GameData;
 
