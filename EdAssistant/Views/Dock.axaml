@@ -10,11 +10,14 @@
         <Style Selector="ToggleButton.dock-btn">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Width" Value="32"/>
-            <Setter Property="Height" Value="32"/>
+            <Setter Property="Width" Value="42"/>
+            <Setter Property="Height" Value="42"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Padding" Value="0"/>
+			<Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+			<Setter Property="RenderTransform" Value="scale(0.76)"/>
+            <Setter Property="UseLayoutRounding" Value="True"/>
 
             <Setter Property="Template">
 				<ControlTemplate>
@@ -23,19 +26,27 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             Padding="{TemplateBinding Padding}">
-                        <ContentPresenter
-                            Content="{TemplateBinding Content}"
-                            ContentTemplate="{TemplateBinding ContentTemplate}"
-                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        <ContentPresenter  Content="{TemplateBinding Content}"
+                                           ContentTemplate="{TemplateBinding ContentTemplate}"
+                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                        </ContentPresenter>
                     </Border>
                 </ControlTemplate>
             </Setter>
+
+			<Setter Property="Transitions">
+				<Transitions>
+					<TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.16"/>
+				</Transitions>
+			</Setter>
         </Style>
 
         <Style Selector="ToggleButton.dock-btn:pointerover, ToggleButton.dock-btn:pressed, ToggleButton.dock-btn:focus">
             <Setter Property="Background"  Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="RenderTransform" Value="scale(1)"/>
+            <Setter Property="Panel.ZIndex" Value="2"/>
         </Style>
 
         <Style Selector="ToggleButton.dock-btn > Path">
@@ -59,13 +70,17 @@
         </Style>
     </UserControl.Styles>
 
-    <Border CornerRadius="5,5,0,0" Padding="10" Background="{DynamicResource Ed.Border.Light}">
-        <StackPanel Orientation="Horizontal" MaxHeight="48"
+    <Border CornerRadius="5,5,0,0" 
+            Padding="10" 
+            Background="{DynamicResource Ed.Border.Light}" 
+            ClipToBounds="True">
+        <StackPanel Orientation="Horizontal" MaxHeight="62"
+                    ClipToBounds="True"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
                     Spacing="8">
             <!-- Home -->
-			<ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
+			<ToggleButton x:Name="home" Classes="dock-btn" Command="{Binding NavigateToCommand}"
                           CommandParameter="{x:Static local:DockEnum.Home}"
                           IsChecked="{Binding CurrentDock,
                                       Converter={StaticResource DockEqualsConverter},

@@ -13,7 +13,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="32"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="48"></RowDefinition>
+            <RowDefinition Height="64"></RowDefinition>
         </Grid.RowDefinitions>
         <Border Grid.Row="0" Background="Transparent"
                 PointerPressed="OnPointPressed" DoubleTapped="OnDoubleTapped">
