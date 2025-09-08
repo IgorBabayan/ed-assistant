@@ -8,7 +8,6 @@
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://EdAssistant/Themes/EliteDangerous.axaml"/>
-        <StyleInclude Source="avares://EdAssistant/Themes/GroupBox.axaml"/>
         <StyleInclude Source="avares://EdAssistant/Themes/Panels.axaml"/>
         <StyleInclude Source="avares://EdAssistant/Themes/Buttons.axaml"/>
         <StyleInclude Source="avares://EdAssistant/Themes/ToggleButton.axaml"/>

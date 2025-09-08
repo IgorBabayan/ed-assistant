@@ -16,7 +16,7 @@
         </Grid.ColumnDefinitions>
         <!-- Filters Section -->
         <Border Grid.Column="0"
-                Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+                Classes="card"
                 CornerRadius="4"
                 Padding="12"
                 Margin="8">
@@ -26,7 +26,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <!-- Search Box -->
-                <TextBox Grid.Row="0" Classes="hud"
+                <TextBox Grid.Row="0"
                          Text="{Binding SearchText}"
                          Watermark="{Binding [Common.Watermark], Source={x:Static translations:Localization.Instance}}"
                          Margin="12"/>
@@ -43,7 +43,7 @@
 				</ItemsControl.ItemsPanel>
 				<ItemsControl.ItemTemplate>
 					<DataTemplate DataType="dto:InventoryItemDTO">
-						<Border Background="{DynamicResource Ed.Border.Mid}"
+						<Border Classes="card"
                                 CornerRadius="5"
                                 Padding="10"
                                 Margin="5"
@@ -68,10 +68,10 @@
                                                MaxWidth="120"/>
                                     <StackPanel Orientation="Horizontal" Spacing="2">
                                         <TextBlock Text="{Binding [CargoWindow.IsStolen], Source={x:Static translations:Localization.Instance}}"
-                                                   Foreground="{DynamicResource Ed.Text.Dim}"
+                                                   Foreground="{DynamicResource Text.Secondary}"
                                                    FontSize="11"></TextBlock>
                                         <TextBlock Text="{Binding IsStolen, Converter={StaticResource BoolToYesNoConverter}}"
-                                                   Foreground="{DynamicResource Ed.Text.Dim}"
+                                                   Foreground="{DynamicResource Text.Secondary}"
                                                    FontSize="11"/>
 									</StackPanel>
 								</StackPanel>

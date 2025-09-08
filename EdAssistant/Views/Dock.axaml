@@ -6,94 +6,31 @@
              xmlns:local="clr-namespace:EdAssistant.Models.Enums"
              mc:Ignorable="d" x:CompileBindings="False"
              x:Class="EdAssistant.Views.Dock">
-    <UserControl.Styles>
-        <Style Selector="ToggleButton.dock-btn">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Width" Value="42"/>
-            <Setter Property="Height" Value="42"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="0"/>
-			<Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
-			<Setter Property="RenderTransform" Value="scale(0.76)"/>
-            <Setter Property="UseLayoutRounding" Value="True"/>
-
-            <Setter Property="Template">
-				<ControlTemplate>
-					<Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{TemplateBinding CornerRadius}"
-                            Padding="{TemplateBinding Padding}">
-                        <ContentPresenter  Content="{TemplateBinding Content}"
-                                           ContentTemplate="{TemplateBinding ContentTemplate}"
-                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                        </ContentPresenter>
-                    </Border>
-                </ControlTemplate>
-            </Setter>
-
-			<Setter Property="Transitions">
-				<Transitions>
-					<TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.16"/>
-				</Transitions>
-			</Setter>
-        </Style>
-
-        <Style Selector="ToggleButton.dock-btn:pointerover, ToggleButton.dock-btn:pressed, ToggleButton.dock-btn:focus">
-            <Setter Property="Background"  Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="RenderTransform" Value="scale(1)"/>
-            <Setter Property="Panel.ZIndex" Value="2"/>
-        </Style>
-
-        <Style Selector="ToggleButton.dock-btn > Path">
-            <Setter Property="Stretch" Value="UniformToFill"/>
-            <Setter Property="Fill" Value="{DynamicResource Ed.Accent.Secondary}"/>
-        </Style>
-        
-        <Style Selector="ToggleButton.dock-btn:pointerover > Path">
-            <Setter Property="Fill" Value="{DynamicResource Ed.Accent.Color}"/>
-        </Style>
-
-        <Style Selector="Border.separator">
-            <Setter Property="Width" Value="1"/>
-            <Setter Property="Margin" Value="8,0"/>
-            <Setter Property="Background" Value="{DynamicResource Ed.Accent.Secondary}"/>
-            <Setter Property="VerticalAlignment" Value="Stretch"/>
-        </Style>
-
-        <Style Selector="ToggleButton.dock-btn:checked Path">
-            <Setter Property="Fill" Value="{DynamicResource Ed.Accent.Color}"/>
-        </Style>
-    </UserControl.Styles>
-
     <Border CornerRadius="5,5,0,0" 
             Padding="10" 
-            Background="{DynamicResource Ed.Border.Light}" 
+            Classes="card"
             ClipToBounds="True">
         <StackPanel Orientation="Horizontal" MaxHeight="62"
                     ClipToBounds="True"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
                     Spacing="8">
-            <!-- Home -->
-			<ToggleButton x:Name="home" Classes="dock-btn" Command="{Binding NavigateToCommand}"
+            <!--// Home //-->
+			<ToggleButton Classes="dock-btn" 
+                          Command="{Binding NavigateToCommand}"
                           CommandParameter="{x:Static local:DockEnum.Home}"
                           IsChecked="{Binding CurrentDock,
                                       Converter={StaticResource DockEqualsConverter},
                                       ConverterParameter={x:Static local:DockEnum.Home},
 									  Mode=OneWay}"
                           ToolTip.Tip="{Binding [Dock.Home], Source={x:Static translations:Localization.Instance}}">
-				<Path
-                    Data="M341.8 72.6C329.5 61.2 310.5 61.2 298.3 72.6L74.3 280.6C64.7 289.6 61.5 303.5 66.3 315.7C71.1 327.9 82.8 336 96 336L112 336L112 512C112 547.3 140.7 576 176 576L464 576C499.3 576 528 547.3 528 512L528 336L544 336C557.2 336 569 327.9 573.8 315.7C578.6 303.5 575.4 289.5 565.8 280.6L341.8 72.6zM304 384L336 384C362.5 384 384 405.5 384 432L384 528L256 528L256 432C256 405.5 277.5 384 304 384z"/>
+				<Path Data="M341.8 72.6C329.5 61.2 310.5 61.2 298.3 72.6L74.3 280.6C64.7 289.6 61.5 303.5 66.3 315.7C71.1 327.9 82.8 336 96 336L112 336L112 512C112 547.3 140.7 576 176 576L464 576C499.3 576 528 547.3 528 512L528 336L544 336C557.2 336 569 327.9 573.8 315.7C578.6 303.5 575.4 289.5 565.8 280.6L341.8 72.6zM304 384L336 384C362.5 384 384 405.5 384 432L384 528L256 528L256 432C256 405.5 277.5 384 304 384z"/>
 			</ToggleButton>
 
             <Border Classes="separator" IsVisible="{Binding IsInventory}"/>
-            <!-- Cargo -->
-            <ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
+            <!--// Cargo //-->
+            <ToggleButton Classes="dock-btn" 
+                          Command="{Binding NavigateToCommand}"
                           IsVisible="{Binding IsCargo}"
                           IsEnabled="{Binding IsCargo}"
                           CommandParameter="{x:Static local:DockEnum.Cargo}"
@@ -102,11 +39,11 @@
                                       ConverterParameter={x:Static local:DockEnum.Cargo},
 									  Mode=OneWay}"
                           ToolTip.Tip="{Binding [Dock.Cargo], Source={x:Static translations:Localization.Instance}}">
-                <Path
-                    Data="M432 96C387.8 96 352 131.8 352 176L352 424.2L54.8 513.4C37.9 518.4 28.3 536.3 33.4 553.2C38.5 570.1 56.3 579.7 73.2 574.7L388.7 480.1L432.4 480.1C432.2 482.7 432 485.4 432 488.1C432 536.7 471.4 576.1 520 576.1C568.6 576.1 608 536.7 608 488.1L608 96.1L432 96.1zM560 488C560 510.1 542.1 528 520 528C497.9 528 480 510.1 480 488C480 465.9 497.9 448 520 448C542.1 448 559.9 465.9 560 487.9L560 488zM83.9 213.5C50.1 223.8 31.1 259.6 41.4 293.4L69.5 385.2C79.8 419 115.6 438 149.4 427.7L241.2 399.6C275 389.3 294 353.5 283.7 319.7L255.6 227.9C245.3 194.1 209.5 175.1 175.7 185.4L83.9 213.5z"/>
+                <Path Data="M432 96C387.8 96 352 131.8 352 176L352 424.2L54.8 513.4C37.9 518.4 28.3 536.3 33.4 553.2C38.5 570.1 56.3 579.7 73.2 574.7L388.7 480.1L432.4 480.1C432.2 482.7 432 485.4 432 488.1C432 536.7 471.4 576.1 520 576.1C568.6 576.1 608 536.7 608 488.1L608 96.1L432 96.1zM560 488C560 510.1 542.1 528 520 528C497.9 528 480 510.1 480 488C480 465.9 497.9 448 520 448C542.1 448 559.9 465.9 560 487.9L560 488zM83.9 213.5C50.1 223.8 31.1 259.6 41.4 293.4L69.5 385.2C79.8 419 115.6 438 149.4 427.7L241.2 399.6C275 389.3 294 353.5 283.7 319.7L255.6 227.9C245.3 194.1 209.5 175.1 175.7 185.4L83.9 213.5z"/>
             </ToggleButton>
-            <!-- Materials -->
-			<ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
+            <!--// Materials //-->
+			<ToggleButton Classes="dock-btn" 
+                          Command="{Binding NavigateToCommand}"
                           IsVisible="{Binding IsMaterials}" 
                           IsEnabled="{Binding IsMaterials}"
                           CommandParameter="{x:Static local:DockEnum.Materials}"
@@ -115,11 +52,11 @@
                                       ConverterParameter={x:Static local:DockEnum.Materials},
 									  Mode=OneWay}"
                           ToolTip.Tip="{Binding [Dock.Materials], Source={x:Static translations:Localization.Instance}}">
-				<Path
-                    Data="M288 64L288 128C288 136.8 295.2 144 304 144L336 144C344.8 144 352 136.8 352 128L352 64L384 64C419.3 64 448 92.7 448 128L448 256C448 261.5 447.3 266.9 446 272L194 272C192.7 266.9 192 261.5 192 256L192 128C192 92.7 220.7 64 256 64L288 64zM384 576C372.8 576 362.2 573.1 353 568C362.5 551.5 368 532.4 368 512L368 384C368 363.6 362.5 344.5 353 328C362.2 322.9 372.7 320 384 320L416 320L416 384C416 392.8 423.2 400 432 400L464 400C472.8 400 480 392.8 480 384L480 320L512 320C547.3 320 576 348.7 576 384L576 512C576 547.3 547.3 576 512 576L384 576zM64 384C64 348.7 92.7 320 128 320L160 320L160 384C160 392.8 167.2 400 176 400L208 400C216.8 400 224 392.8 224 384L224 320L256 320C291.3 320 320 348.7 320 384L320 512C320 547.3 291.3 576 256 576L128 576C92.7 576 64 547.3 64 512L64 384z"/>
+				<Path Data="M288 64L288 128C288 136.8 295.2 144 304 144L336 144C344.8 144 352 136.8 352 128L352 64L384 64C419.3 64 448 92.7 448 128L448 256C448 261.5 447.3 266.9 446 272L194 272C192.7 266.9 192 261.5 192 256L192 128C192 92.7 220.7 64 256 64L288 64zM384 576C372.8 576 362.2 573.1 353 568C362.5 551.5 368 532.4 368 512L368 384C368 363.6 362.5 344.5 353 328C362.2 322.9 372.7 320 384 320L416 320L416 384C416 392.8 423.2 400 432 400L464 400C472.8 400 480 392.8 480 384L480 320L512 320C547.3 320 576 348.7 576 384L576 512C576 547.3 547.3 576 512 576L384 576zM64 384C64 348.7 92.7 320 128 320L160 320L160 384C160 392.8 167.2 400 176 400L208 400C216.8 400 224 392.8 224 384L224 320L256 320C291.3 320 320 348.7 320 384L320 512C320 547.3 291.3 576 256 576L128 576C92.7 576 64 547.3 64 512L64 384z"/>
 			</ToggleButton>
-            <!-- Storage -->
-			<ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
+            <!--// Storage //-->
+			<ToggleButton Classes="dock-btn"
+                          Command="{Binding NavigateToCommand}"
                           IsVisible="{Binding IsStorage}"
                           IsEnabled="{Binding IsStorage}"
                           CommandParameter="{x:Static local:DockEnum.ShipLocker}"
@@ -128,13 +65,13 @@
                                       ConverterParameter={x:Static local:DockEnum.ShipLocker},
 									  Mode=OneWay}"
                           ToolTip.Tip="{Binding [Dock.Storage], Source={x:Static translations:Localization.Instance}}">
-				<Path
-                    Data="M64 64C46.3 64 32 78.3 32 96C32 113.7 46.3 128 64 128L80 128C88.8 128 96 135.2 96 144L96 432C96 471.8 125.1 504.8 163.1 511C161.1 516.3 160 522 160 528C160 554.5 181.5 576 208 576C234.5 576 256 554.5 256 528C256 522.4 255 517 253.3 512L450.8 512C449 517 448.1 522.4 448.1 528C448.1 554.5 469.6 576 496.1 576C522.6 576 544.1 554.5 544.1 528C544.1 522.4 543.1 517 541.4 512L576.1 512C593.8 512 608.1 497.7 608.1 480C608.1 462.3 593.8 448 576.1 448L176.1 448C167.3 448 160.1 440.8 160.1 432L160.1 144C160 99.8 124.2 64 80 64L64 64zM256 128C229.5 128 208 149.5 208 176L208 352C208 378.5 229.5 400 256 400L496 400C522.5 400 544 378.5 544 352L544 176C544 149.5 522.5 128 496 128L256 128z"/>
+				<Path Data="M64 64C46.3 64 32 78.3 32 96C32 113.7 46.3 128 64 128L80 128C88.8 128 96 135.2 96 144L96 432C96 471.8 125.1 504.8 163.1 511C161.1 516.3 160 522 160 528C160 554.5 181.5 576 208 576C234.5 576 256 554.5 256 528C256 522.4 255 517 253.3 512L450.8 512C449 517 448.1 522.4 448.1 528C448.1 554.5 469.6 576 496.1 576C522.6 576 544.1 554.5 544.1 528C544.1 522.4 543.1 517 541.4 512L576.1 512C593.8 512 608.1 497.7 608.1 480C608.1 462.3 593.8 448 576.1 448L176.1 448C167.3 448 160.1 440.8 160.1 432L160.1 144C160 99.8 124.2 64 80 64L64 64zM256 128C229.5 128 208 149.5 208 176L208 352C208 378.5 229.5 400 256 400L496 400C522.5 400 544 378.5 544 352L544 176C544 149.5 522.5 128 496 128L256 128z"/>
 			</ToggleButton>
 
 			<Border Classes="separator" IsVisible="{Binding IsPlanetarySystem}"/>
-			<!-- System -->
-			<ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
+			<!--// System //-->
+			<ToggleButton Classes="dock-btn" 
+                          Command="{Binding NavigateToCommand}"
                           IsVisible="{Binding IsSystem}"
                           IsEnabled="{Binding IsSystem}"
                           CommandParameter="{x:Static local:DockEnum.System}"
@@ -143,11 +80,11 @@
                                       ConverterParameter={x:Static local:DockEnum.System},
 									  Mode=OneWay}"
                           ToolTip.Tip="{Binding [Dock.System], Source={x:Static translations:Localization.Instance}}">
-				<Path
-                    Data="M415.9 344L225 344C227.9 408.5 242.2 467.9 262.5 511.4C273.9 535.9 286.2 553.2 297.6 563.8C308.8 574.3 316.5 576 320.5 576C324.5 576 332.2 574.3 343.4 563.8C354.8 553.2 367.1 535.8 378.5 511.4C398.8 467.9 413.1 408.5 416 344zM224.9 296L415.8 296C413 231.5 398.7 172.1 378.4 128.6C367 104.2 354.7 86.8 343.3 76.2C332.1 65.7 324.4 64 320.4 64C316.4 64 308.7 65.7 297.5 76.2C286.1 86.8 273.8 104.2 262.4 128.6C242.1 172.1 227.8 231.5 224.9 296zM176.9 296C180.4 210.4 202.5 130.9 234.8 78.7C142.7 111.3 74.9 195.2 65.5 296L176.9 296zM65.5 344C74.9 444.8 142.7 528.7 234.8 561.3C202.5 509.1 180.4 429.6 176.9 344L65.5 344zM463.9 344C460.4 429.6 438.3 509.1 406 561.3C498.1 528.6 565.9 444.8 575.3 344L463.9 344zM575.3 296C565.9 195.2 498.1 111.3 406 78.7C438.3 130.9 460.4 210.4 463.9 296L575.3 296z"/>
+				<Path Data="M415.9 344L225 344C227.9 408.5 242.2 467.9 262.5 511.4C273.9 535.9 286.2 553.2 297.6 563.8C308.8 574.3 316.5 576 320.5 576C324.5 576 332.2 574.3 343.4 563.8C354.8 553.2 367.1 535.8 378.5 511.4C398.8 467.9 413.1 408.5 416 344zM224.9 296L415.8 296C413 231.5 398.7 172.1 378.4 128.6C367 104.2 354.7 86.8 343.3 76.2C332.1 65.7 324.4 64 320.4 64C316.4 64 308.7 65.7 297.5 76.2C286.1 86.8 273.8 104.2 262.4 128.6C242.1 172.1 227.8 231.5 224.9 296zM176.9 296C180.4 210.4 202.5 130.9 234.8 78.7C142.7 111.3 74.9 195.2 65.5 296L176.9 296zM65.5 344C74.9 444.8 142.7 528.7 234.8 561.3C202.5 509.1 180.4 429.6 176.9 344L65.5 344zM463.9 344C460.4 429.6 438.3 509.1 406 561.3C498.1 528.6 565.9 444.8 575.3 344L463.9 344zM575.3 296C565.9 195.2 498.1 111.3 406 78.7C438.3 130.9 460.4 210.4 463.9 296L575.3 296z"/>
 			</ToggleButton>
-            <!-- Planet -->
-			<ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
+            <!--// Planet //-->
+			<ToggleButton Classes="dock-btn" 
+                          Command="{Binding NavigateToCommand}"
                           IsVisible="{Binding IsPlanet}"
                           IsEnabled="{Binding IsPlanet}"
                           CommandParameter="{x:Static local:DockEnum.Planet}"
@@ -156,13 +93,13 @@
                                       ConverterParameter={x:Static local:DockEnum.Planet},
 									  Mode=OneWay}"
                           ToolTip.Tip="{Binding [Dock.Planet], Source={x:Static translations:Localization.Instance}}">
-				<Path
-                    Data="M320.2 112C435 112.1 528 205.2 528 320C528 342.1 524.6 363.4 518.2 383.4C516.2 383.8 514.1 384 512 384L509.3 384C500.8 384 492.7 380.6 486.7 374.6L457.4 345.3C451.4 339.3 448 331.2 448 322.7L448 272C448 263.2 455.2 256 464 256C472.8 256 480 248.8 480 240C480 231.2 472.8 224 464 224L440 224C426.7 224 416 234.7 416 248C416 261.3 405.3 272 392 272L336 272C327.2 272 320 279.2 320 288C320 296.8 312.8 304 304 304L278.6 304C266.1 304 256 293.9 256 281.4C256 275.4 258.4 269.6 262.6 265.4L332.7 195.3C334.8 193.2 336 190.3 336 187.3C336 181.1 330.9 176 324.7 176L310.6 176C298.1 176 288 165.9 288 153.4C288 147.4 290.4 141.6 294.6 137.4L317.7 114.3C318.5 113.5 319.3 112.8 320.2 112.1zM502.4 420.1C469.6 479.7 408.5 521.5 337.2 527.3C336.5 525 336.1 522.5 336.1 520C336.1 506.7 325.4 496 312.1 496L285.4 496C276.9 496 268.8 492.6 262.8 486.6L233.5 457.3C227.5 451.3 224.1 443.2 224.1 434.7L224.1 368C224.1 350.3 238.4 336 256.1 336L354.8 336C363.3 336 371.4 339.4 377.4 345.4L406.7 374.7C412.7 380.7 420.8 384.1 429.3 384.1L434.8 384.1C443.3 384.1 451.4 387.5 457.4 393.5L473.4 409.5C477.6 413.7 483.4 416.1 489.4 416.1C494.2 416.1 498.7 417.6 502.4 420.2zM320 576L346.2 574.7C337.6 575.6 328.9 576 320 576zM346.2 574.7C475.3 561.6 576 452.6 576 320C576 178.6 461.4 64 320 64L320 64C178.6 64 64 178.6 64 320C64 447.5 157.2 553.3 279.3 572.8C292.5 574.9 306.1 576 320 576zM251.3 187.3L219.3 219.3C213.1 225.5 202.9 225.5 196.7 219.3C190.5 213.1 190.5 202.9 196.7 196.7L228.7 164.7C234.9 158.5 245.1 158.5 251.3 164.7C257.5 170.9 257.5 181.1 251.3 187.3z"/>
+				<Path Data="M320.2 112C435 112.1 528 205.2 528 320C528 342.1 524.6 363.4 518.2 383.4C516.2 383.8 514.1 384 512 384L509.3 384C500.8 384 492.7 380.6 486.7 374.6L457.4 345.3C451.4 339.3 448 331.2 448 322.7L448 272C448 263.2 455.2 256 464 256C472.8 256 480 248.8 480 240C480 231.2 472.8 224 464 224L440 224C426.7 224 416 234.7 416 248C416 261.3 405.3 272 392 272L336 272C327.2 272 320 279.2 320 288C320 296.8 312.8 304 304 304L278.6 304C266.1 304 256 293.9 256 281.4C256 275.4 258.4 269.6 262.6 265.4L332.7 195.3C334.8 193.2 336 190.3 336 187.3C336 181.1 330.9 176 324.7 176L310.6 176C298.1 176 288 165.9 288 153.4C288 147.4 290.4 141.6 294.6 137.4L317.7 114.3C318.5 113.5 319.3 112.8 320.2 112.1zM502.4 420.1C469.6 479.7 408.5 521.5 337.2 527.3C336.5 525 336.1 522.5 336.1 520C336.1 506.7 325.4 496 312.1 496L285.4 496C276.9 496 268.8 492.6 262.8 486.6L233.5 457.3C227.5 451.3 224.1 443.2 224.1 434.7L224.1 368C224.1 350.3 238.4 336 256.1 336L354.8 336C363.3 336 371.4 339.4 377.4 345.4L406.7 374.7C412.7 380.7 420.8 384.1 429.3 384.1L434.8 384.1C443.3 384.1 451.4 387.5 457.4 393.5L473.4 409.5C477.6 413.7 483.4 416.1 489.4 416.1C494.2 416.1 498.7 417.6 502.4 420.2zM320 576L346.2 574.7C337.6 575.6 328.9 576 320 576zM346.2 574.7C475.3 561.6 576 452.6 576 320C576 178.6 461.4 64 320 64L320 64C178.6 64 64 178.6 64 320C64 447.5 157.2 553.3 279.3 572.8C292.5 574.9 306.1 576 320 576zM251.3 187.3L219.3 219.3C213.1 225.5 202.9 225.5 196.7 219.3C190.5 213.1 190.5 202.9 196.7 196.7L228.7 164.7C234.9 158.5 245.1 158.5 251.3 164.7C257.5 170.9 257.5 181.1 251.3 187.3z"/>
 			</ToggleButton>
 
             <Border Classes="separator"/>
-            <!-- Market connector -->
-			<ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
+            <!--// Market connector //-->
+			<ToggleButton Classes="dock-btn" 
+                          Command="{Binding NavigateToCommand}"
                           IsVisible="{Binding IsMarketConnector}"
                           IsEnabled="{Binding IsMarketConnector}"
                           CommandParameter="{x:Static local:DockEnum.MarketConnector}"
@@ -171,11 +108,11 @@
                                       ConverterParameter={x:Static local:DockEnum.MarketConnector},
 									  Mode=OneWay}"
                           ToolTip.Tip="{Binding [Dock.MarketConnector], Source={x:Static translations:Localization.Instance}}">
-				<Path
-                    Data="M94.7 136.3C101.6 112.4 123.5 96 148.4 96L492.4 96C517.3 96 539.2 112.4 546.2 136.3L569.6 216.5C582.4 260.2 549.5 304 504 304C477.7 304 454.6 289.1 443.2 266.9C431.6 288.8 408.6 304 381.8 304C355.2 304 332.1 289 320.5 267C308.9 289 285.8 304 259.2 304C232.4 304 209.4 288.9 197.8 266.9C186.4 289 163.3 304 137 304C91.4 304 58.6 260.3 71.4 216.5L94.7 136.3zM160.4 416L480.4 416L480.4 349.6C488 351.2 495.9 352 503.9 352C518.2 352 531.9 349.4 544.4 344.8L544.4 496C544.4 522.5 522.9 544 496.4 544L144.4 544C117.9 544 96.4 522.5 96.4 496L96.4 344.8C108.9 349.4 122.5 352 136.9 352C145 352 152.8 351.2 160.4 349.6L160.4 416z"/>
+				<Path Data="M94.7 136.3C101.6 112.4 123.5 96 148.4 96L492.4 96C517.3 96 539.2 112.4 546.2 136.3L569.6 216.5C582.4 260.2 549.5 304 504 304C477.7 304 454.6 289.1 443.2 266.9C431.6 288.8 408.6 304 381.8 304C355.2 304 332.1 289 320.5 267C308.9 289 285.8 304 259.2 304C232.4 304 209.4 288.9 197.8 266.9C186.4 289 163.3 304 137 304C91.4 304 58.6 260.3 71.4 216.5L94.7 136.3zM160.4 416L480.4 416L480.4 349.6C488 351.2 495.9 352 503.9 352C518.2 352 531.9 349.4 544.4 344.8L544.4 496C544.4 522.5 522.9 544 496.4 544L144.4 544C117.9 544 96.4 522.5 96.4 496L96.4 344.8C108.9 349.4 122.5 352 136.9 352C145 352 152.8 351.2 160.4 349.6L160.4 416z"/>
 			</ToggleButton>
-			<!-- Log -->
-			<ToggleButton Classes="dock-btn" Command="{Binding NavigateToCommand}"
+			<!--// Log //-->
+			<ToggleButton Classes="dock-btn" 
+                          Command="{Binding NavigateToCommand}"
                           IsVisible="{Binding IsLog}"
                           IsEnabled="{Binding IsLog}"
                           CommandParameter="{x:Static local:DockEnum.Log}"
@@ -184,19 +121,19 @@
                                       ConverterParameter={x:Static local:DockEnum.Log},
 									  Mode=OneWay}"
                           ToolTip.Tip="{Binding [Dock.Logs], Source={x:Static translations:Localization.Instance}}">
-				<Path
-                    Data="M267.7 576.9C267.7 576.9 267.7 576.9 267.7 576.9L229.9 603.6C222.6 608.8 213 609.4 205 605.3C197 601.2 192 593 192 584L192 512L160 512C107 512 64 469 64 416L64 192C64 139 107 96 160 96L480 96C533 96 576 139 576 192L576 416C576 469 533 512 480 512L359.6 512L267.7 576.9zM332 472.8C340.1 467.1 349.8 464 359.7 464L480 464C506.5 464 528 442.5 528 416L528 192C528 165.5 506.5 144 480 144L160 144C133.5 144 112 165.5 112 192L112 416C112 442.5 133.5 464 160 464L216 464C226.4 464 235.3 470.6 238.6 479.9C239.5 482.4 240 485.1 240 488L240 537.7C272.7 514.6 303.3 493 331.9 472.8z"/>
+				<Path Data="M267.7 576.9C267.7 576.9 267.7 576.9 267.7 576.9L229.9 603.6C222.6 608.8 213 609.4 205 605.3C197 601.2 192 593 192 584L192 512L160 512C107 512 64 469 64 416L64 192C64 139 107 96 160 96L480 96C533 96 576 139 576 192L576 416C576 469 533 512 480 512L359.6 512L267.7 576.9zM332 472.8C340.1 467.1 349.8 464 359.7 464L480 464C506.5 464 528 442.5 528 416L528 192C528 165.5 506.5 144 480 144L160 144C133.5 144 112 165.5 112 192L112 416C112 442.5 133.5 464 160 464L216 464C226.4 464 235.3 470.6 238.6 479.9C239.5 482.4 240 485.1 240 488L240 537.7C272.7 514.6 303.3 493 331.9 472.8z"/>
 			</ToggleButton>
-			<!-- Settings -->
-			<ToggleButton Classes="dock-btn" IsVisible="True" Command="{Binding NavigateToCommand}"
+			<!--// Settings //-->
+			<ToggleButton Classes="dock-btn" 
+                          IsVisible="True" 
+                          Command="{Binding NavigateToCommand}"
                           CommandParameter="{x:Static local:DockEnum.Settings}"
                           IsChecked="{Binding CurrentDock,
                                       Converter={StaticResource DockEqualsConverter},
                                       ConverterParameter={x:Static local:DockEnum.Settings},
 									  Mode=OneWay}"
                           ToolTip.Tip="{Binding [Dock.Settings], Source={x:Static translations:Localization.Instance}}">
-				<Path
-                    Data="M259.1 73.5C262.1 58.7 275.2 48 290.4 48L350.2 48C365.4 48 378.5 58.7 381.5 73.5L396 143.5C410.1 149.5 423.3 157.2 435.3 166.3L503.1 143.8C517.5 139 533.3 145 540.9 158.2L570.8 210C578.4 223.2 575.7 239.8 564.3 249.9L511 297.3C511.9 304.7 512.3 312.3 512.3 320C512.3 327.7 511.8 335.3 511 342.7L564.4 390.2C575.8 400.3 578.4 417 570.9 430.1L541 481.9C533.4 495 517.6 501.1 503.2 496.3L435.4 473.8C423.3 482.9 410.1 490.5 396.1 496.6L381.7 566.5C378.6 581.4 365.5 592 350.4 592L290.6 592C275.4 592 262.3 581.3 259.3 566.5L244.9 496.6C230.8 490.6 217.7 482.9 205.6 473.8L137.5 496.3C123.1 501.1 107.3 495.1 99.7 481.9L69.8 430.1C62.2 416.9 64.9 400.3 76.3 390.2L129.7 342.7C128.8 335.3 128.4 327.7 128.4 320C128.4 312.3 128.9 304.7 129.7 297.3L76.3 249.8C64.9 239.7 62.3 223 69.8 209.9L99.7 158.1C107.3 144.9 123.1 138.9 137.5 143.7L205.3 166.2C217.4 157.1 230.6 149.5 244.6 143.4L259.1 73.5zM320.3 400C364.5 399.8 400.2 363.9 400 319.7C399.8 275.5 363.9 239.8 319.7 240C275.5 240.2 239.8 276.1 240 320.3C240.2 364.5 276.1 400.2 320.3 400z"/>
+				<Path Data="M259.1 73.5C262.1 58.7 275.2 48 290.4 48L350.2 48C365.4 48 378.5 58.7 381.5 73.5L396 143.5C410.1 149.5 423.3 157.2 435.3 166.3L503.1 143.8C517.5 139 533.3 145 540.9 158.2L570.8 210C578.4 223.2 575.7 239.8 564.3 249.9L511 297.3C511.9 304.7 512.3 312.3 512.3 320C512.3 327.7 511.8 335.3 511 342.7L564.4 390.2C575.8 400.3 578.4 417 570.9 430.1L541 481.9C533.4 495 517.6 501.1 503.2 496.3L435.4 473.8C423.3 482.9 410.1 490.5 396.1 496.6L381.7 566.5C378.6 581.4 365.5 592 350.4 592L290.6 592C275.4 592 262.3 581.3 259.3 566.5L244.9 496.6C230.8 490.6 217.7 482.9 205.6 473.8L137.5 496.3C123.1 501.1 107.3 495.1 99.7 481.9L69.8 430.1C62.2 416.9 64.9 400.3 76.3 390.2L129.7 342.7C128.8 335.3 128.4 327.7 128.4 320C128.4 312.3 128.9 304.7 129.7 297.3L76.3 249.8C64.9 239.7 62.3 223 69.8 209.9L99.7 158.1C107.3 144.9 123.1 138.9 137.5 143.7L205.3 166.2C217.4 157.1 230.6 149.5 244.6 143.4L259.1 73.5zM320.3 400C364.5 399.8 400.2 363.9 400 319.7C399.8 275.5 363.9 239.8 319.7 240C275.5 240.2 239.8 276.1 240 320.3C240.2 364.5 276.1 400.2 320.3 400z"/>
 			</ToggleButton>
         </StackPanel>
     </Border>

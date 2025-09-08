@@ -2,41 +2,59 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:EdAssistant.Controls">
 	<Styles.Resources>
-		<Color x:Key="Ed.Accent.Color">#FF7A00</Color>
-		<SolidColorBrush x:Key="Ed.Accent" Color="{StaticResource Ed.Accent.Color}"/>
-		<SolidColorBrush x:Key="Ed.Accent.Glow" Color="#FF9A3C"/>
+        <!--// Colors //-->
+        <Color x:Key="Accent.Color">#4F6BED</Color>
+        <Color x:Key="Accent.Dark.Color">#3854D0</Color>
+        <Color x:Key="Accent.Light.Color">#8AA0FF</Color>
 
-		<SolidColorBrush x:Key="Ed.Bg" Color="#0B0C0E"/>
-		<SolidColorBrush x:Key="Ed.Bg.Panel" Color="#111216"/>
-		<SolidColorBrush x:Key="Ed.Border.Mid" Color="#23262B"/>
-		<SolidColorBrush x:Key="Ed.Border.Light" Color="#2D3138"/>
-		<SolidColorBrush x:Key="Ed.Text" Color="#F2F2F2"/>
-		<SolidColorBrush x:Key="Ed.Text.Dim" Color="#A0A5AD"/>
+        <Color x:Key="Bg.Color">#0F1115</Color>
+        <Color x:Key="Card.Color">#151821</Color>
+        <Color x:Key="Border.Color">#242938</Color>
+        <Color x:Key="Text.Primary.Color">#F3F4F6</Color>
+        <Color x:Key="Text.Secondary.Color">#C5C9D3</Color>
+        <Color x:Key="Danger.Color">#E23D3D</Color>
+        <Color x:Key="Danger.Dark.Color">#B92D2D</Color>
+        <Color x:Key="Danger.Light.Color">#F04A4A</Color>
+        <Color x:Key="Success.Color">#2DB76D</Color>
 
-		<SolidColorBrush x:Key="Ed.Accent.Secondary" Color="#19FFFF"/>
-		<SolidColorBrush x:Key="Ed.Color" Color="#210E00"/>
+        <!--// Brushes //-->
+        <SolidColorBrush x:Key="Accent.Brush" Color="{StaticResource Accent.Color}"/>
+        <SolidColorBrush x:Key="Accent.Dark.Brush" Color="{StaticResource Accent.Dark.Color}"/>
+        <SolidColorBrush x:Key="Accent.Light.Brush" Color="{StaticResource Accent.Light.Color}"/>
 
-		<FontFamily x:Key="Ed.Font">Michroma, Orbitron, Segoe UI, Ubuntu, Arial</FontFamily>
+        <SolidColorBrush x:Key="Bg.Brush" Color="{StaticResource Bg.Color}"/>
+        <SolidColorBrush x:Key="Card.Brush" Color="{StaticResource Card.Color}"/>
+        <SolidColorBrush x:Key="Border.Brush" Color="{StaticResource Border.Color}"/>
+        <SolidColorBrush x:Key="Text.Primary" Color="{StaticResource Text.Primary.Color}"/>
+        <SolidColorBrush x:Key="Text.Secondary" Color="{StaticResource Text.Secondary.Color}"/>
+        <SolidColorBrush x:Key="Danger.Brush" Color="{StaticResource Danger.Color}"/>
+        <SolidColorBrush x:Key="Danger.Dark.Brush" Color="{StaticResource Danger.Dark.Color}"/>
+        <SolidColorBrush x:Key="Danger.Light.Brush" Color="{StaticResource Danger.Light.Color}"/>
+        <SolidColorBrush x:Key="Success.Brush" Color="{StaticResource Success.Color}"/>
 
-		<CornerRadius x:Key="Ed.Radius.Small">4</CornerRadius>
-		<CornerRadius x:Key="Ed.Radius.Mid">6</CornerRadius>
-		<Thickness x:Key="Ed.Padding">12,8</Thickness>
+        <!--// Metrics //-->
+        <Thickness x:Key="Space.0">0</Thickness>
+        <Thickness x:Key="Space.1">4</Thickness>
+        <Thickness x:Key="Space.2">8</Thickness>
+        <Thickness x:Key="Space.3">12</Thickness>
+        <Thickness x:Key="Space.4">16</Thickness>
+        <Thickness x:Key="Space.6">24</Thickness>
+        <Thickness x:Key="Space.8">32</Thickness>
 
-		<LinearGradientBrush x:Key="Ed.Grad.AccentLine" StartPoint="0,0" EndPoint="1,0">
-			<GradientStop Color="#FF7A00" Offset="0"/>
-			<GradientStop Color="#D06000" Offset="1"/>
-		</LinearGradientBrush>
+        <CornerRadius x:Key="Radius.S">6</CornerRadius>
+        <CornerRadius x:Key="Radius.M">10</CornerRadius>
+        <CornerRadius x:Key="Radius.L">14</CornerRadius>
 
-		<DropShadowEffect x:Key="Ed.PanelShadow" BlurRadius="28" Opacity="0.4" OffsetX="0" OffsetY="0"
-                          Color="#0D0E12"/>
+        <!-- Typography -->
+        <FontFamily x:Key="App.Font">Segoe UI Variable, Segoe UI, Arial</FontFamily>
 	</Styles.Resources>
 
-	<!-- Global typography/foreground -->
-	<Style Selector="TextBlock, TextBox">
-		<Setter Property="TextElement.FontFamily" Value="{DynamicResource Ed.Font}"/>
-		<Setter Property="TextElement.Foreground" Value="{DynamicResource Ed.Text}"/>
-	</Style>
-	<Style Selector="Button, ToggleButton, ListBoxItem, ComboBoxItem, CheckBox, RadioButton">
-		<Setter Property="Foreground" Value="{DynamicResource Ed.Text}"/>
-	</Style>
+    <!-- ========= Containers ========= -->
+    <Style Selector="Border.card">
+        <Setter Property="Background" Value="{StaticResource Card.Brush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Border.Brush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.M}"/>
+        <Setter Property="Padding" Value="{StaticResource Space.4}"/>
+    </Style>
 </Styles>

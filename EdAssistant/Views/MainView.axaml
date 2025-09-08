@@ -7,55 +7,69 @@
              x:Class="EdAssistant.Views.MainView"
              xmlns:views="clr-namespace:EdAssistant.Views"
              xmlns:translations="clr-namespace:EdAssistant.Translations"
-             Background="{DynamicResource Ed.Bg}"
              x:DataType="vm:MainViewModel">
-	<Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="32"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="64"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Border Grid.Row="0" Background="Transparent"
-                PointerPressed="OnPointPressed" DoubleTapped="OnDoubleTapped">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="24"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Image Grid.Column="0" Source="../Assets/logo.ico" Margin="5,0,0,0"></Image>
-                <TextBlock Grid.Column="1" Text="{Binding WindowTitle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <Button Command="{Binding CreateDesktopFileCommand}"
-                            IsVisible="{Binding CanCreateDesktopFile}"
-                            Margin="0,0,5,0"
-                            Width="32" Height="32" Classes="hud icon"
-                            ToolTip.Tip="{Binding [MainWindow.DesktopFile], Source={x:Static translations:Localization.Instance}}">
-                        <Path Data="M128 96C92.7 96 64 124.7 64 160L64 416C64 451.3 92.7 480 128 480L272 480L256 528L184 528C170.7 528 160 538.7 160 552C160 565.3 170.7 576 184 576L456 576C469.3 576 480 565.3 480 552C480 538.7 469.3 528 456 528L384 528L368 480L512 480C547.3 480 576 451.3 576 416L576 160C576 124.7 547.3 96 512 96L128 96zM160 160L480 160C497.7 160 512 174.3 512 192L512 352C512 369.7 497.7 384 480 384L160 384C142.3 384 128 369.7 128 352L128 192C128 174.3 142.3 160 160 160z"
-                              Classes="glyph"/>
-                    </Button>
-                    <Button Click="OnMinimizeClick" Margin="0,0,5,0"
-                            Width="32" Height="32" Classes="hud icon"
-                            ToolTip.Tip="{Binding [MainWindow.Minimize], Source={x:Static translations:Localization.Instance}}">
-                        <Path Data="M4,15 L12,15 C12.5128358,15 12.9355072,15.3860402 12.9932723,15.8833789 L13,16 L13,24 C13,24.5522847 12.5522847,25 12,25 C11.4871642,25 11.0644928,24.6139598 11.0067277,24.1166211 L11,24 L11,18.413 L3.70710678,25.7071068 C3.31658249,26.0976311 2.68341751,26.0976311 2.29289322,25.7071068 C1.93240926,25.3466228 1.90467972,24.7793918 2.20970461,24.3871006 L2.29289322,24.2928932 L9.585,17 L4,17 C3.48716416,17 3.06449284,16.6139598 3.00672773,16.1166211 L3,16 C3,15.4871642 3.38604019,15.0644928 3.88337887,15.0067277 L4,15 L12,15 L4,15 Z M25.7071068,2.29289322 C26.0675907,2.65337718 26.0953203,3.22060824 25.7902954,3.61289944 L25.7071068,3.70710678 L18.413,11 L24,11 C24.5128358,11 24.9355072,11.3860402 24.9932723,11.8833789 L25,12 C25,12.5128358 24.6139598,12.9355072 24.1166211,12.9932723 L24,13 L16,13 C15.4871642,13 15.0644928,12.6139598 15.0067277,12.1166211 L15,12 L15,4 C15,3.44771525 15.4477153,3 16,3 C16.5128358,3 16.9355072,3.38604019 16.9932723,3.88337887 L17,4 L17,9.585 L24.2928932,2.29289322 C24.6834175,1.90236893 25.3165825,1.90236893 25.7071068,2.29289322 Z"
-                              Classes="glyph"/>
-                    </Button>
-                    <Button Click="OnMaximizeClick" Margin="0,0,5,0"
-                            Width="32" Height="32" Classes="hud icon"
-                            ToolTip.Tip="{Binding [MainWindow.Maximize], Source={x:Static translations:Localization.Instance}}">
-						<Path Data="M10.71,14.71,5.41,20H10a1,1,0,0,1,0,2H4a2,2,0,0,1-1.38-.56l0,0s0,0,0,0A2,2,0,0,1,2,20V14a1,1,0,0,1,2,0v4.59l5.29-5.3a1,1,0,0,1,1.42,1.42ZM21.44,2.62s0,0,0,0l0,0A2,2,0,0,0,20,2H14a1,1,0,0,0,0,2h4.59l-5.3,5.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L20,5.41V10a1,1,0,0,0,2,0V4A2,2,0,0,0,21.44,2.62Z"
-                              Classes="glyph"/>
-                    </Button>
-                    <Button Click="OnCloseClick" Classes="hud icon"
-                            Width="32" Height="32"
-                            ToolTip.Tip="{Binding [MainWindow.Close], Source={x:Static translations:Localization.Instance}}">
-						<Path Data="M55.1 73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L147.2 256 9.9 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192.5 301.3 329.9 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.8 256 375.1 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192.5 210.7 55.1 73.4z"
-                              Classes="glyph"/>
-					</Button>
-                </StackPanel>
-            </Grid>
-        </Border>
-        <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}" />
-		<views:Dock Grid.Row="2" HorizontalContentAlignment="Center"></views:Dock>
-    </Grid>
+    <Border Background="{StaticResource Bg.Brush}"
+            BorderBrush="{StaticResource Border.Brush}">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="24"></RowDefinition>
+				<RowDefinition Height="*"></RowDefinition>
+				<RowDefinition Height="64"></RowDefinition>
+			</Grid.RowDefinitions>
+			<Border Grid.Row="0"
+                    Background="Transparent"
+					PointerPressed="OnPointPressed"
+                    DoubleTapped="OnDoubleTapped">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="24"></ColumnDefinition>
+						<ColumnDefinition Width="*"></ColumnDefinition>
+						<ColumnDefinition Width="Auto"></ColumnDefinition>
+					</Grid.ColumnDefinitions>
+					<Image Grid.Column="0"
+                           Source="../Assets/logo.ico" 
+                           Margin="5,0,0,0"/>
+					<TextBlock Grid.Column="1" 
+                               Classes="caption" 
+                               Text="{Binding WindowTitle}" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"/>
+					<StackPanel Grid.Column="2"
+								Margin="0,2,2,0"
+                                Orientation="Horizontal">
+						<Button Command="{Binding CreateDesktopFileCommand}"
+								IsVisible="{Binding CanCreateDesktopFile}"
+								Margin="0,0,5,0"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+								ToolTip.Tip="{Binding [MainWindow.DesktopFile], Source={x:Static translations:Localization.Instance}}">
+							<Path Data="M128 96C92.7 96 64 124.7 64 160L64 416C64 451.3 92.7 480 128 480L272 480L256 528L184 528C170.7 528 160 538.7 160 552C160 565.3 170.7 576 184 576L456 576C469.3 576 480 565.3 480 552C480 538.7 469.3 528 456 528L384 528L368 480L512 480C547.3 480 576 451.3 576 416L576 160C576 124.7 547.3 96 512 96L128 96zM160 160L480 160C497.7 160 512 174.3 512 192L512 352C512 369.7 497.7 384 480 384L160 384C142.3 384 128 369.7 128 352L128 192C128 174.3 142.3 160 160 160z"/>
+						</Button>
+						<Button Click="OnMinimizeClick" 
+                                Margin="0,0,5,0"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+								ToolTip.Tip="{Binding [MainWindow.Minimize], Source={x:Static translations:Localization.Instance}}">
+							<Path Data="M4,15 L12,15 C12.5128358,15 12.9355072,15.3860402 12.9932723,15.8833789 L13,16 L13,24 C13,24.5522847 12.5522847,25 12,25 C11.4871642,25 11.0644928,24.6139598 11.0067277,24.1166211 L11,24 L11,18.413 L3.70710678,25.7071068 C3.31658249,26.0976311 2.68341751,26.0976311 2.29289322,25.7071068 C1.93240926,25.3466228 1.90467972,24.7793918 2.20970461,24.3871006 L2.29289322,24.2928932 L9.585,17 L4,17 C3.48716416,17 3.06449284,16.6139598 3.00672773,16.1166211 L3,16 C3,15.4871642 3.38604019,15.0644928 3.88337887,15.0067277 L4,15 L12,15 L4,15 Z M25.7071068,2.29289322 C26.0675907,2.65337718 26.0953203,3.22060824 25.7902954,3.61289944 L25.7071068,3.70710678 L18.413,11 L24,11 C24.5128358,11 24.9355072,11.3860402 24.9932723,11.8833789 L25,12 C25,12.5128358 24.6139598,12.9355072 24.1166211,12.9932723 L24,13 L16,13 C15.4871642,13 15.0644928,12.6139598 15.0067277,12.1166211 L15,12 L15,4 C15,3.44771525 15.4477153,3 16,3 C16.5128358,3 16.9355072,3.38604019 16.9932723,3.88337887 L17,4 L17,9.585 L24.2928932,2.29289322 C24.6834175,1.90236893 25.3165825,1.90236893 25.7071068,2.29289322 Z"/>
+						</Button>
+						<Button Click="OnMaximizeClick" 
+                                Margin="0,0,5,0"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+								ToolTip.Tip="{Binding [MainWindow.Maximize], Source={x:Static translations:Localization.Instance}}">
+							<Path Data="M10.71,14.71,5.41,20H10a1,1,0,0,1,0,2H4a2,2,0,0,1-1.38-.56l0,0s0,0,0,0A2,2,0,0,1,2,20V14a1,1,0,0,1,2,0v4.59l5.29-5.3a1,1,0,0,1,1.42,1.42ZM21.44,2.62s0,0,0,0l0,0A2,2,0,0,0,20,2H14a1,1,0,0,0,0,2h4.59l-5.3,5.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L20,5.41V10a1,1,0,0,0,2,0V4A2,2,0,0,0,21.44,2.62Z"/>
+						</Button>
+						<Button Click="OnCloseClick" Classes="danger"
+								HorizontalContentAlignment="Center"
+								VerticalContentAlignment="Center"
+								ToolTip.Tip="{Binding [MainWindow.Close], Source={x:Static translations:Localization.Instance}}">
+							<Path Data="M55.1 73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L147.2 256 9.9 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192.5 301.3 329.9 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.8 256 375.1 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192.5 210.7 55.1 73.4z"/>
+						</Button>
+					</StackPanel>
+				</Grid>
+			</Border>
+			<ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}" />
+			<views:Dock Grid.Row="2" HorizontalContentAlignment="Center"></views:Dock>
+		</Grid>
+    </Border>
 </UserControl>

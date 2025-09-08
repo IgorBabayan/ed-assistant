@@ -1,15 +1,43 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<Style Selector="TextBox.hud">
-		<Setter Property="Background" Value="#0B0C0E"/>
-		<Setter Property="Foreground" Value="{DynamicResource Ed.Text}"/>
-		<Setter Property="BorderBrush" Value="{DynamicResource Ed.Border.Mid}"/>
-		<Setter Property="BorderThickness" Value="1"/>
-		<Setter Property="CornerRadius" Value="{DynamicResource Ed.Radius.Small}"/>
-		<Setter Property="Padding" Value="10,6"/>
-		<Setter Property="CaretBrush" Value="{DynamicResource Ed.Accent}"/>
-		<Setter Property="SelectionBrush" Value="#66FF7A00"/>
-		<Setter Property="Cursor" Value="IBeam"/>
+	<Styles.Resources>
+        <!--// Input specific colors //-->
+        <Color x:Key="Input.Bg.Color">#171A24</Color>
+
+		<!--// Input brushes //-->
+        <SolidColorBrush x:Key="Input.Bg.Brush" Color="{StaticResource Input.Bg.Color}"/>
+	</Styles.Resources>
+
+    <!--// Base text ///-->
+    <Style Selector="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource Text.Primary}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource App.Font}"/>
+    </Style>
+
+    <!--// Caption (use Classes="caption") //-->
+    <Style Selector="TextBlock.caption">
+        <Setter Property="Opacity" Value="0.8"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Foreground" Value="{DynamicResource Text.Secondary}"/>
+    </Style>
+
+    <!--// Title (use Classes="title") //-->
+    <Style Selector="TextBlock.title">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <!--// ========= TextBox ========= //-->
+    <Style Selector="TextBox">
+        <Setter Property="Foreground" Value="{DynamicResource Text.Primary}"/>
+        <Setter Property="Background" Value="{StaticResource Input.Bg.Brush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Border.Brush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource Radius.S}"/>
+        <Setter Property="Padding" Value="10,8"/>
+        <Setter Property="Cursor" Value="IBeam"/>
+        <Setter Property="CaretBrush" Value="{DynamicResource Accent.Brush}"/>
+        <Setter Property="SelectionBrush" Value="{DynamicResource Accent.Brush}"/>
 		<Setter Property="Template">
 			<ControlTemplate>
 				<Border x:Name="border"
@@ -51,31 +79,37 @@
 				</Border>
 			</ControlTemplate>
 		</Setter>
-	</Style>
+    </Style>
     <Style Selector="TextBox.hud /template/ Border#border, TextBox.hud /template/ Border#border">
-        <Setter Property="BorderBrush" Value="{DynamicResource Ed.Border.Mid}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Accent.Brush}"/>
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="BorderBrush" Duration="0:0:0.12"/>
             </Transitions>
         </Setter>
     </Style>
-    <Style Selector="TextBox.hud:pointerover:not(:disabled) /template/ Border#border,
-                 TextBox.hud:pointerover:not(:disabled) /template/ Border#border">
-        <Setter Property="BorderBrush" Value="{DynamicResource Ed.Accent}"/>
+    <Style Selector="TextBox:focus">
+        <Setter Property="BorderBrush" Value="{DynamicResource Accent.Brush}"/>
     </Style>
-    <Style Selector="TextBox.hud:focus:not(:disabled) /template/ Border#border,
-                 TextBox.hud:focus:not(:disabled) /template/ Border#border">
-        <Setter Property="BorderBrush" Value="{DynamicResource Ed.Accent}"/>
+    <Style Selector="TextBox:disabled">
+        <Setter Property="Opacity" Value="0.6"/>
     </Style>
-    <Style Selector="TextBox.hud /template/ TextBlock#PART_Watermark">
+    <Style Selector="TextBox:pointerover:not(:disabled) /template/ Border#border,
+                 TextBox:pointerover:not(:disabled) /template/ Border#border">
+        <Setter Property="BorderBrush" Value="{DynamicResource Accent.Brush}"/>
+    </Style>
+    <Style Selector="TextBox:focus:not(:disabled) /template/ Border#border,
+                 TextBox:focus:not(:disabled) /template/ Border#border">
+        <Setter Property="BorderBrush" Value="{DynamicResource Accent.Brush}"/>
+    </Style>
+    <Style Selector="TextBox /template/ TextBlock#PART_Watermark">
         <Setter Property="IsVisible" Value="False"/>
     </Style>
-    <Style Selector="TextBox.hud[Text=''] /template/ TextBlock#PART_Watermark,
-                     TextBox.hud[Text={x:Null}] /template/ TextBlock#PART_Watermark">
+    <Style Selector="TextBox[Text=''] /template/ TextBlock#PART_Watermark,
+                     TextBox[Text={x:Null}] /template/ TextBlock#PART_Watermark">
         <Setter Property="IsVisible" Value="True"/>
     </Style>
-    <Style Selector="TextBox.hud:focus /template/ TextBlock#PART_Watermark">
+    <Style Selector="TextBox:focus /template/ TextBlock#PART_Watermark">
         <Setter Property="IsVisible" Value="False"/>
     </Style>
 </Styles>

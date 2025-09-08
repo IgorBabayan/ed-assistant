@@ -1,15 +1,64 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style Selector="ToggleButton.hud">
-        <Setter Property="Background" Value="#141518"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource Ed.Border.Light}"/>
-        <Setter Property="BorderThickness" Value="1.5"/>
-        <Setter Property="CornerRadius" Value="{DynamicResource Ed.Radius.Small}"/>
-        <Setter Property="Padding" Value="{DynamicResource Ed.Padding}"/>
-    </Style>
-    <Style Selector="ToggleButton.hud:checked">
-        <Setter Property="BorderBrush" Value="{DynamicResource Ed.Accent}"/>
-        <Setter Property="Background" Value="#101115"/>
-        <Setter Property="Effect" Value="{DynamicResource Ed.PanelShadow}"/>
-    </Style>
+	<Style Selector="ToggleButton.dock-btn">
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="Width" Value="42"/>
+		<Setter Property="Height" Value="42"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="Padding" Value="0"/>
+		<Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+		<Setter Property="RenderTransform" Value="scale(0.76)"/>
+		<Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="Cursor" Value="Hand"/>
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						CornerRadius="{TemplateBinding CornerRadius}"
+						Padding="{TemplateBinding Padding}">
+					<ContentPresenter  Content="{TemplateBinding Content}"
+									   ContentTemplate="{TemplateBinding ContentTemplate}"
+									   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+									   VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+					</ContentPresenter>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+
+		<Setter Property="Transitions">
+			<Transitions>
+				<TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.16"/>
+			</Transitions>
+		</Setter>
+	</Style>
+
+	<Style Selector="ToggleButton.dock-btn:pointerover, ToggleButton.dock-btn:pressed, ToggleButton.dock-btn:focus">
+		<Setter Property="Background"  Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="RenderTransform" Value="scale(1)"/>
+		<Setter Property="Panel.ZIndex" Value="2"/>
+	</Style>
+
+	<Style Selector="ToggleButton.dock-btn > Path">
+		<Setter Property="Stretch" Value="UniformToFill"/>
+		<Setter Property="Fill" Value="{DynamicResource Accent.Brush}"/>
+	</Style>
+
+	<Style Selector="ToggleButton.dock-btn:pointerover > Path">
+		<Setter Property="Fill" Value="{DynamicResource Accent.Dark.Brush}"/>
+	</Style>
+
+	<Style Selector="Border.separator">
+		<Setter Property="Width" Value="1"/>
+		<Setter Property="Margin" Value="8,0"/>
+		<Setter Property="Background" Value="{DynamicResource Accent.Brush}"/>
+		<Setter Property="VerticalAlignment" Value="Stretch"/>
+	</Style>
+
+	<Style Selector="ToggleButton.dock-btn:checked Path">
+		<Setter Property="Fill" Value="{DynamicResource Accent.Light.Brush}"/>
+	</Style>
 </Styles>

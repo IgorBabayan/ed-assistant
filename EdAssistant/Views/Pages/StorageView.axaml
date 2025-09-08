@@ -16,17 +16,17 @@
         </Grid.ColumnDefinitions>
         <!-- Filters Section -->
 		<Border Grid.Column="0"
-                Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
                 CornerRadius="4"
                 Padding="12"
-                Margin="8">
+                Margin="8"
+                Classes="card">
 			<Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 				<!-- Search Box -->
-				<TextBox Grid.Row="0" Classes="hud"
+				<TextBox Grid.Row="0"
                          Text="{Binding SearchText}"
                          Watermark="{Binding [Common.Watermark], Source={x:Static translations:Localization.Instance}}"
                          Margin="12"/>
@@ -35,19 +35,15 @@
 				<StackPanel Grid.Row="1" Orientation="Vertical" 
                             Spacing="16" Margin="12,0,0,0">
 					<CheckBox IsChecked="{Binding ShowItems}"
-                              Classes="hud"
                               Content="{Binding ItemsCheckboxText}" />
 
 					<CheckBox IsChecked="{Binding ShowComponents}"
-                              Classes="hud"
                               Content="{Binding ComponentsCheckboxText}" />
 
 					<CheckBox IsChecked="{Binding ShowConsumables}"
-                              Classes="hud"
                               Content="{Binding ConsumablesCheckboxText}" />
 
 					<CheckBox IsChecked="{Binding ShowData}"
-                              Classes="hud"
                               Content="{Binding DataCheckboxText}" />
 				</StackPanel>
 			</Grid>
@@ -63,13 +59,14 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
 					<DataTemplate DataType="dto:CategorizedInventoryItemDTO">
-                        <Border Background="{DynamicResource Ed.Border.Mid}"
+                        <Border Classes="card"
                                 CornerRadius="5"
                                 Padding="10"
                                 Margin="5"
                                 Width="200"
                                 Height="80">
-							<StackPanel Orientation="Horizontal" Spacing="10">
+							<StackPanel Orientation="Horizontal"
+                                        Spacing="10">
                                 <Border Background="{DynamicResource Ed.Border.Light}"
                                         Width="50"
                                         Height="50"
@@ -87,7 +84,7 @@
                                                TextWrapping="Wrap"
                                                MaxWidth="120"/>
                                     <TextBlock Text="{Binding Category, Converter={StaticResource EnumLocalizationConverter}}"
-                                               Foreground="{DynamicResource Ed.Text.Dim}"
+                                               Foreground="{DynamicResource Text.Secondary}"
                                                FontSize="11"/>
                                 </StackPanel>
                             </StackPanel>

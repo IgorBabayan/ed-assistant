@@ -1,50 +1,111 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style Selector="Button.hud">
-        <Setter Property="Background" Value="{DynamicResource Ed.Color}"/>
-        <Setter Property="BorderThickness" Value="1.5"/>
-        <Setter Property="CornerRadius" Value="{DynamicResource Ed.Radius.Small}"/>
-        <Setter Property="Padding" Value="{DynamicResource Ed.Padding}"/>
-        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-		<Setter Property="Foreground">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                    <GradientStop Color="#FF7A00" Offset="0"/>
-                    <GradientStop Color="#D06000" Offset="1"/>
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
+	<Styles.Resources>
+        <!--// Button specific colors //-->
+        <Color x:Key="Button.Default.Color">#23283A</Color>
+        <Color x:Key="Button.Default.Hover.Color">#2C3350</Color>
+        <Color x:Key="Button.Default.Pressed.Color">#222946</Color>
+        <Color x:Key="Button.Outline.Hover.Color">#1A1F2F</Color>
+        <Color x:Key="Button.Outline.Pressed.Color">#121725</Color>
+
+        <!--// Button brushes //-->
+        <SolidColorBrush x:Key="Button.Default.Brush" Color="{StaticResource Button.Default.Color}"/>
+        <SolidColorBrush x:Key="Button.Default.Hover.Brush" Color="{StaticResource Button.Default.Hover.Color}"/>
+        <SolidColorBrush x:Key="Button.Default.Pressed.Brush" Color="{StaticResource Button.Default.Pressed.Color}"/>
+        <SolidColorBrush x:Key="Button.Outline.Hover.Brush" Color="{StaticResource Button.Outline.Hover.Color}"/>
+        <SolidColorBrush x:Key="Button.Outline.Pressed.Brush" Color="{StaticResource Button.Outline.Pressed.Color}"/>
+    </Styles.Resources>
+
+	<!--// Default button //-->
+	<Style Selector="Button">
+		<Setter Property="FontFamily" Value="{DynamicResource App.Font}"/>
+		<Setter Property="Foreground" Value="{DynamicResource Text.Primary}"/>
+		<Setter Property="Background" Value="{StaticResource Button.Default.Brush}"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource Border.Brush}"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Padding" Value="10,8"/>
+		<Setter Property="CornerRadius" Value="{DynamicResource Radius.S}"/>
+		<Setter Property="Cursor" Value="Hand"/>
+		<Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+		<Setter Property="Transitions">
+			<Transitions>
+				<TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.06"/>
+				<BrushTransition Property="Background" Duration="0:0:0.08"/>
+			</Transitions>
+		</Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Border x:Name="root"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{StaticResource Radius.S}">
+						<ContentPresenter Margin="4"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style Selector="Button:pointerover">
+		<Setter Property="Background" Value="{StaticResource Button.Default.Hover.Brush}"/>
+	</Style>
+	<Style Selector="Button:pressed">
+		<Setter Property="Background" Value="{StaticResource Button.Default.Pressed.Brush}"/>
+		<Setter Property="RenderTransform" Value="scale(0.98)"/>
+	</Style>
+	<Style Selector="Button:disabled">
+		<Setter Property="Opacity" Value="0.5"/>
+	</Style>
+
+    <!--// Primary button (use Classes="primary") //-->
+    <Style Selector="Button.primary">
+        <Setter Property="Background" Value="{DynamicResource Accent.Brush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Accent.Dark.Brush}"/>
+        <Setter Property="Foreground" Value="White"/>
     </Style>
-    <Style Selector="Button.hud:pointerover /template/ ContentPresenter">
-        <Setter Property="Effect" Value="{DynamicResource Ed.PanelShadow}"/>
-        <Setter Property="Background" Value="{DynamicResource Ed.Accent.Glow}"/>
+    <Style Selector="Button.primary:pointerover">
+        <Setter Property="Background" Value="{DynamicResource Accent.Light.Brush}"/>
     </Style>
-    <Style Selector="Button.hud:pressed /template/ ContentPresenter">
-        <Setter Property="Effect" Value="{DynamicResource Ed.PanelShadow}"/>
-        <Setter Property="Background" Value="{DynamicResource Ed.Accent.Glow}"/>
+    <Style Selector="Button.primary:pressed">
+        <Setter Property="Background" Value="{DynamicResource Accent.Dark.Brush}"/>
+        <Setter Property="RenderTransform" Value="scale(0.98)"/>
     </Style>
-    <Style Selector="Button.hud:disabled">
-        <Setter Property="Opacity" Value="0.5"/>
+
+    <!--// Outline button (use Classes="outline") //-->
+    <Style Selector="Button.outline">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Border.Brush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Text.Primary}"/>
     </Style>
-    <Style Selector="Button.hud > Path">
-        <Setter Property="Fill">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                    <GradientStop Color="#FF7A00" Offset="0"/>
-                    <GradientStop Color="#D06000" Offset="1"/>
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
+    <Style Selector="Button.outline:pointerover">
+        <Setter Property="Background" Value="{StaticResource Button.Outline.Hover.Brush}"/>
     </Style>
-    <Style Selector="Button.hud > Path.glyph">
+    <Style Selector="Button.outline:pressed">
+        <Setter Property="Background" Value="{StaticResource Button.Outline.Pressed.Brush}"/>
+        <Setter Property="RenderTransform" Value="scale(0.98)"/>
+    </Style>
+
+    <!--// Danger button (use Classes="danger") //-->
+    <Style Selector="Button.danger">
+        <Setter Property="Background" Value="{DynamicResource Danger.Brush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Danger.Dark.Brush}"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+    <Style Selector="Button.danger:pointerover">
+        <Setter Property="Background" Value="{DynamicResource Danger.Light.Brush}"/>
+    </Style>
+    <Style Selector="Button.danger:pressed">
+        <Setter Property="Background" Value="{DynamicResource Danger.Dark.Brush}"/>
+        <Setter Property="RenderTransform" Value="scale(0.98)"/>
+    </Style>
+
+    <Style Selector="Button > Path">
         <Setter Property="Stretch" Value="UniformToFill"/>
-        <Setter Property="Width" Value="16"/>
-        <Setter Property="Height" Value="16"/>
-    </Style>
-    <Style Selector="Button.hud.icon">
-        <Setter Property="Padding" Value="0"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Fill" Value="{DynamicResource Text.Primary}"/>
     </Style>
 </Styles>

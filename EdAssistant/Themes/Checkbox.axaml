@@ -1,63 +1,66 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<Style Selector="CheckBox.hud">
-		<Setter Property="Foreground" Value="{DynamicResource Ed.Text}"/>
-		<Setter Property="Background" Value="#141518"/>
-		<Setter Property="BorderBrush" Value="{DynamicResource Ed.Border.Mid}"/>
-		<Setter Property="Padding" Value="2,0"/>
-		<Setter Property="Template">
-			<ControlTemplate>
-				<Grid ColumnDefinitions="Auto,*">
-					<Border x:Name="Box"
+    <!--// ========= CheckBox ========= //-->
+    <Style Selector="CheckBox">
+        <Setter Property="Foreground" Value="{StaticResource Text.Primary}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Border.Brush}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Padding" Value="4,2"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid ColumnDefinitions="Auto,*">
+                    <Border x:Name="Box"
                             Width="16" Height="16"
                             CornerRadius="3"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="1">
-						<!-- This one appears when checked -->
-						<Rectangle x:Name="CheckedMark"
+                        <Rectangle x:Name="CheckedMark"
                                    Width="10" Height="10"
-                                   Fill="{DynamicResource Ed.Accent}"
+                                   Fill="{DynamicResource Accent.Brush}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    IsVisible="False"/>
-					</Border>
+                    </Border>
 
-					<ContentPresenter Grid.Column="1"
+                    <ContentPresenter Grid.Column="1"
                                       Margin="8,0,0,0"
                                       VerticalAlignment="Center"
                                       Content="{TemplateBinding Content}"
                                       Foreground="{TemplateBinding Foreground}"/>
-				</Grid>
-			</ControlTemplate>
-		</Setter>
-	</Style>
-	<Style Selector="CheckBox.hud:pointerover /template/ Border#Box">
-		<Setter Property="BorderBrush" Value="{DynamicResource Ed.Accent}"/>
-	</Style>
-	<Style Selector="CheckBox.hud:pressed /template/ Border#Box">
-		<Setter Property="Background" Value="#0B0C0E"/>
-	</Style>
-	<Style Selector="CheckBox.hud:checked">
-		<Setter Property="Background" Value="#101115"/>
-		<Setter Property="BorderBrush" Value="{DynamicResource Ed.Accent}"/>
-	</Style>
-	<Style Selector="CheckBox.hud:checked /template/ Rectangle#CheckMark">
-		<Setter Property="IsVisible" Value="True"/>
-	</Style>
-	<Style Selector="CheckBox.hud:disabled">
-		<Setter Property="Opacity" Value="0.5"/>
-	</Style>
-	<Style Selector="CheckBox.hud /template/ Rectangle#CheckedMark">
-		<Setter Property="Opacity" Value="0"/>
-		<Setter Property="Transitions">
-			<Transitions>
-				<DoubleTransition Property="Opacity" Duration="0:0:0.12"/>
-			</Transitions>
-		</Setter>
-	</Style>
-	<Style Selector="CheckBox.hud:checked /template/ Rectangle#CheckedMark">
-		<Setter Property="Opacity" Value="1"/>
-		<Setter Property="IsVisible" Value="True"/>
-	</Style>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    <Style Selector="CheckBox:disabled">
+        <Setter Property="Opacity" Value="0.6"/>
+    </Style>
+    <Style Selector="CheckBox:checked">
+        <Setter Property="BorderBrush" Value="{DynamicResource Accent.Brush}"/>
+    </Style>
+    <Style Selector="CheckBox:pointerover /template/ Border#Box">
+        <Setter Property="BorderBrush" Value="{DynamicResource Accent.Brush}"/>
+    </Style>
+    <Style Selector="CheckBox:pressed /template/ Border#Box">
+        <Setter Property="Background" Value="{DynamicResource Accent.Brush}"/>
+    </Style>
+    <Style Selector="CheckBox:checked /template/ Rectangle#CheckMark">
+        <Setter Property="IsVisible" Value="True"/>
+    </Style>
+    <Style Selector="CheckBox:disabled">
+        <Setter Property="Opacity" Value="0.5"/>
+    </Style>
+    <Style Selector="CheckBox /template/ Rectangle#CheckedMark">
+        <Setter Property="Opacity" Value="0"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.12"/>
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="CheckBox:checked /template/ Rectangle#CheckedMark">
+        <Setter Property="Opacity" Value="1"/>
+        <Setter Property="IsVisible" Value="True"/>
+    </Style>
 </Styles>

@@ -7,8 +7,8 @@
         x:Class="EdAssistant.Views.MainWindow"
         WindowStartupLocation="CenterScreen"
         Icon="/Assets/logo.ico"
-        CanResize="False"
-        SystemDecorations="None"
+        CanResize="True"
+        SystemDecorations="BorderOnly"
         Title="EdAssistant">
         <views:MainView />
 </Window>
