@@ -12,6 +12,8 @@ public sealed partial class CargoViewModel : PageViewModel
     [ObservableProperty]
     private string searchText = string.Empty;
 
+    public bool HasNoItems => FilteredItems.Count == 0;
+
     public CargoViewModel(IGameDataService gameDataService)
     {
         _gameDataService = gameDataService;
@@ -60,5 +62,6 @@ public sealed partial class CargoViewModel : PageViewModel
         }).OrderBy(item => item.Name);
 
         FilteredItems = new ObservableCollection<InventoryItemDTO>(filtered);
+        OnPropertyChanged(nameof(HasNoItems));
     }
 }

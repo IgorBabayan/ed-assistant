@@ -26,10 +26,12 @@ public sealed partial class StorageViewModel : PageViewModel
     [ObservableProperty]
     private string searchText = string.Empty;
 
-    public string ItemsCheckboxText => string.Format(Localization.Instance["StorageWindow.Items"], _allItems.Count(item => item.Category == ItemCategory.Items));
-    public string ComponentsCheckboxText => string.Format(Localization.Instance["StorageWindow.Components"], _allItems.Count(item => item.Category == ItemCategory.Components));
-    public string ConsumablesCheckboxText => string.Format(Localization.Instance["StorageWindow.Consumables"], _allItems.Count(item => item.Category == ItemCategory.Consumables));
-    public string DataCheckboxText => string.Format(Localization.Instance["StorageWindow.Data"], _allItems.Count(item => item.Category == ItemCategory.Data));
+    public bool HasNoItems => FilteredItems.Count == 0;
+
+    public string ItemsText => string.Format(Localization.Instance["StorageWindow.Items"], FilteredItems.Count(item => item.Category == ItemCategory.Items));
+    public string ComponentsText => string.Format(Localization.Instance["StorageWindow.Components"], FilteredItems.Count(item => item.Category == ItemCategory.Components));
+    public string ConsumablesText => string.Format(Localization.Instance["StorageWindow.Consumables"], FilteredItems.Count(item => item.Category == ItemCategory.Consumables));
+    public string DataText => string.Format(Localization.Instance["StorageWindow.Data"], FilteredItems.Count(item => item.Category == ItemCategory.Data));
 
     public StorageViewModel(IGameDataService gameDataService)
     {
@@ -127,5 +129,11 @@ public sealed partial class StorageViewModel : PageViewModel
         }).OrderBy(item => item.NameLocalised).ThenBy(item => item.Category);
 
         FilteredItems = new ObservableCollection<CategorizedInventoryItemDTO>(filtered);
+
+        OnPropertyChanged(nameof(HasNoItems));
+        OnPropertyChanged(nameof(ItemsText));
+        OnPropertyChanged(nameof(ComponentsText));
+        OnPropertyChanged(nameof(ConsumablesText));
+        OnPropertyChanged(nameof(DataText));
     }
 }

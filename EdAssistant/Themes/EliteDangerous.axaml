@@ -42,8 +42,10 @@
         <Thickness x:Key="Space.8">32</Thickness>
 
         <CornerRadius x:Key="Radius.S">6</CornerRadius>
+        <CornerRadius x:Key="Radius.SM">8</CornerRadius>
         <CornerRadius x:Key="Radius.M">10</CornerRadius>
         <CornerRadius x:Key="Radius.L">14</CornerRadius>
+        <CornerRadius x:Key="Radius.XL">20</CornerRadius>
 
         <!-- Typography -->
         <FontFamily x:Key="App.Font">Segoe UI Variable, Segoe UI, Arial</FontFamily>

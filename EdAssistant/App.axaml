@@ -17,9 +17,7 @@
     </Application.Styles>
 
     <Application.Resources>
-		<ResourceDictionary>
-            <converters:DockEqualsConverter x:Key="DockEqualsConverter"/>
-        </ResourceDictionary>
+        <converters:DockEqualsConverter x:Key="DockEqualsConverter"/>
 		<converters:BoolToYesNoConverter x:Key="BoolToYesNoConverter" />
 		<converters:EnumLocalizationConverter x:Key="EnumLocalizationConverter" />
     </Application.Resources>

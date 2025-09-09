@@ -5,6 +5,10 @@
     "No": "No",
     "Watermark": "Search items..."
   },
+  "Filtering": {
+    "NoItemsFound": "No items found",
+    "AdjustingFilters": "Try adjusting your filters or search terms"
+  },
   "MainWindow": {
     "Title": "Welcome",
     "DesktopFile": "Create a desktop file",
@@ -48,6 +52,7 @@
     "FailedToLoadFileData": "Failed to load data from {FilePath}"
   },
   "StorageWindow": {
+    "Title": "Ship Storage",
     "Items": "Goods ({0})",
     "Components": "Assets ({0})",
     "Consumables": "Consumables ({0})",
@@ -60,6 +65,7 @@
     }
   },
   "CargoWindow": {
+    "Title": "Cargo Storage",
     "IsStolen": "Stolen: "
   }
 }

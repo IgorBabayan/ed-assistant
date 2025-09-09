@@ -2,84 +2,157 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:translations="clr-namespace:EdAssistant.Translations"
+             xmlns:ext="clr-namespace:EdAssistant.Helpers.Extensions"
              xmlns:vm="clr-namespace:EdAssistant.ViewModels.Pages"
              xmlns:dto="clr-namespace:EdAssistant.DTO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="EdAssistant.Views.Pages.CargoView"
              x:CompileBindings="False"
              x:DataType="vm:CargoViewModel">
-	<Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <!-- Filters Section -->
-        <Border Grid.Column="0"
-                Classes="card"
-                CornerRadius="4"
-                Padding="12"
-                Margin="8">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <!-- Search Box -->
-                <TextBox Grid.Row="0"
-                         Text="{Binding SearchText}"
-                         Watermark="{Binding [Common.Watermark], Source={x:Static translations:Localization.Instance}}"
-                         Margin="12"/>
-            </Grid>
-        </Border>
+    <Grid Margin="{DynamicResource Space.4}">
+		<Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <!-- Items List -->
-		<ScrollViewer Grid.Column="1" Margin="8">
+		<!--// Header Section //-->
+		<Grid Grid.Row="0" Margin="0,0,0,20">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+
+			<!--// Title and Search //-->
+			<StackPanel Grid.Column="0" Orientation="Vertical" Spacing="12">
+				<TextBlock Text="{ext:Localize CargoWindow.Title}"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource Text.Primary}"/>
+
+				<TextBox Text="{Binding SearchText}"
+                         Watermark="{ext:Localize Common.Watermark}"
+                         Classes="search"/>
+			</StackPanel>
+		</Grid>
+
+		<ScrollViewer Grid.Row="1"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
 			<ItemsControl ItemsSource="{Binding FilteredItems}">
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
-						<WrapPanel Orientation="Horizontal"/>
+						<UniformGrid Columns="4"
+                                   HorizontalAlignment="Stretch"/>
 					</ItemsPanelTemplate>
 				</ItemsControl.ItemsPanel>
+
 				<ItemsControl.ItemTemplate>
 					<DataTemplate DataType="dto:InventoryItemDTO">
-						<Border Classes="card"
-                                CornerRadius="5"
-                                Padding="10"
-                                Margin="5"
-                                Width="200"
-                                Height="80">
-							<StackPanel Orientation="Horizontal" Spacing="10">
-								<Border Background="{DynamicResource Ed.Border.Light}"
-                                        Width="50"
-                                        Height="50"
-                                        CornerRadius="3">
+						<Border Classes="storage-item-card"
+                                CornerRadius="12"
+                                Padding="16"
+                                Margin="8"
+                                MinHeight="120"
+                                Background="{DynamicResource Card.Background}"
+                                BorderBrush="{DynamicResource Card.Border}"
+                                BorderThickness="1">
+
+							<Border.Styles>
+								<Style Selector="Border.storage-item-card">
+									<Setter Property="BoxShadow" Value="0 2 8 0 #10000000"/>
+								</Style>
+								<Style Selector="Border.storage-item-card:pointerover">
+									<Setter Property="BoxShadow" Value="0 4 16 0 #20000000"/>
+									<Setter Property="BorderBrush" Value="{DynamicResource Accent.Primary}"/>
+								</Style>
+							</Border.Styles>
+
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="*"/>
+								</Grid.RowDefinitions>
+
+								<!--// Icon Section //-->
+								<Border Grid.Row="0"
+                                        Background="{DynamicResource Card.Icon.Background}"
+                                        Width="48"
+                                        Height="48"
+                                        CornerRadius="8"
+                                        HorizontalAlignment="Center"
+                                        Margin="0,0,0,12">
 									<!-- TODO: implement image -->
-									<!--<Image Width="40"
-                                           Height="40"
-                                           Source="{Binding Name, Converter={x:Static local:ItemImageConverter.Instance}}"
-                                           Stretch="Uniform"/>-->
+									<Border Background="{DynamicResource Accent.Secondary}"
+                                            Width="24"
+                                            Height="24"
+                                            CornerRadius="4"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
 								</Border>
 
-								<StackPanel VerticalAlignment="Center" Spacing="2">
-									<TextBlock Text="{Binding Name}"
-                                               FontWeight="SemiBold"
-                                               TextWrapping="Wrap"
-                                               MaxWidth="120"/>
-                                    <StackPanel Orientation="Horizontal" Spacing="2">
-                                        <TextBlock Text="{Binding [CargoWindow.IsStolen], Source={x:Static translations:Localization.Instance}}"
-                                                   Foreground="{DynamicResource Text.Secondary}"
-                                                   FontSize="11"></TextBlock>
-                                        <TextBlock Text="{Binding IsStolen, Converter={StaticResource BoolToYesNoConverter}}"
-                                                   Foreground="{DynamicResource Text.Secondary}"
-                                                   FontSize="11"/>
-									</StackPanel>
-								</StackPanel>
-							</StackPanel>
+								<!--// Content Section //-->
+                                <Border Classes="card"
+                                        Grid.Row="1">
+                                    <StackPanel VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Spacing="4">
+
+                                        <TextBlock Text="{Binding Name}"
+                                                   FontWeight="SemiBold"
+                                                   FontSize="14"
+                                                   TextWrapping="Wrap"
+                                                   TextAlignment="Center"
+                                                   Foreground="{DynamicResource Text.Primary}"
+                                                   MaxLines="2"/>
+
+                                        <StackPanel Orientation="Horizontal" Spacing="2">
+                                            <TextBlock Text="{ext:Localize CargoWindow.IsStolen}"
+                                                       Foreground="{DynamicResource Text.Secondary}"
+                                                       FontSize="11"></TextBlock>
+                                            <TextBlock Text="{Binding IsStolen, Converter={StaticResource BoolToYesNoConverter}}"
+                                                       Foreground="{DynamicResource Text.Secondary}"
+                                                       FontSize="11"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+							</Grid>
 						</Border>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
 		</ScrollViewer>
-    </Grid>
+
+		<!--// Empty State (when no items) //-->
+		<StackPanel Grid.Row="1"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Spacing="16"
+                    IsVisible="{Binding HasNoItems}">
+
+			<Border Background="{DynamicResource Card.Icon.Background}"
+                    Width="64"
+                    Height="64"
+                    CornerRadius="32"
+                    HorizontalAlignment="Center">
+				<Border Background="{DynamicResource Text.Tertiary}"
+                        Width="32"
+                        Height="32"
+                        CornerRadius="16"
+                        Opacity="0.3"/>
+			</Border>
+
+			<StackPanel Spacing="8" HorizontalAlignment="Center">
+				<TextBlock Text="{ext:Localize Filtering.NoItemsFound}"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           Foreground="{DynamicResource Text.Primary}"/>
+
+				<TextBlock Text="{ext:Localize Filtering.AdjustingFilters}"
+                           FontSize="14"
+                           HorizontalAlignment="Center"
+                           Foreground="{DynamicResource Text.Secondary}"/>
+			</StackPanel>
+		</StackPanel>
+	</Grid>
 </UserControl>

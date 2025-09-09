@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:translations="clr-namespace:EdAssistant.Translations"
+             xmlns:ext="clr-namespace:EdAssistant.Helpers.Extensions"
              xmlns:helpers="clr-namespace:EdAssistant.Helpers"
              xmlns:vm="clr-namespace:EdAssistant.ViewModels.Pages"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -23,22 +23,22 @@
                 Grid.Column="0"
                 Classes="card">
             <DockPanel>
-                <TextBlock Text="{Binding [Settings.DockGroup], Source={x:Static translations:Localization.Instance}}"
+                <TextBlock Text="{ext:Localize Settings.DockGroup}"
                            Classes="title"
                            HorizontalAlignment="Center"
                            DockPanel.Dock="Top"/>
                 <WrapPanel Orientation="Vertical"
                            helpers:WrapPanelHelper.SpacingX="12"
                            helpers:WrapPanelHelper.SpacingY="8">
-                    <CheckBox Content="{Binding [Settings.Home], Source={x:Static translations:Localization.Instance}}" IsEnabled="False" IsChecked="True"></CheckBox>
-                    <CheckBox Content="{Binding [Settings.Cargo], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Cargo}"></CheckBox>
-                    <CheckBox Content="{Binding [Settings.Materials], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Materials}"></CheckBox>
-                    <CheckBox Content="{Binding [Settings.Storage], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Storage}"></CheckBox>
-                    <CheckBox Content="{Binding [Settings.System], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding System}"></CheckBox>
-                    <CheckBox Content="{Binding [Settings.Planet], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Planet}"></CheckBox>
-                    <CheckBox Content="{Binding [Settings.MarketConnector], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding MarketConnector}"></CheckBox>
-                    <CheckBox Content="{Binding [Settings.Log], Source={x:Static translations:Localization.Instance}}" IsChecked="{Binding Log}"></CheckBox>
-                    <CheckBox Content="{Binding [Settings.Settings], Source={x:Static translations:Localization.Instance}}" IsEnabled="False" IsChecked="True"></CheckBox>
+                    <CheckBox Content="{ext:Localize Settings.Home}" IsEnabled="False" IsChecked="True"></CheckBox>
+                    <CheckBox Content="{ext:Localize Settings.Cargo}" IsChecked="{Binding Cargo}"></CheckBox>
+                    <CheckBox Content="{ext:Localize Settings.Materials}" IsChecked="{Binding Materials}"></CheckBox>
+                    <CheckBox Content="{ext:Localize Settings.Storage}" IsChecked="{Binding Storage}"></CheckBox>
+                    <CheckBox Content="{ext:Localize Settings.System}" IsChecked="{Binding System}"></CheckBox>
+                    <CheckBox Content="{ext:Localize Settings.Planet}" IsChecked="{Binding Planet}"></CheckBox>
+                    <CheckBox Content="{ext:Localize Settings.MarketConnector}" IsChecked="{Binding MarketConnector}"></CheckBox>
+                    <CheckBox Content="{ext:Localize Settings.Log}" IsChecked="{Binding Log}"></CheckBox>
+                    <CheckBox Content="{ext:Localize Settings.Settings}" IsEnabled="False" IsChecked="True"></CheckBox>
                 </WrapPanel>
             </DockPanel>
         </Border>
@@ -48,7 +48,7 @@
                 Grid.Column="1"
                 Classes="card">
             <DockPanel>
-                <TextBlock Text="{Binding [Settings.AppGroup], Source={x:Static translations:Localization.Instance}}"
+                <TextBlock Text="{ext:Localize Settings.AppGroup}"
                            Classes="title"
                            HorizontalAlignment="Center"
                            DockPanel.Dock="Top"/>
@@ -62,7 +62,7 @@
                                 Grid.Row="0"
                                 Margin="0,5,0,0">
                         <TextBox Text="{Binding JournalsFolderPath}"
-                                 Watermark="{Binding [Settings.PathToJournals], Source={x:Static translations:Localization.Instance}}"
+                                 Watermark="{ext:Localize Settings.PathToJournals}"
                                  VerticalAlignment="Stretch"/>
                         <Button Content="..."
                                 Command="{Binding BrowseFolderCommand}"
@@ -76,7 +76,7 @@
                             VerticalAlignment="Bottom"
                             HorizontalAlignment="Right"
                             Command="{Binding ReadAllCommand}"
-                            Content="{Binding [Settings.ReadAll], Source={x:Static translations:Localization.Instance}}"></Button>
+                            Content="{ext:Localize Settings.ReadAll}"></Button>
                 </Grid>
             </DockPanel>
         </Border>

@@ -34,6 +34,7 @@
         <Setter Property="BorderBrush" Value="{DynamicResource Border.Brush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="{DynamicResource Radius.S}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Padding" Value="10,8"/>
         <Setter Property="Cursor" Value="IBeam"/>
         <Setter Property="CaretBrush" Value="{DynamicResource Accent.Brush}"/>
@@ -62,7 +63,8 @@
                                            LineHeight="{TemplateBinding LineHeight}"
                                            LetterSpacing="{TemplateBinding LetterSpacing}"
                                            PasswordChar="{TemplateBinding PasswordChar}"
-                                           RevealPassword="{TemplateBinding RevealPassword}"/>
+                                           RevealPassword="{TemplateBinding RevealPassword}"
+                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 						</ScrollViewer>
 
 						<TextBlock x:Name="PART_Watermark"
@@ -111,5 +113,17 @@
     </Style>
     <Style Selector="TextBox:focus /template/ TextBlock#PART_Watermark">
         <Setter Property="IsVisible" Value="False"/>
+    </Style>
+
+    <!--// ========= TextBox.search ========= //-->
+	<Style Selector="TextBox.search">
+        <Setter Property="Width" Value="300"/>
+        <Setter Property="MinHeight" Value="40"/>
+        <Setter Property="MaxHeight" Value="40"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource Radius.SM}"/>
     </Style>
 </Styles>
