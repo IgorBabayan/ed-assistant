@@ -1,12 +1,14 @@
-﻿namespace EdAssistant.ViewModels.Pages;
+﻿using EdAssistant.Services.Initialization;
+
+namespace EdAssistant.ViewModels.Pages;
 
 [DockMapping(DockEnum.Settings)]
 public sealed partial class SettingsViewModel : PageViewModel
 {
-    private readonly IFolderPickerService _picker;
+    private readonly IFolderPickerService _folderPickerService;
     private readonly ISettingsService _settingsService;
     private readonly IDockVisibilityService _dockVisibilityService;
-    private readonly IGameDataService _gameDataService;
+    private readonly IInitializationService _initializationService;
     private readonly ILogger<SettingsViewModel> _logger;
 
     public bool Cargo
@@ -83,51 +85,18 @@ public sealed partial class SettingsViewModel : PageViewModel
     [NotifyCanExecuteChangedFor(nameof(ReadAllCommand))]
     private string? journalsFolderPath;
 
-    public SettingsViewModel(IFolderPickerService picker, ILogger<SettingsViewModel> logger, IDockVisibilityService dockVisibilityService, ISettingsService settingsService, IGameDataService gameDataService)
+    public SettingsViewModel(IFolderPickerService folderPickerService, ILogger<SettingsViewModel> logger, IDockVisibilityService dockVisibilityService, ISettingsService settingsService, IInitializationService initializationService)
     {
-        _picker = picker;
+        _folderPickerService = folderPickerService;
         _logger = logger;
         _dockVisibilityService = dockVisibilityService;
         _settingsService = settingsService;
-        _gameDataService = gameDataService;
+        _initializationService = initializationService;
 
-        PrepareDefaultJournalsPath();
+        JournalsFolderPath = _folderPickerService.GetDefaultJournalsPath();
         LoadSettings();
 
         _dockVisibilityService.VisibilityChanged += OnDockVisibilityChanged;
-    }
-
-    private void PrepareDefaultJournalsPath()
-    {
-        var homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        string path;
-        if (OperatingSystem.IsWindows())
-        {
-            path = Path.Combine(homeFolder, "Saved Games", "Frontier Developments", "Elite Dangerous");
-            TrySetupJournalsPath(path);
-        }
-        else if (OperatingSystem.IsLinux())
-        {
-            //! TODO: check on Linux to correct path
-            path = Path.Combine(homeFolder, ".steam", "Saved Games", "Frontier Developments", "Elite Dangerous");
-            TrySetupJournalsPath(path);
-        }
-        else
-        {
-            throw new NotImplementedException(Localization.Instance["Exceptions.OSNotSupported"]);
-        }
-    }
-
-    private void TrySetupJournalsPath(string path)
-    {
-        if (Directory.Exists(path))
-        {
-            JournalsFolderPath = path;
-        }
-        else
-        {
-            throw new DirectoryNotFoundException(string.Format(Localization.Instance["Exceptions.DirectoryNotFound"], path));
-        }
     }
 
     private void LoadSettings()
@@ -151,7 +120,9 @@ public sealed partial class SettingsViewModel : PageViewModel
     [RelayCommand]
     private async Task BrowseFolderAsync()
     {
-        var folder = await _picker.PickSingleFolderAsync();
+        var folder = !string.IsNullOrWhiteSpace(JournalsFolderPath) && Directory.Exists(JournalsFolderPath)
+            ? await _folderPickerService.PickSingleFolderAsync(suggestedStartPath: JournalsFolderPath)
+            : await _folderPickerService.PickSingleFolderAsync();
         if (folder is null)
             return;
 
@@ -171,7 +142,7 @@ public sealed partial class SettingsViewModel : PageViewModel
     }
 
     [RelayCommand(CanExecute = nameof(CanReadAll))]
-    private async Task ReadAllAsync() => await _gameDataService.LoadAllGameDataAsync(JournalsFolderPath!);
+    private async Task ReadAllAsync() => await _initializationService.InitializeAsync();
 
     private bool CanReadAll() => !string.IsNullOrWhiteSpace(JournalsFolderPath) && Directory.Exists(JournalsFolderPath);
 

@@ -5,6 +5,7 @@ public partial class MainViewModel : ObservableObject
     private readonly INavigationService _navigationService;
     private readonly IDockVisibilityService _dockVisibilityService;
     private readonly IDesktopService _desktopService;
+    private readonly IFolderPickerService _folderPickerService;
 
     private static readonly Dictionary<Type, DockEnum> _viewModelToDockCache = new();
     private static readonly Dictionary<DockEnum, Type> _dockToViewModelCache = new();
@@ -41,11 +42,13 @@ public partial class MainViewModel : ObservableObject
 
     static MainViewModel() => InitializeMappings();
 
-    public MainViewModel(INavigationService navigationService, IDockVisibilityService dockVisibilityService, IDesktopService desktopService)
+    public MainViewModel(INavigationService navigationService, IDockVisibilityService dockVisibilityService, IDesktopService desktopService,
+        IFolderPickerService folderPickerService)
     {
         _navigationService = navigationService;
         _dockVisibilityService = dockVisibilityService;
         _desktopService = desktopService;
+        _folderPickerService = folderPickerService;
         CurrentViewModel = _navigationService.Current;
 
         _dockVisibilityService.VisibilityChanged += OnDockVisibilityChanged;

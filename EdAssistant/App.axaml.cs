@@ -1,4 +1,6 @@
-﻿namespace EdAssistant;
+﻿using EdAssistant.Services.Initialization;
+
+namespace EdAssistant;
 
 public partial class App : Application
 {
@@ -6,7 +8,7 @@ public partial class App : Application
 
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
-    public override void OnFrameworkInitializationCompleted()
+    public override async void OnFrameworkInitializationCompleted()
     {
         Localization.Instance.UseLanguage("en");
         RequestedThemeVariant = ThemeVariant.Dark;
@@ -31,6 +33,8 @@ public partial class App : Application
             singleViewPlatform.MainView = view;
         }
 
+        var initService = _host.Services.GetRequiredService<IInitializationService>();
+        await initService.InitializeAsync();
         base.OnFrameworkInitializationCompleted();
     }
 

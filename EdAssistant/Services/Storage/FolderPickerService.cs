@@ -35,6 +35,38 @@ class FolderPickerService : IFolderPickerService
         };
 
         var result = await sp.OpenFolderPickerAsync(options);
-        return result?.FirstOrDefault();
+        return result.FirstOrDefault();
+    }
+
+    public string GetDefaultJournalsPath()
+    {
+        var homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        string path;
+        if (OperatingSystem.IsWindows())
+        {
+            path = Path.Combine(homeFolder, "Saved Games", "Frontier Developments", "Elite Dangerous");
+            return TrySetupJournalsPath(path);
+        }
+
+        if (OperatingSystem.IsLinux())
+        {
+            //! TODO: check on Linux to correct path
+            path = Path.Combine(homeFolder, ".steam", "Saved Games", "Frontier Developments", "Elite Dangerous");
+            return TrySetupJournalsPath(path);
+        }
+        else
+        {
+            throw new NotImplementedException(Localization.Instance["Exceptions.OSNotSupported"]);
+        }
+    }
+
+    private string TrySetupJournalsPath(string path)
+    {
+        if (Directory.Exists(path))
+        {
+            return path;
+        }
+
+        throw new DirectoryNotFoundException(string.Format(Localization.Instance["Exceptions.DirectoryNotFound"], path));
     }
 }

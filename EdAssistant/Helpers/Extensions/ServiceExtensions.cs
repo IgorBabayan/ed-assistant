@@ -1,4 +1,6 @@
-﻿namespace EdAssistant.Helpers.Extensions;
+﻿using EdAssistant.Services.Initialization;
+
+namespace EdAssistant.Helpers.Extensions;
 
 public static class ServiceExtensions
 {
@@ -10,6 +12,7 @@ public static class ServiceExtensions
         services.AddSingleton<IDockVisibilityService, DockVisibilityService>();
         services.AddSingleton<ISettingsService, JsonSettingsService>();
         services.AddSingleton<IGameDataService, GameDataService>();
+        services.AddSingleton<IInitializationService, InitializationService>();
     }
 
     public static void RegisterViewModels(this IServiceCollection services)
