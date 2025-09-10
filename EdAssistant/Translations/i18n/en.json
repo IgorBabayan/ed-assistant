@@ -3,7 +3,18 @@
     "SelectFolderTitle": "Select a folder",
     "Yes": "Yes",
     "No": "No",
-    "Watermark": "Search items..."
+    "Watermark": "Search items...",
+    "CleanUpCache": "Cleaned up {0} event cache entries"
+  },
+  "Exceptions": {
+    "NoStorageProvider": "No StorageProvider available.",
+    "FailedGettingFolder": "Failed to get local path for folder {0} ({1})",
+    "OSNotSupported": "Operation system is not supported",
+    "DirectoryNotFound": "Directory not found: {0}",
+    "FileNotFound": "File not found: {0}",
+    "FailedToLoadFileData": "Failed to load data from {0}",
+    "ParsingJournalEvent": "Error parsing journal event to {0}: {1}",
+    "UnknownJournalEvent": "Unknown event type '{0}' encountered, skipping. Line: {1}"
   },
   "Filtering": {
     "NoItemsFound": "No items found",
@@ -41,15 +52,7 @@
     "Settings": "Settings",
     "PathToJournals": "Path to Elite Dangerous journals:",
     "ReadAll": "Read all",
-    "SuccessfullyLoadFileData": "Successfully loaded {DataType} from {FilePath}"
-  },
-  "Exceptions": {
-    "NoStorageProvider": "No StorageProvider available.",
-    "FailedGettingFolder": "Failed to get local path for folder {FolderName} ({FolderType})",
-    "OSNotSupported": "Operation system is not supported",
-    "DirectoryNotFound": "Directory not found: {0}",
-    "FileNotFound": "File not found: {FilePath}",
-    "FailedToLoadFileData": "Failed to load data from {FilePath}"
+    "SuccessfullyLoadFileData": "Successfully loaded {0} from {1}"
   },
   "StorageWindow": {
     "Title": "Ship Storage",

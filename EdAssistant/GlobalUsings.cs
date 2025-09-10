@@ -1,4 +1,5 @@
 ﻿global using System;
+global using System.Collections.Concurrent;
 global using System.Collections.Generic;
 global using System.Collections.Immutable;
 global using System.Collections.ObjectModel;
@@ -31,9 +32,8 @@ global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;
 global using EdAssistant.DTO;
 global using EdAssistant.Helpers.Attributes;
-global using EdAssistant.Helpers.Converters;
 global using EdAssistant.Helpers.Extensions;
-global using EdAssistant.Models.Cargo;
+global using EdAssistant.Helpers.Factory.Journal;
 global using EdAssistant.Models.Enums;
 global using EdAssistant.Models.Journal;
 global using EdAssistant.Models.Market;

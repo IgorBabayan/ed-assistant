@@ -1,0 +1,177 @@
+<!--// Modern, visible scrollbar styles //-->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<!--// Modern ScrollBar Style //-->
+	<Style Selector="ScrollBar">
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="Width" Value="12"/>
+		<Setter Property="MinWidth" Value="12"/>
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border Background="{TemplateBinding Background}"
+						CornerRadius="6">
+					<Grid RowDefinitions="Auto,*,Auto">
+
+						<!--// Up/Left Button - Hidden for minimal look //-->
+						<RepeatButton Name="PART_LineUpButton"
+									 Grid.Row="0"
+									 Height="0"
+									 Width="0"
+									 IsVisible="False"/>
+
+						<!--// Track //-->
+						<Track Name="PART_Track"
+							   Grid.Row="1"
+							   Orientation="{TemplateBinding Orientation}">
+							<Track.DecreaseButton>
+								<RepeatButton Name="PART_PageUpButton"
+											 Background="Transparent"
+											 BorderThickness="0"/>
+							</Track.DecreaseButton>
+
+							<Track.Thumb>
+								<Thumb Name="PART_Thumb">
+									<Thumb.Template>
+										<ControlTemplate>
+											<Border Background="#A0000000"
+													CornerRadius="6"
+													MinHeight="30"
+													MinWidth="12"
+													Margin="2">
+												<Border.Transitions>
+													<Transitions>
+														<BrushTransition Property="Background" Duration="0:0:0.15"/>
+													</Transitions>
+												</Border.Transitions>
+											</Border>
+										</ControlTemplate>
+									</Thumb.Template>
+								</Thumb>
+							</Track.Thumb>
+
+							<Track.IncreaseButton>
+								<RepeatButton Name="PART_PageDownButton"
+											 Background="Transparent"
+											 BorderThickness="0"/>
+							</Track.IncreaseButton>
+						</Track>
+
+						<!--// Down/Right Button - Hidden for minimal look //-->
+						<RepeatButton Name="PART_LineDownButton"
+									 Grid.Row="2"
+									 Height="0"
+									 Width="0"
+									 IsVisible="False"/>
+					</Grid>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+
+	<!--// Horizontal ScrollBar //-->
+	<Style Selector="ScrollBar:horizontal">
+		<Setter Property="Height" Value="12"/>
+		<Setter Property="MinHeight" Value="12"/>
+		<Setter Property="Width" Value="NaN"/>
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border Background="{TemplateBinding Background}"
+						CornerRadius="6">
+					<Grid ColumnDefinitions="Auto,*,Auto">
+
+						<!--// Left Button - Hidden //-->
+						<RepeatButton Name="PART_LineUpButton"
+									 Grid.Column="0"
+									 Height="0"
+									 Width="0"
+									 IsVisible="False"/>
+
+						<!--// Track //-->
+						<Track Name="PART_Track"
+							   Grid.Column="1"
+							   Orientation="Horizontal">
+							<Track.DecreaseButton>
+								<RepeatButton Name="PART_PageUpButton"
+											 Background="Transparent"
+											 BorderThickness="0"/>
+							</Track.DecreaseButton>
+
+							<Track.Thumb>
+								<Thumb Name="PART_Thumb">
+									<Thumb.Template>
+										<ControlTemplate>
+											<Border Background="#A0000000"
+													CornerRadius="6"
+													MinHeight="12"
+													MinWidth="30"
+													Margin="2">
+												<Border.Transitions>
+													<Transitions>
+														<BrushTransition Property="Background" Duration="0:0:0.15"/>
+													</Transitions>
+												</Border.Transitions>
+											</Border>
+										</ControlTemplate>
+									</Thumb.Template>
+								</Thumb>
+							</Track.Thumb>
+
+							<Track.IncreaseButton>
+								<RepeatButton Name="PART_PageDownButton"
+											 Background="Transparent"
+											 BorderThickness="0"/>
+							</Track.IncreaseButton>
+						</Track>
+
+						<!--// Right Button - Hidden //-->
+						<RepeatButton Name="PART_LineDownButton"
+									 Grid.Column="2"
+									 Height="0"
+									 Width="0"
+									 IsVisible="False"/>
+					</Grid>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+
+	<!--// Thumb Hover Effects //-->
+	<Style Selector="ScrollBar /template/ Thumb:pointerover /template/ Border">
+		<Setter Property="Background" Value="#C0000000"/>
+	</Style>
+
+	<Style Selector="ScrollBar /template/ Thumb:pressed /template/ Border">
+		<Setter Property="Background" Value="#D0000000"/>
+	</Style>
+
+	<!--// Optional: ScrollViewer track background for better visibility //-->
+	<Style Selector="ScrollViewer /template/ ScrollBar:vertical">
+		<Setter Property="Background" Value="#10000000"/>
+		<Setter Property="Margin" Value="0,0,2,0"/>
+	</Style>
+
+	<Style Selector="ScrollViewer /template/ ScrollBar:horizontal">
+		<Setter Property="Background" Value="#10000000"/>
+		<Setter Property="Margin" Value="0,0,0,2"/>
+	</Style>
+
+	<!--// Dark Theme Variants (if you use dark theme) //-->
+	<Style Selector="ScrollBar.dark /template/ Thumb /template/ Border">
+		<Setter Property="Background" Value="#A0FFFFFF"/>
+	</Style>
+
+	<Style Selector="ScrollBar.dark /template/ Thumb:pointerover /template/ Border">
+		<Setter Property="Background" Value="#C0FFFFFF"/>
+	</Style>
+
+	<Style Selector="ScrollBar.dark /template/ Thumb:pressed /template/ Border">
+		<Setter Property="Background" Value="#D0FFFFFF"/>
+	</Style>
+
+	<!--// Remove default ScrollViewer corner //-->
+	<Style Selector="ScrollViewer /template/ Rectangle#PART_ScrollBarCorner">
+		<Setter Property="Fill" Value="Transparent"/>
+	</Style>
+
+</Styles>

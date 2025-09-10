@@ -13,6 +13,7 @@ public static class ServiceExtensions
         services.AddSingleton<ISettingsService, JsonSettingsService>();
         services.AddSingleton<IGameDataService, GameDataService>();
         services.AddSingleton<IInitializationService, InitializationService>();
+        services.AddSingleton<IJournalEventFactory, JournalEventFactory>();
     }
 
     public static void RegisterViewModels(this IServiceCollection services)

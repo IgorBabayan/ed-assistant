@@ -35,6 +35,5 @@
 
   <ItemGroup>
     <Folder Include="Assets\Icons\" />
-    <Folder Include="Models\Journal\" />
   </ItemGroup>
 </Project>

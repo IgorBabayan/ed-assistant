@@ -76,7 +76,7 @@
 		<!--// Items Grid //-->
 		<ScrollViewer Grid.Row="1"
                       HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollBarVisibility="Auto">
+                      VerticalScrollBarVisibility="Visible">
 			<ItemsControl ItemsSource="{Binding FilteredItems}">
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>

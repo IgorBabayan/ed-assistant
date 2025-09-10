@@ -2,8 +2,7 @@
 
 public enum JournalEventType
 {
-    Unknown = 0,
-    Fileheader,
+    FileHeader,
     Commander,
     Materials,
     Rank,
@@ -11,13 +10,10 @@ public enum JournalEventType
     Reputation,
     EngineerProgress,
     LoadGame,
-    CarrierLocation,
-    Statistics,
-    ReceiveText,
     Location,
-    Powerplay,
-    Music,
-    ShipLocker,
-    Missions,
-    Loadout
+    Docked,
+    Undocked,
+    MarketBuy,
+    Cargo,
+    ReceiveText
 }

@@ -1,4 +1,6 @@
-﻿namespace EdAssistant.ViewModels.Pages;
+﻿using CargoEvent = EdAssistant.Models.Cargo.CargoEvent;
+
+namespace EdAssistant.ViewModels.Pages;
 
 [DockMapping(DockEnum.Cargo)]
 public sealed partial class CargoViewModel : PageViewModel
