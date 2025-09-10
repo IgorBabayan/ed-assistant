@@ -49,7 +49,7 @@ class JournalEventFactory(ILogger<JournalEventFactory> logger) : IJournalEventFa
         }
         catch (JsonException exception)
         {
-            logger.LogError(exception, string.Format(Localization.Instance["Exceptions.ParsingJournalEvent"], typeof(T).Name, exception.Message));
+            logger.LogError(exception, Localization.Instance["Exceptions.ParsingJournalEvent"], typeof(T).Name, exception.Message);
             return null;
         }
     }

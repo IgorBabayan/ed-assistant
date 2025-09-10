@@ -28,6 +28,8 @@ public sealed partial class CargoViewModel : PageViewModel
         }
     }
 
+    public override void Dispose() => _gameDataService.DataLoaded -= OnGameDataLoaded;
+
     partial void OnSearchTextChanged(string value) => ApplyFilters();
 
     private void OnGameDataLoaded(object? sender, GameDataLoadedEventArgs e)

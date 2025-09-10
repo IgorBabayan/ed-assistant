@@ -1,6 +1,6 @@
 ﻿namespace EdAssistant.ViewModels;
 
-public partial class MainViewModel : ObservableObject
+public partial class MainViewModel : BaseViewModel
 {
     private readonly INavigationService _navigationService;
     private readonly IDockVisibilityService _dockVisibilityService;

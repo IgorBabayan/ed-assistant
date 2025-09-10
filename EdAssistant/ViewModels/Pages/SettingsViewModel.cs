@@ -99,6 +99,8 @@ public sealed partial class SettingsViewModel : PageViewModel
         _dockVisibilityService.VisibilityChanged += OnDockVisibilityChanged;
     }
 
+    public override void Dispose() => _dockVisibilityService.VisibilityChanged -= OnDockVisibilityChanged;
+
     private void LoadSettings()
     {
         _dockVisibilityService.SetVisibility(DockEnum.Cargo,

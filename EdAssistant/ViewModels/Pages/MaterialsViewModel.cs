@@ -8,14 +8,16 @@ public sealed partial class MaterialsViewModel : PageViewModel
     public MaterialsViewModel(IGameDataService gameDataService)
     {
         _gameDataService = gameDataService;
-        _gameDataService.JournalEventLoaded += OnJournalEventLoaded;
+        /*_gameDataService.JournalEventLoaded += OnJournalEventLoaded;
 
         var existingData = _gameDataService.GetLatestJournalEvent<MaterialsEvent>();
         if (existingData is not null)
         {
             ProcessMaterials(existingData);
-        }
+        }*/
     }
+
+    //public override void Dispose() => _gameDataService.JournalEventLoaded -= OnJournalEventLoaded;
 
     private void OnJournalEventLoaded(object? sender, JournalEventLoadedEventArgs e)
     {

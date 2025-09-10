@@ -1,6 +1,6 @@
 ﻿namespace EdAssistant.ViewModels.Pages;
 
-public abstract partial class PageViewModel : ObservableObject { }
+public abstract partial class PageViewModel : BaseViewModel { }
 
 [DockMapping(DockEnum.Home)]
 public sealed partial class HomeViewModel : PageViewModel { }

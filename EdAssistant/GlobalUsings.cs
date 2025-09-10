@@ -27,6 +27,7 @@ global using Avalonia.Media;
 global using Avalonia.Platform;
 global using Avalonia.Platform.Storage;
 global using Avalonia.Styling;
+global using Avalonia.Threading;
 global using Avalonia.VisualTree;
 global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;
