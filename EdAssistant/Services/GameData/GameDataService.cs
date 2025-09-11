@@ -1,3 +1,5 @@
+using CargoEvent = EdAssistant.Models.Cargo.CargoEvent;
+
 namespace EdAssistant.Services.GameData;
 
 public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache, IJournalEventFactory journalFactory) : IGameDataService
@@ -32,12 +34,6 @@ public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache
     {
         var cacheKey = GetDataCacheKey<T>();
         return cache.Get<T>(cacheKey);
-    }
-
-    public object? GetData(Type type)
-    {
-        var cacheKey = GetDataCacheKey(type);
-        return cache.Get(cacheKey);
     }
 
     public T? GetJournal<T>() where T : JournalEvent

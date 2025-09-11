@@ -5,12 +5,13 @@ public partial class MainViewModel : BaseViewModel
     private readonly INavigationService _navigationService;
     private readonly IDockVisibilityService _dockVisibilityService;
     private readonly IDesktopService _desktopService;
-    private readonly IFolderPickerService _folderPickerService;
+    private readonly IGameDataService _gameDataService;
 
     private static readonly Dictionary<Type, DockEnum> _viewModelToDockCache = new();
     private static readonly Dictionary<DockEnum, Type> _dockToViewModelCache = new();
 
-    public string WindowTitle => Localization.Instance["MainWindow.Title"];
+    [ObservableProperty]
+    private string? windowTitle;
 
     public DockEnum CurrentDock
     {
@@ -42,16 +43,90 @@ public partial class MainViewModel : BaseViewModel
 
     static MainViewModel() => InitializeMappings();
 
-    public MainViewModel(INavigationService navigationService, IDockVisibilityService dockVisibilityService, IDesktopService desktopService,
-        IFolderPickerService folderPickerService)
+    public MainViewModel(INavigationService navigationService, IDockVisibilityService dockVisibilityService, IDesktopService desktopService, IGameDataService gameDataService)
     {
         _navigationService = navigationService;
         _dockVisibilityService = dockVisibilityService;
         _desktopService = desktopService;
-        _folderPickerService = folderPickerService;
+        _gameDataService = gameDataService;
         CurrentViewModel = _navigationService.Current;
 
         _dockVisibilityService.VisibilityChanged += OnDockVisibilityChanged;
+        _gameDataService.JournalLoaded += OnJournalLoaded;
+
+        ProcessCommanderEvent();
+        ProcessRankEvent();
+        ProcessProgressEvent();
+    }
+
+    public override void Dispose()
+    {
+        _dockVisibilityService.VisibilityChanged -= OnDockVisibilityChanged;
+        _gameDataService.JournalLoaded -= OnJournalLoaded;
+    }
+
+    private void OnJournalLoaded(object? sender, JournalEventLoadedEventArgs e)
+    {
+        switch (e)
+        {
+            case { EventType: JournalEventType.Commander, Event: CommanderEvent commander }:
+                ProcessCommander(commander);
+                break;
+
+            case { EventType: JournalEventType.Rank, Event: RankEvent rank }:
+                ProcessRank(rank);
+                break;
+
+            case { EventType: JournalEventType.Progress, Event: ProgressEvent progress }:
+                ProcessProgress(progress);
+                break;
+        }
+    }
+
+    private void ProcessCommander(CommanderEvent commander)
+    {
+        WindowTitle = string.Format(Localization.Instance["MainWindow.TitleLoaded"], commander.Name);
+    }
+
+    private void ProcessRankEvent()
+    {
+        var rankEvent = _gameDataService.GetLatestJournal<RankEvent>();
+        if (rankEvent is not null)
+        {
+            ProcessRank(rankEvent);
+        }
+    }
+
+    private void ProcessProgressEvent()
+    {
+        var progressEvent = _gameDataService.GetLatestJournal<ProgressEvent>();
+        if (progressEvent is not null)
+        {
+            ProcessProgress(progressEvent);
+        }
+    }
+
+    private void ProcessRank(RankEvent rank)
+    {
+
+    }
+
+    private void ProcessProgress(ProgressEvent progress)
+    {
+
+    }
+
+    private void ProcessCommanderEvent()
+    {
+        var commanderEvent = _gameDataService.GetLatestJournal<CommanderEvent>();
+        if (commanderEvent is not null)
+        {
+            ProcessCommander(commanderEvent);
+        }
+        else
+        {
+            WindowTitle = Localization.Instance["MainWindow.Title"];
+        }
     }
 
     private static void InitializeMappings()

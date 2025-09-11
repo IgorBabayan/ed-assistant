@@ -43,7 +43,8 @@
     "AdjustingFilters": "Try adjusting your filters or search terms"
   },
   "MainWindow": {
-    "Title": "Welcome",
+    "Title": "o7, Commander!",
+    "TitleLoaded": "o7, {0}!",
     "DesktopFile": "Create a desktop file",
     "Minimize": "Minimize window",
     "Maximize": "Maximize window",

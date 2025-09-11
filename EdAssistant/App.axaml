@@ -15,6 +15,7 @@
         <StyleInclude Source="avares://EdAssistant/Themes/ProgressBar.axaml"/>
         <StyleInclude Source="avares://EdAssistant/Themes/Checkbox.axaml"/>
         <StyleInclude Source="avares://EdAssistant/Themes/ScrollBar.axaml"/>
+        <StyleInclude Source="avares://EdAssistant/Themes/Icons.axaml"/>
     </Application.Styles>
 
     <Application.Resources>
