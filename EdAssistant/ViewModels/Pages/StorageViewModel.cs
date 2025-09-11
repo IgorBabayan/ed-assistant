@@ -6,10 +6,10 @@ namespace EdAssistant.ViewModels.Pages;
 public sealed partial class StorageViewModel : PageViewModel
 {
     private readonly IGameDataService _gameDataService;
-    private readonly List<CategorizedInventoryItemDTO> _allItems = new();
+    private readonly List<StorageInventoryItemDTO> _allItems = new();
 
     [ObservableProperty]
-    private ObservableCollection<CategorizedInventoryItemDTO> filteredItems = new();
+    private ObservableCollection<StorageInventoryItemDTO> filteredItems = new();
 
     [ObservableProperty]
     private bool showItems = true;
@@ -63,7 +63,7 @@ public sealed partial class StorageViewModel : PageViewModel
     {
         _allItems.Clear();
 
-        _allItems.AddRange(shipData.Items.Select(item => new CategorizedInventoryItemDTO
+        _allItems.AddRange(shipData.Items.Select(item => new StorageInventoryItemDTO
         {
             Name = item.Name,
             NameLocalised = string.IsNullOrWhiteSpace(item.NameLocalised)
@@ -72,7 +72,7 @@ public sealed partial class StorageViewModel : PageViewModel
             Category = ItemCategory.Items
         }));
 
-        _allItems.AddRange(shipData.Components.Select(component => new CategorizedInventoryItemDTO
+        _allItems.AddRange(shipData.Components.Select(component => new StorageInventoryItemDTO
         {
             Name = component.Name,
             NameLocalised = string.IsNullOrWhiteSpace(component.NameLocalised)
@@ -81,7 +81,7 @@ public sealed partial class StorageViewModel : PageViewModel
             Category = ItemCategory.Components
         }));
 
-        _allItems.AddRange(shipData.Consumables.Select(consumable => new CategorizedInventoryItemDTO
+        _allItems.AddRange(shipData.Consumables.Select(consumable => new StorageInventoryItemDTO
         {
             Name = consumable.Name,
             NameLocalised = string.IsNullOrWhiteSpace(consumable.NameLocalised)
@@ -90,7 +90,7 @@ public sealed partial class StorageViewModel : PageViewModel
             Category = ItemCategory.Consumables
         }));
 
-        _allItems.AddRange(shipData.Data.Select(dataItem => new CategorizedInventoryItemDTO
+        _allItems.AddRange(shipData.Data.Select(dataItem => new StorageInventoryItemDTO
         {
             Name = dataItem.Name,
             NameLocalised = string.IsNullOrWhiteSpace(dataItem.NameLocalised)
@@ -128,7 +128,7 @@ public sealed partial class StorageViewModel : PageViewModel
             return true;
         }).OrderBy(item => item.NameLocalised).ThenBy(item => item.Category);
 
-        FilteredItems = new ObservableCollection<CategorizedInventoryItemDTO>(filtered);
+        FilteredItems = new ObservableCollection<StorageInventoryItemDTO>(filtered);
 
         OnPropertyChanged(nameof(HasNoItems));
         OnPropertyChanged(nameof(ItemsText));

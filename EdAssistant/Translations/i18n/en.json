@@ -89,6 +89,17 @@
       "Data": "Data"
     }
   },
+  "MaterialsWindow": {
+    "Title": "Materials",
+    "Raw": "Raw ({0})",
+    "Manufactured": "Manufactured ({0})",
+    "Encoded": "Encoded ({0})",
+    "Categories": {
+      "Raw": "Raw",
+      "Manufactured": "Manufactured",
+      "Encoded": "Encoded"
+    }
+  },
   "CargoWindow": {
     "Title": "Cargo Storage",
     "IsStolen": "Stolen: "

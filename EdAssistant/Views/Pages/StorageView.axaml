@@ -86,7 +86,7 @@
 				</ItemsControl.ItemsPanel>
 
 				<ItemsControl.ItemTemplate>
-					<DataTemplate DataType="dto:CategorizedInventoryItemDTO">
+					<DataTemplate DataType="dto:StorageInventoryItemDTO">
 						<Border Classes="storage-item-card"
                                 CornerRadius="12"
                                 Padding="16"

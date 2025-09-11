@@ -6,10 +6,10 @@ namespace EdAssistant.ViewModels.Pages;
 public sealed partial class CargoViewModel : PageViewModel
 {
     private readonly IGameDataService _gameDataService;
-    private readonly List<InventoryItemDTO> _allItems = new();
+    private readonly List<CargoInventoryItemDTO> _allItems = new();
 
     [ObservableProperty]
-    private ObservableCollection<InventoryItemDTO> filteredItems = new();
+    private ObservableCollection<CargoInventoryItemDTO> filteredItems = new();
 
     [ObservableProperty]
     private string searchText = string.Empty;
@@ -43,7 +43,7 @@ public sealed partial class CargoViewModel : PageViewModel
     private void ProcessCargoData(CargoEvent cargoData)
     {
         _allItems.Clear();
-        _allItems.AddRange(cargoData.Inventory.Select(x => new InventoryItemDTO
+        _allItems.AddRange(cargoData.Inventory.Select(x => new CargoInventoryItemDTO
         {
             Name = $"{x.Name.Capitalize()} ({x.Count})",
             IsStolen = Convert.ToBoolean(x.Stolen)
@@ -65,7 +65,7 @@ public sealed partial class CargoViewModel : PageViewModel
             return true;
         }).OrderBy(item => item.Name);
 
-        FilteredItems = new ObservableCollection<InventoryItemDTO>(filtered);
+        FilteredItems = new ObservableCollection<CargoInventoryItemDTO>(filtered);
         OnPropertyChanged(nameof(HasNoItems));
     }
 }

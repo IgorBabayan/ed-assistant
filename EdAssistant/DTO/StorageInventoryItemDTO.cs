@@ -1,6 +1,6 @@
 ﻿namespace EdAssistant.DTO;
 
-public class CategorizedInventoryItemDTO
+public class StorageInventoryItemDTO
 {
     public required string Name { get; set; }
     public required string NameLocalised { get; set; }
