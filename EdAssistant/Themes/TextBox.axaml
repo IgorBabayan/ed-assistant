@@ -42,47 +42,50 @@
 		<Setter Property="Template">
 			<ControlTemplate>
 				<Border x:Name="border"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding CornerRadius}">
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						CornerRadius="{TemplateBinding CornerRadius}">
 					<Grid>
 						<ScrollViewer x:Name="PART_ScrollViewer"
-                                      HorizontalScrollBarVisibility="Hidden"
-                                      VerticalScrollBarVisibility="Hidden"
-                                      Padding="{TemplateBinding Padding}">
+									  HorizontalScrollBarVisibility="Hidden"
+									  VerticalScrollBarVisibility="Hidden"
+									  BringIntoViewOnFocusChange="True"
+									  Padding="0">
 							<TextPresenter x:Name="PART_TextPresenter"
-                                           Text="{TemplateBinding Text}"
-                                           CaretBrush="{TemplateBinding CaretBrush}"
-                                           SelectionBrush="{TemplateBinding SelectionBrush}"
-                                           CaretIndex="{TemplateBinding CaretIndex}"
-                                           SelectionStart="{TemplateBinding SelectionStart}"
-                                           SelectionEnd="{TemplateBinding SelectionEnd}"
-                                           TextAlignment="{TemplateBinding TextAlignment}"
-                                           TextWrapping="{TemplateBinding TextWrapping}"
-                                           LineHeight="{TemplateBinding LineHeight}"
-                                           LetterSpacing="{TemplateBinding LetterSpacing}"
-                                           PasswordChar="{TemplateBinding PasswordChar}"
-                                           RevealPassword="{TemplateBinding RevealPassword}"
-                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+										   Text="{TemplateBinding Text}"
+										   CaretBrush="{TemplateBinding CaretBrush}"
+										   SelectionBrush="{TemplateBinding SelectionBrush}"
+										   CaretIndex="{TemplateBinding CaretIndex}"
+										   SelectionStart="{TemplateBinding SelectionStart}"
+										   SelectionEnd="{TemplateBinding SelectionEnd}"
+										   TextAlignment="{TemplateBinding TextAlignment}"
+										   TextWrapping="NoWrap"
+										   LineHeight="{TemplateBinding LineHeight}"
+										   LetterSpacing="{TemplateBinding LetterSpacing}"
+										   PasswordChar="{TemplateBinding PasswordChar}"
+										   RevealPassword="{TemplateBinding RevealPassword}"
+										   VerticalAlignment="Center"
+										   HorizontalAlignment="Left"
+										   Margin="{TemplateBinding Padding}"/>
 						</ScrollViewer>
 
 						<TextBlock x:Name="PART_Watermark"
-                                   Text="{TemplateBinding Watermark}"
-                                   Foreground="#80FFFFFF"
-                                   FontStyle="Italic"
-                                   Opacity="0.6"
-                                   Margin="{TemplateBinding Padding}"
-                                   VerticalAlignment="Center"
-                                   HorizontalAlignment="Left"
-                                   IsHitTestVisible="False"
-                                   IsVisible="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
+								   Text="{TemplateBinding Watermark}"
+								   Foreground="#80FFFFFF"
+								   FontStyle="Italic"
+								   Opacity="0.6"
+								   Margin="{TemplateBinding Padding}"
+								   VerticalAlignment="Center"
+								   HorizontalAlignment="Left"
+								   IsHitTestVisible="False"
+								   IsVisible="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
 					</Grid>
 				</Border>
 			</ControlTemplate>
 		</Setter>
     </Style>
-    <Style Selector="TextBox.hud /template/ Border#border, TextBox.hud /template/ Border#border">
+    <Style Selector="TextBox /template/ Border#border, TextBox /template/ Border#border">
         <Setter Property="BorderBrush" Value="{DynamicResource Accent.Brush}"/>
         <Setter Property="Transitions">
             <Transitions>
@@ -117,7 +120,6 @@
 
     <!--// ========= TextBox.search ========= //-->
 	<Style Selector="TextBox.search">
-        <Setter Property="Width" Value="300"/>
         <Setter Property="MinHeight" Value="40"/>
         <Setter Property="MaxHeight" Value="40"/>
         <Setter Property="FontSize" Value="14"/>
