@@ -5,6 +5,7 @@
              xmlns:dto="clr-namespace:EdAssistant.DTO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:CompileBindings="False"
+             xmlns:svg="clr-namespace:Avalonia.Svg;assembly=Avalonia.Svg"
              x:Class="EdAssistant.Views.Pages.HomeView">
 	<UserControl.Styles>
 		<Style Selector="Border.modern-card">
@@ -99,18 +100,15 @@
 								</Grid.RowDefinitions>
 
 								<!--// Icon placeholder //-->
-								<Border Grid.Row="0"
-                                        Width="40" Height="40"
-                                        CornerRadius="20"
-                                        Background="#F0F0F0"
-                                        HorizontalAlignment="Left"
-                                        Margin="0,0,0,12">
-									<TextBlock Text="📊"
-                                               FontSize="20"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"/>
-								</Border>
-
+                                <Image Grid.Row="0"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Width="40"
+                                       Height="40">
+                                    <Image.Source>
+                                        <SvgImage Source="{Binding Rank, Converter={StaticResource RankToIconConverter}}"/>
+                                    </Image.Source>
+                                </Image>
 								<TextBlock Grid.Row="1"
                                            Classes="modern-title"
                                            Text="{Binding Rank, Converter={StaticResource EnumLocalizationConverter}}"/>

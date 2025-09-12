@@ -23,6 +23,7 @@
         <converters:DockEqualsConverter x:Key="DockEqualsConverter"/>
 		<converters:BoolToYesNoConverter x:Key="BoolToYesNoConverter" />
 		<converters:EnumLocalizationConverter x:Key="EnumLocalizationConverter" />
+		<converters:RankToIconConverter x:Key="RankToIconConverter" />
     </Application.Resources>
 
     <Application.DataTemplates>
