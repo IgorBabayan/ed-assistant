@@ -1,0 +1,349 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ext="clr-namespace:EdAssistant.Helpers.Extensions"
+             xmlns:local="clr-namespace:EdAssistant.Models.Enums"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:CompileBindings="False"
+             x:Class="EdAssistant.Views.SidebarNavigation">
+	<UserControl.Styles>
+		<!--// Navigation Item Button Style - Expanded //-->
+		<Style Selector="Button.nav-item">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Padding" Value="12,8"/>
+			<Setter Property="Margin" Value="0,1"/>
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+			<Setter Property="HorizontalContentAlignment" Value="Left"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="CornerRadius" Value="6"/>
+			<Setter Property="MinHeight" Value="36"/>
+			<Setter Property="Transitions">
+				<Transitions>
+					<TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+				</Transitions>
+			</Setter>
+		</Style>
+
+		<Style Selector="Button.nav-item Path">
+			<Setter Property="Width" Value="18"/>
+			<Setter Property="Height" Value="18"/>
+			<Setter Property="Fill" Value="{DynamicResource Accent.Light.Brush}"/>
+            <Setter Property="Stretch" Value="UniformToFill"/>
+        </Style>
+
+        <!--// Navigation Item Button Style - Collapsed //-->
+		<Style Selector="Button.nav-item.collapsed">
+			<Setter Property="Padding" Value="8"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="MinHeight" Value="32"/>
+		</Style>
+
+		<Style Selector="Button.nav-item:pointerover">
+			<Setter Property="Background" Value="#4a5568"/>
+			<Setter Property="RenderTransform" Value="translateX(4px)"/>
+		</Style>
+
+		<Style Selector="Button.nav-item.collapsed:pointerover">
+			<Setter Property="RenderTransform" Value="none"/>
+		</Style>
+
+		<Style Selector="Button.nav-item:pressed">
+			<Setter Property="Background" Value="#2d3748"/>
+		</Style>
+
+		<Style Selector="Button.nav-item.active">
+			<Setter Property="Background" Value="#3182ce"/>
+		</Style>
+
+        <Style Selector="Button.nav-item.active Path">
+            <Setter Property="Fill" Value="White"/>
+        </Style>
+
+		<!--// Section Title Style //-->
+		<Style Selector="TextBlock.section-title">
+			<Setter Property="FontSize" Value="11"/>
+			<Setter Property="Foreground" Value="#a0aec0"/>
+			<Setter Property="Margin" Value="0,0,0,12"/>
+			<Setter Property="LetterSpacing" Value="0.5"/>
+		</Style>
+
+		<Style Selector="TextBlock.section-title.collapsed">
+			<Setter Property="IsVisible" Value="False"/>
+		</Style>
+
+		<!--// Toggle Button Style //-->
+		<Style Selector="Button.toggle-btn">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="Padding" Value="8"/>
+			<Setter Property="CornerRadius" Value="4"/>
+		</Style>
+
+		<Style Selector="Button.toggle-btn:pointerover">
+			<Setter Property="Background" Value="#4a5568"/>
+		</Style>
+
+		<!--// Navigation text styles //-->
+		<Style Selector="TextBlock.nav-text">
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+
+		<Style Selector="TextBlock.nav-text.collapsed">
+			<Setter Property="IsVisible" Value="False"/>
+		</Style>
+
+		<!--// App title styles //-->
+		<Style Selector="TextBlock.app-title.collapsed">
+			<Setter Property="IsVisible" Value="False"/>
+		</Style>
+	</UserControl.Styles>
+
+	<Border Background="#2d3748" 
+            CornerRadius="0">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+			<Border Grid.Row="0"
+					BorderBrush="#4a5568"
+					BorderThickness="0,0,0,1"
+					Padding="20">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Name="AppTitle"
+                               Classes="app-title"
+                               Text="Elite Dangerous Assistant"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="White"
+                               VerticalAlignment="Center"/>
+
+					<!--// Menu Button //-->
+					<Button Grid.Column="1"
+							Name="ToggleButton"
+							Classes="toggle-btn"
+                            Width="36"
+                            Height="36"
+                            VerticalContentAlignment="Center"
+                            HorizontalContentAlignment="Center"
+							Click="ToggleButton_Click">
+                        <Path Data="{DynamicResource MenuIcon}" Width="18" Height="18"/>
+                    </Button>
+				</Grid>
+			</Border>
+
+			<!--// Navigation Content //-->
+			<ScrollViewer Grid.Row="1"
+						  HorizontalScrollBarVisibility="Disabled"
+						  VerticalScrollBarVisibility="Auto">
+				<StackPanel Name="MainStackPanel" Margin="20,16">
+
+					<!--// Home Section //-->
+                    <Button Classes="nav-item active"
+                            Name="HomeBtn"
+                            Click="NavigationItem_Click"
+                            Tag="Home"
+                            Command="{Binding NavigateToCommand}"
+                            CommandParameter="{x:Static local:DockEnum.Home}"
+                            Margin="0,0,0,16">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Path Data="{DynamicResource HomeIcon}"/>
+                            <TextBlock Grid.Column="1"
+                                       Classes="nav-text"
+                                       Text="{ext:Localize Dock.Home}"
+                                       Margin="12,0,0,0"/>
+                        </Grid>
+                    </Button>
+
+					<!--// Ship Section //-->
+					<StackPanel Name="DataSection" Margin="0,0,0,16">
+						<TextBlock Classes="section-title" 
+                                   Text="Data Management"/>
+
+						<Button Classes="nav-item"
+                                Click="NavigationItem_Click"
+                                Tag="Cargo"
+                                Command="{Binding NavigateToCommand}"
+                                CommandParameter="{x:Static local:DockEnum.Cargo}"
+                                IsVisible="{Binding IsCargo}"
+                                IsEnabled="{Binding IsCargo}">
+							<Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Path Data="{DynamicResource CargoIcon}"/>
+								<TextBlock Grid.Column="1" 
+                                           Classes="nav-text" 
+                                           Text="{ext:Localize Dock.Cargo}" 
+                                           Margin="12,0,0,0"/>
+							</Grid>
+						</Button>
+
+						<Button Classes="nav-item" 
+                                Click="NavigationItem_Click" 
+                                Tag="Materials"
+                                Command="{Binding NavigateToCommand}"
+                                CommandParameter="{x:Static local:DockEnum.Materials}"
+                                IsVisible="{Binding IsMaterials}"
+                                IsEnabled="{Binding IsMaterials}">
+							<Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Path Data="{DynamicResource MaterialsIcon}"/>
+								<TextBlock Grid.Column="1"
+                                           Classes="nav-text" 
+                                           Text="{ext:Localize Dock.Materials}" 
+                                           Margin="12,0,0,0"/>
+							</Grid>
+						</Button>
+
+						<Button Classes="nav-item" 
+                                Click="NavigationItem_Click"
+                                Tag="Storage"
+                                CommandParameter="{x:Static local:DockEnum.ShipLocker}"
+                                Command="{Binding NavigateToCommand}"
+                                IsVisible="{Binding IsStorage}"
+                                IsEnabled="{Binding IsStorage}">
+							<Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Path Data="{DynamicResource StorageIcon}"/>
+								<TextBlock Grid.Column="1" 
+                                           Classes="nav-text" 
+                                           Text="{ext:Localize Dock.Storage}" 
+                                           Margin="12,0,0,0"/>
+							</Grid>
+						</Button>
+					</StackPanel>
+
+					<!--// System Section //-->
+					<StackPanel Name="ToolsSection" Margin="0,0,0,16">
+						<TextBlock Classes="section-title" Text="Tools"/>
+
+						<Button Classes="nav-item" 
+                                Click="NavigationItem_Click"
+                                Tag="System"
+                                Command="{Binding NavigateToCommand}"
+                                CommandParameter="{x:Static local:DockEnum.System}"
+                                IsVisible="{Binding IsSystem}"
+                                IsEnabled="{Binding IsSystem}">
+							<Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Path Data="{DynamicResource SystemIcon}"/>
+								<TextBlock Grid.Column="1" 
+                                           Classes="nav-text"
+                                           Text="{ext:Localize Dock.System}"
+                                           Margin="12,0,0,0"/>
+							</Grid>
+						</Button>
+
+						<Button Classes="nav-item" 
+                                Click="NavigationItem_Click" 
+                                Tag="Planet"
+                                Command="{Binding NavigateToCommand}"
+                                CommandParameter="{x:Static local:DockEnum.Planet}"
+                                IsVisible="{Binding IsPlanet}"
+                                IsEnabled="{Binding IsPlanet}">
+							<Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Path Data="{DynamicResource PlanetIcon}"/>
+								<TextBlock Grid.Column="1" 
+                                           Classes="nav-text" 
+                                           Text="{ext:Localize Dock.Planet}" 
+                                           Margin="12,0,0,0"/>
+							</Grid>
+						</Button>
+					</StackPanel>
+
+					<!--// Administration Section //-->
+					<StackPanel Name="AdminSection" Margin="0,0,0,16">
+						<TextBlock Classes="section-title" Text="Administration"/>
+
+						<Button Classes="nav-item" 
+                                Click="NavigationItem_Click"
+                                Tag="Market Connector"
+                                Command="{Binding NavigateToCommand}"
+                                CommandParameter="{x:Static local:DockEnum.MarketConnector}"
+                                IsVisible="{Binding IsMarketConnector}"
+                                IsEnabled="{Binding IsMarketConnector}">
+							<Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Path Data="{DynamicResource MarketConnectorIcon}"/>
+								<TextBlock Grid.Column="1" 
+                                           Classes="nav-text" 
+                                           Text="{ext:Localize Dock.MarketConnector}" 
+                                           Margin="12,0,0,0"/>
+							</Grid>
+						</Button>
+
+						<Button Classes="nav-item" 
+                                Click="NavigationItem_Click"
+                                Tag="Logs"
+                                Command="{Binding NavigateToCommand}"
+                                CommandParameter="{x:Static local:DockEnum.Log}"
+                                IsVisible="{Binding IsLog}"
+                                IsEnabled="{Binding IsLog}">
+							<Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Path Data="{DynamicResource LogIcon}"/>
+								<TextBlock Grid.Column="1"
+                                           Classes="nav-text" 
+                                           Text="{ext:Localize Dock.Logs}" 
+                                           Margin="12,0,0,0"/>
+							</Grid>
+						</Button>
+
+						<Button Classes="nav-item"
+                                Click="NavigationItem_Click"
+                                Tag="Settings"
+                                Command="{Binding NavigateToCommand}"
+                                CommandParameter="{x:Static local:DockEnum.Settings}">
+							<Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Path Data="{DynamicResource SettingsIcon}"/>
+								<TextBlock Grid.Column="1" 
+                                           Classes="nav-text" 
+                                           Text="{ext:Localize Dock.Settings}"
+                                           Margin="12,0,0,0"/>
+							</Grid>
+						</Button>
+					</StackPanel>
+				</StackPanel>
+			</ScrollViewer>
+		</Grid>
+	</Border>
+</UserControl>

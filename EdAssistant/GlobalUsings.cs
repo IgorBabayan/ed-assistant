@@ -22,6 +22,7 @@ global using Avalonia.Data.Converters;
 global using Avalonia.Data.Core.Plugins;
 global using Avalonia.Input;
 global using Avalonia.Interactivity;
+global using Avalonia.LogicalTree;
 global using Avalonia.Markup.Xaml;
 global using Avalonia.Media;
 global using Avalonia.Platform;

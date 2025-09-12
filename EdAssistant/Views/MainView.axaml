@@ -12,11 +12,15 @@
             BorderBrush="{StaticResource Border.Brush}">
 		<Grid>
 			<Grid.RowDefinitions>
-				<RowDefinition Height="24"></RowDefinition>
-				<RowDefinition Height="*"></RowDefinition>
-				<RowDefinition Height="64"></RowDefinition>
+				<RowDefinition Height="24"/>
+				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 			<Border Grid.Row="0"
+					Grid.ColumnSpan="2"
                     Background="Transparent"
 					PointerPressed="OnPointPressed"
                     DoubleTapped="OnDoubleTapped">
@@ -68,8 +72,11 @@
 					</StackPanel>
 				</Grid>
 			</Border>
-			<ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}" />
-			<views:Dock Grid.Row="2" HorizontalContentAlignment="Center"></views:Dock>
+			<views:SidebarNavigation Grid.Row="1"
+                                     Grid.Column="0"/>
+            <ContentControl Grid.Row="1" 
+							Grid.Column="1"
+                            Content="{Binding CurrentViewModel}" />
 		</Grid>
     </Border>
 </UserControl>
