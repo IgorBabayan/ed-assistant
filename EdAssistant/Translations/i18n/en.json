@@ -3,15 +3,7 @@
     "SelectFolderTitle": "Select a folder",
     "Yes": "Yes",
     "No": "No",
-    "Watermark": "Search items...",
-    "CleanUpCache": "Cleaned up {0} event cache entries",
-    "Loading": "Loading storage data...",
-    "CheckData": "Checking for existing data...",
-    "ProcessCache": "Processing cached data...",
-    "LoadingFromFile": "Loading from files...",
-    "ProcessLoadedData": "Processing loaded data...",
-    "NoStorageFound": "No storage data found. Please ensure game files are accessible.",
-    "OperationCanceled": "[{0}]: Operation canceled by user."
+    "Watermark": "Search items"
   },
   "Exceptions": {
     "NoStorageProvider": "No StorageProvider available.",
@@ -21,22 +13,7 @@
     "FileNotFound": "File not found: {0}",
     "FailedToLoadFileData": "Failed to load data from {0}",
     "ParsingJournalEvent": "Error parsing journal event to {0}: {1}",
-    "UnknownJournalEvent": "Unknown event type '{0}' encountered, skipping. Line: {1}",
-    "ErrorLoadData": "Error loading data: {0}",
-    "ErrorProcessingData": "Error processing data: {0}",
-    "JournalsPathNotFound": "Journals path not found: {0}",
-    "ErrorDuringDataLoading": "Error during data loading",
-    "FailedToProcessJournalLine": "Failed to process journal line in {0}: {1}",
-    "ErrorProcessingRegularEvents": "Error processing regular events from {0}"
-  },
-  "Initialization": {
-    "Starting": "Starting initialization with path: {0}",
-    "BackgroundDataLoadingFailed": "Background data loading failed",
-    "BackgroundDataLoadingCompleted": "Background data loading completed in {0} seconds",
-    "InitializationStarted": "Initialization started, UI ready in {0} seconds",
-    "InitializationFailed": "Initialization failed",
-    "ProcessedEvents": "Processed {0} priority events from {1}",
-    "Loaded": "Loaded {0} events from {1} ({2} priority, {3} regular)"
+    "UnknownJournalEvent": "Unknown event type '{0}' encountered, skipping. Line: {1}"
   },
   "Filtering": {
     "NoItemsFound": "No items found",

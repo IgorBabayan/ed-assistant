@@ -4,9 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="EdAssistant.Views.Pages.HomeView">
-	<Grid>
-        <TextBlock Text="HOME"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
-    </Grid>
+	<UniformGrid Columns="4" Margin="{DynamicResource Space.4}">
+        <Border Classes="card" Margin="{DynamicResource Space.1}">
+            <Grid>
+                <TextBlock Classes="title" Text="Rank 1"/>
+            </Grid>
+        </Border>
+        <Border Classes="card" Margin="{DynamicResource Space.1}"></Border>
+        <Border Classes="card" Margin="{DynamicResource Space.1}"></Border>
+        <Border Classes="card" Margin="{DynamicResource Space.1}"></Border>
+        <Border Classes="card" Margin="{DynamicResource Space.1}"></Border>
+    </UniformGrid>
 </UserControl>
