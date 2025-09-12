@@ -8,7 +8,7 @@ public enum RankEnum
     [Display(Name = "Rank.Trade.Title")]
     Trade,
 
-    [Display(Name = "Rank.Explore.Title")]
+    [Display(Name = "Rank.Exploration.Title")]
     Explore,
 
     [Display(Name = "Rank.Soldier.Title")]
