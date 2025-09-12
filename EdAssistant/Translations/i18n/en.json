@@ -88,5 +88,38 @@
   "CargoWindow": {
     "Title": "Cargo Storage",
     "IsStolen": "Stolen: "
+  },
+  "Rank": {
+    "Combat": {
+      "Title": "Combat rank"
+    },
+    "Trade": {
+      "Title": "Trade rank"
+    },
+    "Explore": {
+      "Title": "Explore rank"
+    },
+    "Soldier": {
+      "Title": "Soldier rank"
+    },
+    "Exobiologist": {
+      "Title": "Exobiologist rank"
+    },
+    "Empire": {
+      "Title": "Empire rank"
+    },
+    "Federation": {
+      "Title": "Federation rank"
+    },
+    "CQC": {
+      "Title": "CQC rank"
+    },
+    "Unknown": "Unknown rank"
+  },
+  "Reputation": {
+    "Empire": "Empire reputation",
+    "Federation": "Federation reputation",
+    "Alliance": "Alliance reputation",
+    "Independent": "Independent reputation"
   }
 }

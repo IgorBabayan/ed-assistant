@@ -20,25 +20,21 @@
 				<ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 			<Border Grid.Row="0"
-					Grid.ColumnSpan="2"
+					Grid.Column="1"
                     Background="Transparent"
 					PointerPressed="OnPointPressed"
                     DoubleTapped="OnDoubleTapped">
 				<Grid>
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="24"></ColumnDefinition>
 						<ColumnDefinition Width="*"></ColumnDefinition>
 						<ColumnDefinition Width="Auto"></ColumnDefinition>
 					</Grid.ColumnDefinitions>
-					<Image Grid.Column="0"
-                           Source="../Assets/logo.ico" 
-                           Margin="5,0,0,0"/>
-					<TextBlock Grid.Column="1" 
+					<TextBlock Grid.Column="0" 
                                Classes="caption" 
                                Text="{Binding WindowTitle}" 
                                HorizontalAlignment="Center" 
                                VerticalAlignment="Center"/>
-					<StackPanel Grid.Column="2"
+					<StackPanel Grid.Column="1"
 								Margin="0,2,2,0"
                                 Orientation="Horizontal">
 						<Button Command="{Binding CreateDesktopFileCommand}"
@@ -72,7 +68,8 @@
 					</StackPanel>
 				</Grid>
 			</Border>
-			<views:SidebarNavigation Grid.Row="1"
+			<views:SidebarNavigation Grid.RowSpan="2"
+									 Grid.Row="0"
                                      Grid.Column="0"/>
             <ContentControl Grid.Row="1" 
 							Grid.Column="1"

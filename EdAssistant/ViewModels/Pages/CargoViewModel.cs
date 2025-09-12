@@ -6,10 +6,10 @@ namespace EdAssistant.ViewModels.Pages;
 public sealed partial class CargoViewModel : PageViewModel
 {
     private readonly IGameDataService _gameDataService;
-    private readonly List<CargoInventoryItemDTO> _allItems = new();
+    private readonly List<CargoInventoryItemDTO> _allItems = [];
 
     [ObservableProperty]
-    private ObservableCollection<CargoInventoryItemDTO> filteredItems = new();
+    private ObservableCollection<CargoInventoryItemDTO> filteredItems = [];
 
     [ObservableProperty]
     private string searchText = string.Empty;
@@ -28,7 +28,10 @@ public sealed partial class CargoViewModel : PageViewModel
         }
     }
 
-    public override void Dispose() => _gameDataService.DataLoaded -= OnGameDataLoaded;
+    public override void Dispose()
+    {
+        _gameDataService.DataLoaded -= OnGameDataLoaded;
+    }
 
     partial void OnSearchTextChanged(string value) => ApplyFilters();
 
@@ -58,8 +61,7 @@ public sealed partial class CargoViewModel : PageViewModel
         {
             if (!string.IsNullOrWhiteSpace(SearchText))
             {
-                var searchLower = SearchText.ToLowerInvariant();
-                return item.Name.ToLowerInvariant().Contains(searchLower);
+                return string.Equals(item.Name, SearchText, StringComparison.OrdinalIgnoreCase);
             }
 
             return true;

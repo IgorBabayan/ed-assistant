@@ -7,8 +7,8 @@ public partial class MainViewModel : BaseViewModel
     private readonly IDesktopService _desktopService;
     private readonly IGameDataService _gameDataService;
 
-    private static readonly Dictionary<Type, DockEnum> _viewModelToDockCache = new();
-    private static readonly Dictionary<DockEnum, Type> _dockToViewModelCache = new();
+    private static readonly Dictionary<Type, DockEnum> _viewModelToDockCache = [];
+    private static readonly Dictionary<DockEnum, Type> _dockToViewModelCache = [];
 
     [ObservableProperty]
     private string? windowTitle;
@@ -29,6 +29,7 @@ public partial class MainViewModel : BaseViewModel
     [NotifyCanExecuteChangedFor(nameof(NavigateToCommand))]
     private PageViewModel? currentViewModel;
 
+    public static bool CanCreateDesktopFile => OperatingSystem.IsLinux();
     public bool IsCargo => _dockVisibilityService.GetVisibility(DockEnum.Cargo);
     public bool IsMaterials => _dockVisibilityService.GetVisibility(DockEnum.Materials);
     public bool IsStorage => _dockVisibilityService.GetVisibility(DockEnum.ShipLocker);
@@ -36,7 +37,6 @@ public partial class MainViewModel : BaseViewModel
     public bool IsPlanet => _dockVisibilityService.GetVisibility(DockEnum.Planet);
     public bool IsMarketConnector => _dockVisibilityService.GetVisibility(DockEnum.MarketConnector);
     public bool IsLog => _dockVisibilityService.GetVisibility(DockEnum.Log);
-    public bool CanCreateDesktopFile => OperatingSystem.IsLinux();
 
     public bool IsPlanetarySystem => IsSystem || IsPlanet;
     public bool IsInventory => IsCargo || IsMaterials || IsStorage;
@@ -55,32 +55,14 @@ public partial class MainViewModel : BaseViewModel
         _gameDataService.JournalLoaded += OnJournalLoaded;
 
         ProcessCommanderEvent();
-        ProcessRankEvent();
-        ProcessProgressEvent();
     }
 
     public override void Dispose()
     {
         _dockVisibilityService.VisibilityChanged -= OnDockVisibilityChanged;
         _gameDataService.JournalLoaded -= OnJournalLoaded;
-    }
 
-    private void OnJournalLoaded(object? sender, JournalEventLoadedEventArgs e)
-    {
-        switch (e)
-        {
-            case { EventType: JournalEventType.Commander, Event: CommanderEvent commander }:
-                ProcessCommander(commander);
-                break;
-
-            case { EventType: JournalEventType.Rank, Event: RankEvent rank }:
-                ProcessRank(rank);
-                break;
-
-            case { EventType: JournalEventType.Progress, Event: ProgressEvent progress }:
-                ProcessProgress(progress);
-                break;
-        }
+        GC.SuppressFinalize(this);
     }
 
     private void ProcessCommander(CommanderEvent commander)
@@ -88,32 +70,10 @@ public partial class MainViewModel : BaseViewModel
         WindowTitle = string.Format(Localization.Instance["MainWindow.TitleLoaded"], commander.Name);
     }
 
-    private void ProcessRankEvent()
+    private void OnJournalLoaded(object? sender, JournalEventLoadedEventArgs e)
     {
-        var rankEvent = _gameDataService.GetLatestJournal<RankEvent>();
-        if (rankEvent is not null)
-        {
-            ProcessRank(rankEvent);
-        }
-    }
-
-    private void ProcessProgressEvent()
-    {
-        var progressEvent = _gameDataService.GetLatestJournal<ProgressEvent>();
-        if (progressEvent is not null)
-        {
-            ProcessProgress(progressEvent);
-        }
-    }
-
-    private void ProcessRank(RankEvent rank)
-    {
-
-    }
-
-    private void ProcessProgress(ProgressEvent progress)
-    {
-
+        if (e is { EventType: JournalEventType.Commander, Event: CommanderEvent commander })
+            ProcessCommander(commander);
     }
 
     private void ProcessCommanderEvent()

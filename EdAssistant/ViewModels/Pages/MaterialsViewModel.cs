@@ -6,10 +6,10 @@ namespace EdAssistant.ViewModels.Pages;
 public sealed partial class MaterialsViewModel : PageViewModel
 {
     private readonly IGameDataService _gameDataService;
-    private readonly List<MaterialsInventoryItemDTO> _allItems = new();
+    private readonly List<MaterialsInventoryItemDTO> _allItems = [];
 
     [ObservableProperty]
-    private ObservableCollection<MaterialsInventoryItemDTO> filteredItems = new(); 
+    private ObservableCollection<MaterialsInventoryItemDTO> filteredItems = []; 
     
     [ObservableProperty]
     private bool showRaw = true;
@@ -101,8 +101,7 @@ public sealed partial class MaterialsViewModel : PageViewModel
 
             if (!string.IsNullOrWhiteSpace(SearchText))
             {
-                var searchLower = SearchText.ToLowerInvariant();
-                return item.Name.ToLowerInvariant().Contains(searchLower);
+                return string.Equals(item.Name, SearchText, StringComparison.OrdinalIgnoreCase);
             }
 
             return true;

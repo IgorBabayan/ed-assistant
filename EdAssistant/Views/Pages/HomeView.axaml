@@ -2,17 +2,44 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dto="clr-namespace:EdAssistant.DTO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:CompileBindings="False"
              x:Class="EdAssistant.Views.Pages.HomeView">
-	<UniformGrid Columns="4" Margin="{DynamicResource Space.4}">
-        <Border Classes="card" Margin="{DynamicResource Space.1}">
-            <Grid>
-                <TextBlock Classes="title" Text="Rank 1"/>
-            </Grid>
-        </Border>
-        <Border Classes="card" Margin="{DynamicResource Space.1}"></Border>
-        <Border Classes="card" Margin="{DynamicResource Space.1}"></Border>
-        <Border Classes="card" Margin="{DynamicResource Space.1}"></Border>
-        <Border Classes="card" Margin="{DynamicResource Space.1}"></Border>
-    </UniformGrid>
+	<ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Hidden"
+                  Margin="{DynamicResource Space.4}">
+        <ItemsControl ItemsSource="{Binding Ranks}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+					<UniformGrid Columns="4"
+                                 HorizontalAlignment="Stretch"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="dto:RankDTO">
+                    <Border Classes="card"
+                            Margin="{DynamicResource Space.1}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Classes="title"
+                                       Text="{Binding Rank, Converter={StaticResource EnumLocalizationConverter}}"/>
+                            <StackPanel Grid.Row="1"
+                                        Orientation="Vertical"
+                                        VerticalAlignment="Center">
+                                <TextBlock Classes="caption"
+                                           Text="{Binding Title}"/>
+                                <ProgressBar Value="{Binding Progress}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
 </UserControl>

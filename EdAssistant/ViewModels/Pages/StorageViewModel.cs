@@ -120,9 +120,8 @@ public sealed partial class StorageViewModel : PageViewModel
 
             if (!string.IsNullOrWhiteSpace(SearchText))
             {
-                var searchLower = SearchText.ToLowerInvariant();
-                return item.Name.ToLowerInvariant().Contains(searchLower) ||
-                       item.NameLocalised.ToLowerInvariant().Contains(searchLower);
+                return string.Equals(item.Name, SearchText, StringComparison.OrdinalIgnoreCase) ||
+                       string.Equals(item.NameLocalised, SearchText, StringComparison.OrdinalIgnoreCase);
             }
 
             return true;

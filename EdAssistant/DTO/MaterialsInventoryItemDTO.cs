@@ -1,6 +1,6 @@
 ﻿namespace EdAssistant.DTO;
 
-public class MaterialsInventoryItemDTO
+public sealed class MaterialsInventoryItemDTO
 {
     public required string Name { get; set; }
     public string Icon { get; set; }

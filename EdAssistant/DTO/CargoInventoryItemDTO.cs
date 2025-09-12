@@ -1,6 +1,6 @@
 ﻿namespace EdAssistant.DTO;
 
-public class CargoInventoryItemDTO
+public sealed class CargoInventoryItemDTO
 {
     public required string Name { get; set; }
     public bool IsStolen { get; set; }
