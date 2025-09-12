@@ -50,16 +50,23 @@
     "Maximize": "Maximize window",
     "Close": "Close window"
   },
-  "Dock": {
-    "Home": "Home",
-    "Cargo": "Cargo",
-    "Materials": "Materials",
-    "Storage": "Storage",
-    "System": "System",
-    "Planet": "Planet",
-    "MarketConnector": "Market connector",
-    "Logs": "Logs",
-    "Settings": "Settings"
+  "Menu": {
+    "MenuItem": {
+      "Home": "Home",
+      "Cargo": "Cargo",
+      "Materials": "Materials",
+      "Storage": "Storage",
+      "System": "System",
+      "Planet": "Planet",
+      "MarketConnector": "Market connector",
+      "Logs": "Logs",
+      "Settings": "Settings"
+    },
+    "Section": {
+      "ShipStorage": "Ship storage",
+      "StarSystem": "Star system",
+      "Administration": "Administration"
+    }
   },
   "Settings": {
     "DockGroup": "Dock buttons",
