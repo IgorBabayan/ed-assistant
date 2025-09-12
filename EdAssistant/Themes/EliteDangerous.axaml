@@ -7,9 +7,9 @@
         <Color x:Key="Accent.Dark.Color">#3854D0</Color>
         <Color x:Key="Accent.Light.Color">#8AA0FF</Color>
 
-        <Color x:Key="Bg.Color">#0F1115</Color>
+        <Color x:Key="Bg.Color">#222222</Color>
         <Color x:Key="Card.Color">#151821</Color>
-        <Color x:Key="Border.Color">#242938</Color>
+        <Color x:Key="Border.Color">#5B5B56</Color>
         <Color x:Key="Text.Primary.Color">#F3F4F6</Color>
         <Color x:Key="Text.Secondary.Color">#C5C9D3</Color>
         <Color x:Key="Danger.Color">#E23D3D</Color>
@@ -47,16 +47,7 @@
         <CornerRadius x:Key="Radius.L">14</CornerRadius>
         <CornerRadius x:Key="Radius.XL">20</CornerRadius>
 
-        <!-- Typography -->
+        <!--// Typography //-->
         <FontFamily x:Key="App.Font">Segoe UI Variable, Segoe UI, Arial</FontFamily>
 	</Styles.Resources>
-
-    <!-- ========= Containers ========= -->
-    <Style Selector="Border.card">
-        <Setter Property="Background" Value="{StaticResource Card.Brush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource Border.Brush}"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="CornerRadius" Value="{StaticResource Radius.M}"/>
-        <Setter Property="Padding" Value="{StaticResource Space.4}"/>
-    </Style>
 </Styles>

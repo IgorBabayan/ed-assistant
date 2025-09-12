@@ -6,40 +6,132 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:CompileBindings="False"
              x:Class="EdAssistant.Views.Pages.HomeView">
-	<ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                  VerticalScrollBarVisibility="Hidden"
-                  Margin="{DynamicResource Space.4}">
-        <ItemsControl ItemsSource="{Binding Ranks}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-					<UniformGrid Columns="4"
-                                 HorizontalAlignment="Stretch"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+	<UserControl.Styles>
+		<Style Selector="Border.modern-card">
+			<Setter Property="Background" Value="{DynamicResource Bg.Brush}"/>
+			<Setter Property="BorderBrush" Value="{DynamicResource Border.Brush}"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="CornerRadius" Value="12"/>
+			<Setter Property="Padding" Value="20"/>
+			<Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
+			<Setter Property="Transitions">
+				<Transitions>
+					<DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+				</Transitions>
+			</Setter>
+		</Style>
 
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="dto:RankDTO">
-                    <Border Classes="card"
-                            Margin="{DynamicResource Space.1}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0"
-                                       Classes="title"
-                                       Text="{Binding Rank, Converter={StaticResource EnumLocalizationConverter}}"/>
-                            <StackPanel Grid.Row="1"
-                                        Orientation="Vertical"
-                                        VerticalAlignment="Center">
-                                <TextBlock Classes="caption"
-                                           Text="{Binding Title}"/>
-                                <ProgressBar Value="{Binding Progress}"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </ScrollViewer>
+		<Style Selector="Border.modern-card:pointerover">
+			<Setter Property="RenderTransform" Value="scale(1.02)"/>
+			<Setter Property="BoxShadow" Value="0 4 16 0 #2A000000"/>
+		</Style>
+
+		<Style Selector="TextBlock.modern-title">
+			<Setter Property="FontSize" Value="18"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="Margin" Value="0,0,0,16"/>
+		</Style>
+
+		<Style Selector="TextBlock.modern-caption">
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="Opacity" Value="0.8"/>
+			<Setter Property="Margin" Value="0,0,0,12"/>
+		</Style>
+
+		<Style Selector="ProgressBar.modern-progress">
+			<Setter Property="Height" Value="6"/>
+			<Setter Property="CornerRadius" Value="3"/>
+			<Setter Property="Background" Value="#E0E0E0"/>
+			<Setter Property="Foreground" Value="{DynamicResource Accent.Brush}" />
+			<Setter Property="Template">
+				<ControlTemplate>
+					<Border Name="PART_Track"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Height="{TemplateBinding Height}">
+						<Border Name="PART_Indicator"
+                                Background="{TemplateBinding Foreground}"
+                                HorizontalAlignment="Left"
+                                CornerRadius="{TemplateBinding CornerRadius}"/>
+					</Border>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+
+		<Style Selector="TextBlock.progress-value">
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="FontWeight" Value="Medium"/>
+			<Setter Property="HorizontalAlignment" Value="Right"/>
+			<Setter Property="Margin" Value="0,4,0,0"/>
+			<Setter Property="Opacity" Value="0.7"/>
+		</Style>
+	</UserControl.Styles>
+
+	<ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto"
+                  Margin="{DynamicResource Space.4}">
+
+		<!--// Header section //-->
+		<StackPanel>
+			<TextBlock Text="Progress Overview"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Margin="0,0,0,24"/>
+
+			<ItemsControl ItemsSource="{Binding Ranks}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<UniformGrid Columns="4"
+                                     HorizontalAlignment="Stretch"/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+
+				<ItemsControl.ItemTemplate>
+					<DataTemplate DataType="dto:RankDTO">
+						<Border Classes="modern-card"
+                                Margin="8">
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+
+								<!--// Icon placeholder //-->
+								<Border Grid.Row="0"
+                                        Width="40" Height="40"
+                                        CornerRadius="20"
+                                        Background="#F0F0F0"
+                                        HorizontalAlignment="Left"
+                                        Margin="0,0,0,12">
+									<TextBlock Text="📊"
+                                               FontSize="20"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+								</Border>
+
+								<TextBlock Grid.Row="1"
+                                           Classes="modern-title"
+                                           Text="{Binding Rank, Converter={StaticResource EnumLocalizationConverter}}"/>
+
+								<TextBlock Grid.Row="2"
+                                           Classes="modern-caption"
+                                           Text="{Binding Title}"
+                                           TextWrapping="Wrap"/>
+
+								<StackPanel Grid.Row="3">
+									<ProgressBar Classes="modern-progress"
+                                                 Value="{Binding Progress}"
+                                                 Maximum="100"/>
+									<TextBlock Classes="progress-value"
+                                               Text="{Binding Progress, StringFormat='{}{0}%'}"/>
+								</StackPanel>
+							</Grid>
+						</Border>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</StackPanel>
+	</ScrollViewer>
 </UserControl>

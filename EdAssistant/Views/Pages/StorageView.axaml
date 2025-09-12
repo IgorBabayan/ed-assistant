@@ -87,7 +87,7 @@
 
 				<ItemsControl.ItemTemplate>
 					<DataTemplate DataType="dto:StorageInventoryItemDTO">
-						<Border Classes="storage-item-card"
+						<Border Classes="card"
                                 CornerRadius="12"
                                 Padding="16"
                                 Margin="8"
@@ -95,17 +95,6 @@
                                 Background="{DynamicResource Card.Background}"
                                 BorderBrush="{DynamicResource Card.Border}"
                                 BorderThickness="1">
-
-							<Border.Styles>
-								<Style Selector="Border.storage-item-card">
-									<Setter Property="BoxShadow" Value="0 2 8 0 #10000000"/>
-								</Style>
-								<Style Selector="Border.storage-item-card:pointerover">
-									<Setter Property="BoxShadow" Value="0 4 16 0 #20000000"/>
-									<Setter Property="BorderBrush" Value="{DynamicResource Accent.Primary}"/>
-								</Style>
-							</Border.Styles>
-
 							<Grid>
 								<Grid.RowDefinitions>
 									<RowDefinition Height="Auto"/>

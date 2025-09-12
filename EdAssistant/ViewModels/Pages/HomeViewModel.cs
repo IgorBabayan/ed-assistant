@@ -6,7 +6,7 @@ public sealed partial class HomeViewModel : PageViewModel
     private readonly IGameDataService _gameDataService;
 
     [ObservableProperty]
-    private List<RankDTO> ranks = [];
+    private ObservableCollection<RankDTO> ranks = [];
 
     public HomeViewModel(IGameDataService gameDataService)
     {
