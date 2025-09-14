@@ -17,7 +17,7 @@ public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache
     public event EventHandler<GameDataLoadedEventArgs>? DataLoaded;
     public event EventHandler<JournalEventLoadedEventArgs>? JournalLoaded;
 
-    public async Task LoadAllGameDataAsync(string journalsFolder)
+    public async Task LoadLast(string journalsFolder)
     {
         if (string.IsNullOrWhiteSpace(journalsFolder) || !Directory.Exists(journalsFolder))
             return;
@@ -25,7 +25,20 @@ public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache
         Task[] tasks =
         [
             LoadShipData(journalsFolder),
-            LoadJournalData(journalsFolder)
+            LoadLastJournalData(journalsFolder)
+        ];
+        await Task.WhenAll(tasks);
+    }
+
+    public async Task LoadAll(string journalsFolder)
+    {
+        if (string.IsNullOrWhiteSpace(journalsFolder) || !Directory.Exists(journalsFolder))
+            return;
+
+        Task[] tasks =
+        [
+            LoadShipData(journalsFolder),
+            LoadAllJournalData(journalsFolder)
         ];
         await Task.WhenAll(tasks);
     }
@@ -162,7 +175,7 @@ public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache
         }
     }
 
-    private async Task LoadJournalData(string journalsFolder)
+    private async Task LoadLastJournalData(string journalsFolder)
     {
         _journalsFolder = journalsFolder;
         var journal = GetLastJournal(_journalsFolder);
@@ -230,5 +243,10 @@ public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache
         cache.Set(allEventsKey, newEvents, _expirationTime);
         cache.Set(lastWriteKey, journal.Value.Info.LastWriteTime, _expirationTime);
         cache.Set(lastPositionKey, currentPosition, _expirationTime);
+    }
+
+    private async Task LoadAllJournalData(string journalsFolder)
+    {
+        throw new NotImplementedException();
     }
 }

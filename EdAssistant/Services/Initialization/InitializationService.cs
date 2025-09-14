@@ -8,7 +8,7 @@ class InitializationService(IGameDataService gameDataService, IFolderPickerServi
         var journalsPath = folderPickerService.GetDefaultJournalsPath();
         if (!string.IsNullOrWhiteSpace(journalsPath) && Directory.Exists(journalsPath))
         {
-            await gameDataService.LoadAllGameDataAsync(journalsPath);
+            await gameDataService.LoadLast(journalsPath);
         }
     }
 }

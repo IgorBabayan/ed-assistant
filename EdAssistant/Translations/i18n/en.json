@@ -13,7 +13,8 @@
     "FileNotFound": "File not found: {0}",
     "FailedToLoadFileData": "Failed to load data from {0}",
     "ParsingJournalEvent": "Error parsing journal event to {0}: {1}",
-    "UnknownJournalEvent": "Unknown event type '{0}' encountered, skipping. Line: {1}"
+    "UnknownJournalEvent": "Unknown event type '{0}' encountered, skipping. Line: {1}",
+    "LoadingIconError": "Error loading icon: {0}"
   },
   "Filtering": {
     "NoItemsFound": "No items found",

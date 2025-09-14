@@ -8,7 +8,7 @@ public sealed partial class SettingsViewModel : PageViewModel
     private readonly IFolderPickerService _folderPickerService;
     private readonly ISettingsService _settingsService;
     private readonly IDockVisibilityService _dockVisibilityService;
-    private readonly IInitializationService _initializationService;
+    private readonly IGameDataService _gameDataService;
     private readonly ILogger<SettingsViewModel> _logger;
 
     public bool Cargo
@@ -85,13 +85,13 @@ public sealed partial class SettingsViewModel : PageViewModel
     [NotifyCanExecuteChangedFor(nameof(ReadAllCommand))]
     private string? journalsFolderPath;
 
-    public SettingsViewModel(IFolderPickerService folderPickerService, ILogger<SettingsViewModel> logger, IDockVisibilityService dockVisibilityService, ISettingsService settingsService, IInitializationService initializationService)
+    public SettingsViewModel(IFolderPickerService folderPickerService, ILogger<SettingsViewModel> logger, IDockVisibilityService dockVisibilityService, ISettingsService settingsService, IGameDataService gameDataService)
     {
         _folderPickerService = folderPickerService;
         _logger = logger;
         _dockVisibilityService = dockVisibilityService;
         _settingsService = settingsService;
-        _initializationService = initializationService;
+        _gameDataService = gameDataService;
 
         JournalsFolderPath = _folderPickerService.GetDefaultJournalsPath();
         LoadSettings();
@@ -144,7 +144,7 @@ public sealed partial class SettingsViewModel : PageViewModel
     }
 
     [RelayCommand(CanExecute = nameof(CanReadAll))]
-    private async Task ReadAllAsync() => await _initializationService.InitializeAsync();
+    private async Task ReadAllAsync() => await _gameDataService.LoadAll(JournalsFolderPath!);
 
     private bool CanReadAll() => !string.IsNullOrWhiteSpace(JournalsFolderPath) && Directory.Exists(JournalsFolderPath);
 

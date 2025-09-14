@@ -2,22 +2,44 @@
 
 public class RankToIconConverter : IValueConverter
 {
+    private static readonly Dictionary<RankEnum, Bitmap> _iconCache = new();
+
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is RankEnum rank)
         {
-            return rank switch
+            if (_iconCache.TryGetValue(rank, out var cachedBitmap))
+                return cachedBitmap;
+
+            var iconPath = rank switch
             {
-                RankEnum.Combat => "avares://EdAssistant/Assets/Icons/Ranks/Combat.svg",
-                RankEnum.Trade => "avares://EdAssistant/Assets/Icons/Ranks/Trader.svg",
-                RankEnum.Explore => "avares://EdAssistant/Assets/Icons/Ranks/Explore.svg",
-                RankEnum.Soldier => "avares://EdAssistant/Assets/Icons/Ranks/Soldier.svg",
-                RankEnum.Exobiologist => "avares://EdAssistant/Assets/Icons/Ranks/Exobiologist.svg",
-                RankEnum.Empire => "avares://EdAssistant/Assets/Icons/Ranks/Empire.svg",
-                RankEnum.Federation => "avares://EdAssistant/Assets/Icons/Ranks/Federation.svg",
-                RankEnum.CQC => "avares://EdAssistant/Assets/Icons/Ranks/CQC.svg",
-                _ => null,
+                RankEnum.Combat => "avares://EdAssistant/Assets/Icons/Ranks/Combat.png",
+                RankEnum.Trade => "avares://EdAssistant/Assets/Icons/Ranks/Trader.png",
+                RankEnum.Explore => "avares://EdAssistant/Assets/Icons/Ranks/Explorer.png",
+                RankEnum.Soldier => "avares://EdAssistant/Assets/Icons/Ranks/Soldier.png",
+                RankEnum.Exobiologist => "avares://EdAssistant/Assets/Icons/Ranks/Exobiologist.png",
+                RankEnum.Empire => "avares://EdAssistant/Assets/Icons/Ranks/Empire.png",
+                RankEnum.Federation => "avares://EdAssistant/Assets/Icons/Ranks/Federation.png",
+                RankEnum.CQC => "avares://EdAssistant/Assets/Icons/Ranks/CQC.png",
+                _ => null
             };
+
+            if (iconPath is not null)
+            {
+                try
+                {
+                    var uri = new Uri(iconPath);
+                    var bitmap = new Bitmap(AssetLoader.Open(uri));
+                    _iconCache[rank] = bitmap;
+
+                    return bitmap;
+                }
+                catch (Exception exception)
+                {
+                    Debug.WriteLine(Localization.Instance["Exceptions.LoadingIconError"], exception.Message);
+                    return null;
+                }
+            }
         }
 
         return null;

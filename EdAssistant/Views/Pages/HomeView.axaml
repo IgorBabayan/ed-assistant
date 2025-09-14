@@ -5,7 +5,6 @@
              xmlns:dto="clr-namespace:EdAssistant.DTO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:CompileBindings="False"
-             xmlns:svg="clr-namespace:Avalonia.Svg;assembly=Avalonia.Svg"
              x:Class="EdAssistant.Views.Pages.HomeView">
 	<UserControl.Styles>
 		<Style Selector="Border.modern-card">
@@ -92,38 +91,34 @@
 						<Border Classes="modern-card"
                                 Margin="8">
 							<Grid>
-								<Grid.RowDefinitions>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-								</Grid.RowDefinitions>
-
-								<!--// Icon placeholder //-->
-                                <Image Grid.Row="0"
-                                       HorizontalAlignment="Left"
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="Auto"/>
+									<ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0"
+                                       HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
-                                       Width="40"
-                                       Height="40">
-                                    <Image.Source>
-                                        <SvgImage Source="{Binding Rank, Converter={StaticResource RankToIconConverter}}"/>
-                                    </Image.Source>
-                                </Image>
-								<TextBlock Grid.Row="1"
-                                           Classes="modern-title"
-                                           Text="{Binding Rank, Converter={StaticResource EnumLocalizationConverter}}"/>
+                                       Width="120"
+                                       Height="120"
+                                       Source="{Binding Rank, Converter={StaticResource RankToIconConverter}}"/>
+                                <StackPanel Grid.Column="1"
+											HorizontalAlignment="Center"
+											VerticalAlignment="Center"
+                                            Margin="10,0,0,0">
+                                    <TextBlock Classes="modern-title"
+                                               Text="{Binding Rank, Converter={StaticResource EnumLocalizationConverter}}"/>
 
-								<TextBlock Grid.Row="2"
-                                           Classes="modern-caption"
-                                           Text="{Binding Title}"
-                                           TextWrapping="Wrap"/>
+                                    <TextBlock Classes="modern-caption"
+                                               Text="{Binding Title}"
+                                               TextWrapping="Wrap"/>
 
-								<StackPanel Grid.Row="3">
-									<ProgressBar Classes="modern-progress"
-                                                 Value="{Binding Progress}"
-                                                 Maximum="100"/>
-									<TextBlock Classes="progress-value"
-                                               Text="{Binding Progress, StringFormat='{}{0}%'}"/>
+                                    <StackPanel>
+                                        <ProgressBar Classes="modern-progress"
+                                                     Value="{Binding Progress}"
+                                                     Maximum="100"/>
+                                        <TextBlock Classes="progress-value"
+                                                   Text="{Binding Progress, StringFormat='{}{0}%'}"/>
+                                    </StackPanel>
 								</StackPanel>
 							</Grid>
 						</Border>
