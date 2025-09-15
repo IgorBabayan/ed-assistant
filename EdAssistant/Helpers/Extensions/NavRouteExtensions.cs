@@ -1,4 +1,6 @@
-﻿namespace EdAssistant.Helpers.Extensions;
+﻿using StarSystem = EdAssistant.Models.Route.StarSystem;
+
+namespace EdAssistant.Helpers.Extensions;
 
 public static class NavRouteExtensions
 {

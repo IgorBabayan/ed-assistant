@@ -1,6 +1,4 @@
-﻿using EdAssistant.Services.Initialization;
-
-namespace EdAssistant.Helpers.Extensions;
+﻿namespace EdAssistant.Helpers.Extensions;
 
 public static class ServiceExtensions
 {
@@ -14,6 +12,7 @@ public static class ServiceExtensions
         services.AddSingleton<IGameDataService, GameDataService>();
         services.AddSingleton<IInitializationService, InitializationService>();
         services.AddSingleton<IJournalEventFactory, JournalEventFactory>();
+        services.AddSingleton<ICelestialStructure, CelestialStructure>();
     }
 
     public static void RegisterViewModels(this IServiceCollection services)

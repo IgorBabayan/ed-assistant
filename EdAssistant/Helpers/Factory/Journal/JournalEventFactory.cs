@@ -30,6 +30,8 @@ class JournalEventFactory(ILogger<JournalEventFactory> logger) : IJournalEventFa
             "MarketBuy" => CreateEvent<MarketBuyEvent>(jsonLine),
             "Cargo" => CreateEvent<CargoEvent>(jsonLine),
             "ReceiveText" => CreateEvent<ReceiveTextEvent>(jsonLine),
+            "Scan" => CreateEvent<ScanEvent>(jsonLine),
+            "SAA" => CreateEvent<SAASignalsFoundEvent>(jsonLine),
             _ => HandleUnknownEvent(eventType, jsonLine)
         };
     }

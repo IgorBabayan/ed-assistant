@@ -15,5 +15,7 @@ public enum JournalEventType
     Undocked,
     MarketBuy,
     Cargo,
-    ReceiveText
+    ReceiveText,
+    Scan,
+    SAA
 }

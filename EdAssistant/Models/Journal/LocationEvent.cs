@@ -53,8 +53,8 @@ public class LocationEvent : JournalEvent
     [JsonPropertyName("Body")]
     public string Body { get; set; }
 
-    [JsonPropertyName("BodyID")]
-    public int BodyID { get; set; }
+    [JsonPropertyName("BodyId")]
+    public int BodyId { get; set; }
 
     [JsonPropertyName("BodyType")]
     public string BodyType { get; set; }

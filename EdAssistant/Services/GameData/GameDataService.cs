@@ -76,6 +76,27 @@ public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache
         return null;
     }
 
+    public IList<T> GetLatestJournals<T>() where T : JournalEvent
+    {
+        if (string.IsNullOrWhiteSpace(_journalsFolder))
+            return [];
+
+        var journal = GetLastJournal(_journalsFolder);
+        if (journal is null)
+            return [];
+
+        var lastJournalKey = GetLastJournalCacheKey(journal.Value.FileName);
+        var allEventsKey = $"{lastJournalKey}_AllEvents";
+
+        var cachedEvents = cache.Get<Dictionary<Type, List<JournalEvent>>>(lastJournalKey);
+        if (cachedEvents is not null && cachedEvents.TryGetValue(typeof(T), out var events))
+        {
+            return events.OfType<T>().ToList();
+        }
+
+        return [];
+    }
+
     private static string GetDataCacheKey<T>() => $"GameData_{typeof(T).Name}";
     private static string GetDataCacheKey(Type type) => $"GameData_{type.Name}";
     private static string GetJournalCacheKey(string fileName) => $"Journal_{Path.GetFileName(fileName)}";
