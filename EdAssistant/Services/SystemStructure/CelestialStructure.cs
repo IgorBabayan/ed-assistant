@@ -3,6 +3,7 @@
 class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructure
 {
     private readonly Dictionary<int, CelestialBody> _bodyLookup = new();
+    private readonly Dictionary<string, Station> _stationLookup = new();
     private readonly List<ScanEvent> _allScans = new();
     private SystemNode? _currentSystem;
     private string _currentSystemName = string.Empty;
@@ -48,6 +49,18 @@ class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructu
 
             logger.LogInformation(Localization.Instance["ScanProcess.AddedBody"], body.BodyName, body.BodyId, scanEvent.StarSystem);
         }
+    }
+
+    public void AddFSSSignalDiscoveredEvent(FSSSignalDiscoveredEvent fssSignal)
+    {
+        if (SystemAddress != fssSignal.SystemAddress)
+            return;
+
+        var station = CreateStationFromScan(fssSignal);
+        _stationLookup[fssSignal.SignalName] = station;
+        
+        logger.LogInformation("Added station {StationName} of type {StationType}", 
+            fssSignal.SignalName, fssSignal.SignalType);
     }
 
     // Simple name-based hierarchy building
@@ -120,7 +133,67 @@ class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructu
                 }
             }
         }
+        
+        // Step 4: Add stations to appropriate celestial bodies
+        AddStationsToHierarchy();
+        
         logger.LogInformation(Localization.Instance["ScanProcess.HierarchyBuildingComplete"]);
+    }
+    
+    private void AddStationsToHierarchy()
+    {
+        foreach (var station in _stationLookup.Values)
+        {
+            // Find the best celestial body to attach this station to
+            var targetBody = FindBestBodyForStation(station);
+            
+            if (targetBody is not null)
+            {
+                targetBody.Children.Add(station);
+                logger.LogInformation("Added station {StationName} to {BodyName}", 
+                    station.BodyName, targetBody.BodyName);
+            }
+            else
+            {
+                // Fallback: add to the main star or system root
+                var mainStar = _bodyLookup.Values.OfType<Star>().FirstOrDefault();
+                if (mainStar is not null)
+                {
+                    mainStar.Children.Add(station);
+                    logger.LogInformation("Added orphaned station {StationName} to main star", station.BodyName);
+                }
+                else
+                {
+                    _currentSystem?.Children.Add(station);
+                    logger.LogInformation("Added orphaned station {StationName} to system root", station.BodyName);
+                }
+            }
+        }
+    }
+    
+    private CelestialBody? FindBestBodyForStation(Station station)
+    {
+        // Strategy 1: Try to match by name similarity
+        // For example, if station is "Babbage Base" and there's a body "Babbage", match them
+        var stationNameParts = station.BodyName.ToLowerInvariant()
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            
+        foreach (var body in _bodyLookup.Values)
+        {
+            var bodyNameParts = body.BodyName.ToLowerInvariant()
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                
+            // Check if any significant part of the names match
+            if (stationNameParts.Intersect(bodyNameParts).Any())
+            {
+                return body;
+            }
+        }
+
+        // Strategy 2: Default placement near star (don't know yet how to place it correctly)
+        return _bodyLookup.Values.OfType<Star>()
+            .OrderBy(x => x.BodyId)
+            .FirstOrDefault() as CelestialBody;
     }
 
     private bool IsMoonOrBeltCluster(string bodyName)
@@ -186,7 +259,18 @@ class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructu
         return null;
     }
 
-    private CelestialBody CreateBodyFromScan(ScanEvent scanEvent)
+    private static Station CreateStationFromScan(FSSSignalDiscoveredEvent scanEvent) =>
+        scanEvent.SignalType switch
+        {
+            StationType.Outpost => new Outpost { BodyName = scanEvent.SignalName },
+            StationType.AsteroidBase => new Asteroid { BodyName = scanEvent.SignalName },
+            StationType.Coriolis => new Coriolis { BodyName = scanEvent.SignalName },
+            StationType.Orbis => new Orbis { BodyName = scanEvent.SignalName },
+            StationType.Ocellus => new Ocellus { BodyName = scanEvent.SignalName },
+            _ => new UnknownStation { BodyName = scanEvent.SignalName }
+        };
+
+    private static CelestialBody CreateBodyFromScan(ScanEvent scanEvent)
     {
         if (scanEvent.StarType is not null)
         {

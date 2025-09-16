@@ -3,8 +3,8 @@
 public abstract class CelestialBody
 {
     public string BodyName { get; set; } = string.Empty;
-    public int BodyId { get; set; }
-    public string BodyType { get; set; } = string.Empty;
+    public virtual int BodyId { get; set; }
+    public virtual string BodyType { get; set; } = string.Empty;
     public double DistanceFromArrivalLS { get; set; }
     public bool WasDiscovered { get; set; }
     public bool WasMapped { get; set; }

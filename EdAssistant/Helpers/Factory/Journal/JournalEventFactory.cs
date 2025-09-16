@@ -33,6 +33,7 @@ class JournalEventFactory(ILogger<JournalEventFactory> logger) : IJournalEventFa
             "Scan" => CreateEvent<ScanEvent>(jsonLine),
             "SAA" => CreateEvent<SAASignalsFoundEvent>(jsonLine),
             "FSDJump" => CreateEvent<FSDJumpEvent>(jsonLine),
+            "FSSSignalDiscovered" => CreateEvent<FSSSignalDiscoveredEvent>(jsonLine),
             _ => HandleUnknownEvent(eventType, jsonLine)
         };
     }

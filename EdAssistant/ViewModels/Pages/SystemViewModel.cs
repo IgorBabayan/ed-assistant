@@ -62,6 +62,28 @@ public sealed partial class SystemViewModel : PageViewModel
                 RefreshSystemDisplay();
             }
         }
+
+        if (e is { EventType: JournalEventType.FSSSignalDiscovered, Event: FSSSignalDiscoveredEvent fssSignalEvent })
+        {
+            if (_celestialStructure.SystemAddress == fssSignalEvent.SystemAddress)
+            {
+                _celestialStructure.AddFSSSignalDiscoveredEvent(fssSignalEvent);
+            }
+        }
+    }
+
+    private void ProcessFSSScans(IList<FSSSignalDiscoveredEvent> scans)
+    {
+        foreach (var scan in scans)
+        {
+            _celestialStructure.AddFSSSignalDiscoveredEvent(scan);
+        }
+        
+        if (_celestialStructure.SystemRoot?.Children?.Any() == true)
+        {
+            _celestialStructure.BuildHierarchy();
+            RefreshSystemDisplay();
+        }
     }
 
     private void ProcessScans(IList<ScanEvent> scans)
@@ -91,10 +113,22 @@ public sealed partial class SystemViewModel : PageViewModel
         {
             _celestialStructure.AddScanEvent(scan);
         }
+        
+        var existingFSSScans = _gameDataService.GetLatestJournals<FSSSignalDiscoveredEvent>();
+        if (existingFSSScans.Any())
+        {
+            var systemFSSScans = existingFSSScans
+                .Where(f => f.SystemAddress == latestScan?.SystemAddress)
+                .ToList();
+            
+            foreach (var fssScan in systemFSSScans)
+            {
+                _celestialStructure.AddFSSSignalDiscoveredEvent(fssScan);
+            }
+        }
 
         // Then build hierarchy using name-based logic
         _celestialStructure.BuildHierarchy();
-
         RefreshSystemDisplay();
     }
 
@@ -142,7 +176,7 @@ public sealed partial class SystemViewModel : PageViewModel
 
                 var nameText = new TextBlock
                 {
-                    Text = value.DisplayName,
+                    Text = value?.DisplayName,
                     VerticalAlignment = VerticalAlignment.Center,
                     UseLayoutRounding = true,
                     TextWrapping = TextWrapping.NoWrap,
@@ -186,6 +220,21 @@ public sealed partial class SystemViewModel : PageViewModel
             case BeltCluster:
             case Ring:
                 return new IconData("avares://EdAssistant/Assets/Icons/Star/Asteroid.png");
+            
+            case Outpost:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/Outpost.png");
+            
+            case Asteroid:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/AsteroidBase.png");
+            
+            case Coriolis:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/Coriolis.png");
+            
+            case Orbis:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/Orbis.png");
+            
+            case Ocellus:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/Ocellus.png");
             
             default:
                 return new IconData("avares://EdAssistant/Assets/Icons/Default/Unknown.png");

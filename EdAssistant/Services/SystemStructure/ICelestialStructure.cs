@@ -7,5 +7,6 @@ public interface ICelestialStructure
     long SystemAddress { get; set; }
     string SystemName { get; set; }
     void AddScanEvent(ScanEvent scanEvent);
+    void AddFSSSignalDiscoveredEvent(FSSSignalDiscoveredEvent fssSignal);
     void BuildHierarchy();
 }

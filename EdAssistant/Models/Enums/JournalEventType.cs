@@ -18,5 +18,6 @@ public enum JournalEventType
     ReceiveText,
     Scan,
     SAA,
-    FSDJump
+    FSDJump,
+    FSSSignalDiscovered
 }
