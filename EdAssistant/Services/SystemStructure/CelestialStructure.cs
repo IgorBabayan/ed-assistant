@@ -51,17 +51,17 @@ class CelestialStructure : ICelestialStructure
     private SystemNode? _currentSystem;
     private string _currentSystemName = string.Empty;
 
-    public IReadOnlyList<Star> Stars => 
-        _currentSystem?.Children.OfType<Star>().ToList().AsReadOnly() ?? new List<Star>().AsReadOnly();
+    public IReadOnlyList<Star> Stars => _currentSystem?.Children.OfType<Star>().ToList().AsReadOnly() ?? new List<Star>().AsReadOnly();
     public required long SystemAddress { get; set; }
     public required string SystemName { get; set; }
 
-    public SystemNode SystemRoot => _currentSystem!;
+    // Get the system as root node for TreeDataGrid
+    public SystemNode? SystemRoot => _currentSystem;
 
     public void AddScanEvent(ScanEvent scanEvent)
     {
         // Check if this scan event is for the current system we're displaying
-        if (!string.Equals(_currentSystemName, scanEvent.StarSystem, StringComparison.OrdinalIgnoreCase))
+        if (_currentSystemName != scanEvent.StarSystem)
         {
             // Switch to new system - clear previous data
             _currentSystemName = scanEvent.StarSystem;
@@ -77,7 +77,7 @@ class CelestialStructure : ICelestialStructure
         }
 
         // Only process if this scan event belongs to the current system
-        if (string.Equals(_currentSystemName, scanEvent.StarSystem, StringComparison.OrdinalIgnoreCase))
+        if (scanEvent.StarSystem == _currentSystemName)
         {
             // Check for duplicates
             if (_allScans.Any(s => s.BodyId == scanEvent.BodyId))
@@ -97,8 +97,7 @@ class CelestialStructure : ICelestialStructure
     // Simple name-based hierarchy building
     public void BuildHierarchy()
     {
-        if (_currentSystem is null) 
-            return;
+        if (_currentSystem == null) return;
 
         Console.WriteLine("Building hierarchy using name-based approach...");
         _currentSystem.Children.Clear();
@@ -124,7 +123,7 @@ class CelestialStructure : ICelestialStructure
         foreach (var planet in planets)
         {
             var parentStar = FindStarForBody(planet.BodyName);
-            if (parentStar is not null)
+            if (parentStar != null)
             {
                 parentStar.Children.Add(planet);
                 Console.WriteLine($"Added planet: {planet.BodyName} to star: {parentStar.BodyName}");
@@ -138,7 +137,7 @@ class CelestialStructure : ICelestialStructure
         foreach (var moon in moonsAndClusters)
         {
             var parentPlanet = FindPlanetForMoon(moon.BodyName);
-            if (parentPlanet is not null)
+            if (parentPlanet != null)
             {
                 // Insert belt clusters first
                 if (moon is BeltCluster)
@@ -157,7 +156,7 @@ class CelestialStructure : ICelestialStructure
             {
                 // Fallback: add to main star
                 var mainStar = stars.FirstOrDefault();
-                if (mainStar is not null)
+                if (mainStar != null)
                 {
                     mainStar.Children.Add(moon);
                     Console.WriteLine($"Added orphaned body: {moon.BodyName} to main star");
@@ -172,14 +171,13 @@ class CelestialStructure : ICelestialStructure
     private bool IsMoonOrBeltCluster(string bodyName)
     {
         // Check if this is a moon (has letter suffix) or belt cluster
-        if (bodyName.Contains("Belt Cluster")) 
-            return true;
+        if (bodyName.Contains("Belt Cluster")) return true;
 
         // Check for moon pattern: ends with " a", " b", " c", etc.
         var parts = bodyName.Split(' ');
         if (parts.Length > 0)
         {
-            var lastPart = parts[^1];
+            var lastPart = parts[parts.Length - 1];
             return lastPart.Length == 1 && char.IsLetter(lastPart[0]);
         }
 
@@ -189,19 +187,7 @@ class CelestialStructure : ICelestialStructure
     private Star? FindStarForBody(string bodyName)
     {
         // For bodies in this system, they belong to the main star
-        var parts = bodyName.Split(' ');
-        if (parts.Length < 2)
-            return _bodyLookup.Values.OfType<Star>().FirstOrDefault();
-
-        // Get the star designation (A, B, C, etc.)
-        var starDesignation = parts[^2]; // Second to last part should be the star designation
-
-        // Find the star that matches this designation
-        var targetStar = _bodyLookup.Values.OfType<Star>()
-            .FirstOrDefault(s => s.BodyName.EndsWith(" " + starDesignation));
-
-        // Fallback to main star if not found
-        return targetStar ?? _bodyLookup.Values.OfType<Star>().FirstOrDefault();
+        return _bodyLookup.Values.OfType<Star>().FirstOrDefault();
     }
 
     private Planet? FindPlanetForMoon(string moonName)
@@ -211,7 +197,7 @@ class CelestialStructure : ICelestialStructure
             // Belt cluster names like "NGC 6124 Sector QT-R c4-7 A Belt Cluster 1"
             // Find the planet by removing "Belt Cluster X" part
             var baseName = moonName;
-            var beltIndex = baseName.IndexOf(" Belt Cluster", StringComparison.Ordinal);
+            var beltIndex = baseName.IndexOf(" Belt Cluster");
             if (beltIndex > 0)
             {
                 baseName = baseName.Substring(0, beltIndex);
@@ -359,7 +345,7 @@ class CelestialStructure : ICelestialStructure
 
     public void DebugHierarchy()
     {
-        if (_currentSystem is null)
+        if (_currentSystem == null)
         {
             Console.WriteLine("No current system");
             return;

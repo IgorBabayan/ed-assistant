@@ -1,14 +1,7 @@
-﻿namespace EdAssistant.DTO.Scan;
+﻿/*namespace EdAssistant.DTO.Scan;
 
-public class SystemNode : CelestialBody
+public partial class SystemNode : CelestialBody
 {
-    public long SystemAddress { get; set; }
-
-    public override string DisplayName => BodyName;
-    public override string TypeInfo => $"System ({GetStarCount()} stars)";
-    public override string DistanceInfo => "";
-    public override string StatusInfo => $"{GetTotalBodies()} bodies";
-
     public SystemNode(string systemName, long systemAddress)
     {
         BodyName = systemName;
@@ -17,12 +10,35 @@ public class SystemNode : CelestialBody
         DistanceFromArrivalLS = 0;
     }
 
-    private int GetStarCount() =>
-        Children.Count(c => c is Star);
+    public long SystemAddress { get; set; }
 
-    private int GetTotalBodies() => 
-        Children.Sum(child => 1 + CountChildren(child.Children));
+    public override string DisplayName => BodyName;
+    public override string TypeInfo => $"System ({GetStarCount()} stars)";
+    public override string DistanceInfo => "";
+    public override string StatusInfo => $"{GetTotalBodies()} bodies";
 
-    private int CountChildren(IList<CelestialBody> children) => 
-        children.Count + children.Sum(child => CountChildren(child.Children));
-}
+    private int GetStarCount()
+    {
+        return Children.Count(c => c is Star);
+    }
+
+    private int GetTotalBodies()
+    {
+        int count = 0;
+        foreach (var child in Children)
+        {
+            count += 1 + CountChildren(child.Children);
+        }
+        return count;
+    }
+
+    private int CountChildren(IList<CelestialBody> children)
+    {
+        int count = children.Count;
+        foreach (var child in children)
+        {
+            count += CountChildren(child.Children);
+        }
+        return count;
+    }
+}*/
