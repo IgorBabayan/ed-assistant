@@ -48,6 +48,7 @@ global using EdAssistant.Models.Market;
 global using EdAssistant.Models.Route;
 global using EdAssistant.Models.Scan;
 global using EdAssistant.Models.ShipLocker;
+global using EdAssistant.Services.Color;
 global using EdAssistant.Services.Desktop;
 global using EdAssistant.Services.DockVisibility;
 global using EdAssistant.Services.GameData;

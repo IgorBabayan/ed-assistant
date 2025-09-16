@@ -7,16 +7,19 @@ public sealed partial class SystemViewModel : PageViewModel
     private readonly ICelestialStructure _celestialStructure;
     private readonly ILogger<SystemViewModel> _logger;
     private readonly ITemplateCacheManager _templateCacheManager;
+    private readonly IResourceService _resourceService;
     private string _currentSystemName = string.Empty;
 
     [ObservableProperty]
     private HierarchicalTreeDataGridSource<CelestialBody>? starSystem;
 
-    public SystemViewModel(IGameDataService gameDataService, ICelestialStructure celestialStructure, ILogger<SystemViewModel> logger, ITemplateCacheManager templateCacheManager)
+    public SystemViewModel(IGameDataService gameDataService, ICelestialStructure celestialStructure,
+        ILogger<SystemViewModel> logger, ITemplateCacheManager templateCacheManager, IResourceService  resourceService)
     {
         _logger = logger;
         _celestialStructure = celestialStructure;
         _templateCacheManager = templateCacheManager;
+        _resourceService = resourceService;
 
         _gameDataService = gameDataService;
         _gameDataService.JournalLoaded += OnJournalEventLoaded;
@@ -25,6 +28,18 @@ public sealed partial class SystemViewModel : PageViewModel
         if (existingData.Any())
         {
             ProcessScans(existingData);
+
+            var existingFSSScans = _gameDataService.GetLatestJournals<FSSSignalDiscoveredEvent>();
+            if (existingFSSScans.Any())
+            {
+                ProcessFSSScans(existingFSSScans);
+            }
+        }
+        
+        var completedScanData = _gameDataService.GetLatestJournals<SAAScanCompleteEvent>();
+        if (completedScanData.Any())
+        {
+            ProcessCompletedScans(completedScanData);
         }
     }
 
@@ -86,6 +101,51 @@ public sealed partial class SystemViewModel : PageViewModel
         }
     }
 
+    private void ProcessCompletedScans(IList<SAAScanCompleteEvent> scans)
+    {
+        SetDefaultColorRecursive(_celestialStructure.SystemRoot);
+        
+        foreach (var scan in scans.Where(x => _celestialStructure.SystemAddress == x.SystemAddress))
+        {
+            var body = FindCelestialBodyByBodyId(scan.BodyId);
+            if (body is not null)
+            {
+                if (scan.ProbesUsed < scan.EfficiencyTarget)
+                {
+                    body.ForegroundBrush = _resourceService.GetBrush("Success.Brush");
+                } else if (scan.ProbesUsed == scan.EfficiencyTarget)
+                {
+                    body.ForegroundBrush = _resourceService.GetBrush("Warning.Brush");
+                }
+                else
+                {
+                    body.ForegroundBrush = _resourceService.GetBrush("Danger.Brush");
+                }    
+            }
+        }
+    }
+    
+    private CelestialBody? FindCelestialBodyByBodyId(int bodyId) => 
+        FindBodyRecursive(_celestialStructure.SystemRoot, bodyId);
+
+    private CelestialBody? FindBodyRecursive(CelestialBody? root, int bodyId)
+    {
+        if (root is null)
+            return null;
+    
+        if (root.BodyId == bodyId)
+            return root;
+
+        foreach (var child in root.SubItems)
+        {
+            var result = FindBodyRecursive(child, bodyId);
+            if (result is not null)
+                return result;
+        }
+
+        return null;
+    }
+
     private void ProcessScans(IList<ScanEvent> scans)
     {
         // Get the most recent system from the scans
@@ -130,6 +190,18 @@ public sealed partial class SystemViewModel : PageViewModel
         // Then build hierarchy using name-based logic
         _celestialStructure.BuildHierarchy();
         RefreshSystemDisplay();
+        
+        SetDefaultColorRecursive(_celestialStructure.SystemRoot);
+    }
+    
+    private void SetDefaultColorRecursive(CelestialBody body)
+    {
+        body.ForegroundBrush ??= _resourceService.GetBrush("Text.Primary");
+    
+        foreach (var child in body.SubItems)
+        {
+            SetDefaultColorRecursive(child);
+        }
     }
 
     private void RefreshSystemDisplay()
@@ -150,6 +222,8 @@ public sealed partial class SystemViewModel : PageViewModel
                 new TextColumn<CelestialBody, string>("Mass", x => x.MassInfo)
             }
         };
+        
+        SetDefaultColorRecursive(_celestialStructure.SystemRoot);
     }
     
     private IDataTemplate GetNameColumnTemplate() =>
@@ -181,7 +255,8 @@ public sealed partial class SystemViewModel : PageViewModel
                     UseLayoutRounding = true,
                     TextWrapping = TextWrapping.NoWrap,
                     TextTrimming = TextTrimming.CharacterEllipsis,
-                    [!TextBlock.TextProperty] = new Binding(nameof(CelestialBody.DisplayName))
+                    [!TextBlock.TextProperty] = new Binding(nameof(CelestialBody.DisplayName)),
+                    [!TextBlock.ForegroundProperty] = new Binding(nameof(CelestialBody.ForegroundBrush))
                 };
 
                 stackPanel.Children.Add(icon);

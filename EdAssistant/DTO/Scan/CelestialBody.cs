@@ -1,7 +1,10 @@
 ﻿namespace EdAssistant.DTO.Scan;
 
-public abstract class CelestialBody
+public abstract partial class CelestialBody : ObservableObject
 {
+    [ObservableProperty]
+    private IBrush? foregroundBrush;
+    
     public string BodyName { get; set; } = string.Empty;
     public virtual int BodyId { get; set; }
     public virtual string BodyType { get; set; } = string.Empty;

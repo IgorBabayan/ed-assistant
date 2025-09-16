@@ -1,0 +1,36 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style Selector="TreeDataGrid TreeDataGridRow">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Margin" Value="2,1" />
+    </Style>
+
+    <!-- Style selection -->
+    <Style Selector="TreeDataGrid TreeDataGridRow:selected">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <!-- Style the actual background border in the existing template -->
+    <Style Selector="TreeDataGrid TreeDataGridRow /template/ Border">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="ClipToBounds" Value="True" />
+    </Style>
+
+    <Style Selector="TreeDataGrid TreeDataGridRow:selected /template/ Border">
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.SM}" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Background">
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                <GradientStop Color="{StaticResource Accent.Color}" Offset="0" />
+                <GradientStop Color="{StaticResource Accent.Dark.Color}" Offset="1" />
+            </LinearGradientBrush>
+        </Setter>
+    </Style>
+
+    <!-- Also try styling any rectangles used for selection -->
+    <Style Selector="TreeDataGrid TreeDataGridRow:selected /template/ Rectangle">
+        <Setter Property="RadiusX" Value="8" />
+        <Setter Property="RadiusY" Value="8" />
+        <Setter Property="Fill" Value="Transparent"/>
+    </Style>
+</Styles>

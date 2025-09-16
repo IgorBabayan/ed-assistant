@@ -12,6 +12,7 @@
         <Color x:Key="Text.Primary.Color">#F3F4F6</Color>
         <Color x:Key="Text.Secondary.Color">#C5C9D3</Color>
         <Color x:Key="Danger.Color">#E23D3D</Color>
+        <Color x:Key="Warning.Color">#FFC107</Color>
         <Color x:Key="Danger.Dark.Color">#B92D2D</Color>
         <Color x:Key="Danger.Light.Color">#F04A4A</Color>
         <Color x:Key="Success.Color">#2DB76D</Color>
@@ -30,6 +31,7 @@
         <SolidColorBrush x:Key="Danger.Dark.Brush" Color="{StaticResource Danger.Dark.Color}"/>
         <SolidColorBrush x:Key="Danger.Light.Brush" Color="{StaticResource Danger.Light.Color}"/>
         <SolidColorBrush x:Key="Success.Brush" Color="{StaticResource Success.Color}"/>
+        <SolidColorBrush x:Key="Warning.Brush" Color="{StaticResource Warning.Color}"/>
 
         <!--// Metrics //-->
         <Thickness x:Key="Space.0">0</Thickness>

@@ -19,5 +19,6 @@ public enum JournalEventType
     Scan,
     SAA,
     FSDJump,
-    FSSSignalDiscovered
+    FSSSignalDiscovered,
+    SAAScanComplete
 }

@@ -18,6 +18,7 @@
         <StyleInclude Source="avares://EdAssistant/Themes/ScrollBar.axaml"/>
         <StyleInclude Source="avares://EdAssistant/Themes/Border.axaml"/>
         <StyleInclude Source="avares://EdAssistant/Themes/Icons.axaml"/>
+        <StyleInclude Source="avares://EdAssistant/Themes/TreeDataGrid.axaml"/>
     </Application.Styles>
 
     <Application.Resources>
