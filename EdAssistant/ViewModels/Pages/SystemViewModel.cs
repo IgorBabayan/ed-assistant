@@ -31,7 +31,7 @@ public sealed partial class SystemViewModel : PageViewModel
         if (e is { EventType: JournalEventType.Scan, Event: ScanEvent scanEvent })
         {
             // Check if we need to switch to a new system
-            if (_currentSystemName != scanEvent.StarSystem)
+            if (!string.Equals(_currentSystemName, scanEvent.StarSystem, StringComparison.OrdinalIgnoreCase))
             {
                 Console.WriteLine($"System changed from '{_currentSystemName}' to '{scanEvent.StarSystem}'");
                 _currentSystemName = scanEvent.StarSystem;
@@ -56,18 +56,18 @@ public sealed partial class SystemViewModel : PageViewModel
         }
     }
 
-    private void ProcessScans(IEnumerable<ScanEvent> scans)
+    private void ProcessScans(IList<ScanEvent> scans)
     {
         // Get the most recent system from the scans
         var latestScan = scans.OrderByDescending(s => s.Timestamp).FirstOrDefault();
-        if (latestScan != null)
+        if (latestScan is not null)
         {
             _currentSystemName = latestScan.StarSystem;
             Console.WriteLine($"Processing scans for system: {_currentSystemName}");
         }
 
         // Filter scans to only include those from the current system
-        var systemScans = scans.Where(s => s.StarSystem == _currentSystemName).ToList();
+        var systemScans = scans.Where(s => string.Equals(s.StarSystem, _currentSystemName, StringComparison.OrdinalIgnoreCase)).ToList();
 
         // Remove duplicates based on BodyId
         var uniqueScans = systemScans
@@ -92,33 +92,29 @@ public sealed partial class SystemViewModel : PageViewModel
 
     private void RefreshSystemDisplay()
     {
-        // Only create TreeDataGrid if we have a system
-        if (_celestialStructure.SystemRoot != null)
-        {
-            // Create a collection with the system root as the single item
-            var systemRootCollection = new List<CelestialBody> { _celestialStructure.SystemRoot };
+        // Create a collection with the system root as the single item
+        var systemRootCollection = new List<CelestialBody> { _celestialStructure.SystemRoot };
 
-            StarSystem = new HierarchicalTreeDataGridSource<CelestialBody>(systemRootCollection)
+        StarSystem = new HierarchicalTreeDataGridSource<CelestialBody>(systemRootCollection)
+        {
+            Columns =
             {
-                Columns =
-                {
-                    new HierarchicalExpanderColumn<CelestialBody>(
-                        new TextColumn<CelestialBody, string>("Name", x => x.DisplayName),
-                        x => x.SubItems),
-                    new TextColumn<CelestialBody, string>("Type", x => x.TypeInfo),
-                    new TextColumn<CelestialBody, string>("Distance", x => x.DistanceInfo),
-                    new TextColumn<CelestialBody, string>("Status", x => x.StatusInfo),
-                    new TextColumn<CelestialBody, string>("Landable", x => x.LandableInfo),
-                    new TextColumn<CelestialBody, string>("Mass", x => x.MassInfo)
-                }
-            };
-        }
+                new HierarchicalExpanderColumn<CelestialBody>(
+                    new TextColumn<CelestialBody, string>("Name", x => x.DisplayName),
+                    x => x.SubItems),
+                new TextColumn<CelestialBody, string>("Type", x => x.TypeInfo),
+                new TextColumn<CelestialBody, string>("Distance", x => x.DistanceInfo),
+                new TextColumn<CelestialBody, string>("Status", x => x.StatusInfo),
+                new TextColumn<CelestialBody, string>("Landable", x => x.LandableInfo),
+                new TextColumn<CelestialBody, string>("Mass", x => x.MassInfo)
+            }
+        };
     }
 
     // Method to manually set the current system (useful for testing or when user selects a system)
     public void SetCurrentSystem(string systemName)
     {
-        if (_currentSystemName != systemName)
+        if (!string.Equals(_currentSystemName, systemName, StringComparison.OrdinalIgnoreCase))
         {
             _currentSystemName = systemName;
 
