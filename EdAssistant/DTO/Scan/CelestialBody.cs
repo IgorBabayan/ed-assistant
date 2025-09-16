@@ -8,22 +8,16 @@ public abstract class CelestialBody
     public double DistanceFromArrivalLS { get; set; }
     public bool WasDiscovered { get; set; }
     public bool WasMapped { get; set; }
-
-    // For TreeDataGrid hierarchy
     public IList<CelestialBody> Children { get; set; } = new List<CelestialBody>();
-
-    // Properties for TreeDataGrid columns
     public virtual string DisplayName => BodyName;
     public virtual string TypeInfo => BodyType;
-    public virtual string DistanceInfo => $"{DistanceFromArrivalLS:N1} LS";
-    public virtual string StatusInfo => WasDiscovered ? (WasMapped ? "Mapped" : "Discovered") : "Undiscovered";
-    public virtual string LandableInfo => "";
-    public virtual string MassInfo => "";
-
-    // For HierarchicalTreeDataGridSource
+    public virtual string DistanceInfo => $"{DistanceFromArrivalLS:N1} {Localization.Instance["CelestialInfo.LS"]}";
+    public virtual string StatusInfo => WasDiscovered 
+        ? (WasMapped ? Localization.Instance["CelestialInfo.Mapped"] : Localization.Instance["CelestialInfo.Discovered"]) 
+        : Localization.Instance["CelestialInfo.Undiscovered"];
+    public virtual string LandableInfo => string.Empty;
+    public virtual string MassInfo => string.Empty;
     public IEnumerable<CelestialBody> SubItems => Children;
-
-    // Optional orbital parameters
     public double? SemiMajorAxis { get; set; }
     public double? Eccentricity { get; set; }
     public double? OrbitalInclination { get; set; }

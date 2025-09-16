@@ -236,5 +236,37 @@
     "Federation": "Federation reputation",
     "Alliance": "Alliance reputation",
     "Independent": "Independent reputation"
+  },
+  "CelestialInfo": {
+    "LS": "LS",
+    "Mapped": "Mapped",
+    "Discovered": "Discovered",
+    "Undiscovered": "Undiscovered",
+    "BeltCluster": "Belt Cluster",
+    "Planet": "Planet",
+    "MassInfo": "M⊕",
+    "Ring": "Ring",
+    "RingMassInfo": "MT",
+    "Star": "Star",
+    "Primary": "Primary",
+    "StarMassInfo": "M☉",
+    "System": "System",
+    "Stars": "stars",
+    "Bodies": "bodies"
+  },
+  "ScanProcess": {
+    "SwitchedToSystem": "Switched to system: {0}",
+    "DuplicateBodyDetected": "Duplicate body detected: {0} (ID: {1}) - skipping",
+    "AddedBody": "Added body: {0} (ID: {1}) to system: {2}",
+    "BuildingHierarchy": "Building hierarchy using name-based approach...",
+    "AddedStar": "Added star: {0}",
+    "AddedPlanet": "Added planet: {0} to star: {1}",
+    "AddedBeltCluster": "Added belt cluster: {0} to planet: {1}",
+    "AddedMoon": "Added moon: {0} to planet: {1}",
+    "AddedOrphanedBody": "Added orphaned body: {0} to main star",
+    "HierarchyBuildingComplete": "Hierarchy building complete!",
+    "SystemChanged": "System changed from '{0}' to '{1}'",
+    "ProcessingScans": "Processing scans for system: {0}",
+    "ProcessingUniqueScan": "Processing {0} unique scan events for system '{1}' (removed {3} duplicates)..."
   }
 }

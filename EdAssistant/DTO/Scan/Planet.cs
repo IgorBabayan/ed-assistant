@@ -20,8 +20,9 @@ public class Planet : CelestialBody
     public Composition? Composition { get; set; }
     public string? ReserveLevel { get; set; }
     public List<Ring>? Rings { get; set; }
-
-    public override string TypeInfo => PlanetClass ?? "Planet";
-    public override string LandableInfo => Landable == true ? "Yes" : "No";
-    public override string MassInfo => MassEM?.ToString("N3") + " M⊕" ?? "";
+    public override string TypeInfo => PlanetClass ?? Localization.Instance["CelestialInfo.Planet"];
+    public override string LandableInfo => Landable == true
+        ? Localization.Instance["Common.Yes"]
+        : Localization.Instance["Common.No"];
+    public override string MassInfo => $"{MassEM?.ToString("N3")} {Localization.Instance["CelestialInfo.MassInfo"]}";
 }

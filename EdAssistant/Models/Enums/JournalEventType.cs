@@ -17,5 +17,6 @@ public enum JournalEventType
     Cargo,
     ReceiveText,
     Scan,
-    SAA
+    SAA,
+    FSDJump
 }

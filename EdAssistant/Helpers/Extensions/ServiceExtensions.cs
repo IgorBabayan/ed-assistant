@@ -13,6 +13,7 @@ public static class ServiceExtensions
         services.AddSingleton<IInitializationService, InitializationService>();
         services.AddSingleton<IJournalEventFactory, JournalEventFactory>();
         services.AddSingleton<ICelestialStructure, CelestialStructure>();
+        services.AddSingleton<ITemplateCacheManager, TemplateCacheManager>();
     }
 
     public static void RegisterViewModels(this IServiceCollection services)
