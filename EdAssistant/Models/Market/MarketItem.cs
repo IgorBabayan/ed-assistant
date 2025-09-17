@@ -6,16 +6,16 @@ public class MarketItem
     public int Id { get; set; }
 
     [JsonPropertyName("Name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [JsonPropertyName("Name_Localised")]
-    public string NameLocalised { get; set; }
+    public required string NameLocalised { get; set; }
 
     [JsonPropertyName("Category")]
-    public string Category { get; set; }
+    public required string Category { get; set; }
 
     [JsonPropertyName("Category_Localised")]
-    public string CategoryLocalised { get; set; }
+    public required string CategoryLocalised { get; set; }
 
     [JsonPropertyName("BuyPrice")]
     public int BuyPrice { get; set; }

@@ -86,8 +86,6 @@ public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache
             return [];
 
         var lastJournalKey = GetLastJournalCacheKey(journal.Value.FileName);
-        var allEventsKey = $"{lastJournalKey}_AllEvents";
-
         var cachedEvents = cache.Get<Dictionary<Type, List<JournalEvent>>>(lastJournalKey);
         if (cachedEvents is not null && cachedEvents.TryGetValue(typeof(T), out var events))
         {

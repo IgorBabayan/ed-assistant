@@ -1,6 +1,4 @@
-﻿using EdAssistant.Services.Initialization;
-
-namespace EdAssistant.ViewModels.Pages;
+﻿namespace EdAssistant.ViewModels.Pages;
 
 [DockMapping(DockEnum.Settings)]
 public sealed partial class SettingsViewModel : PageViewModel

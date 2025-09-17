@@ -1,6 +1,4 @@
-﻿using EdAssistant.Models.ShipLocker;
-
-namespace EdAssistant.ViewModels.Pages;
+﻿namespace EdAssistant.ViewModels.Pages;
 
 [DockMapping(DockEnum.Materials)]
 public sealed partial class MaterialsViewModel : PageViewModel

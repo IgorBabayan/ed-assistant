@@ -1,6 +1,6 @@
 ﻿namespace EdAssistant.ViewModels.Pages;
 
-public abstract partial class PageViewModel : BaseViewModel { }
+public abstract class PageViewModel : BaseViewModel { }
 
 [DockMapping(DockEnum.MarketConnector)]
 public sealed partial class MarketConnectorViewModel : PageViewModel { }

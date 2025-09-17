@@ -6,10 +6,10 @@ public class CargoEvent
     public DateTime Timestamp { get; set; }
 
     [JsonPropertyName("event")]
-    public string Event { get; set; }
+    public required string Event { get; set; }
 
     [JsonPropertyName("Vessel")]
-    public string Vessel { get; set; }
+    public required string Vessel { get; set; }
 
     [JsonPropertyName("Count")]
     public int Count { get; set; }

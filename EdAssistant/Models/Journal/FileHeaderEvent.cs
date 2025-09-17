@@ -6,16 +6,16 @@ public class FileHeaderEvent : JournalEvent
     public int Part { get; set; }
 
     [JsonPropertyName("language")]
-    public string Language { get; set; }
+    public required string Language { get; set; }
 
     [JsonPropertyName("Odyssey")]
     public bool Odyssey { get; set; }
 
     [JsonPropertyName("gameversion")]
-    public string GameVersion { get; set; }
+    public required string GameVersion { get; set; }
 
     [JsonPropertyName("build")]
-    public string Build { get; set; }
+    public required string Build { get; set; }
 
     public override JournalEventType EventType => JournalEventType.FileHeader;
 }

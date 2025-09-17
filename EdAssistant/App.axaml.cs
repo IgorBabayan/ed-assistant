@@ -1,6 +1,4 @@
-﻿using EdAssistant.Services.Initialization;
-
-namespace EdAssistant;
+﻿namespace EdAssistant;
 
 public partial class App : Application
 {

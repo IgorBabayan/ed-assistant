@@ -1,4 +1,5 @@
-﻿namespace EdAssistant.ViewModels.Pages;
+﻿// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+namespace EdAssistant.ViewModels.Pages;
 
 [DockMapping(DockEnum.System)]
 public sealed partial class SystemViewModel : PageViewModel
@@ -49,6 +50,65 @@ public sealed partial class SystemViewModel : PageViewModel
         _templateCacheManager.ClearExpired();
     }
 
+    private static CelestialBody? FindBodyRecursive(CelestialBody? root, int bodyId)
+    {
+        if (root is null)
+            return null;
+    
+        if (root.BodyId == bodyId)
+            return root;
+
+        foreach (var child in root.SubItems)
+        {
+            var result = FindBodyRecursive(child, bodyId);
+            if (result is not null)
+                return result;
+        }
+
+        return null;
+    }
+
+    private static IconData GetIconForCelestialBodyType(CelestialBody body)
+    {
+        switch (body)
+        {
+            case SystemNode:
+                return new IconData("avares://EdAssistant/Assets/Icons/Star/System.png");
+            
+            case Star:
+                return new IconData("avares://EdAssistant/Assets/Icons/Star/Star.png");
+
+            case Planet planet:
+            {
+                var isLandable = planet.Landable!.Value;
+                var fileName = isLandable ? "Landable" : "Non-Landable";
+                return new IconData($"avares://EdAssistant/Assets/Icons/Star/{fileName}.png");
+            }
+            
+            case BeltCluster:
+            case Ring:
+                return new IconData("avares://EdAssistant/Assets/Icons/Star/Asteroid.png");
+            
+            case Outpost:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/Outpost.png");
+            
+            case Asteroid:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/AsteroidBase.png");
+            
+            case Coriolis:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/Coriolis.png");
+            
+            case Orbis:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/Orbis.png");
+            
+            case Ocellus:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/Ocellus.png");
+            
+            default:
+                return new IconData("avares://EdAssistant/Assets/Icons/Default/Unknown.png");
+        }
+    }
+
     private void OnJournalEventLoaded(object? sender, JournalEventLoadedEventArgs e)
     {
         if (e is { EventType: JournalEventType.Scan, Event: ScanEvent scanEvent })
@@ -94,7 +154,7 @@ public sealed partial class SystemViewModel : PageViewModel
             _celestialStructure.AddFSSSignalDiscoveredEvent(scan);
         }
         
-        if (_celestialStructure.SystemRoot?.Children?.Any() == true)
+        if (_celestialStructure.SystemRoot.Children.Any())
         {
             _celestialStructure.BuildHierarchy();
             RefreshSystemDisplay();
@@ -125,26 +185,8 @@ public sealed partial class SystemViewModel : PageViewModel
         }
     }
     
-    private CelestialBody? FindCelestialBodyByBodyId(int bodyId) => 
+    private CelestialBody? FindCelestialBodyByBodyId(int bodyId) =>
         FindBodyRecursive(_celestialStructure.SystemRoot, bodyId);
-
-    private CelestialBody? FindBodyRecursive(CelestialBody? root, int bodyId)
-    {
-        if (root is null)
-            return null;
-    
-        if (root.BodyId == bodyId)
-            return root;
-
-        foreach (var child in root.SubItems)
-        {
-            var result = FindBodyRecursive(child, bodyId);
-            if (result is not null)
-                return result;
-        }
-
-        return null;
-    }
 
     private void ProcessScans(IList<ScanEvent> scans)
     {
@@ -215,11 +257,11 @@ public sealed partial class SystemViewModel : PageViewModel
                     new TemplateColumn<CelestialBody>("Name", 
                         GetNameColumnTemplate()),
                     x => x.SubItems),
-                new TextColumn<CelestialBody, string>("Type", x => x.TypeInfo),
-                new TextColumn<CelestialBody, string>("Distance", x => x.DistanceInfo),
-                new TextColumn<CelestialBody, string>("Status", x => x.StatusInfo),
-                new TextColumn<CelestialBody, string>("Landable", x => x.LandableInfo),
-                new TextColumn<CelestialBody, string>("Mass", x => x.MassInfo)
+                new TemplateColumn<CelestialBody>("Type", GetTextColumnTemplate(nameof(CelestialBody.TypeInfo))),
+                new TemplateColumn<CelestialBody>("Distance", GetTextColumnTemplate(nameof(CelestialBody.DistanceInfo))),
+                new TemplateColumn<CelestialBody>("Status", GetTextColumnTemplate(nameof(CelestialBody.StatusInfo))),
+                new TemplateColumn<CelestialBody>("Landable", GetTextColumnTemplate(nameof(CelestialBody.LandableInfo))),
+                new TemplateColumn<CelestialBody>("Mass", GetTextColumnTemplate(nameof(CelestialBody.MassInfo)))
             }
         };
         
@@ -230,11 +272,14 @@ public sealed partial class SystemViewModel : PageViewModel
         _templateCacheManager.GetOrCreateTemplate("CelestialBodyNameTemplate", () =>
             new FuncDataTemplate<CelestialBody>((value, _) =>
             {
-                var stackPanel = new StackPanel
+                var stackPanel = new StackPanel();
+                if (value is null)
                 {
-                    Orientation = Orientation.Horizontal,
-                    Spacing = 4
-                };
+                    return stackPanel;
+                }
+
+                stackPanel.Orientation = Orientation.Horizontal;
+                stackPanel.Spacing = 4;
 
                 var iconData = GetCachedIconForCelestialBody(value);
                 var icon = new Image
@@ -250,7 +295,7 @@ public sealed partial class SystemViewModel : PageViewModel
 
                 var nameText = new TextBlock
                 {
-                    Text = value?.DisplayName,
+                    Text = value.DisplayName,
                     VerticalAlignment = VerticalAlignment.Center,
                     UseLayoutRounding = true,
                     TextWrapping = TextWrapping.NoWrap,
@@ -264,6 +309,29 @@ public sealed partial class SystemViewModel : PageViewModel
 
                 return stackPanel;
             }));
+    
+    private IDataTemplate GetTextColumnTemplate(string propertyName) =>
+        _templateCacheManager.GetOrCreateTemplate($"TextColumn_{propertyName}", () =>
+            new FuncDataTemplate<CelestialBody>((value, _) =>
+            {
+                var textBlock = new TextBlock();
+                if (value == null)
+                {
+                    return textBlock;
+                }
+
+                textBlock.VerticalAlignment = VerticalAlignment.Center;
+                textBlock.UseLayoutRounding = true;
+                textBlock.TextWrapping = TextWrapping.NoWrap;
+                textBlock.TextTrimming = TextTrimming.CharacterEllipsis;
+                textBlock[!TextBlock.TextProperty] = new Binding(propertyName);
+                textBlock[!TextBlock.ForegroundProperty] = new Binding(nameof(CelestialBody.ForegroundBrush))
+                {
+                    FallbackValue = _resourceService.GetBrush("Text.Primary")
+                };
+
+                return textBlock;
+            }));
 
     private IconData GetCachedIconForCelestialBody(CelestialBody? body)
     {
@@ -273,46 +341,5 @@ public sealed partial class SystemViewModel : PageViewModel
         var cacheKey = $"icon_{body.TypeInfo.ToLowerInvariant()}";
         return _templateCacheManager.GetOrCreateIcon(cacheKey, () => 
             GetIconForCelestialBodyType(body));
-    }
-
-    private static IconData GetIconForCelestialBodyType(CelestialBody body)
-    {
-        switch (body)
-        {
-            case SystemNode:
-                return new IconData("avares://EdAssistant/Assets/Icons/Star/System.png");
-            
-            case Star:
-                return new IconData("avares://EdAssistant/Assets/Icons/Star/Star.png");
-
-            case Planet planet:
-            {
-                var isLandable = planet.Landable!.Value;
-                var fileName = isLandable ? "Landable" : "Non-Landable";
-                return new IconData($"avares://EdAssistant/Assets/Icons/Star/{fileName}.png");
-            }
-            
-            case BeltCluster:
-            case Ring:
-                return new IconData("avares://EdAssistant/Assets/Icons/Star/Asteroid.png");
-            
-            case Outpost:
-                return new IconData("avares://EdAssistant/Assets/Icons/Station/Outpost.png");
-            
-            case Asteroid:
-                return new IconData("avares://EdAssistant/Assets/Icons/Station/AsteroidBase.png");
-            
-            case Coriolis:
-                return new IconData("avares://EdAssistant/Assets/Icons/Station/Coriolis.png");
-            
-            case Orbis:
-                return new IconData("avares://EdAssistant/Assets/Icons/Station/Orbis.png");
-            
-            case Ocellus:
-                return new IconData("avares://EdAssistant/Assets/Icons/Station/Ocellus.png");
-            
-            default:
-                return new IconData("avares://EdAssistant/Assets/Icons/Default/Unknown.png");
-        }
     }
 }

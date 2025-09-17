@@ -3,10 +3,10 @@
 public class LoadGameEvent : JournalEvent
 {
     [JsonPropertyName("FID")]
-    public string FID { get; set; }
+    public required string FId { get; set; }
 
     [JsonPropertyName("Commander")]
-    public string Commander { get; set; }
+    public required string Commander { get; set; }
 
     [JsonPropertyName("Horizons")]
     public bool Horizons { get; set; }
@@ -15,19 +15,19 @@ public class LoadGameEvent : JournalEvent
     public bool Odyssey { get; set; }
 
     [JsonPropertyName("Ship")]
-    public string Ship { get; set; }
+    public required string Ship { get; set; }
 
     [JsonPropertyName("Ship_Localised")]
-    public string ShipLocalised { get; set; }
+    public required string ShipLocalised { get; set; }
 
     [JsonPropertyName("ShipID")]
-    public int ShipID { get; set; }
+    public int ShipId { get; set; }
 
     [JsonPropertyName("ShipName")]
-    public string ShipName { get; set; }
+    public required string ShipName { get; set; }
 
     [JsonPropertyName("ShipIdent")]
-    public string ShipIdent { get; set; }
+    public required string ShipIdent { get; set; }
 
     [JsonPropertyName("FuelLevel")]
     public double FuelLevel { get; set; }
@@ -36,7 +36,7 @@ public class LoadGameEvent : JournalEvent
     public double FuelCapacity { get; set; }
 
     [JsonPropertyName("GameMode")]
-    public string GameMode { get; set; }
+    public required string GameMode { get; set; }
 
     [JsonPropertyName("Credits")]
     public long Credits { get; set; }
@@ -45,13 +45,13 @@ public class LoadGameEvent : JournalEvent
     public long Loan { get; set; }
 
     [JsonPropertyName("language")]
-    public string Language { get; set; }
+    public required string Language { get; set; }
 
     [JsonPropertyName("gameversion")]
-    public string GameVersion { get; set; }
+    public required string GameVersion { get; set; }
 
     [JsonPropertyName("build")]
-    public string Build { get; set; }
+    public required string Build { get; set; }
 
     public override JournalEventType EventType => JournalEventType.LoadGame;
 }

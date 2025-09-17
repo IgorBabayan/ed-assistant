@@ -10,7 +10,6 @@ public abstract class Station : CelestialBody
     public override string StatusInfo => string.Empty;
     public override string LandableInfo => string.Empty;
     public override string MassInfo => string.Empty;
-    public override string BodyType => Type.ToString();
 }
 
 public class Outpost : Station

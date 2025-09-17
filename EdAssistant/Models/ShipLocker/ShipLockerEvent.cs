@@ -6,7 +6,7 @@ public class ShipLockerEvent
     public DateTime Timestamp { get; set; }
 
     [JsonPropertyName("event")]
-    public string Event { get; set; }
+    public required string Event { get; set; }
 
     [JsonPropertyName("Items")]
     public List<InventoryItem> Items { get; set; } = new();

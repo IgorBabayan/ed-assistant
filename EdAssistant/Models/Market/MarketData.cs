@@ -6,20 +6,20 @@ public class MarketData
     public DateTime Timestamp { get; set; }
 
     [JsonPropertyName("event")]
-    public string Event { get; set; }
+    public required string Event { get; set; }
 
     [JsonPropertyName("MarketID")]
     public long MarketId { get; set; }
 
     [JsonPropertyName("StationName")]
-    public string StationName { get; set; }
+    public required string StationName { get; set; }
 
     [JsonPropertyName("StationType")]
-    public string StationType { get; set; }
+    public required string StationType { get; set; }
 
     [JsonPropertyName("StarSystem")]
-    public string StarSystem { get; set; }
+    public required string StarSystem { get; set; }
 
     [JsonPropertyName("Items")]
-    public List<MarketItem> Items { get; set; }
+    public required List<MarketItem> Items { get; set; }
 }
