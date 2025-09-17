@@ -50,7 +50,7 @@ class JsonSettingsService : ISettingsService
 
     public void SetSetting<T>(string key, T value)
     {
-        _settings[key] = value;
+        _settings[key] = value!;
         Save();
     }
 

@@ -7,7 +7,7 @@ public class NavRouteEvent
 
     
     [JsonPropertyName("event")]
-    public string Event { get; set; }
+    public required string Event { get; set; }
 
     [JsonPropertyName("Route")]
     public List<StarSystem> Route { get; set; } = [];

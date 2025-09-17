@@ -3,13 +3,13 @@
 public static class WrapPanelHelper
 {
     public static readonly AttachedProperty<double> SpacingXProperty =
-        AvaloniaProperty.RegisterAttached<WrapPanel, double>("SpacingX", typeof(WrapPanelHelper), 0.0);
+        AvaloniaProperty.RegisterAttached<WrapPanel, double>("SpacingX", typeof(WrapPanelHelper));
 
     public static readonly AttachedProperty<double> SpacingYProperty =
-        AvaloniaProperty.RegisterAttached<WrapPanel, double>("SpacingY", typeof(WrapPanelHelper), 0.0);
+        AvaloniaProperty.RegisterAttached<WrapPanel, double>("SpacingY", typeof(WrapPanelHelper));
 
     private static readonly AttachedProperty<bool> HookedProperty =
-        AvaloniaProperty.RegisterAttached<WrapPanel, bool>("__Hooked", typeof(WrapPanelHelper), false);
+        AvaloniaProperty.RegisterAttached<WrapPanel, bool>("__Hooked", typeof(WrapPanelHelper));
 
     static WrapPanelHelper()
     {
@@ -23,9 +23,9 @@ public static class WrapPanelHelper
         p.SetValue(HookedProperty, true);
 
         // Re-apply when children change or visual attaches
-        p.Children.CollectionChanged += (_, __) => Apply(p);
-        p.AttachedToVisualTree += (_, __) => Apply(p);
-        p.DetachedFromVisualTree += (_, __) => Apply(p);
+        p.Children.CollectionChanged += (_, _) => Apply(p);
+        p.AttachedToVisualTree += (_, _) => Apply(p);
+        p.DetachedFromVisualTree += (_, _) => Apply(p);
     }
 
     private static void Apply(WrapPanel p)

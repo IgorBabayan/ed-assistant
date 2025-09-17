@@ -3,10 +3,10 @@
 public class MarketBuyEvent : JournalEvent
 {
     [JsonPropertyName("MarketID")]
-    public long MarketID { get; set; }
+    public long MarketId { get; set; }
 
     [JsonPropertyName("Type")]
-    public string Type { get; set; }
+    public required string Type { get; set; }
 
     [JsonPropertyName("Count")]
     public int Count { get; set; }

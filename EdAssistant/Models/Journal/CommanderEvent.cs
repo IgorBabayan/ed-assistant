@@ -3,10 +3,10 @@
 public class CommanderEvent : JournalEvent
 {
     [JsonPropertyName("FID")]
-    public string FID { get; set; }
+    public required string FId { get; set; }
 
     [JsonPropertyName("Name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     public override JournalEventType EventType => JournalEventType.Commander;
 }

@@ -45,7 +45,6 @@ global using EdAssistant.Helpers.Factory.Journal;
 global using EdAssistant.Models.Enums;
 global using EdAssistant.Models.Journal;
 global using EdAssistant.Models.Market;
-global using EdAssistant.Models.Route;
 global using EdAssistant.Models.Scan;
 global using EdAssistant.Models.ShipLocker;
 global using EdAssistant.Services.Color;

@@ -17,5 +17,5 @@ public class SAAScanCompleteEvent : JournalEvent
     public int BodyId { get; set; }
     
     [JsonPropertyName("BodyName")]
-    public string BodyName { get; set; }
+    public required string BodyName { get; set; }
 }

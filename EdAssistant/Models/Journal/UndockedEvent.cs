@@ -3,13 +3,13 @@
 public class UndockedEvent : JournalEvent
 {
     [JsonPropertyName("StationName")]
-    public string StationName { get; set; }
+    public required string StationName { get; set; }
 
     [JsonPropertyName("StationType")]
-    public string StationType { get; set; }
+    public required string StationType { get; set; }
 
     [JsonPropertyName("MarketID")]
-    public long MarketID { get; set; }
+    public long MarketId { get; set; }
 
     public override JournalEventType EventType => JournalEventType.Undocked;
 }

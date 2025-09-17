@@ -3,19 +3,19 @@
 public class ReceiveTextEvent : JournalEvent
 {
     [JsonPropertyName("From")]
-    public string From { get; set; }
+    public required string From { get; set; }
 
     [JsonPropertyName("From_Localised")]
-    public string FromLocalised { get; set; }
+    public required string FromLocalised { get; set; }
 
     [JsonPropertyName("Message")]
-    public string Message { get; set; }
+    public required string Message { get; set; }
 
     [JsonPropertyName("Message_Localised")]
-    public string MessageLocalised { get; set; }
+    public required string MessageLocalised { get; set; }
 
     [JsonPropertyName("Channel")]
-    public string Channel { get; set; }
+    public required string Channel { get; set; }
 
     public override JournalEventType EventType => JournalEventType.ReceiveText;
 }

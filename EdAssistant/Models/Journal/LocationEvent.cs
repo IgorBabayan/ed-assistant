@@ -9,16 +9,16 @@ public class LocationEvent : JournalEvent
     public bool Docked { get; set; }
 
     [JsonPropertyName("StationName")]
-    public string StationName { get; set; }
+    public string? StationName { get; set; }
 
     [JsonPropertyName("StationType")]
-    public string StationType { get; set; }
+    public required string StationType { get; set; }
 
     [JsonPropertyName("MarketID")]
-    public long MarketID { get; set; }
+    public long MarketId { get; set; }
 
     [JsonPropertyName("StarSystem")]
-    public string StarSystem { get; set; }
+    public required string StarSystem { get; set; }
 
     [JsonPropertyName("SystemAddress")]
     public long SystemAddress { get; set; }
@@ -27,37 +27,37 @@ public class LocationEvent : JournalEvent
     public List<double> StarPos { get; set; } = new();
 
     [JsonPropertyName("SystemAllegiance")]
-    public string SystemAllegiance { get; set; }
+    public required string SystemAllegiance { get; set; }
 
     [JsonPropertyName("SystemEconomy")]
-    public string SystemEconomy { get; set; }
+    public required string SystemEconomy { get; set; }
 
     [JsonPropertyName("SystemEconomy_Localised")]
-    public string SystemEconomyLocalised { get; set; }
+    public required string SystemEconomyLocalised { get; set; }
 
     [JsonPropertyName("SystemGovernment")]
-    public string SystemGovernment { get; set; }
+    public required string SystemGovernment { get; set; }
 
     [JsonPropertyName("SystemGovernment_Localised")]
-    public string SystemGovernmentLocalised { get; set; }
+    public required string SystemGovernmentLocalised { get; set; }
 
     [JsonPropertyName("SystemSecurity")]
-    public string SystemSecurity { get; set; }
+    public required string SystemSecurity { get; set; }
 
     [JsonPropertyName("SystemSecurity_Localised")]
-    public string SystemSecurityLocalised { get; set; }
+    public required string SystemSecurityLocalised { get; set; }
 
     [JsonPropertyName("Population")]
     public long Population { get; set; }
 
     [JsonPropertyName("Body")]
-    public string Body { get; set; }
+    public required string Body { get; set; }
 
     [JsonPropertyName("BodyId")]
     public int BodyId { get; set; }
 
     [JsonPropertyName("BodyType")]
-    public string BodyType { get; set; }
+    public required string BodyType { get; set; }
 
     public override JournalEventType EventType => JournalEventType.Location;
 }

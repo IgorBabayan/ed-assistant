@@ -3,7 +3,7 @@
 public class CargoEvent : JournalEvent
 {
     [JsonPropertyName("Vessel")]
-    public string Vessel { get; set; }
+    public required string Vessel { get; set; }
 
     [JsonPropertyName("Count")]
     public int Count { get; set; }

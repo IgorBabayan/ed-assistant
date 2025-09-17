@@ -193,7 +193,7 @@ class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructu
         // Strategy 2: Default placement near star (don't know yet how to place it correctly)
         return _bodyLookup.Values.OfType<Star>()
             .OrderBy(x => x.BodyId)
-            .FirstOrDefault() as CelestialBody;
+            .FirstOrDefault();
     }
 
     private bool IsMoonOrBeltCluster(string bodyName)
