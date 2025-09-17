@@ -59,16 +59,32 @@ public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache
         if (string.IsNullOrWhiteSpace(_journalsFolder))
             return null;
 
+        // First try to get from combined cache
+        var journalFiles = GetJournalFilesForToday(_journalsFolder);
+        if (journalFiles.Any())
+        {
+            var combinedKey = GetCombinedJournalCacheKey(journalFiles);
+            var cachedEvents = cache.Get<Dictionary<Type, List<JournalEvent>>>(combinedKey);
+
+            if (cachedEvents != null && cachedEvents.TryGetValue(typeof(T), out var events))
+            {
+                return events.OfType<T>()
+                    .OrderByDescending(e => e.Timestamp)
+                    .FirstOrDefault();
+            }
+        }
+
+        // Fallback to original logic for single journal file
         var journal = GetLastJournal(_journalsFolder);
         if (journal is null)
             return null;
 
-        var lastJournalKey = GetLastJournalCacheKey(journal.Value.FileName);
-        var cachedEvents = cache.Get<Dictionary<Type, List<JournalEvent>>>(lastJournalKey);
+        var singleJournalKey = GetLastJournalCacheKey(journal.Value.FileName);
+        var singleCachedEvents = cache.Get<Dictionary<Type, List<JournalEvent>>>(singleJournalKey);
 
-        if (cachedEvents != null && cachedEvents.TryGetValue(typeof(T), out var events))
+        if (singleCachedEvents != null && singleCachedEvents.TryGetValue(typeof(T), out var singleEvents))
         {
-            return events.OfType<T>()
+            return singleEvents.OfType<T>()
                 .OrderByDescending(e => e.Timestamp)
                 .FirstOrDefault();
         }
@@ -81,17 +97,30 @@ public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache
         if (string.IsNullOrWhiteSpace(_journalsFolder))
             return [];
 
+        // First try to get from combined cache
+        var journalFiles = GetJournalFilesForToday(_journalsFolder);
+        if (journalFiles.Any())
+        {
+            var combinedKey = GetCombinedJournalCacheKey(journalFiles);
+            var cachedEvents = cache.Get<Dictionary<Type, List<JournalEvent>>>(combinedKey);
+        
+            if (cachedEvents is not null && cachedEvents.TryGetValue(typeof(T), out var events))
+            {
+                return events.OfType<T>().ToList();
+            }
+        }
+
+        // Fallback to original logic for single journal file
         var journal = GetLastJournal(_journalsFolder);
         if (journal is null)
             return [];
 
-        var lastJournalKey = GetLastJournalCacheKey(journal.Value.FileName);
-        var allEventsKey = $"{lastJournalKey}_AllEvents";
-
-        var cachedEvents = cache.Get<Dictionary<Type, List<JournalEvent>>>(lastJournalKey);
-        if (cachedEvents is not null && cachedEvents.TryGetValue(typeof(T), out var events))
+        var singleJournalKey = GetLastJournalCacheKey(journal.Value.FileName);
+        var singleCachedEvents = cache.Get<Dictionary<Type, List<JournalEvent>>>(singleJournalKey);
+    
+        if (singleCachedEvents is not null && singleCachedEvents.TryGetValue(typeof(T), out var singleEvents))
         {
-            return events.OfType<T>().ToList();
+            return singleEvents.OfType<T>().ToList();
         }
 
         return [];
@@ -197,73 +226,139 @@ public class GameDataService(ILogger<GameDataService> logger, IMemoryCache cache
     }
 
     private async Task LoadLastJournalData(string journalsFolder)
+{
+    _journalsFolder = journalsFolder;
+    
+    // Get all journal files from today (or specify date range as needed)
+    var journalFiles = GetJournalFilesForToday(journalsFolder);
+    
+    if (!journalFiles.Any())
+        return;
+
+    // Create a combined cache key based on all files
+    var combinedCacheKey = GetCombinedJournalCacheKey(journalFiles);
+    var lastWriteKey = $"{combinedCacheKey}_LastWrite";
+    var lastPositionsKey = $"{combinedCacheKey}_LastPositions";
+
+    // Get the latest modification time from all files
+    var latestWriteTime = journalFiles.Max(f => f.Info.LastWriteTime);
+    var cachedLastWrite = cache.Get<DateTime?>(lastWriteKey);
+    var cachedPositions = cache.Get<Dictionary<string, long>>(lastPositionsKey) ?? new Dictionary<string, long>();
+
+    // Get existing cached events to preserve them
+    var existingEventsByType = cache.Get<Dictionary<Type, List<JournalEvent>>>(combinedCacheKey) ?? new Dictionary<Type, List<JournalEvent>>();
+    var existingAllEvents = cache.Get<List<JournalEvent>>($"{combinedCacheKey}_AllEvents") ?? new List<JournalEvent>();
+    
+    var needsReload = cachedLastWrite != latestWriteTime;
+    if (!needsReload)
+        return;
+
+    var allNewEvents = new List<JournalEvent>(existingAllEvents);
+    var allNewEventsByType = new Dictionary<Type, List<JournalEvent>>();
+    
+    // Copy existing events
+    foreach (var kvp in existingEventsByType)
     {
-        _journalsFolder = journalsFolder;
-        var journal = GetLastJournal(_journalsFolder);
+        allNewEventsByType[kvp.Key] = new List<JournalEvent>(kvp.Value);
+    }
+    
+    var updatedPositions = new Dictionary<string, long>(cachedPositions);
 
-        if (journal is null)
-            return;
-
-        var cacheKey = GetJournalCacheKey(journal.Value.FileName);
-        var lastWriteKey = $"{cacheKey}_LastWrite";
-        var lastPositionKey = $"{cacheKey}_LastPosition";
-
-        var cachedLastWrite = cache.Get<DateTime?>(lastWriteKey);
-        var cachedLastPosition = cache.Get<long>(lastPositionKey);
-
-        var needsReload = cachedLastWrite != journal.Value.Info.LastWriteTime;
-        if (!needsReload)
-            return;
-
-        await using var fileStream = new FileStream(journal.Value.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+    // Process each journal file in chronological order
+    foreach (var journal in journalFiles.OrderBy(j => j.DateTime))
+    {
+        var startPosition = updatedPositions.GetValueOrDefault(journal.FileName, 0);
+        
+        await using var fileStream = new FileStream(journal.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         using var reader = new StreamReader(fileStream);
 
-        long startPosition = 0;
-        if (cachedLastWrite.HasValue && journal.Value.Info.LastWriteTime > cachedLastWrite.Value)
-        {
-            startPosition = cachedLastPosition;
-        }
-
+        // Skip to the last processed position if we've read this file before
         if (startPosition > 0 && fileStream.Length > startPosition)
         {
             fileStream.Seek(startPosition, SeekOrigin.Begin);
-            await reader.ReadLineAsync();
+            // Don't skip a line here - we might miss data
         }
 
-        var newEvents = new List<JournalEvent>();
-        var newEventsByType = new Dictionary<Type, List<JournalEvent>>();
         var currentPosition = fileStream.Position;
+        var hasNewEvents = false;
 
         while (await reader.ReadLineAsync() is { } line)
         {
+            currentPosition = fileStream.Position;
+            
             if (!string.IsNullOrWhiteSpace(line))
             {
                 var journalEvent = journalFactory.CreateEvent(line);
                 if (journalEvent is not null)
                 {
-                    newEvents.Add(journalEvent);
+                    // Check if this event is newer than what we already have
+                    if (startPosition > 0)
+                    {
+                        var existingEvents = allNewEventsByType.GetValueOrDefault(journalEvent.GetType(), new List<JournalEvent>());
+                        if (existingEvents.Any(e => e.Timestamp == journalEvent.Timestamp))
+                            continue; // Skip duplicate
+                    }
+                    
+                    allNewEvents.Add(journalEvent);
+                    hasNewEvents = true;
 
                     var eventType = journalEvent.GetType();
-                    if (!newEventsByType.ContainsKey(eventType))
+                    if (!allNewEventsByType.ContainsKey(eventType))
                     {
-                        newEventsByType[eventType] = [];
+                        allNewEventsByType[eventType] = new List<JournalEvent>();
                     }
-                    newEventsByType[eventType].Add(journalEvent);
+                    allNewEventsByType[eventType].Add(journalEvent);
 
-                    logger.LogInformation(Localization.Instance["Settings.SuccessfullyLoadFileData"], eventType.Name, journal.Value.FileName);
+                    logger.LogInformation(Localization.Instance["Settings.SuccessfullyLoadFileData"], eventType.Name, journal.FileName);
                     JournalLoaded?.Invoke(this, new JournalEventLoadedEventArgs(journalEvent));
                 }
             }
-            currentPosition = fileStream.Position;
         }
 
-        var lastJournalKey = GetLastJournalCacheKey(journal.Value.FileName);
-        var allEventsKey = $"{lastJournalKey}_AllEvents";
+        // Only update position if we successfully read the file
+        if (hasNewEvents || startPosition == 0)
+        {
+            updatedPositions[journal.FileName] = currentPosition;
+        }
+    }
 
-        cache.Set(lastJournalKey, newEventsByType, _expirationTime);
-        cache.Set(allEventsKey, newEvents, _expirationTime);
-        cache.Set(lastWriteKey, journal.Value.Info.LastWriteTime, _expirationTime);
-        cache.Set(lastPositionKey, currentPosition, _expirationTime);
+    // Sort all events by timestamp to ensure proper chronological order
+    foreach (var eventList in allNewEventsByType.Values)
+    {
+        eventList.Sort((e1, e2) => e1.Timestamp.CompareTo(e2.Timestamp));
+    }
+    
+    allNewEvents.Sort((e1, e2) => e1.Timestamp.CompareTo(e2.Timestamp));
+
+    // Cache the combined results
+    cache.Set(combinedCacheKey, allNewEventsByType, _expirationTime);
+    cache.Set($"{combinedCacheKey}_AllEvents", allNewEvents, _expirationTime);
+    cache.Set(lastWriteKey, latestWriteTime, _expirationTime);
+    cache.Set(lastPositionsKey, updatedPositions, _expirationTime);
+}
+
+    private static List<(string FileName, FileInfo Info, DateTime? DateTime)> GetJournalFilesForToday(string journalsFolder)
+    {
+        var today = DateTime.Today;
+    
+        return Directory.GetFiles(journalsFolder, "Journal.*.log")
+            .Select(file => new
+            {
+                FileName = file,
+                Info = new FileInfo(file),
+                DateTime = ExtractDateTime(Path.GetFileName(file))
+            })
+            .Where(x => x.DateTime.HasValue && x.DateTime.Value.Date == today)
+            .OrderBy(x => x.DateTime!.Value)
+            .Select(x => (x.FileName, x.Info, x.DateTime))
+            .ToList();
+    }
+
+    private static string GetCombinedJournalCacheKey(IEnumerable<(string FileName, FileInfo Info, DateTime? DateTime)> journalFiles)
+    {
+        var fileNames = journalFiles.Select(f => Path.GetFileName(f.FileName)).OrderBy(name => name);
+        var combined = string.Join("_", fileNames);
+        return $"CombinedJournal_{combined.GetHashCode():X}";
     }
 
     private async Task LoadAllJournalData(string journalsFolder)
