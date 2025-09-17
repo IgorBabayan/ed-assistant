@@ -108,4 +108,10 @@
         <Setter Property="Stretch" Value="UniformToFill"/>
         <Setter Property="Fill" Value="{DynamicResource Text.Primary}"/>
     </Style>
+	
+	<Style Selector="Button.success">
+		<Setter Property="Background" Value="{DynamicResource Success.Brush}"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource Success.Brush}"/>
+		<Setter Property="Foreground" Value="White"/>
+	</Style>
 </Styles>

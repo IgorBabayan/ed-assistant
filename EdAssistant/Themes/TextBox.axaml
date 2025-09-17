@@ -46,7 +46,7 @@
 						BorderBrush="{TemplateBinding BorderBrush}"
 						BorderThickness="{TemplateBinding BorderThickness}"
 						CornerRadius="{TemplateBinding CornerRadius}">
-					<Grid>
+					<Grid Margin="5,0">
 						<ScrollViewer x:Name="PART_ScrollViewer"
 									  HorizontalScrollBarVisibility="Hidden"
 									  VerticalScrollBarVisibility="Hidden"

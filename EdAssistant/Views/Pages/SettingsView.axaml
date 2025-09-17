@@ -3,79 +3,543 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ext="clr-namespace:EdAssistant.Helpers.Extensions"
-             xmlns:helpers="clr-namespace:EdAssistant.Helpers"
              xmlns:vm="clr-namespace:EdAssistant.ViewModels.Pages"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:CompileBindings="False"
              x:Class="EdAssistant.Views.Pages.SettingsView"
              x:DataType="vm:SettingsViewModel">
-    <UniformGrid Columns="4"
-                 HorizontalAlignment="Stretch"
-                 Margin="{DynamicResource Space.4}">
-        <Border Margin="8" 
-                Classes="card">
-            <DockPanel>
-                <TextBlock Text="{ext:Localize Settings.DockGroup}"
-                           Classes="title"
-                           HorizontalAlignment="Center"
-                           DockPanel.Dock="Top"/>
-                <WrapPanel Orientation="Vertical"
-                           helpers:WrapPanelHelper.SpacingX="12"
-                           helpers:WrapPanelHelper.SpacingY="8">
-                    <CheckBox Content="{ext:Localize Settings.Home}" IsEnabled="False" IsChecked="True"></CheckBox>
-                    <CheckBox Content="{ext:Localize Settings.Cargo}" IsChecked="{Binding Cargo}"></CheckBox>
-                    <CheckBox Content="{ext:Localize Settings.Materials}" IsChecked="{Binding Materials}"></CheckBox>
-                    <CheckBox Content="{ext:Localize Settings.Storage}" IsChecked="{Binding Storage}"></CheckBox>
-                    <CheckBox Content="{ext:Localize Settings.System}" IsChecked="{Binding System}"></CheckBox>
-                    <CheckBox Content="{ext:Localize Settings.Planet}" IsChecked="{Binding Planet}"></CheckBox>
-                    <CheckBox Content="{ext:Localize Settings.MarketConnector}" IsChecked="{Binding MarketConnector}"></CheckBox>
-                    <CheckBox Content="{ext:Localize Settings.Log}" IsChecked="{Binding Log}"></CheckBox>
-                    <CheckBox Content="{ext:Localize Settings.Settings}" IsEnabled="False" IsChecked="True"></CheckBox>
-                </WrapPanel>
-            </DockPanel>
-        </Border>
+    <UserControl.Styles>
+        <!--// Dashboard Typography //-->
+        <Style Selector="TextBlock.dashboard-title">
+            <Setter Property="FontSize" Value="28" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{DynamicResource Text.Primary}" />
+        </Style>
 
-        <Border Margin="8"
-                Classes="card">
-            <DockPanel>
-                <TextBlock Text="{ext:Localize Settings.AppGroup}"
-                           Classes="title"
-                           HorizontalAlignment="Center"
-                           DockPanel.Dock="Top"/>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
+        <Style Selector="TextBlock.dashboard-subtitle">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Foreground" Value="{DynamicResource Text.Secondary}" />
+            <Setter Property="Opacity" Value="0.8" />
+        </Style>
 
-					<Grid Grid.Row="0" 
-                          Margin="0,5,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+        <!--// Stat Cards //-->
+        <Style Selector="Border.stat-card">
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#151821" Offset="0" />
+                    <GradientStop Color="#1A1D26" Offset="1" />
+                </LinearGradientBrush>
+            </Setter>
+            <Setter Property="BorderBrush" Value="{DynamicResource Border.Brush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{DynamicResource Radius.SM}" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
 
-                        <TextBox Grid.Column="0"
-                                 Text="{Binding JournalsFolderPath}"
-                                 Watermark="{ext:Localize Settings.PathToJournals}"
-                                 VerticalAlignment="Stretch"
-                                 HorizontalAlignment="Stretch"
-                                 Theme="{x:Null}"/>
-                        <Button Grid.Column="1"
-                                Content="..."
-                                Command="{Binding BrowseFolderCommand}"
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Stretch"
-                                HorizontalContentAlignment="Center"
-                                Width="25"/>
-                    </Grid>
-					<Button Grid.Row="1"
-                            Classes="primary"
-                            VerticalAlignment="Bottom"
-                            HorizontalAlignment="Right"
-                            Command="{Binding ReadAllCommand}"
-                            Content="{ext:Localize Settings.ReadAll}"/>
-                </Grid>
-            </DockPanel>
-        </Border>
-    </UniformGrid>
+        <Style Selector="Border.stat-card:pointerover">
+            <Setter Property="RenderTransform" Value="translateY(-2px)" />
+        </Style>
+
+        <Style Selector="TextBlock.stat-label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="{DynamicResource Text.Secondary}" />
+            <Setter Property="LetterSpacing" Value="0.5" />
+        </Style>
+
+        <Style Selector="TextBlock.stat-value">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{DynamicResource Text.Primary}" />
+        </Style>
+
+        <Style Selector="TextBlock.stat-value.success">
+            <Setter Property="Foreground" Value="{DynamicResource Success.Brush}"/>
+        </Style>
+
+        <Style Selector="TextBlock.stat-value.error">
+            <Setter Property="Foreground" Value="{DynamicResource Danger.Brush}"/>
+        </Style>
+
+        <Style Selector="TextBlock.stat-description">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="{DynamicResource Text.Secondary}" />
+            <Setter Property="Opacity" Value="0.7" />
+        </Style>
+
+        <!--// Dashboard Panels //-->
+        <Style Selector="Border.dashboard-panel">
+            <Setter Property="Background" Value="#0F1117" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Border.Brush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{DynamicResource Radius.M}" />
+            <Setter Property="Padding" Value="24" />
+        </Style>
+
+        <Style Selector="Border.dashboard-panel.compact">
+            <Setter Property="Padding" Value="16" />
+        </Style>
+
+        <Style Selector="TextBlock.panel-title">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource Text.Primary}" />
+        </Style>
+
+        <Style Selector="TextBlock.panel-subtitle">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{DynamicResource Text.Secondary}" />
+            <Setter Property="Opacity" Value="0.7" />
+        </Style>
+
+        <!--// Toggle Items //-->
+        <Style Selector="Border.toggle-item">
+            <Setter Property="Background" Value="#0A0C10" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Border.Brush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{DynamicResource Radius.S}" />
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.15" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Border.toggle-item:pointerover">
+            <Setter Property="Background" Value="#0E1014" />
+            <Setter Property="RenderTransform" Value="scale(1.02)" />
+        </Style>
+
+        <Style Selector="TextBlock.toggle-label">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource Text.Primary}" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="TextBlock.toggle-description">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="{DynamicResource Text.Secondary}" />
+            <Setter Property="Opacity" Value="0.7" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+        </Style>
+
+        <!--// Dashboard Toggle Switch //-->
+        <Style Selector="ToggleButton.dashboard-toggle">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Width" Value="44" />
+            <Setter Property="Height" Value="24" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="SwitchTrack"
+                            Width="44" Height="24"
+                            CornerRadius="12"
+                            Background="#252837"
+                            BorderBrush="{DynamicResource Border.Brush}"
+                            BorderThickness="1">
+                        <Ellipse x:Name="SwitchThumb"
+                                 Width="18" Height="18"
+                                 Fill="{DynamicResource Text.Secondary}"
+                                 HorizontalAlignment="Left"
+                                 Margin="2,0,0,0">
+                            <Ellipse.Transitions>
+                                <Transitions>
+                                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.25"
+                                                                   Easing="CubicEaseOut" />
+                                    <BrushTransition Property="Fill" Duration="0:0:0.2" />
+                                </Transitions>
+                            </Ellipse.Transitions>
+                        </Ellipse>
+                        <Border.Transitions>
+                            <Transitions>
+                                <BrushTransition Property="Background" Duration="0:0:0.2" />
+                            </Transitions>
+                        </Border.Transitions>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <Style Selector="ToggleButton.dashboard-toggle:checked /template/ Border#SwitchTrack">
+            <Setter Property="Background" Value="{DynamicResource Accent.Brush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Accent.Brush}" />
+        </Style>
+
+        <Style Selector="ToggleButton.dashboard-toggle:checked /template/ Ellipse#SwitchThumb">
+            <Setter Property="Fill" Value="White" />
+            <Setter Property="RenderTransform" Value="translateX(20px)" />
+        </Style>
+
+        <Style Selector="ToggleButton.dashboard-toggle.required">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+
+        <!--// Compact Form Controls //-->
+        <Style Selector="TextBox.compact-input">
+            <Setter Property="MinHeight" Value="36" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Background" Value="#0A0C10" />
+            <Setter Property="CornerRadius" Value="{DynamicResource Radius.S}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Border.Brush}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <Style Selector="Button.compact-button">
+            <Setter Property="MinHeight" Value="36" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="CornerRadius" Value="{DynamicResource Radius.S}" />
+        </Style>
+
+        <Style Selector="Button.icon-button">
+            <Setter Property="MinHeight" Value="36" />
+            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="Medium" />
+        </Style>
+
+        <!--// Status Items //-->
+        <Style Selector="TextBlock.status-item">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="{DynamicResource Text.Primary}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        
+        <Style Selector="Ellipse.success">
+            <Setter Property="Fill" Value="{DynamicResource Success.Brush}"/>
+        </Style>
+        
+        <Style Selector="Ellipse.error">
+            <Setter Property="Fill" Value="{DynamicResource Danger.Brush}"/>
+        </Style>
+    </UserControl.Styles>
+
+    <ScrollViewer Padding="24">
+        <StackPanel Spacing="24"
+                    MaxWidth="1200">
+            <!--// Header //-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Text="{ext:Localize Settings.Title}"
+                               Classes="dashboard-title" />
+                    <TextBlock Text="{ext:Localize Settings.Description}"
+                               Classes="dashboard-subtitle" />
+                </StackPanel>
+            </Grid>
+
+            <!--// Quick Stats //-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0"
+                        Classes="stat-card"
+                        Margin="8,0">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="{ext:Localize Settings.JournalPath}"
+                                   Classes="stat-label" />
+                        <TextBlock Text="{Binding ConnectionStatus}"
+                                   Classes="stat-value"
+                                   Classes.success="{Binding IsConnected}"
+                                   Classes.error="{Binding !IsConnected}"/>
+                        <TextBlock Text="{ext:Localize Settings.JournalPathDescription}"
+                                   Classes="stat-description" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1"
+                        Classes="stat-card"
+                        Margin="8,0">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="{ext:Localize Settings.LastSync}"
+                                   Classes="stat-label" />
+                        <TextBlock Text="2m ago" Classes="stat-value" />
+                        <TextBlock Text="{ext:Localize Settings.LastSyncDescription}"
+                                   Classes="stat-description" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2"
+                        Classes="stat-card"
+                        Margin="8,0,0,0">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="{ext:Localize Settings.Version}"
+                                   Classes="stat-label" />
+                        <TextBlock Text="{Binding Version}" 
+                                   Classes="stat-value" />
+                        <TextBlock Text="{ext:Localize Settings.VersionDescription}" 
+                                   Classes="stat-description" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!--// Main Settings Grid //-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <!--// Interface Configuration Panel //-->
+                <Border Grid.Column="0" 
+                        Classes="dashboard-panel">
+                    <StackPanel Spacing="20">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{ext:Localize Settings.InterfaceConfiguration}"
+                                       Classes="panel-title" />
+                            <TextBlock Text="{ext:Localize Settings.InterfaceConfigurationDescription}" 
+                                       Classes="panel-subtitle" />
+                        </StackPanel>
+
+                        <!--// Toggle Grid //-->
+                        <UniformGrid Columns="3"
+                                     Rows="3">
+                            <Border Classes="toggle-item"
+                                    Margin="0,0,8,8">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="{ext:Localize Settings.Home}" 
+                                               Classes="toggle-label" />
+                                    <ToggleButton IsChecked="True"
+                                                  IsEnabled="False"
+                                                  Classes="dashboard-toggle required" />
+                                    <TextBlock Text="{ext:Localize Settings.MainDashboard}"
+                                               Classes="toggle-description" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="toggle-item"
+                                    Margin="8,0,8,8">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="{ext:Localize Settings.Cargo}"
+                                               Classes="toggle-label" />
+                                    <ToggleButton IsChecked="{Binding Cargo}"
+                                                  Classes="dashboard-toggle" />
+                                    <TextBlock Text="{ext:Localize Settings.CargoManagement}"
+                                               Classes="toggle-description" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="toggle-item"
+                                    Margin="8,0,0,8">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="{ext:Localize Settings.Materials}"
+                                               Classes="toggle-label" />
+                                    <ToggleButton IsChecked="{Binding Materials}" 
+                                                  Classes="dashboard-toggle" />
+                                    <TextBlock Text="{ext:Localize Settings.EngineeringMaterials}"
+                                               Classes="toggle-description" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="toggle-item"
+                                    Margin="0,8,8,8">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="{ext:Localize Settings.Storage}"
+                                               Classes="toggle-label" />
+                                    <ToggleButton IsChecked="{Binding Storage}" 
+                                                  Classes="dashboard-toggle" />
+                                    <TextBlock Text="{ext:Localize Settings.ShipStorage}"
+                                               Classes="toggle-description" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="toggle-item" 
+                                    Margin="8,8,8,8">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="{ext:Localize Settings.System}" 
+                                               Classes="toggle-label" />
+                                    <ToggleButton IsChecked="{Binding System}" 
+                                                  Classes="dashboard-toggle" />
+                                    <TextBlock Text="{ext:Localize Settings.StarSystemInformation}"
+                                               Classes="toggle-description" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="toggle-item" 
+                                    Margin="8,8,0,8">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="{ext:Localize Settings.Planet}"
+                                               Classes="toggle-label" />
+                                    <ToggleButton IsChecked="{Binding Planet}" 
+                                                  Classes="dashboard-toggle" />
+                                    <TextBlock Text="{ext:Localize Settings.PlanetaryData}"
+                                               Classes="toggle-description" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="toggle-item" 
+                                    Margin="0,8,8,0">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="{ext:Localize Settings.MarketConnector}"
+                                               Classes="toggle-label" />
+                                    <ToggleButton IsChecked="{Binding MarketConnector}" 
+                                                  Classes="dashboard-toggle" />
+                                    <TextBlock Text="{ext:Localize Settings.TradeDataConnector}"
+                                               Classes="toggle-description" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="toggle-item" 
+                                    Margin="8,8,8,0">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="{ext:Localize Settings.Log}"
+                                               Classes="toggle-label" />
+                                    <ToggleButton IsChecked="{Binding Log}" 
+                                                  Classes="dashboard-toggle" />
+                                    <TextBlock Text="{ext:Localize Settings.ActivityLogging}"
+                                               Classes="toggle-description" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="toggle-item"
+                                    Margin="8,8,0,0">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="{ext:Localize Settings.Settings}"
+                                               Classes="toggle-label" />
+                                    <ToggleButton IsChecked="True" 
+                                                  IsEnabled="False"
+                                                  Classes="dashboard-toggle required" />
+                                    <TextBlock Text="{ext:Localize Settings.ConfigurationPanel}" 
+                                               Classes="toggle-description" />
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
+                    </StackPanel>
+                </Border>
+
+                <!--// Quick Actions Panel //-->
+                <StackPanel Grid.Column="2" 
+                            Spacing="16">
+
+                    <!--// Data Source Panel //-->
+                    <Border Classes="dashboard-panel compact">
+                        <StackPanel Spacing="16">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="{ext:Localize Settings.DataSource}"
+                                           Classes="panel-title" />
+                                <TextBlock Text="{ext:Localize Settings.DataSourceDescription}"
+                                           Classes="panel-subtitle" />
+                            </StackPanel>
+
+                            <StackPanel Spacing="12">
+                                <TextBox Text="{Binding JournalsFolderPath}"
+                                         Watermark="{ext:Localize Settings.PathToJournals}"
+                                         Classes="compact-input" />
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button Grid.Column="0"
+                                            Content="{ext:Localize Settings.BrowseFolder}"
+                                            HorizontalAlignment="Left"
+                                            VerticalContentAlignment="Center"
+                                            HorizontalContentAlignment="Center"
+                                            Command="{Binding BrowseFolderCommand}"
+                                            Classes="outline compact-button" />
+
+                                    <StackPanel Grid.Column="2"
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal"
+                                                Spacing="5">
+                                        <Button HorizontalAlignment="Right"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalContentAlignment="Center"
+                                                Content="{ext:Localize Settings.ReadAll}"
+                                                Command="{Binding ReadAllCommand}"
+                                                Classes="primary compact-button" />
+                                        
+                                        <Button HorizontalAlignment="Right"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalContentAlignment="Center"
+                                                Content="{ext:Localize Settings.ReadLast}"
+                                                Command="{Binding ReadLastCommand}"
+                                                Classes="success compact-button" />
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!--// Status Panel //-->
+                    <Border Classes="dashboard-panel compact">
+                        <StackPanel Spacing="16">
+                            <TextBlock Text="System Status"
+                                       Classes="panel-title" />
+                            <StackPanel Spacing="10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" 
+                                               Text="{ext:Localize Settings.JournalMonitoring}" 
+                                               Classes="status-item" />
+                                    <Ellipse Grid.Column="1"
+                                             Width="8"
+                                             Height="8"
+                                             Classes.success="{Binding IsConnected}"
+                                             Classes.error="{Binding !IsConnected}"/>
+                                </Grid>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" 
+                                               Text="{ext:Localize Settings.DataProcessing}"
+                                               Classes="status-item" />
+                                    <Ellipse Grid.Column="1"
+                                             Width="8" 
+                                             Height="8" 
+                                             Fill="#4F6BED" />
+                                </Grid>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" 
+                                               Text="{ext:Localize Settings.MarketUpdates}"
+                                               Classes="status-item" />
+                                    <Ellipse Grid.Column="1"
+                                             Width="8"
+                                             Height="8"
+                                             Fill="#FFC107" />
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

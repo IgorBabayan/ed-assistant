@@ -83,7 +83,58 @@ public sealed partial class SettingsViewModel : PageViewModel
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ReadAllCommand))]
+    [NotifyPropertyChangedFor(nameof(ConnectionStatus))]
+    [NotifyPropertyChangedFor(nameof(IsConnected))]
     private string? journalsFolderPath;
+    
+    public string ConnectionStatus
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(JournalsFolderPath))
+                return Localization.Instance["Settings.NotConnected"];
+
+            if (!Directory.Exists(JournalsFolderPath))
+                return Localization.Instance["Settings.PathNotFound"];
+
+            try
+            {
+                var journalFiles = Directory.GetFiles(JournalsFolderPath, "*.log");
+                if (journalFiles.Length > 0)
+                    return Localization.Instance["Settings.Connected"];
+                
+                return Localization.Instance["Settings.NoJournalFiles"];
+            }
+            catch
+            {
+                return Localization.Instance["Settings.AccessDenied"];
+            }
+        }
+    }
+    
+    public bool IsConnected
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(JournalsFolderPath))
+                return false;
+
+            if (!Directory.Exists(JournalsFolderPath))
+                return false;
+
+            try
+            {
+                var journalFiles = Directory.GetFiles(JournalsFolderPath, "*.log");
+                return journalFiles.Length > 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+    }
+
+    public string Version => $"v{Assembly.GetExecutingAssembly().GetName().Version}";
 
     public SettingsViewModel(IFolderPickerService folderPickerService, ILogger<SettingsViewModel> logger, IDockVisibilityService dockVisibilityService, ISettingsService settingsService, IGameDataService gameDataService)
     {
@@ -145,6 +196,9 @@ public sealed partial class SettingsViewModel : PageViewModel
 
     [RelayCommand(CanExecute = nameof(CanReadAll))]
     private async Task ReadAllAsync() => await _gameDataService.LoadAll(JournalsFolderPath!);
+    
+    [RelayCommand(CanExecute = nameof(CanReadAll))]
+    private async Task ReadLastAsync() => await _gameDataService.LoadLast(JournalsFolderPath!);
 
     private bool CanReadAll() => !string.IsNullOrWhiteSpace(JournalsFolderPath) && Directory.Exists(JournalsFolderPath);
 
