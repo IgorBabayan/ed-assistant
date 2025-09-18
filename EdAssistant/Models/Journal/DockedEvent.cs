@@ -1,15 +1,15 @@
 ﻿namespace EdAssistant.Models.Journal;
 
-public class DockedEvent : JournalEvent
+/*public class DockedEvent : JournalEvent
 {
     [JsonPropertyName("StationName")]
-    public required string StationName { get; set; }
+    public string StationName { get; set; }
 
     [JsonPropertyName("StationType")]
-    public required string StationType { get; set; }
+    public string StationType { get; set; }
 
     [JsonPropertyName("StarSystem")]
-    public required string StarSystem { get; set; }
+    public string StarSystem { get; set; }
 
     [JsonPropertyName("SystemAddress")]
     public long SystemAddress { get; set; }
@@ -20,5 +20,5 @@ public class DockedEvent : JournalEvent
     [JsonPropertyName("DistFromStarLS")]
     public double DistFromStarLS { get; set; }
 
-    public override JournalEventType EventType => JournalEventType.Docked;
-}
+    public override JournalEventTypeEnum EventTypeEnum => JournalEventTypeEnum.Docked;
+}*/

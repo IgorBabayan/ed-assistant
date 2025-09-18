@@ -2,7 +2,7 @@ namespace EdAssistant.Models.Scan;
 
 public class FSSSignalDiscoveredEvent : JournalEvent
 {
-    public override JournalEventType EventType => JournalEventType.FSSSignalDiscovered;
+    public override JournalEventTypeEnum EventTypeEnum => JournalEventTypeEnum.FSSSignalDiscovered;
 
     [JsonPropertyName("SystemAddress")]
     public long SystemAddress { get; set; }
@@ -12,5 +12,5 @@ public class FSSSignalDiscoveredEvent : JournalEvent
 
     [JsonPropertyName("SignalType")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public StationType SignalType { get; set; }
+    public StationTypeEnum SignalTypeEnum { get; set; }
 }

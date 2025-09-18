@@ -6,7 +6,7 @@ public abstract class JournalEvent
     public DateTime Timestamp { get; set; }
 
     [JsonPropertyName("event")]
-    public required string Event { get; set; }
+    public string Event { get; set; }
 
-    public abstract JournalEventType EventType { get; }
+    public abstract JournalEventTypeEnum EventTypeEnum { get; }
 }

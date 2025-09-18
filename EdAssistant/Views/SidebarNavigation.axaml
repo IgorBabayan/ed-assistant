@@ -126,7 +126,7 @@
                         <TextBlock Grid.Column="0"
                                    Name="AppTitle"
                                    Classes="app-title"
-                                   Text="Elite Dangerous Assistant"
+                                   Text="{ext:Localize Common.AppTitle}"
                                    FontSize="17"
                                    FontWeight="SemiBold"
                                    Foreground="White"
@@ -175,7 +175,7 @@
                             Name="HomeBtn"
                             Click="NavigationItem_Click"
                             Command="{Binding NavigateToCommand}"
-                            CommandParameter="{x:Static local:DockEnum.Home}"
+                            CommandParameter="{x:Static local:PageEnum.Home}"
                             Margin="0,0,0,16">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -198,7 +198,7 @@
 						<Button Classes="nav-item"
                                 Click="NavigationItem_Click"
                                 Command="{Binding NavigateToCommand}"
-                                CommandParameter="{x:Static local:DockEnum.Cargo}"
+                                CommandParameter="{x:Static local:PageEnum.Cargo}"
                                 IsVisible="{Binding IsCargo}"
                                 IsEnabled="{Binding IsCargo}">
 							<Grid>
@@ -217,7 +217,7 @@
 						<Button Classes="nav-item" 
                                 Click="NavigationItem_Click" 
                                 Command="{Binding NavigateToCommand}"
-                                CommandParameter="{x:Static local:DockEnum.Materials}"
+                                CommandParameter="{x:Static local:PageEnum.Materials}"
                                 IsVisible="{Binding IsMaterials}"
                                 IsEnabled="{Binding IsMaterials}">
 							<Grid>
@@ -235,7 +235,7 @@
 
 						<Button Classes="nav-item" 
                                 Click="NavigationItem_Click"
-                                CommandParameter="{x:Static local:DockEnum.ShipLocker}"
+                                CommandParameter="{x:Static local:PageEnum.ShipLocker}"
                                 Command="{Binding NavigateToCommand}"
                                 IsVisible="{Binding IsStorage}"
                                 IsEnabled="{Binding IsStorage}">
@@ -261,7 +261,7 @@
 						<Button Classes="nav-item" 
                                 Click="NavigationItem_Click"
                                 Command="{Binding NavigateToCommand}"
-                                CommandParameter="{x:Static local:DockEnum.System}"
+                                CommandParameter="{x:Static local:PageEnum.System}"
                                 IsVisible="{Binding IsSystem}"
                                 IsEnabled="{Binding IsSystem}">
 							<Grid>
@@ -280,7 +280,7 @@
 						<Button Classes="nav-item" 
                                 Click="NavigationItem_Click" 
                                 Command="{Binding NavigateToCommand}"
-                                CommandParameter="{x:Static local:DockEnum.Planet}"
+                                CommandParameter="{x:Static local:PageEnum.Planet}"
                                 IsVisible="{Binding IsPlanet}"
                                 IsEnabled="{Binding IsPlanet}">
 							<Grid>
@@ -305,7 +305,7 @@
 						<Button Classes="nav-item" 
                                 Click="NavigationItem_Click"
                                 Command="{Binding NavigateToCommand}"
-                                CommandParameter="{x:Static local:DockEnum.MarketConnector}"
+                                CommandParameter="{x:Static local:PageEnum.MarketConnector}"
                                 IsVisible="{Binding IsMarketConnector}"
                                 IsEnabled="{Binding IsMarketConnector}">
 							<Grid>
@@ -324,7 +324,7 @@
 						<Button Classes="nav-item" 
                                 Click="NavigationItem_Click"
                                 Command="{Binding NavigateToCommand}"
-                                CommandParameter="{x:Static local:DockEnum.Log}"
+                                CommandParameter="{x:Static local:PageEnum.Log}"
                                 IsVisible="{Binding IsLog}"
                                 IsEnabled="{Binding IsLog}">
 							<Grid>
@@ -343,7 +343,7 @@
 						<Button Classes="nav-item"
                                 Click="NavigationItem_Click"
                                 Command="{Binding NavigateToCommand}"
-                                CommandParameter="{x:Static local:DockEnum.Settings}">
+                                CommandParameter="{x:Static local:PageEnum.Settings}">
 							<Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>

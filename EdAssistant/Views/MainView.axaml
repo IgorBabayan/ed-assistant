@@ -73,7 +73,7 @@
                                      Grid.Column="0"/>
             <ContentControl Grid.Row="1" 
 							Grid.Column="1"
-                            Content="{Binding CurrentViewModel}" />
+							x:Name="PART_NavigationContent" />
 		</Grid>
     </Border>
 </UserControl>

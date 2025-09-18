@@ -11,5 +11,5 @@ public class MaterialsEvent : JournalEvent
     [JsonPropertyName("Encoded")]
     public List<Material> Encoded { get; set; } = new();
 
-    public override JournalEventType EventType => JournalEventType.Materials;
+    public override JournalEventTypeEnum EventTypeEnum => JournalEventTypeEnum.Materials;
 }

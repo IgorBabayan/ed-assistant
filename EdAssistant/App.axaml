@@ -27,34 +27,4 @@
 		<converters:EnumLocalizationConverter x:Key="EnumLocalizationConverter" />
 		<converters:RankToIconConverter x:Key="RankToIconConverter" />
     </Application.Resources>
-
-    <Application.DataTemplates>
-        <DataTemplate DataType="{x:Type vm:HomeViewModel}">
-            <views:HomeView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:CargoViewModel}">
-            <views:CargoView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:MaterialsViewModel}">
-			<views:MaterialsView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:StorageViewModel}">
-			<views:StorageView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:SystemViewModel}">
-			<views:SystemView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:PlanetViewModel}">
-			<views:PlanetView/>
-		</DataTemplate>
-		<DataTemplate DataType="{x:Type vm:MarketConnectorViewModel}">
-			<views:MarketConnectorView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:LogViewModel}">
-			<views:LogView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
-			<views:SettingsView/>
-        </DataTemplate>
-    </Application.DataTemplates>
 </Application>

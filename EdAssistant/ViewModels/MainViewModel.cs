@@ -1,153 +1,96 @@
 ﻿namespace EdAssistant.ViewModels;
 
-public partial class MainViewModel : BaseViewModel
+public partial class MainViewModel : BaseViewModel, IRecipient<CommanderMessage>
 {
     private readonly INavigationService _navigationService;
-    private readonly IDockVisibilityService _dockVisibilityService;
     private readonly IDesktopService _desktopService;
-    private readonly IGameDataService _gameDataService;
-
-    private static readonly Dictionary<Type, DockEnum> _viewModelToDockCache = [];
-    private static readonly Dictionary<DockEnum, Type> _dockToViewModelCache = [];
-
-    [ObservableProperty]
-    private string? windowTitle;
-
-    public DockEnum CurrentDock
-    {
-        get
-        {
-            if (CurrentViewModel == null)
-                return default;
-
-            var viewModelType = CurrentViewModel.GetType();
-            return _viewModelToDockCache.GetValueOrDefault(viewModelType);
-        }
-    }
+    private readonly IDockVisibilityService _dockVisibilityService;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(NavigateToCommand))]
-    private PageViewModel? currentViewModel;
+    private PageEnum _currentPage = PageEnum.Home;
+
+    [ObservableProperty]
+    private string? _windowTitle;
 
     public static bool CanCreateDesktopFile => OperatingSystem.IsLinux();
-    public bool IsCargo => _dockVisibilityService.GetVisibility(DockEnum.Cargo);
-    public bool IsMaterials => _dockVisibilityService.GetVisibility(DockEnum.Materials);
-    public bool IsStorage => _dockVisibilityService.GetVisibility(DockEnum.ShipLocker);
-    public bool IsSystem => _dockVisibilityService.GetVisibility(DockEnum.System);
-    public bool IsPlanet => _dockVisibilityService.GetVisibility(DockEnum.Planet);
-    public bool IsMarketConnector => _dockVisibilityService.GetVisibility(DockEnum.MarketConnector);
-    public bool IsLog => _dockVisibilityService.GetVisibility(DockEnum.Log);
+    public bool IsCargo => _dockVisibilityService.GetVisibility(PageEnum.Cargo);
+    public bool IsMaterials => _dockVisibilityService.GetVisibility(PageEnum.Materials);
+    public bool IsStorage => _dockVisibilityService.GetVisibility(PageEnum.ShipLocker);
+    public bool IsSystem => _dockVisibilityService.GetVisibility(PageEnum.System);
+    public bool IsPlanet => _dockVisibilityService.GetVisibility(PageEnum.Planet);
+    public bool IsMarketConnector => _dockVisibilityService.GetVisibility(PageEnum.MarketConnector);
+    public bool IsLog => _dockVisibilityService.GetVisibility(PageEnum.Log);
 
     public bool IsPlanetarySystem => IsSystem || IsPlanet;
     public bool IsInventory => IsCargo || IsMaterials || IsStorage;
 
-    static MainViewModel() => InitializeMappings();
-
-    public MainViewModel(INavigationService navigationService, IDockVisibilityService dockVisibilityService, IDesktopService desktopService, IGameDataService gameDataService)
+    public MainViewModel(INavigationService navigationService, IDesktopService desktopService,
+        IDockVisibilityService dockVisibilityService)
     {
         _navigationService = navigationService;
-        _dockVisibilityService = dockVisibilityService;
         _desktopService = desktopService;
-        _gameDataService = gameDataService;
-        CurrentViewModel = _navigationService.Current;
+        _dockVisibilityService = dockVisibilityService;
 
+        _navigationService.Navigated += OnNavigated;
         _dockVisibilityService.VisibilityChanged += OnDockVisibilityChanged;
-        _gameDataService.JournalLoaded += OnJournalLoaded;
-
-        ProcessCommanderEvent();
+        
+        WeakReferenceMessenger.Default.Register(this);
     }
+    
+    public void Receive(CommanderMessage commander) => WindowTitle = $"o7, {commander.Name}!";
 
-    public override void Dispose()
+    protected override void OnDispose(bool disposing)
     {
-        _dockVisibilityService.VisibilityChanged -= OnDockVisibilityChanged;
-        _gameDataService.JournalLoaded -= OnJournalLoaded;
-
-        GC.SuppressFinalize(this);
-    }
-
-    private void ProcessCommander(CommanderEvent commander)
-    {
-        WindowTitle = string.Format(Localization.Instance["MainWindow.TitleLoaded"], commander.Name);
-    }
-
-    private void OnJournalLoaded(object? sender, JournalEventLoadedEventArgs e)
-    {
-        if (e is { EventType: JournalEventType.Commander, Event: CommanderEvent commander })
-            ProcessCommander(commander);
-    }
-
-    private void ProcessCommanderEvent()
-    {
-        var commanderEvent = _gameDataService.GetLatestJournal<CommanderEvent>();
-        if (commanderEvent is not null)
+        if (disposing)
         {
-            ProcessCommander(commanderEvent);
+            _navigationService.Navigated -= OnNavigated;
+            _dockVisibilityService.VisibilityChanged -= OnDockVisibilityChanged;    
         }
-        else
+        
+        base.OnDispose(disposing);
+    }
+    
+    private static PageEnum GetPageFromViewModelType(Type viewModelType)
+    {
+        return viewModelType.Name switch
         {
-            WindowTitle = Localization.Instance["MainWindow.Title"];
-        }
+            nameof(HomeViewModel) => PageEnum.Home,
+            nameof(CargoViewModel) => PageEnum.Cargo,
+            nameof(MaterialsViewModel) => PageEnum.Materials,
+            nameof(StorageViewModel) => PageEnum.ShipLocker,
+            nameof(SystemViewModel) => PageEnum.System,
+            nameof(PlanetViewModel) => PageEnum.Planet,
+            nameof(MarketConnectorViewModel) => PageEnum.MarketConnector,
+            nameof(LogViewModel) => PageEnum.Log,
+            nameof(SettingsViewModel) => PageEnum.Settings,
+            _ => PageEnum.Home
+        };
     }
 
-    private static void InitializeMappings()
-    {
-        var viewModelTypes = typeof(PageViewModel).Assembly
-            .GetTypes()
-            .Where(t => t.IsSubclassOf(typeof(PageViewModel)) &&
-                        t.GetCustomAttribute<DockMappingAttribute>() != null);
-
-        foreach (var type in viewModelTypes)
-        {
-            var attribute = type.GetCustomAttribute<DockMappingAttribute>();
-            if (attribute is not null)
-            {
-                _viewModelToDockCache[type] = attribute.Dock;
-                _dockToViewModelCache[attribute.Dock] = type;
-            }
-        }
-    }
-
-    partial void OnCurrentViewModelChanged(PageViewModel? oldValue, PageViewModel? newValue)
-        => OnPropertyChanged(nameof(CurrentDock));
-
-    [RelayCommand(CanExecute = nameof(CanNavigateTo))]
-    private void NavigateTo(DockEnum dock)
-    {
-        _navigationService.NavigateTo(dock);
-        CurrentViewModel = _navigationService.Current;
-    }
-
-    private bool CanNavigateTo(DockEnum dock)
-    {
-        if (CurrentViewModel is null)
-            return true;
-
-        var currentViewModelType = CurrentViewModel.GetType();
-        var targetViewModelType = _dockToViewModelCache.GetValueOrDefault(dock);
-
-        return currentViewModelType != targetViewModelType;
-    }
+    private void OnNavigated(object? sender, NavigationEventArgs e) => 
+        CurrentPage = GetPageFromViewModelType(e.ViewModelType);
 
     private void OnDockVisibilityChanged(object? sender, DockVisibilityChangedEventArgs e)
     {
-        OnPropertyChanged(e.Dock switch
+        OnPropertyChanged(e.Page switch
         {
-            DockEnum.Cargo => nameof(IsCargo),
-            DockEnum.Materials => nameof(IsMaterials),
-            DockEnum.ShipLocker => nameof(IsStorage),
-            DockEnum.System => nameof(IsSystem),
-            DockEnum.Planet => nameof(IsPlanet),
-            DockEnum.MarketConnector => nameof(IsMarketConnector),
-            DockEnum.Log => nameof(IsLog),
+            PageEnum.Cargo => nameof(IsCargo),
+            PageEnum.Materials => nameof(IsMaterials),
+            PageEnum.ShipLocker => nameof(IsStorage),
+            PageEnum.System => nameof(IsSystem),
+            PageEnum.Planet => nameof(IsPlanet),
+            PageEnum.MarketConnector => nameof(IsMarketConnector),
+            PageEnum.Log => nameof(IsLog),
             _ => string.Empty
         });
 
-        if (e.Dock is DockEnum.System or DockEnum.Planet)
+        if (e.Page is PageEnum.System or PageEnum.Planet)
         {
             OnPropertyChanged(nameof(IsPlanetarySystem));
         }
 
-        if (e.Dock is DockEnum.Cargo or DockEnum.Materials or DockEnum.ShipLocker)
+        if (e.Page is PageEnum.Cargo or PageEnum.Materials or PageEnum.ShipLocker)
         {
             OnPropertyChanged(nameof(IsInventory));
         }
@@ -159,4 +102,49 @@ public partial class MainViewModel : BaseViewModel
         _desktopService.CreateDesktopFile();
         _desktopService.Save();
     }
+    
+    [RelayCommand(CanExecute = nameof(CanNavigateTo))]
+    private async Task NavigateToAsync(PageEnum page)
+    {
+        switch (page)
+        {
+            case PageEnum.Home:
+                await _navigationService.NavigateAsync<HomeViewModel>();
+                break;
+                
+            case PageEnum.Cargo:
+                await _navigationService.NavigateAsync<CargoViewModel>();
+                break;
+            
+            case PageEnum.Materials:
+                await _navigationService.NavigateAsync<MaterialsViewModel>();
+                break;
+            
+            case PageEnum.ShipLocker:
+                await _navigationService.NavigateAsync<StorageViewModel>();
+                break;
+            
+            case PageEnum.System:
+                await _navigationService.NavigateAsync<SystemViewModel>();
+                break;
+            
+            case PageEnum.Planet:
+                await _navigationService.NavigateAsync<PlanetViewModel>();
+                break;
+            
+            case PageEnum.MarketConnector:
+                await _navigationService.NavigateAsync<MarketConnectorViewModel>();
+                break;
+            
+            case PageEnum.Log:
+                await _navigationService.NavigateAsync<LogViewModel>();
+                break;
+            
+            case PageEnum.Settings:
+                await _navigationService.NavigateAsync<SettingsViewModel>();
+                break;
+        }
+    }
+    
+    private bool CanNavigateTo(PageEnum page) => CurrentPage != page;
 }

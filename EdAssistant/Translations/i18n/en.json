@@ -1,20 +1,58 @@
 {
   "Common": {
-    "SelectFolderTitle": "Select a folder",
     "Yes": "Yes",
     "No": "No",
-    "Watermark": "Search items"
+    "Watermark": "Search items",
+    "AppTitle": "Elite Dangerous Assistant"
   },
   "Exceptions": {
-    "NoStorageProvider": "No StorageProvider available.",
-    "FailedGettingFolder": "Failed to get local path for folder {0} ({1})",
-    "OSNotSupported": "Operation system is not supported",
     "DirectoryNotFound": "Directory not found: {0}",
     "FileNotFound": "File not found: {0}",
     "FailedToLoadFileData": "Failed to load data from {0}",
     "ParsingJournalEvent": "Error parsing journal event to {0}: {1}",
     "UnknownJournalEvent": "Unknown event type '{0}' encountered, skipping. Line: {1}",
-    "LoadingIconError": "Error loading icon: {0}"
+    "LoadingIconError": "Error loading icon: {0}",
+    "FailedToInitialize": "Failed to initialize {0}" 
+  },
+  "Warnings": {
+    "CouldNotReadFile": "Warning: Could not read file {0}: {1}",
+    "CouldNotParseEvent": "Warning: Could not parse journal line: {0}... Error: {1}"
+  },
+  "JournalService": {
+    "Exceptions": {
+      
+    }
+  },
+  "NavigationService": {
+    "Navigating": {
+      "NavigatingTo": "Navigating to {0}",
+      "NavigationWasCanceled": "Navigation to {0} was cancelled",
+      "InitializingViewModel": "Initializing {0} asynchronously",
+      "SuccessfullyNavigated": "Successfully navigated to {0}",
+      "GoingBackTo": "Going back to {0}",
+      "ClearingNavigationHistory": "Clearing navigation history",
+      "Initializing": "Initializing {0}",
+      "SuccessfullyInitialized": "Successfully initialized {0}",
+      "Disposing": "Disposing {0}"
+    },
+    "Warnings": {
+      "CannotGoBack": "Cannot go back - no navigation history available"
+    },
+    "Exceptions": {
+      "ViewMustInheritUserControl": "View must inherit from UserControl",
+      "NavigationServiceNotInitialized": "NavigationService not initialized. Call Initialize() first.",
+      "FailedToNavigate": "Failed to navigate to {0}",
+      "FailedToNavigateBack": "Failed to navigate back",
+      "NoViewMappingFound": "No view mapping found for ViewModel type: {0}"
+    }
+  },
+  "FolderService": {
+    "SelectFolderTitle": "Select a folder",
+    "Exceptions": {
+      "OSNotSupported": "Operation system is not supported",
+      "NoStorageProvider": "No StorageProvider available.",
+      "NoJournalsPath": "No default journal folder"
+    }
   },
   "Filtering": {
     "NoItemsFound": "No items found",
@@ -26,27 +64,73 @@
     "DesktopFile": "Create a desktop file",
     "Minimize": "Minimize window",
     "Maximize": "Maximize window",
-    "Close": "Close window"
-  },
-  "Menu": {
-    "MenuItem": {
-      "Home": "Home",
-      "Cargo": "Cargo",
-      "Materials": "Materials",
-      "Storage": "Storage",
-      "System": "System",
-      "Planet": "Planet",
-      "MarketConnector": "Market connector",
-      "Logs": "Logs",
-      "Settings": "Settings"
-    },
-    "Section": {
-      "ShipStorage": "Ship storage",
-      "StarSystem": "Star system",
-      "Administration": "Administration"
+    "Close": "Close window",
+    "Exceptions": {
+      "NavigationNotFound": "Navigation content control not found"
     }
   },
-  "Settings": {
+  "HomePage": {
+    "Initializing": "Initializing Home page data",
+    "Exceptions": {
+      "FailedToInitialize": "Failed to initialize home page data"
+    }
+  },
+  "CargoPage": {
+    "Title": "Cargo Storage",
+    "Initializing": "Initializing Cargo page data",
+    "IsStolen": "Stolen: ",
+    "Exceptions": {
+      "FailedToInitialize": "Failed to initialize cargo page data"
+    }
+  },
+  "MaterialsPage": {
+    "Title": "Materials",
+    "Initializing": "Initializing Materials page data",
+    "Raw": "Raw ({0})",
+    "Manufactured": "Manufactured ({0})",
+    "Encoded": "Encoded ({0})",
+    "Categories": {
+      "Raw": "Raw",
+      "Manufactured": "Manufactured",
+      "Encoded": "Encoded"
+    },
+    "Exceptions": {
+      "FailedToInitialize": "Failed to initialize materials page data"
+    }
+  },
+  "SystemPage": {
+    "Initializing": "Initializing System page data",
+    "Exceptions": {
+      "FailedToInitialize": "Failed to initialize system page data"
+    },
+    "Information": {
+      "NotedBarycenter": "Noted barycenter {0} in system {1}",
+      "SwitchedToSystem": "Switched to system: {0}",
+      "DuplicateBodyDetected": "Duplicate body detected: {0} (ID: {1}) - skipping",
+      "AddedBody": "Added body: {0} (ID: {1}) to system: {2}",
+      "AddedStation": "Added station {0} of type {1}",
+      "AddedOrphanedStation": "Added orphaned station {0} to main star"
+    },
+    "ScanProcess": {
+      "BuildingHierarchy": "Building hierarchy using name-based approach...",
+      "AddedStar": "Added star: {0}",
+      "AddedPlanet": "Added planet: {0} to star: {1}",
+      "AddedBeltCluster": "Added belt cluster: {0} to planet: {1}",
+      "AddedMoon": "Added moon: {0} to planet: {1}",
+      "AddedOrphanedBody": "Added orphaned body: {0} to main star",
+      "HierarchyBuildingComplete": "Hierarchy building complete!",
+      "SystemChanged": "System changed from '{0}' to '{1}'",
+      "ProcessingScans": "Processing scans for system: {0}",
+      "ProcessingUniqueScan": "Processing {0} unique scan events for system '{1}' (removed {3} duplicates)..."
+    }
+  },
+  "StoragePage": {
+    "Initializing": "Initializing Storage page data",
+    "Exceptions": {
+      "FailedToInitialize": "Failed to initialize storage page data"
+    }
+  },
+  "SettingsPage": {
     "Title": "Settings Dashboard",
     "Description": "Configure your Elite Dangerous Assistant",
     "PathToJournals": "Path to Elite Dangerous journals...",
@@ -89,7 +173,28 @@
     "Log": "Logs",
     "ActivityLogging": "Activity logging",
     "Settings": "Settings",
-    "ConfigurationPanel": "Configuration panel"
+    "ConfigurationPanel": "Configuration panel",
+    "Exceptions": {
+      "FailedGettingFolder": "Failed to get local path for folder {0} ({1})"
+    }
+  },
+  "Menu": {
+    "MenuItem": {
+      "Home": "Home",
+      "Cargo": "Cargo",
+      "Materials": "Materials",
+      "Storage": "Storage",
+      "System": "System",
+      "Planet": "Planet",
+      "MarketConnector": "Market connector",
+      "Logs": "Logs",
+      "Settings": "Settings"
+    },
+    "Section": {
+      "ShipStorage": "Ship storage",
+      "StarSystem": "Star system",
+      "Administration": "Administration"
+    }
   },
   "StorageWindow": {
     "Title": "Ship Storage",
@@ -103,21 +208,6 @@
       "Consumables": "Consumables",
       "Data": "Data"
     }
-  },
-  "MaterialsWindow": {
-    "Title": "Materials",
-    "Raw": "Raw ({0})",
-    "Manufactured": "Manufactured ({0})",
-    "Encoded": "Encoded ({0})",
-    "Categories": {
-      "Raw": "Raw",
-      "Manufactured": "Manufactured",
-      "Encoded": "Encoded"
-    }
-  },
-  "CargoWindow": {
-    "Title": "Cargo Storage",
-    "IsStolen": "Stolen: "
   },
   "Rank": {
     "Combat": {
@@ -282,20 +372,5 @@
     "System": "System",
     "Stars": "stars",
     "Bodies": "bodies"
-  },
-  "ScanProcess": {
-    "SwitchedToSystem": "Switched to system: {0}",
-    "DuplicateBodyDetected": "Duplicate body detected: {0} (ID: {1}) - skipping",
-    "AddedBody": "Added body: {0} (ID: {1}) to system: {2}",
-    "BuildingHierarchy": "Building hierarchy using name-based approach...",
-    "AddedStar": "Added star: {0}",
-    "AddedPlanet": "Added planet: {0} to star: {1}",
-    "AddedBeltCluster": "Added belt cluster: {0} to planet: {1}",
-    "AddedMoon": "Added moon: {0} to planet: {1}",
-    "AddedOrphanedBody": "Added orphaned body: {0} to main star",
-    "HierarchyBuildingComplete": "Hierarchy building complete!",
-    "SystemChanged": "System changed from '{0}' to '{1}'",
-    "ProcessingScans": "Processing scans for system: {0}",
-    "ProcessingUniqueScan": "Processing {0} unique scan events for system '{1}' (removed {3} duplicates)..."
   }
 }

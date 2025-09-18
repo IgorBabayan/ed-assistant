@@ -24,7 +24,7 @@
 
 			<!--// Title and Search //-->
 			<StackPanel Grid.Column="0" Orientation="Vertical" Spacing="12">
-				<TextBlock Text="{ext:Localize CargoWindow.Title}"
+				<TextBlock Text="{ext:Localize CargoPage.Title}"
                            FontSize="24"
                            FontWeight="Bold"
                            Foreground="{DynamicResource Text.Primary}"/>
@@ -96,7 +96,7 @@
                                                    MaxLines="2"/>
 
                                         <StackPanel Orientation="Horizontal" Spacing="2">
-                                            <TextBlock Text="{ext:Localize CargoWindow.IsStolen}"
+                                            <TextBlock Text="{ext:Localize CargoPage.IsStolen}"
                                                        Foreground="{DynamicResource Text.Secondary}"
                                                        FontSize="11"></TextBlock>
                                             <TextBlock Text="{Binding IsStolen, Converter={StaticResource BoolToYesNoConverter}}"

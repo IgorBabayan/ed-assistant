@@ -2,15 +2,15 @@
 
 class DockVisibilityService : IDockVisibilityService
 {
-    private readonly Dictionary<DockEnum, bool> _dockVisibility = new()
+    private readonly Dictionary<PageEnum, bool> _dockVisibility = new()
     {
-        [DockEnum.Cargo] = true,
-        [DockEnum.Materials] = true,
-        [DockEnum.ShipLocker] = true,
-        [DockEnum.System] = true,
-        [DockEnum.Planet] = true,
-        [DockEnum.MarketConnector] = true,
-        [DockEnum.Log] = true
+        [PageEnum.Cargo] = true,
+        [PageEnum.Materials] = true,
+        [PageEnum.ShipLocker] = true,
+        [PageEnum.System] = true,
+        [PageEnum.Planet] = true,
+        [PageEnum.MarketConnector] = true,
+        [PageEnum.Log] = true
     };
     private readonly string _settingsPath;
 
@@ -23,16 +23,16 @@ class DockVisibilityService : IDockVisibilityService
         LoadSettings();
     }
 
-    public bool GetVisibility(DockEnum dock) => _dockVisibility.GetValueOrDefault(dock, true);
+    public bool GetVisibility(PageEnum page) => _dockVisibility.GetValueOrDefault(page, true);
 
-    public void SetVisibility(DockEnum dock, bool isVisible)
+    public void SetVisibility(PageEnum page, bool isVisible)
     {
-        if (_dockVisibility.GetValueOrDefault(dock) == isVisible)
+        if (_dockVisibility.GetValueOrDefault(page) == isVisible)
             return;
 
-        _dockVisibility[dock] = isVisible;
+        _dockVisibility[page] = isVisible;
         SaveSettings();
-        VisibilityChanged?.Invoke(this, new DockVisibilityChangedEventArgs(dock, isVisible));
+        VisibilityChanged?.Invoke(this, new DockVisibilityChangedEventArgs(page, isVisible));
     }
 
     public void SaveSettings()
@@ -48,7 +48,7 @@ class DockVisibilityService : IDockVisibilityService
             return;
 
         var json = File.ReadAllText(_settingsPath);
-        var loaded = JsonSerializer.Deserialize<Dictionary<DockEnum, bool>>(json);
+        var loaded = JsonSerializer.Deserialize<Dictionary<PageEnum, bool>>(json);
         if (loaded == null)
             return;
 

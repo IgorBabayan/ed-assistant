@@ -1,52 +1,49 @@
-﻿using CargoEvent = EdAssistant.Models.Cargo.CargoEvent;
+﻿namespace EdAssistant.ViewModels.Pages;
 
-namespace EdAssistant.ViewModels.Pages;
-
-[DockMapping(DockEnum.Cargo)]
-public sealed partial class CargoViewModel : PageViewModel
+public sealed partial class CargoViewModel(IJournalService journalService, ILogger<CargoViewModel> logger)
+    : PageViewModel(logger)
 {
-    private readonly IGameDataService _gameDataService;
+    [ObservableProperty]
+    private bool _isCargoLoading;
+    
     private readonly List<CargoInventoryItemDTO> _allItems = [];
 
     [ObservableProperty]
-    private ObservableCollection<CargoInventoryItemDTO> filteredItems = [];
+    private ObservableCollection<CargoInventoryItemDTO> _filteredItems = [];
 
     [ObservableProperty]
-    private string searchText = string.Empty;
+    private string _searchText = string.Empty;
 
     public bool HasNoItems => FilteredItems.Count == 0;
-
-    public CargoViewModel(IGameDataService gameDataService)
+    
+    protected override async Task OnInitializeAsync()
     {
-        _gameDataService = gameDataService;
-        _gameDataService.DataLoaded += OnGameDataLoaded;
-
-        var existingData = _gameDataService.GetData<CargoEvent>();
-        if (existingData is not null)
+        logger.LogInformation(Localization.Instance["CargoPage.Initializing"]);
+        IsCargoLoading = true;
+        try
         {
-            ProcessCargoData(existingData);
+            await LoadCargoDataAsync();
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, Localization.Instance["CargoPage.Exceptions.FailedToInitialize"]);
+        }
+        finally
+        {
+            IsCargoLoading = false;
         }
     }
-
-    public override void Dispose()
-    {
-        _gameDataService.DataLoaded -= OnGameDataLoaded;
-    }
-
+    
     partial void OnSearchTextChanged(string value) => ApplyFilters();
 
-    private void OnGameDataLoaded(object? sender, GameDataLoadedEventArgs e)
+    private async Task LoadCargoDataAsync()
     {
-        if (e.DataType == typeof(CargoEvent) && e.Data is CargoEvent cargoData)
-        {
-            ProcessCargoData(cargoData);
-        }
-    }
-
-    private void ProcessCargoData(CargoEvent cargoData)
-    {
+        var cargoEvent = (await journalService.GetLatestJournalEntriesAsync<CargoEvent>()).LastOrDefault();
+        if (cargoEvent is null)
+            return;
+        
         _allItems.Clear();
-        _allItems.AddRange(cargoData.Inventory.Select(x => new CargoInventoryItemDTO
+        _allItems.AddRange(cargoEvent.Inventory.Select(x => new CargoInventoryItemDTO
         {
             Name = $"{x.Name.Capitalize()} ({x.Count})",
             IsStolen = Convert.ToBoolean(x.Stolen)
@@ -54,7 +51,7 @@ public sealed partial class CargoViewModel : PageViewModel
 
         ApplyFilters();
     }
-
+    
     private void ApplyFilters()
     {
         var filtered = _allItems.Where(item =>

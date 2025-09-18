@@ -2,11 +2,11 @@
 
 public class ScanEvent : JournalEvent
 {
-    public override JournalEventType EventType => JournalEventType.Scan;
+    public override JournalEventTypeEnum EventTypeEnum => JournalEventTypeEnum.Scan;
 
     [JsonPropertyName("ScanType")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public ScanType ScanType { get; set; }
+    public ScanTypeEnum ScanTypeEnum { get; set; }
 
     [JsonPropertyName("BodyName")]
     public string BodyName { get; set; } = string.Empty;
@@ -31,7 +31,7 @@ public class ScanEvent : JournalEvent
 
     [JsonPropertyName("StarType")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public StarType? StarType { get; set; }
+    public StarTypeEnum? StarType { get; set; }
 
     [JsonPropertyName("Subclass")]
     public int? Subclass { get; set; }

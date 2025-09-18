@@ -1,59 +1,66 @@
 ﻿namespace EdAssistant.ViewModels.Pages;
 
-[DockMapping(DockEnum.Materials)]
-public sealed partial class MaterialsViewModel : PageViewModel
+public sealed partial class MaterialsViewModel(IJournalService journalService, ILogger<MaterialsViewModel> logger)
+    : PageViewModel(logger)
 {
-    private readonly IGameDataService _gameDataService;
     private readonly List<MaterialsInventoryItemDTO> _allItems = [];
-
-    [ObservableProperty]
-    private ObservableCollection<MaterialsInventoryItemDTO> filteredItems = []; 
     
     [ObservableProperty]
-    private bool showRaw = true;
+    private ObservableCollection<MaterialsInventoryItemDTO> _filteredItems = []; 
+    
+    [ObservableProperty]
+    private bool _showRaw = true;
 
     [ObservableProperty]
-    private bool showManufactures = true;
+    private bool _showManufactures = true;
 
     [ObservableProperty]
-    private bool showEncodes = true;
+    private bool _showEncodes = true;
 
     [ObservableProperty]
-    private string searchText = string.Empty;
+    private string _searchText = string.Empty;
+    
+    [ObservableProperty]
+    private bool _isLoadingMaterials;
 
     public bool HasNoItems => FilteredItems.Count == 0;
 
-    public string RawText => string.Format(Localization.Instance["MaterialsWindow.Raw"], FilteredItems.Count(item => item.Category == MaterialCategory.Raw));
-    public string ManufacturesText => string.Format(Localization.Instance["MaterialsWindow.Manufactured"], FilteredItems.Count(item => item.Category == MaterialCategory.Manufactured));
-    public string EncodesText => string.Format(Localization.Instance["MaterialsWindow.Encoded"], FilteredItems.Count(item => item.Category == MaterialCategory.Encoded));
-
-    public MaterialsViewModel(IGameDataService gameDataService)
+    public string RawText => string.Format(Localization.Instance["MaterialsPage.Raw"], FilteredItems.Count(item => item.CategoryEnum == MaterialCategoryEnum.Raw));
+    public string ManufacturesText => string.Format(Localization.Instance["MaterialsPage.Manufactured"], FilteredItems.Count(item => item.CategoryEnum == MaterialCategoryEnum.Manufactured));
+    public string EncodesText => string.Format(Localization.Instance["MaterialsPage.Encoded"], FilteredItems.Count(item => item.CategoryEnum == MaterialCategoryEnum.Encoded));
+    
+    protected override async Task OnInitializeAsync()
     {
-        _gameDataService = gameDataService;
-        _gameDataService.JournalLoaded += OnJournalEventLoaded;
-
-        var existingData = _gameDataService.GetLatestJournal<MaterialsEvent>();
-        if (existingData is not null)
+        logger.LogInformation(Localization.Instance["MaterialsPage.Initializing"]);
+        IsLoadingMaterials = true;
+        try
         {
-            ProcessMaterials(existingData);
+            await LoadMaterialsDataAsync();
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, Localization.Instance["MaterialsPage.Exceptions.FailedToInitialize"]);
+        }
+        finally
+        {
+            IsLoadingMaterials = false;
         }
     }
-
-    public override void Dispose() => _gameDataService.JournalLoaded -= OnJournalEventLoaded;
-
+    
     partial void OnShowRawChanged(bool value) => ApplyFilters();
     partial void OnShowManufacturesChanged(bool value) => ApplyFilters();
     partial void OnShowEncodesChanged(bool value) => ApplyFilters();
     partial void OnSearchTextChanged(string value) => ApplyFilters();
 
-    private void OnJournalEventLoaded(object? sender, JournalEventLoadedEventArgs e)
+    private async Task LoadMaterialsDataAsync()
     {
-        if (e is { EventType: JournalEventType.Materials, Event: MaterialsEvent materialsEvent })
-        {
-            ProcessMaterials(materialsEvent);
-        }
+        var materials = (await journalService.GetLatestJournalEntriesAsync<MaterialsEvent>()).LastOrDefault();
+        if (materials is null)
+            return;
+        
+        ProcessMaterials(materials);
     }
-
+    
     private void ProcessMaterials(MaterialsEvent materialsEvent)
     {
         _allItems.Clear();
@@ -62,35 +69,35 @@ public sealed partial class MaterialsViewModel : PageViewModel
             Name = string.IsNullOrWhiteSpace(m.NameLocalised)
                 ? $"{m.Name.Capitalize()} ({m.Count})"
                 : $"{m.NameLocalised} ({m.Count})",
-            Category = MaterialCategory.Raw
+            CategoryEnum = MaterialCategoryEnum.Raw
         }));
         _allItems.AddRange(materialsEvent.Manufactured.Select(m => new MaterialsInventoryItemDTO
         {
             Name = string.IsNullOrWhiteSpace(m.NameLocalised)
                 ? $"{m.Name.Capitalize()} ({m.Count})"
                 : $"{m.NameLocalised} ({m.Count})",
-            Category = MaterialCategory.Manufactured
+            CategoryEnum = MaterialCategoryEnum.Manufactured
         }));
         _allItems.AddRange(materialsEvent.Encoded.Select(m => new MaterialsInventoryItemDTO
         {
             Name = string.IsNullOrWhiteSpace(m.NameLocalised)
                 ? $"{m.Name.Capitalize()} ({m.Count})"
                 : $"{m.NameLocalised} ({m.Count})",
-            Category = MaterialCategory.Encoded
+            CategoryEnum = MaterialCategoryEnum.Encoded
         }));
 
         ApplyFilters();
     }
-
+    
     private void ApplyFilters()
     {
         var filtered = _allItems.Where(item =>
         {
-            var categoryMatch = item.Category switch
+            var categoryMatch = item.CategoryEnum switch
             {
-                MaterialCategory.Raw => ShowRaw,
-                MaterialCategory.Manufactured => ShowManufactures,
-                MaterialCategory.Encoded => ShowEncodes,
+                MaterialCategoryEnum.Raw => ShowRaw,
+                MaterialCategoryEnum.Manufactured => ShowManufactures,
+                MaterialCategoryEnum.Encoded => ShowEncodes,
                 _ => false
             };
 
@@ -103,7 +110,7 @@ public sealed partial class MaterialsViewModel : PageViewModel
             }
 
             return true;
-        }).OrderBy(item => item.Name).ThenBy(item => item.Category);
+        }).OrderBy(item => item.Name).ThenBy(item => item.CategoryEnum);
 
         FilteredItems = new ObservableCollection<MaterialsInventoryItemDTO>(filtered);
 

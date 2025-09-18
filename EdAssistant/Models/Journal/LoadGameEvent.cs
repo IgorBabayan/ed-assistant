@@ -1,12 +1,12 @@
 ﻿namespace EdAssistant.Models.Journal;
 
-public class LoadGameEvent : JournalEvent
+/*public class LoadGameEvent : JournalEvent
 {
     [JsonPropertyName("FID")]
-    public required string FId { get; set; }
+    public string FId { get; set; }
 
     [JsonPropertyName("Commander")]
-    public required string Commander { get; set; }
+    public string Commander { get; set; }
 
     [JsonPropertyName("Horizons")]
     public bool Horizons { get; set; }
@@ -15,19 +15,19 @@ public class LoadGameEvent : JournalEvent
     public bool Odyssey { get; set; }
 
     [JsonPropertyName("Ship")]
-    public required string Ship { get; set; }
+    public string Ship { get; set; }
 
     [JsonPropertyName("Ship_Localised")]
-    public required string ShipLocalised { get; set; }
+    public string ShipLocalised { get; set; }
 
     [JsonPropertyName("ShipID")]
     public int ShipId { get; set; }
 
     [JsonPropertyName("ShipName")]
-    public required string ShipName { get; set; }
+    public string ShipName { get; set; }
 
     [JsonPropertyName("ShipIdent")]
-    public required string ShipIdent { get; set; }
+    public string ShipIdent { get; set; }
 
     [JsonPropertyName("FuelLevel")]
     public double FuelLevel { get; set; }
@@ -36,7 +36,7 @@ public class LoadGameEvent : JournalEvent
     public double FuelCapacity { get; set; }
 
     [JsonPropertyName("GameMode")]
-    public required string GameMode { get; set; }
+    public string GameMode { get; set; }
 
     [JsonPropertyName("Credits")]
     public long Credits { get; set; }
@@ -45,13 +45,13 @@ public class LoadGameEvent : JournalEvent
     public long Loan { get; set; }
 
     [JsonPropertyName("language")]
-    public required string Language { get; set; }
+    public string Language { get; set; }
 
     [JsonPropertyName("gameversion")]
-    public required string GameVersion { get; set; }
+    public string GameVersion { get; set; }
 
     [JsonPropertyName("build")]
-    public required string Build { get; set; }
+    public string Build { get; set; }
 
-    public override JournalEventType EventType => JournalEventType.LoadGame;
-}
+    public override JournalEventTypeEnum EventTypeEnum => JournalEventTypeEnum.LoadGame;
+}*/

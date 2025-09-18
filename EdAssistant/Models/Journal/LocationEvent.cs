@@ -1,6 +1,6 @@
 ﻿namespace EdAssistant.Models.Journal;
 
-public class LocationEvent : JournalEvent
+/*public class LocationEvent : JournalEvent
 {
     [JsonPropertyName("DistFromStarLS")]
     public double DistFromStarLS { get; set; }
@@ -12,13 +12,13 @@ public class LocationEvent : JournalEvent
     public string? StationName { get; set; }
 
     [JsonPropertyName("StationType")]
-    public required string StationType { get; set; }
+    public string StationType { get; set; }
 
     [JsonPropertyName("MarketID")]
     public long MarketId { get; set; }
 
     [JsonPropertyName("StarSystem")]
-    public required string StarSystem { get; set; }
+    public string StarSystem { get; set; }
 
     [JsonPropertyName("SystemAddress")]
     public long SystemAddress { get; set; }
@@ -27,37 +27,37 @@ public class LocationEvent : JournalEvent
     public List<double> StarPos { get; set; } = new();
 
     [JsonPropertyName("SystemAllegiance")]
-    public required string SystemAllegiance { get; set; }
+    public string SystemAllegiance { get; set; }
 
     [JsonPropertyName("SystemEconomy")]
-    public required string SystemEconomy { get; set; }
+    public string SystemEconomy { get; set; }
 
     [JsonPropertyName("SystemEconomy_Localised")]
-    public required string SystemEconomyLocalised { get; set; }
+    public string SystemEconomyLocalised { get; set; }
 
     [JsonPropertyName("SystemGovernment")]
-    public required string SystemGovernment { get; set; }
+    public string SystemGovernment { get; set; }
 
     [JsonPropertyName("SystemGovernment_Localised")]
-    public required string SystemGovernmentLocalised { get; set; }
+    public string SystemGovernmentLocalised { get; set; }
 
     [JsonPropertyName("SystemSecurity")]
-    public required string SystemSecurity { get; set; }
+    public string SystemSecurity { get; set; }
 
     [JsonPropertyName("SystemSecurity_Localised")]
-    public required string SystemSecurityLocalised { get; set; }
+    public string SystemSecurityLocalised { get; set; }
 
     [JsonPropertyName("Population")]
     public long Population { get; set; }
 
     [JsonPropertyName("Body")]
-    public required string Body { get; set; }
+    public string Body { get; set; }
 
     [JsonPropertyName("BodyId")]
     public int BodyId { get; set; }
 
     [JsonPropertyName("BodyType")]
-    public required string BodyType { get; set; }
+    public string BodyType { get; set; }
 
-    public override JournalEventType EventType => JournalEventType.Location;
-}
+    public override JournalEventTypeEnum EventTypeEnum => JournalEventTypeEnum.Location;
+}*/

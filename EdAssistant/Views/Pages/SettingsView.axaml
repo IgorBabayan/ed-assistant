@@ -239,9 +239,9 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Spacing="4">
-                    <TextBlock Text="{ext:Localize Settings.Title}"
+                    <TextBlock Text="{ext:Localize SettingsPage.Title}"
                                Classes="dashboard-title" />
-                    <TextBlock Text="{ext:Localize Settings.Description}"
+                    <TextBlock Text="{ext:Localize SettingsPage.Description}"
                                Classes="dashboard-subtitle" />
                 </StackPanel>
             </Grid>
@@ -258,13 +258,13 @@
                         Classes="stat-card"
                         Margin="8,0">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="{ext:Localize Settings.JournalPath}"
+                        <TextBlock Text="{ext:Localize SettingsPage.JournalPath}"
                                    Classes="stat-label" />
                         <TextBlock Text="{Binding ConnectionStatus}"
                                    Classes="stat-value"
                                    Classes.success="{Binding IsConnected}"
                                    Classes.error="{Binding !IsConnected}"/>
-                        <TextBlock Text="{ext:Localize Settings.JournalPathDescription}"
+                        <TextBlock Text="{ext:Localize SettingsPage.JournalPathDescription}"
                                    Classes="stat-description" />
                     </StackPanel>
                 </Border>
@@ -273,10 +273,10 @@
                         Classes="stat-card"
                         Margin="8,0">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="{ext:Localize Settings.LastSync}"
+                        <TextBlock Text="{ext:Localize SettingsPage.LastSync}"
                                    Classes="stat-label" />
                         <TextBlock Text="2m ago" Classes="stat-value" />
-                        <TextBlock Text="{ext:Localize Settings.LastSyncDescription}"
+                        <TextBlock Text="{ext:Localize SettingsPage.LastSyncDescription}"
                                    Classes="stat-description" />
                     </StackPanel>
                 </Border>
@@ -285,11 +285,11 @@
                         Classes="stat-card"
                         Margin="8,0,0,0">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="{ext:Localize Settings.Version}"
+                        <TextBlock Text="{ext:Localize SettingsPage.Version}"
                                    Classes="stat-label" />
                         <TextBlock Text="{Binding Version}" 
                                    Classes="stat-value" />
-                        <TextBlock Text="{ext:Localize Settings.VersionDescription}" 
+                        <TextBlock Text="{ext:Localize SettingsPage.VersionDescription}" 
                                    Classes="stat-description" />
                     </StackPanel>
                 </Border>
@@ -308,9 +308,9 @@
                         Classes="dashboard-panel">
                     <StackPanel Spacing="20">
                         <StackPanel Spacing="8">
-                            <TextBlock Text="{ext:Localize Settings.InterfaceConfiguration}"
+                            <TextBlock Text="{ext:Localize SettingsPage.InterfaceConfiguration}"
                                        Classes="panel-title" />
-                            <TextBlock Text="{ext:Localize Settings.InterfaceConfigurationDescription}" 
+                            <TextBlock Text="{ext:Localize SettingsPage.InterfaceConfigurationDescription}" 
                                        Classes="panel-subtitle" />
                         </StackPanel>
 
@@ -320,12 +320,12 @@
                             <Border Classes="toggle-item"
                                     Margin="0,0,8,8">
                                 <StackPanel Spacing="8">
-                                    <TextBlock Text="{ext:Localize Settings.Home}" 
+                                    <TextBlock Text="{ext:Localize SettingsPage.Home}" 
                                                Classes="toggle-label" />
                                     <ToggleButton IsChecked="True"
                                                   IsEnabled="False"
                                                   Classes="dashboard-toggle required" />
-                                    <TextBlock Text="{ext:Localize Settings.MainDashboard}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.MainDashboard}"
                                                Classes="toggle-description" />
                                 </StackPanel>
                             </Border>
@@ -333,11 +333,11 @@
                             <Border Classes="toggle-item"
                                     Margin="8,0,8,8">
                                 <StackPanel Spacing="8">
-                                    <TextBlock Text="{ext:Localize Settings.Cargo}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.Cargo}"
                                                Classes="toggle-label" />
                                     <ToggleButton IsChecked="{Binding Cargo}"
                                                   Classes="dashboard-toggle" />
-                                    <TextBlock Text="{ext:Localize Settings.CargoManagement}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.CargoManagement}"
                                                Classes="toggle-description" />
                                 </StackPanel>
                             </Border>
@@ -345,11 +345,11 @@
                             <Border Classes="toggle-item"
                                     Margin="8,0,0,8">
                                 <StackPanel Spacing="8">
-                                    <TextBlock Text="{ext:Localize Settings.Materials}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.Materials}"
                                                Classes="toggle-label" />
                                     <ToggleButton IsChecked="{Binding Materials}" 
                                                   Classes="dashboard-toggle" />
-                                    <TextBlock Text="{ext:Localize Settings.EngineeringMaterials}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.EngineeringMaterials}"
                                                Classes="toggle-description" />
                                 </StackPanel>
                             </Border>
@@ -357,11 +357,11 @@
                             <Border Classes="toggle-item"
                                     Margin="0,8,8,8">
                                 <StackPanel Spacing="8">
-                                    <TextBlock Text="{ext:Localize Settings.Storage}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.Storage}"
                                                Classes="toggle-label" />
                                     <ToggleButton IsChecked="{Binding Storage}" 
                                                   Classes="dashboard-toggle" />
-                                    <TextBlock Text="{ext:Localize Settings.ShipStorage}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.ShipStorage}"
                                                Classes="toggle-description" />
                                 </StackPanel>
                             </Border>
@@ -369,11 +369,11 @@
                             <Border Classes="toggle-item" 
                                     Margin="8,8,8,8">
                                 <StackPanel Spacing="8">
-                                    <TextBlock Text="{ext:Localize Settings.System}" 
+                                    <TextBlock Text="{ext:Localize SettingsPage.System}" 
                                                Classes="toggle-label" />
                                     <ToggleButton IsChecked="{Binding System}" 
                                                   Classes="dashboard-toggle" />
-                                    <TextBlock Text="{ext:Localize Settings.StarSystemInformation}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.StarSystemInformation}"
                                                Classes="toggle-description" />
                                 </StackPanel>
                             </Border>
@@ -381,11 +381,11 @@
                             <Border Classes="toggle-item" 
                                     Margin="8,8,0,8">
                                 <StackPanel Spacing="8">
-                                    <TextBlock Text="{ext:Localize Settings.Planet}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.Planet}"
                                                Classes="toggle-label" />
                                     <ToggleButton IsChecked="{Binding Planet}" 
                                                   Classes="dashboard-toggle" />
-                                    <TextBlock Text="{ext:Localize Settings.PlanetaryData}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.PlanetaryData}"
                                                Classes="toggle-description" />
                                 </StackPanel>
                             </Border>
@@ -393,11 +393,11 @@
                             <Border Classes="toggle-item" 
                                     Margin="0,8,8,0">
                                 <StackPanel Spacing="8">
-                                    <TextBlock Text="{ext:Localize Settings.MarketConnector}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.MarketConnector}"
                                                Classes="toggle-label" />
                                     <ToggleButton IsChecked="{Binding MarketConnector}" 
                                                   Classes="dashboard-toggle" />
-                                    <TextBlock Text="{ext:Localize Settings.TradeDataConnector}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.TradeDataConnector}"
                                                Classes="toggle-description" />
                                 </StackPanel>
                             </Border>
@@ -405,11 +405,11 @@
                             <Border Classes="toggle-item" 
                                     Margin="8,8,8,0">
                                 <StackPanel Spacing="8">
-                                    <TextBlock Text="{ext:Localize Settings.Log}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.Log}"
                                                Classes="toggle-label" />
                                     <ToggleButton IsChecked="{Binding Log}" 
                                                   Classes="dashboard-toggle" />
-                                    <TextBlock Text="{ext:Localize Settings.ActivityLogging}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.ActivityLogging}"
                                                Classes="toggle-description" />
                                 </StackPanel>
                             </Border>
@@ -417,12 +417,12 @@
                             <Border Classes="toggle-item"
                                     Margin="8,8,0,0">
                                 <StackPanel Spacing="8">
-                                    <TextBlock Text="{ext:Localize Settings.Settings}"
+                                    <TextBlock Text="{ext:Localize SettingsPage.Settings}"
                                                Classes="toggle-label" />
                                     <ToggleButton IsChecked="True" 
                                                   IsEnabled="False"
                                                   Classes="dashboard-toggle required" />
-                                    <TextBlock Text="{ext:Localize Settings.ConfigurationPanel}" 
+                                    <TextBlock Text="{ext:Localize SettingsPage.ConfigurationPanel}" 
                                                Classes="toggle-description" />
                                 </StackPanel>
                             </Border>
@@ -438,15 +438,15 @@
                     <Border Classes="dashboard-panel compact">
                         <StackPanel Spacing="16">
                             <StackPanel Spacing="8">
-                                <TextBlock Text="{ext:Localize Settings.DataSource}"
+                                <TextBlock Text="{ext:Localize SettingsPage.DataSource}"
                                            Classes="panel-title" />
-                                <TextBlock Text="{ext:Localize Settings.DataSourceDescription}"
+                                <TextBlock Text="{ext:Localize SettingsPage.DataSourceDescription}"
                                            Classes="panel-subtitle" />
                             </StackPanel>
 
                             <StackPanel Spacing="12">
                                 <TextBox Text="{Binding JournalsFolderPath}"
-                                         Watermark="{ext:Localize Settings.PathToJournals}"
+                                         Watermark="{ext:Localize SettingsPage.PathToJournals}"
                                          Classes="compact-input" />
 
                                 <Grid>
@@ -457,7 +457,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Button Grid.Column="0"
-                                            Content="{ext:Localize Settings.BrowseFolder}"
+                                            Content="{ext:Localize SettingsPage.BrowseFolder}"
                                             HorizontalAlignment="Left"
                                             VerticalContentAlignment="Center"
                                             HorizontalContentAlignment="Center"
@@ -471,14 +471,14 @@
                                         <Button HorizontalAlignment="Right"
                                                 HorizontalContentAlignment="Center"
                                                 VerticalContentAlignment="Center"
-                                                Content="{ext:Localize Settings.ReadAll}"
+                                                Content="{ext:Localize SettingsPage.ReadAll}"
                                                 Command="{Binding ReadAllCommand}"
                                                 Classes="primary compact-button" />
                                         
                                         <Button HorizontalAlignment="Right"
                                                 HorizontalContentAlignment="Center"
                                                 VerticalContentAlignment="Center"
-                                                Content="{ext:Localize Settings.ReadLast}"
+                                                Content="{ext:Localize SettingsPage.ReadLast}"
                                                 Command="{Binding ReadLastCommand}"
                                                 Classes="success compact-button" />
                                     </StackPanel>
@@ -499,7 +499,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" 
-                                               Text="{ext:Localize Settings.JournalMonitoring}" 
+                                               Text="{ext:Localize SettingsPage.JournalMonitoring}" 
                                                Classes="status-item" />
                                     <Ellipse Grid.Column="1"
                                              Width="8"
@@ -514,7 +514,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" 
-                                               Text="{ext:Localize Settings.DataProcessing}"
+                                               Text="{ext:Localize SettingsPage.DataProcessing}"
                                                Classes="status-item" />
                                     <Ellipse Grid.Column="1"
                                              Width="8" 
@@ -528,7 +528,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" 
-                                               Text="{ext:Localize Settings.MarketUpdates}"
+                                               Text="{ext:Localize SettingsPage.MarketUpdates}"
                                                Classes="status-item" />
                                     <Ellipse Grid.Column="1"
                                              Width="8"

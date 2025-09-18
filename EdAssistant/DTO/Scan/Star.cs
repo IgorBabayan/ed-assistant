@@ -2,7 +2,7 @@
 
 public class Star : CelestialBody
 {
-    public StarType? StarType { get; set; }
+    public StarTypeEnum? StarType { get; set; }
     public int? Subclass { get; set; }
     public double? StellarMass { get; set; }
     public double? Radius { get; set; }

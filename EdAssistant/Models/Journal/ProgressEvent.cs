@@ -26,5 +26,5 @@ public class ProgressEvent : JournalEvent
     [JsonPropertyName("CQC")]
     public int CQC { get; set; }
 
-    public override JournalEventType EventType => JournalEventType.Progress;
+    public override JournalEventTypeEnum EventTypeEnum => JournalEventTypeEnum.Progress;
 }

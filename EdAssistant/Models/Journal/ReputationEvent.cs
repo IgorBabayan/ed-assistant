@@ -14,5 +14,5 @@ public class ReputationEvent : JournalEvent
     [JsonPropertyName("Alliance")]
     public double Alliance { get; set; }
 
-    public override JournalEventType EventType => JournalEventType.Reputation;
+    public override JournalEventTypeEnum EventTypeEnum => JournalEventTypeEnum.Reputation;
 }

@@ -1,6 +1,6 @@
 ﻿namespace EdAssistant.Services.Storage;
 
-class FolderPickerService : IFolderPickerService
+class FolderPickerService(ISettingsService settingsService, ILogger<FolderPickerService> logger) : IFolderPickerService
 {
     private static IStorageProvider? GetStorageProvider()
     {
@@ -23,12 +23,13 @@ class FolderPickerService : IFolderPickerService
 
     public async Task<IStorageFolder?> PickSingleFolderAsync(string? title = null, string? suggestedStartPath = null)
     {
-        var sp = GetStorageProvider() ?? throw new InvalidOperationException(Localization.Instance["Exceptions.NoStorageProvider"]);
+        var sp = GetStorageProvider() ?? 
+                 throw new InvalidOperationException(Localization.Instance["FolderService.Exceptions.NoStorageProvider"]);
 
         var options = new FolderPickerOpenOptions
         {
             AllowMultiple = false,
-            Title = title ?? Localization.Instance["Common.SelectFolderTitle"],
+            Title = title ?? Localization.Instance["FolderService.SelectFolderTitle"],
             SuggestedStartLocation = string.IsNullOrWhiteSpace(suggestedStartPath)
                 ? null
                 : await sp.TryGetFolderFromPathAsync(suggestedStartPath)
@@ -40,33 +41,47 @@ class FolderPickerService : IFolderPickerService
 
     public string GetDefaultJournalsPath()
     {
+        var path  = settingsService.GetSetting<string>("JournalFolderPath");
+        if (!string.IsNullOrWhiteSpace(path) && TrySetupJournalsPath(ref path))
+        {
+            return path;
+        }
+        
         var homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        string path;
         if (OperatingSystem.IsWindows())
         {
             path = Path.Combine(homeFolder, "Saved Games", "Frontier Developments", "Elite Dangerous");
-            return TrySetupJournalsPath(path);
+            if (!TrySetupJournalsPath(ref path))
+            {
+                logger.LogWarning(Localization.Instance["FolderService.Exceptions.NoJournalsPath"]);
+                return string.Empty;
+            }
+            return path;
         }
 
         if (OperatingSystem.IsLinux())
         {
             //! TODO: check on Linux to correct path
             path = Path.Combine(homeFolder, ".steam", "Saved Games", "Frontier Developments", "Elite Dangerous");
-            return TrySetupJournalsPath(path);
+            if (!TrySetupJournalsPath(ref path))
+            {
+                logger.LogWarning(Localization.Instance["FolderService.Exceptions.NoJournalsPath"]);
+                return string.Empty;
+            }
+            return path;
         }
-        else
-        {
-            throw new NotImplementedException(Localization.Instance["Exceptions.OSNotSupported"]);
-        }
+        
+        throw new NotImplementedException(Localization.Instance["FolderService.Exceptions.OSNotSupported"]);
     }
 
-    private string TrySetupJournalsPath(string path)
+    private bool TrySetupJournalsPath(ref string path)
     {
         if (Directory.Exists(path))
         {
-            return path;
+            return true;
         }
 
-        throw new DirectoryNotFoundException(string.Format(Localization.Instance["Exceptions.DirectoryNotFound"], path));
+        logger.LogWarning(Localization.Instance["Exceptions.DirectoryNotFound"], path);
+        return false;
     }
 }

@@ -2,10 +2,10 @@ namespace EdAssistant.DTO.Scan;
 
 public abstract class Station : CelestialBody
 {
-    public abstract StationType Type { get; }
+    public abstract StationTypeEnum TypeEnum { get; }
     
     public override int BodyId => -1;
-    public override string TypeInfo => Type.ToString();
+    public override string TypeInfo => TypeEnum.ToString();
     public override string DistanceInfo => string.Empty;
     public override string StatusInfo => string.Empty;
     public override string LandableInfo => string.Empty;
@@ -14,30 +14,30 @@ public abstract class Station : CelestialBody
 
 public class Outpost : Station
 {
-    public override StationType Type => StationType.Outpost;
+    public override StationTypeEnum TypeEnum => StationTypeEnum.Outpost;
 }
 
 public class Asteroid : Station
 {
-    public override StationType Type => StationType.AsteroidBase;
+    public override StationTypeEnum TypeEnum => StationTypeEnum.AsteroidBase;
 }
 
 public class Coriolis : Station
 {
-    public override StationType Type => StationType.Coriolis;
+    public override StationTypeEnum TypeEnum => StationTypeEnum.Coriolis;
 }
 
 public class Orbis : Station
 {
-    public override StationType Type => StationType.Orbis;
+    public override StationTypeEnum TypeEnum => StationTypeEnum.Orbis;
 }
 
 public class Ocellus : Station
 {
-    public override StationType Type => StationType.Ocellus;
+    public override StationTypeEnum TypeEnum => StationTypeEnum.Ocellus;
 }
 
 public class UnknownStation : Station
 {
-    public override StationType Type => StationType.Unknown;
+    public override StationTypeEnum TypeEnum => StationTypeEnum.Unknown;
 }

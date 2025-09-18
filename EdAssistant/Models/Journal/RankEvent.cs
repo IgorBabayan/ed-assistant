@@ -26,5 +26,5 @@ public class RankEvent : JournalEvent
     [JsonPropertyName("CQC")]
     public int CQC { get; set; }
 
-    public override JournalEventType EventType => JournalEventType.Rank;
+    public override JournalEventTypeEnum EventTypeEnum => JournalEventTypeEnum.Rank;
 }

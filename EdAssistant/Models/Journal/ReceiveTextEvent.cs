@@ -1,21 +1,21 @@
 ﻿namespace EdAssistant.Models.Journal;
 
-public class ReceiveTextEvent : JournalEvent
+/*public class ReceiveTextEvent : JournalEvent
 {
     [JsonPropertyName("From")]
-    public required string From { get; set; }
+    public string From { get; set; }
 
     [JsonPropertyName("From_Localised")]
-    public required string FromLocalised { get; set; }
+    public string FromLocalised { get; set; }
 
     [JsonPropertyName("Message")]
-    public required string Message { get; set; }
+    public string Message { get; set; }
 
     [JsonPropertyName("Message_Localised")]
-    public required string MessageLocalised { get; set; }
+    public string MessageLocalised { get; set; }
 
     [JsonPropertyName("Channel")]
-    public required string Channel { get; set; }
+    public string Channel { get; set; }
 
-    public override JournalEventType EventType => JournalEventType.ReceiveText;
-}
+    public override JournalEventTypeEnum EventTypeEnum => JournalEventTypeEnum.ReceiveText;
+}*/

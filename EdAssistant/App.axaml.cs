@@ -6,7 +6,7 @@ public partial class App : Application
 
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
-    public override async void OnFrameworkInitializationCompleted()
+    public override void OnFrameworkInitializationCompleted()
     {
         Localization.Instance.UseLanguage("en");
         RequestedThemeVariant = ThemeVariant.Dark;
@@ -21,6 +21,12 @@ public partial class App : Application
             var window = _host.Services.GetRequiredService<MainWindow>();
             window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
             desktop.MainWindow = window;
+            
+            var navigationService = _host.Services.GetRequiredService<INavigationService>();
+            navigationService.Initialize(window.NavigationHost);
+            navigationService.RegisterViewMappings();
+        
+            window.Loaded += async (_, _) => await navigationService.NavigateAsync<HomeViewModel>();
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
@@ -31,8 +37,6 @@ public partial class App : Application
             singleViewPlatform.MainView = view;
         }
 
-        var initService = _host.Services.GetRequiredService<IInitializationService>();
-        await initService.InitializeAsync();
         base.OnFrameworkInitializationCompleted();
     }
 

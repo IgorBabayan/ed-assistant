@@ -2,5 +2,18 @@
 
 public abstract class BaseViewModel : ObservableObject, IDisposable
 {
-    public virtual void Dispose() { }
+    private bool _disposed;
+
+    public void Dispose()
+    {
+        if (_disposed)
+            return;
+        
+        _disposed = true;
+        OnDispose(true);
+        
+        GC.SuppressFinalize(this);
+    }
+    
+    protected virtual void OnDispose(bool disposing) { }
 }

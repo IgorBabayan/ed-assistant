@@ -3,13 +3,13 @@
 public class Engineer
 {
     [JsonPropertyName("Engineer")]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     [JsonPropertyName("EngineerID")]
     public int EngineerId { get; set; }
 
     [JsonPropertyName("Progress")]
-    public required string Progress { get; set; }
+    public string Progress { get; set; }
 
     [JsonPropertyName("RankProgress")]
     public int RankProgress { get; set; }

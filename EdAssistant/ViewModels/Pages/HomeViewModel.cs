@@ -1,56 +1,76 @@
 ﻿namespace EdAssistant.ViewModels.Pages;
 
-[DockMapping(DockEnum.Home)]
-public sealed partial class HomeViewModel : PageViewModel
+public sealed partial class HomeViewModel(IJournalService journalService, ILogger<HomeViewModel> logger)
+    : PageViewModel(logger)
 {
-    private readonly IGameDataService _gameDataService;
-
     [ObservableProperty]
-    private ObservableCollection<RankDTO> ranks = [];
+    private ObservableCollection<RankDTO> _ranks = new();
+    
+    [ObservableProperty]
+    private bool _isLoadingRanks;
 
-    public HomeViewModel(IGameDataService gameDataService)
+    protected override async Task OnInitializeAsync()
     {
-        _gameDataService = gameDataService;
-        _gameDataService.JournalLoaded += OnJournalLoaded;
-
-        ProcessRankEvent();
-        ProcessProgressEvent();
-    }
-
-    public override void Dispose() => _gameDataService.JournalLoaded -= OnJournalLoaded;
-
-    private void OnJournalLoaded(object? sender, JournalEventLoadedEventArgs e)
-    {
-        switch (e)
+        logger.LogInformation(Localization.Instance["HomePage.Initializing"]);
+        IsLoadingRanks = true;
+        try
         {
-            case { EventType: JournalEventType.Rank, Event: RankEvent rank }:
-                ProcessRank(rank);
-                break;
-
-            case { EventType: JournalEventType.Progress, Event: ProgressEvent progress }:
-                ProcessProgress(progress);
-                break;
+            await LoadCommanderDataAsync();
+            await LoadRankDataAsync();
+            await LoadProgressDataAsync();
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, Localization.Instance["HomePage.Exceptions.FailedToInitialize"]);
+        }
+        finally
+        {
+            IsLoadingRanks = false;
         }
     }
 
-    private void ProcessRankEvent()
+    private async Task LoadCommanderDataAsync()
     {
-        var rankEvent = _gameDataService.GetLatestJournal<RankEvent>();
-        if (rankEvent is not null)
-        {
-            ProcessRank(rankEvent);
-        }
+        var commander = (await journalService.GetLatestJournalEntriesAsync<CommanderEvent>()).LastOrDefault();
+        var title = commander is not null
+            ? commander.Name
+            : Localization.Instance["MainWindow.Title"];
+        
+        WeakReferenceMessenger.Default.Send(new CommanderMessage(title));
     }
 
-    private void ProcessProgressEvent()
+    private async Task LoadRankDataAsync()
     {
-        var progressEvent = _gameDataService.GetLatestJournal<ProgressEvent>();
-        if (progressEvent is not null)
+        try
         {
-            ProcessProgress(progressEvent);
+            var rankEvent = (await journalService.GetLatestJournalEntriesAsync<RankEvent>()).LastOrDefault();
+            if (rankEvent is not null)
+            {
+                ProcessRank(rankEvent);
+            }
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning(exception, "Failed to load progress data");
         }
     }
-
+    
+    private async Task LoadProgressDataAsync()
+    {
+        try
+        {
+            var progressEvent = (await journalService.GetLatestJournalEntriesAsync<ProgressEvent>()).LastOrDefault();
+            if (progressEvent is not null)
+            {
+                ProcessProgress(progressEvent);
+            }
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning(exception, "Failed to load progress data");
+        }
+    }
+    
     private void ProcessRank(RankEvent rank)
     {
         Ranks.Clear();
@@ -111,7 +131,7 @@ public sealed partial class HomeViewModel : PageViewModel
             Progress = 0
         });
     }
-
+    
     private void ProcessProgress(ProgressEvent progress)
     {
         if (Ranks.Count == 0)

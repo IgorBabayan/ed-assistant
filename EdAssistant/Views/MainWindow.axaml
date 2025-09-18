@@ -10,5 +10,5 @@
         CanResize="True"
         SystemDecorations="BorderOnly"
         Title="EdAssistant">
-        <views:MainView />
+        <views:MainView x:Name="MainView" />
 </Window>

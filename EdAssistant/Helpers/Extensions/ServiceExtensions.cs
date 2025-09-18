@@ -9,12 +9,11 @@ public static class ServiceExtensions
         services.AddSingleton<IFolderPickerService, FolderPickerService>();
         services.AddSingleton<IDockVisibilityService, DockVisibilityService>();
         services.AddSingleton<ISettingsService, JsonSettingsService>();
-        services.AddSingleton<IGameDataService, GameDataService>();
-        services.AddSingleton<IInitializationService, InitializationService>();
         services.AddSingleton<IJournalEventFactory, JournalEventFactory>();
         services.AddSingleton<ICelestialStructure, CelestialStructure>();
         services.AddSingleton<ITemplateCacheManager, TemplateCacheManager>();
         services.AddSingleton<IResourceService, ResourceService>();
+        services.AddSingleton<IJournalService, JournalService>();
     }
 
     public static void RegisterViewModels(this IServiceCollection services)

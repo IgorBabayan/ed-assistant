@@ -24,7 +24,7 @@
 
 			<!--// Title and Search //-->
 			<StackPanel Grid.Column="0" Orientation="Vertical" Spacing="12">
-				<TextBlock Text="{ext:Localize MaterialsWindow.Title}"
+				<TextBlock Text="{ext:Localize MaterialsPage.Title}"
                            FontSize="24"
                            FontWeight="Bold"
                            Foreground="{DynamicResource Text.Primary}"/>
@@ -126,7 +126,7 @@
                                                Foreground="{DynamicResource Text.Primary}"
                                                MaxLines="2"/>
 
-									<TextBlock Text="{Binding Category, Converter={StaticResource EnumLocalizationConverter}}"
+									<TextBlock Text="{Binding CategoryEnum, Converter={StaticResource EnumLocalizationConverter}}"
                                                FontSize="12"
                                                Classes="title"
                                                FontWeight="Medium"

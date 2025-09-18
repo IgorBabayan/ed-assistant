@@ -2,7 +2,7 @@ namespace EdAssistant.Models.Scan;
 
 public class SAAScanCompleteEvent : JournalEvent
 {
-    public override JournalEventType EventType => JournalEventType.SAAScanComplete;
+    public override JournalEventTypeEnum EventTypeEnum => JournalEventTypeEnum.SAAScanComplete;
     
     [JsonPropertyName("ProbesUsed")]
     public int ProbesUsed { get; set; }

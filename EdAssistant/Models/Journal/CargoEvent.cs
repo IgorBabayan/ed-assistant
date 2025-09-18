@@ -3,7 +3,7 @@
 public class CargoEvent : JournalEvent
 {
     [JsonPropertyName("Vessel")]
-    public required string Vessel { get; set; }
+    public string Vessel { get; set; }
 
     [JsonPropertyName("Count")]
     public int Count { get; set; }
@@ -11,5 +11,5 @@ public class CargoEvent : JournalEvent
     [JsonPropertyName("Inventory")]
     public List<CargoItem> Inventory { get; set; } = new();
 
-    public override JournalEventType EventType => JournalEventType.Cargo;
+    public override JournalEventTypeEnum EventTypeEnum => JournalEventTypeEnum.Cargo;
 }

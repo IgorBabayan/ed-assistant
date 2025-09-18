@@ -24,35 +24,35 @@ public static class EnumExtensions
 
         return rank switch
         {
-            RankEnum.Combat => Enum.TryParse<CombatRank>(value.ToString(), out var result)
+            RankEnum.Combat => Enum.TryParse<CombatRankEnum>(value.ToString(), out var result)
                 ? result.GetLocalizedDisplayName()
                 : unknowRank,
 
-            RankEnum.Trade => Enum.TryParse<TradeRank>(value.ToString(), out var result)
+            RankEnum.Trade => Enum.TryParse<TradeRankEnum>(value.ToString(), out var result)
                 ? result.GetLocalizedDisplayName()
                 : unknowRank,
 
-            RankEnum.Explore => Enum.TryParse<ExplorationRank>(value.ToString(), out var result)
+            RankEnum.Explore => Enum.TryParse<ExplorationRankEnum>(value.ToString(), out var result)
                 ? result.GetLocalizedDisplayName()
                 : unknowRank,
 
-            RankEnum.Soldier => Enum.TryParse<SoldierRank>(value.ToString(), out var result)
+            RankEnum.Soldier => Enum.TryParse<SoldierRankEnum>(value.ToString(), out var result)
                 ? result.GetLocalizedDisplayName()
                 : unknowRank,
 
-            RankEnum.Exobiologist => Enum.TryParse<ExobiologistRank>(value.ToString(), out var result)
+            RankEnum.Exobiologist => Enum.TryParse<ExobiologistRankEnum>(value.ToString(), out var result)
                 ? result.GetLocalizedDisplayName()
                 : unknowRank,
 
-            RankEnum.Empire => Enum.TryParse<EmpireRank>(value.ToString(), out var result)
+            RankEnum.Empire => Enum.TryParse<EmpireRankEnum>(value.ToString(), out var result)
                 ? result.GetLocalizedDisplayName()
                 : unknowRank,
 
-            RankEnum.Federation => Enum.TryParse<FederationRank>(value.ToString(), out var result)
+            RankEnum.Federation => Enum.TryParse<FederationRankEnum>(value.ToString(), out var result)
                 ? result.GetLocalizedDisplayName()
                 : unknowRank,
 
-            RankEnum.CQC => Enum.TryParse<CQCRank>(value.ToString(), out var result)
+            RankEnum.CQC => Enum.TryParse<CQCRankEnum>(value.ToString(), out var result)
                 ? result.GetLocalizedDisplayName()
                 : unknowRank,
 
