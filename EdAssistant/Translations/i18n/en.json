@@ -20,7 +20,16 @@
   },
   "JournalService": {
     "Exceptions": {
-      
+      "ErrorGettingJournalFiles": "Error getting journal files from {0}",
+      "CouldNotExtractTimestamp": "Could not extract timestamp from filename: {0}",
+      "FailedToCreateJournalEvent": "Failed to create journal event from: {0}"
+    },
+    "Information": {
+      "FoundTodayEntity": "Found {0} {1} entries from today's journal files",
+      "NoTodayEntries": "No {0} entries found in today's journal files, falling back to latest session",
+      "FoundEntries": "Found {0} {1} entries from latest journal session",
+      "FoundLatestJournal": "Found latest journal group with {0} files: {1}",
+      "FoundJournalGroups": "Found {0} journal groups from today with total {1} files"
     }
   },
   "NavigationService": {

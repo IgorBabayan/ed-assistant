@@ -43,31 +43,30 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
         }
 
         // Strategy 1: Try to get entries from all of today's journal files
-        var todaysGroups = GetTodaysJournalGroups(journalFiles);
-        if (todaysGroups.Count > 0)
+        var todayGroups = GetTodaysJournalGroups(journalFiles);
+        if (todayGroups.Count > 0)
         {
-            var allTodaysEntries = new List<JournalEvent>();
-            foreach (var group in todaysGroups)
+            var allTodayEntries = new List<JournalEvent>();
+            foreach (var group in todayGroups)
             {
                 var groupEntries = await ProcessJournalGroupAsync(group);
-                allTodaysEntries.AddRange(groupEntries);
+                allTodayEntries.AddRange(groupEntries);
             }
 
-            var todaysResults = allTodaysEntries.OfType<T>().OrderBy(e => e.Timestamp).ToList();
-            if (todaysResults.Count > 0)
+            var todayResults = allTodayEntries.OfType<T>().OrderBy(e => e.Timestamp).ToList();
+            if (todayResults.Count > 0)
             {
-                logger.LogInformation("Found {Count} {EventType} entries from today's journal files", 
-                    todaysResults.Count, typeof(T).Name);
-                return todaysResults;
+                logger.LogInformation(Localization.Instance["JournalService.Information.FoundTodayEntity"], 
+                    todayResults.Count, typeof(T).Name);
+                return todayResults;
             }
 
-            logger.LogInformation("No {EventType} entries found in today's journal files, falling back to latest session", 
-                typeof(T).Name);
+            logger.LogInformation(Localization.Instance["JournalService.Information.NoTodayEntries"], typeof(T).Name);
         }
 
         // Strategy 2: Fallback to latest journal session if today's files have no matching entries
         var latestGroup = GetLatestJournalGroup(journalFiles);
-        if (latestGroup == null || latestGroup.Count == 0)
+        if (latestGroup.Count == 0)
         {
             return [];
         }
@@ -75,7 +74,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
         var latestEntries = await ProcessJournalGroupAsync(latestGroup);
         var latestResults = latestEntries.OfType<T>().OrderBy(e => e.Timestamp).ToList();
         
-        logger.LogInformation("Found {Count} {EventType} entries from latest journal session", 
+        logger.LogInformation(Localization.Instance["JournalService.Information.FoundEntries"], 
             latestResults.Count, typeof(T).Name);
         
         return latestResults;
@@ -113,9 +112,27 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
         }
     }
 
+    public void Dispose() => _cacheSemaphore?.Dispose();
+
+    private static string GetJournalBaseName(string fileName)
+    {
+        // Extract base name from files like "Journal.2024-01-15T123456.01.log"
+        // Returns "Journal.2024-01-15T123456" without the part number
+        var parts = fileName.Split('.');
+        if (parts.Length >= 4) // Journal, date, part, log
+        {
+            return string.Join(".", parts.Take(parts.Length - 2));
+        }
+
+        return Path.GetFileNameWithoutExtension(fileName);
+    }
+
+    private static string GetGroupKey(FileInfo file) => GetJournalBaseName(file.Name);
+
     private async Task EnsureCacheIsUpToDateAsync()
     {
-        if (_isUpdating) return; // Prevent multiple simultaneous updates
+        if (_isUpdating)
+            return;
 
         if (!Directory.Exists(_journalsPath))
         {
@@ -126,8 +143,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
         var journalFiles = GetJournalFiles();
         if (journalFiles.Length == 0) return;
 
-        var needsUpdate = false;
-
+        bool needsUpdate;
         await _cacheSemaphore.WaitAsync();
         try
         {
@@ -157,8 +173,8 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             try
             {
                 await LoadJournalFilesAsync(journalFiles);
-                
                 await _cacheSemaphore.WaitAsync();
+                
                 try
                 {
                     _lastCacheUpdate = DateTime.Now;
@@ -186,10 +202,10 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
                 .OrderBy(f => f.Name)
                 .ToArray();
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            logger.LogError(ex, "Error getting journal files from {Path}", _journalsPath);
-            return Array.Empty<FileInfo>();
+            logger.LogError(exception, Localization.Instance["JournalService.Exceptions.ErrorGettingJournalFiles"], _journalsPath);
+            return [];
         }
     }
 
@@ -253,28 +269,15 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
         return groups;
     }
 
-    private string GetJournalBaseName(string fileName)
-    {
-        // Extract base name from files like "Journal.2024-01-15T123456.01.log"
-        // Returns "Journal.2024-01-15T123456" without the part number
-        var parts = fileName.Split('.');
-        if (parts.Length >= 4) // Journal, date, part, log
-        {
-            return string.Join(".", parts.Take(parts.Length - 2));
-        }
-
-        return Path.GetFileNameWithoutExtension(fileName);
-    }
-
-    private string GetGroupKey(FileInfo file) => GetJournalBaseName(file.Name);
-
     private List<FileInfo> GetLatestJournalGroup(FileInfo[] journalFiles)
     {
-        if (journalFiles.Length == 0) return new List<FileInfo>();
+        if (journalFiles.Length == 0) 
+            return [];
 
         // Group all files by their base name
         var groupedFiles = GroupRelatedJournalFiles(journalFiles);
-        if (groupedFiles.Count == 0) return new List<FileInfo>();
+        if (groupedFiles.Count == 0) 
+            return [];
 
         // Find the group with the most recent base name (latest timestamp)
         // Journal files are named like: Journal.2024-01-15T123456.01.log
@@ -282,8 +285,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             .OrderByDescending(group => ExtractTimestampFromFileName(group.First().Name))
             .First();
 
-        logger.LogInformation("Found latest journal group with {FileCount} files: {Files}", 
-            latestGroup.Count, 
+        logger.LogInformation(Localization.Instance["JournalService.Information.FoundLatestJournal"], latestGroup.Count, 
             string.Join(", ", latestGroup.Select(f => f.Name)));
 
         return latestGroup;
@@ -291,14 +293,16 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
 
     private List<List<FileInfo>> GetTodaysJournalGroups(FileInfo[] journalFiles)
     {
-        if (journalFiles.Length == 0) return new List<List<FileInfo>>();
+        if (journalFiles.Length == 0) 
+            return [];
 
         // Group all files by their base name
         var groupedFiles = GroupRelatedJournalFiles(journalFiles);
-        if (groupedFiles.Count == 0) return new List<List<FileInfo>>();
+        if (groupedFiles.Count == 0) 
+            return [];
 
         var today = DateTime.Today;
-        var todaysGroups = new List<List<FileInfo>>();
+        var todayGroups = new List<List<FileInfo>>();
 
         // Filter groups to only include those from today
         foreach (var group in groupedFiles)
@@ -306,20 +310,20 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             var groupTimestamp = ExtractTimestampFromFileName(group.First().Name);
             if (groupTimestamp.Date == today)
             {
-                todaysGroups.Add(group);
+                todayGroups.Add(group);
             }
         }
 
         // Sort by timestamp to process in chronological order
-        todaysGroups = todaysGroups
+        todayGroups = todayGroups
             .OrderBy(group => ExtractTimestampFromFileName(group.First().Name))
             .ToList();
 
-        logger.LogInformation("Found {GroupCount} journal groups from today with total {FileCount} files", 
-            todaysGroups.Count, 
-            todaysGroups.Sum(g => g.Count));
+        logger.LogInformation(Localization.Instance["JournalService.Information.FoundJournalGroups"], 
+            todayGroups.Count, 
+            todayGroups.Sum(g => g.Count));
 
-        return todaysGroups;
+        return todayGroups;
     }
 
     private DateTime ExtractTimestampFromFileName(string fileName)
@@ -340,9 +344,9 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            logger.LogWarning(ex, "Could not extract timestamp from filename: {FileName}", fileName);
+            logger.LogWarning(exception, Localization.Instance["JournalService.Exceptions.CouldNotExtractTimestamp"], fileName);
         }
 
         // Fallback to file creation time if timestamp parsing fails
@@ -384,7 +388,6 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
         var entries = new List<JournalEvent>();
         
         // Process lines with progress tracking for large files
-        var totalLines = lines.Count;
         var processedLines = 0;
 
         foreach (var line in lines)
@@ -398,7 +401,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             {
                 using var jsonDocument = JsonDocument.Parse(trimmedLine);
                 var entry = ParseJournalEntry(jsonDocument, trimmedLine);
-                if (entry != null)
+                if (entry is not null)
                 {
                     entries.Add(entry);
                 }
@@ -419,17 +422,17 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
         return entries.OrderBy(e => e.Timestamp).ToList();
     }
 
-    private JournalEvent ParseJournalEntry(JsonDocument jsonDocument, string rawJson)
+    private JournalEvent? ParseJournalEntry(JsonDocument jsonDocument, string rawJson)
     {
         var root = jsonDocument.RootElement;
 
         if (!root.TryGetProperty("timestamp", out var timestampElement) ||
-            !root.TryGetProperty("event", out var eventElement))
+            !root.TryGetProperty("event", out _))
         {
             return null;
         }
 
-        if (!DateTime.TryParse(timestampElement.GetString(), out var timestamp))
+        if (!DateTime.TryParse(timestampElement.GetString(), out _))
         {
             return null;
         }
@@ -438,15 +441,10 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
         {
             return journalFactory.CreateEvent(rawJson);
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            logger.LogWarning(ex, "Failed to create journal event from: {Json}", rawJson[..Math.Min(100, rawJson.Length)]);
+            logger.LogWarning(exception, Localization.Instance["JournalService.Exceptions.FailedToCreateJournalEvent"], rawJson[..Math.Min(100, rawJson.Length)]);
             return null;
         }
-    }
-
-    public void Dispose()
-    {
-        _cacheSemaphore?.Dispose();
     }
 }
