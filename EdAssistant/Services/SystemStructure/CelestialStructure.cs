@@ -288,13 +288,61 @@ class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructu
         if (!stars.Any())
             return null;
 
-        // For now, use a simple heuristic: 
-        // If there are multiple stars, prefer the last one (highest BodyId)
-        // This works for your CD case where bodies should go to star C or D rather than A
+        // Single star system - assign to that star
+        if (stars.Count == 1)
+            return stars.First().BodyId;
 
-        // You could enhance this by analyzing the barycenter relationships more deeply,
-        // but this simple approach should work for most cases
-        return stars.OrderByDescending(s => s.BodyId).First().BodyId;
+        // For binary/multiple star systems, analyze barycenter relationships
+        // Find which stars are part of the same barycenter as the child
+        var barycenterIds = parents.Where(p => p.Null.HasValue).Select(p => p.Null!.Value).ToList();
+        
+        if (barycenterIds.Any())
+        {
+            // Find stars that share the same immediate barycenter as this child
+            var candidateStars = FindStarsInSameBarycenter(barycenterIds, stars);
+            if (candidateStars.Any())
+            {
+                // Return the primary star (lowest BodyId) from the barycenter group
+                return candidateStars.OrderBy(s => s.BodyId).First().BodyId;
+            }
+        }
+
+        // Fallback: assign to the primary star (lowest BodyId)
+        return stars.OrderBy(s => s.BodyId).First().BodyId;
+    }
+
+    private List<Star> FindStarsInSameBarycenter(List<int> childBarycenterIds, List<Star> allStars)
+    {
+        var candidateStars = new List<Star>();
+
+        // Find stars that belong to the same barycenter as the child
+        foreach (var star in allStars)
+        {
+            var starScan = _allScans.FirstOrDefault(s => s.BodyId == star.BodyId);
+            if (starScan?.Parents != null)
+            {
+                var starBarycenterIds = starScan.Parents
+                    .Where(p => p.Null.HasValue)
+                    .Select(p => p.Null!.Value)
+                    .ToList();
+
+                // Check if this star shares any barycenter with the child
+                if (starBarycenterIds.Intersect(childBarycenterIds).Any())
+                {
+                    candidateStars.Add(star);
+                }
+            }
+            else
+            {
+                // Stars without parents are primary stars - include them if no specific barycenter match
+                if (!candidateStars.Any())
+                {
+                    candidateStars.Add(star);
+                }
+            }
+        }
+
+        return candidateStars;
     }
 
     private void AddStarsToSystem()

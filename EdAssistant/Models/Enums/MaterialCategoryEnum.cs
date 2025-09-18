@@ -2,12 +2,12 @@
 
 public enum MaterialCategoryEnum
 {
-    [Display(Name = "MaterialsWindow.Categories.Raw")]
+    [Display(Name = "MaterialsPage.Categories.Raw")]
     Raw,
 
-    [Display(Name = "MaterialsWindow.Categories.Manufactured")]
+    [Display(Name = "MaterialsPage.Categories.Manufactured")]
     Manufactured,
 
-    [Display(Name = "MaterialsWindow.Categories.Encoded")]
+    [Display(Name = "MaterialsPage.Categories.Encoded")]
     Encoded
 }
