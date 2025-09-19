@@ -51,3 +51,52 @@ public class UnknownStation : Station
 {
     public override StationTypeEnum TypeEnum => StationTypeEnum.Unknown;
 }
+
+public class Installation : Station
+{
+    public override StationTypeEnum TypeEnum => StationTypeEnum.Installation;
+}
+
+public class ConflictZone : Station
+{
+    public override StationTypeEnum TypeEnum => StationTypeEnum.ConflictZone;
+}
+
+public class ResourceExtraction : Station
+{
+    public override StationTypeEnum TypeEnum => StationTypeEnum.ResourceExtraction;
+}
+
+public class Carrier : Station
+{
+    public override StationTypeEnum TypeEnum => StationTypeEnum.Carrier;
+}
+
+public class USS : Station
+{
+    public override StationTypeEnum TypeEnum => StationTypeEnum.USS;
+    public string? USSType { get; set; }
+    public int? ThreatLevel { get; set; }
+    public double? TimeRemaining { get; set; }
+    
+    public override string TypeInfo => 
+        !string.IsNullOrEmpty(USSType) ? $"USS ({USSType})" : "USS";
+    
+    public override string StatusInfo => 
+        ThreatLevel.HasValue ? $"Threat Level {ThreatLevel}" : base.StatusInfo;
+}
+
+public class NotableStellarPhenomena : Station
+{
+    public override StationTypeEnum TypeEnum => StationTypeEnum.NotableStellarPhenomena;
+}
+
+public class ListeningPost : Station
+{
+    public override StationTypeEnum TypeEnum => StationTypeEnum.ListeningPost;
+}
+
+public class NumberStation : Station
+{
+    public override StationTypeEnum TypeEnum => StationTypeEnum.NumberStation;
+}

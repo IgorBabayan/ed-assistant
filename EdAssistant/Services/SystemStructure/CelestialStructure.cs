@@ -102,18 +102,118 @@ class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructu
         logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.HierarchyBuildingComplete"]);
     }
 
-    /*private static Station CreateStationFromScan(FSSSignalDiscoveredEvent scanEvent) =>
-        scanEvent.SignalTypeEnum switch
+    private static Station CreateStationFromScan(FSSSignalDiscoveredEvent scanEvent)
+    {
+        // Determine station type based on SignalType and SignalName
+        var stationTypeEnum = DetermineStationTypeFromSignal(scanEvent);
+    
+        return stationTypeEnum switch
         {
-            StationTypeEnum.Outpost => new Outpost { BodyName = scanEvent.SignalName },
-            StationTypeEnum.AsteroidBase => new Asteroid { BodyName = scanEvent.SignalName },
-            StationTypeEnum.Coriolis => new Coriolis { BodyName = scanEvent.SignalName },
-            StationTypeEnum.Orbis => new Orbis { BodyName = scanEvent.SignalName },
-            StationTypeEnum.Ocellus => new Ocellus { BodyName = scanEvent.SignalName },
-            StationTypeEnum.NavBeacon => new Ocellus { BodyName = scanEvent.SignalName },
-            _ => new UnknownStation { BodyName = scanEvent.SignalName }
-        };*/
-    private static Station CreateStationFromScan(FSSSignalDiscoveredEvent scanEvent) => new UnknownStation { BodyName = scanEvent.SignalName };
+            StationTypeEnum.Outpost => new Outpost { BodyName = GetDisplayName(scanEvent) },
+            StationTypeEnum.AsteroidBase => new Asteroid { BodyName = GetDisplayName(scanEvent) },
+            StationTypeEnum.Coriolis => new Coriolis { BodyName = GetDisplayName(scanEvent) },
+            StationTypeEnum.Orbis => new Orbis { BodyName = GetDisplayName(scanEvent) },
+            StationTypeEnum.Ocellus => new Ocellus { BodyName = GetDisplayName(scanEvent) },
+            StationTypeEnum.Installation => new Installation { BodyName = GetDisplayName(scanEvent) },
+            StationTypeEnum.ConflictZone => new ConflictZone { BodyName = GetDisplayName(scanEvent) },
+            StationTypeEnum.ResourceExtraction => new ResourceExtraction { BodyName = GetDisplayName(scanEvent) },
+            StationTypeEnum.Carrier => new Carrier { BodyName = GetDisplayName(scanEvent) },
+            StationTypeEnum.USS => new USS 
+            { 
+                BodyName = GetDisplayName(scanEvent),
+                USSType = scanEvent.USSType,
+                ThreatLevel = scanEvent.ThreatLevel,
+                TimeRemaining = scanEvent.TimeRemaining
+            },
+            StationTypeEnum.NotableStellarPhenomena => new NotableStellarPhenomena { BodyName = GetDisplayName(scanEvent) },
+            StationTypeEnum.ListeningPost => new ListeningPost { BodyName = GetDisplayName(scanEvent) },
+            StationTypeEnum.NumberStation => new NumberStation { BodyName = GetDisplayName(scanEvent) },
+            _ => new UnknownStation { BodyName = GetDisplayName(scanEvent) }
+        };
+    }
+
+    private static StationTypeEnum DetermineStationTypeFromSignal(FSSSignalDiscoveredEvent scanEvent)
+    {
+        // First check if it's explicitly marked as a station
+        if (scanEvent.IsStation == true)
+        {
+            // Try to determine specific station type from SignalName
+            var signalName = scanEvent.SignalName.ToLowerInvariant();
+        
+            if (signalName.Contains("outpost"))
+                return StationTypeEnum.Outpost;
+            if (signalName.Contains("asteroid") || signalName.Contains("mining"))
+                return StationTypeEnum.AsteroidBase;
+            if (signalName.Contains("coriolis"))
+                return StationTypeEnum.Coriolis;
+            if (signalName.Contains("orbis"))
+                return StationTypeEnum.Orbis;
+            if (signalName.Contains("ocellus"))
+                return StationTypeEnum.Ocellus;
+        
+            // Default to installation for unknown station types
+            return StationTypeEnum.Installation;
+        }
+    
+        // Determine type based on SignalType
+        return scanEvent.SignalType.ToLowerInvariant() switch
+        {
+            "resourceextraction" => StationTypeEnum.ResourceExtraction,
+            "conflictzone" => StationTypeEnum.ConflictZone,
+            "installation" => StationTypeEnum.Installation,
+            "carrier" => StationTypeEnum.Carrier,
+            "uss" => StationTypeEnum.USS,
+            "notablestellarphenomena" => StationTypeEnum.NotableStellarPhenomena,
+            _ => DetermineTypeFromSignalName(scanEvent.SignalName)
+        };
+    }
+    
+    private static StationTypeEnum DetermineTypeFromSignalName(string signalName)
+    {
+        var name = signalName.ToLowerInvariant();
+    
+        // Check for specific signal name patterns
+        if (name.Contains("$listeningpost"))
+            return StationTypeEnum.ListeningPost;
+        if (name.Contains("$numberstation"))
+            return StationTypeEnum.NumberStation;
+        if (name.Contains("$uss"))
+            return StationTypeEnum.USS;
+        if (name.Contains("$multiplayer_scenario") && name.Contains("extraction"))
+            return StationTypeEnum.ResourceExtraction;
+        if (name.Contains("$multiplayer_scenario") && name.Contains("conflict"))
+            return StationTypeEnum.ConflictZone;
+        if (name.Contains("carrier"))
+            return StationTypeEnum.Carrier;
+    
+        return StationTypeEnum.Unknown;
+    }
+
+    private static string GetDisplayName(FSSSignalDiscoveredEvent scanEvent)
+    {
+        // Prefer localized name if available, fallback to SignalName
+        if (!string.IsNullOrEmpty(scanEvent.SignalNameLocalised))
+            return scanEvent.SignalNameLocalised;
+    
+        // Clean up the SignalName if it contains special formatting
+        var name = scanEvent.SignalName;
+    
+        // Remove common prefixes and formatting
+        if (name.StartsWith("$") && name.Contains(";"))
+        {
+            // Try to extract meaningful part from names like "$MULTIPLAYER_SCENARIO79_TITLE;"
+            var parts = name.Split('_');
+            if (parts.Length > 1)
+            {
+                return string.Join(" ", parts.Skip(1).Take(parts.Length - 1))
+                    .Replace("TITLE;", "")
+                    .Replace(";", "")
+                    .Trim();
+            }
+        }
+    
+        return name;
+    }
 
     private static CelestialBody CreateBodyFromScan(ScanEvent scanEvent)
     {

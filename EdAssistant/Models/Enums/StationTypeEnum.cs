@@ -9,5 +9,13 @@ public enum StationTypeEnum
     AsteroidBase,
     Coriolis,
     Orbis,
-    Ocellus
+    Ocellus,
+    Installation,
+    ConflictZone,
+    ResourceExtraction,
+    Carrier,
+    USS,
+    NotableStellarPhenomena,
+    ListeningPost,
+    NumberStation
 }
