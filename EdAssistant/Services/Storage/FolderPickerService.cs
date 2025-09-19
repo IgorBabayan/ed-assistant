@@ -56,6 +56,8 @@ class FolderPickerService(ISettingsService settingsService, ILogger<FolderPicker
                 logger.LogWarning(Localization.Instance["FolderService.Exceptions.NoJournalsPath"]);
                 return string.Empty;
             }
+            
+            settingsService.SetSetting("JournalFolderPath", path);
             return path;
         }
 
@@ -68,6 +70,8 @@ class FolderPickerService(ISettingsService settingsService, ILogger<FolderPicker
                 logger.LogWarning(Localization.Instance["FolderService.Exceptions.NoJournalsPath"]);
                 return string.Empty;
             }
+            
+            settingsService.SetSetting("JournalFolderPath", path);
             return path;
         }
         

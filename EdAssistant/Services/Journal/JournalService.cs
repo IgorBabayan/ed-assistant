@@ -42,7 +42,22 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             return [];
         }
 
-        // Strategy 1: Try to get entries from all of today's journal files
+        // For system-related events, look across multiple recent days immediately
+        if (typeof(T) == typeof(ScanEvent) || 
+            typeof(T) == typeof(SAAScanCompleteEvent) ||
+            typeof(T) == typeof(ScanBaryCentreEvent) ||
+            typeof(T) == typeof(FSSSignalDiscoveredEvent))
+        {
+            var recentResults = (await GetEntriesFromRecentDaysAsync<T>(journalFiles, maxDaysBack: 7)).ToList();
+            if (recentResults.Any())
+            {
+                logger.LogInformation("Found {Count} {Type} entries from recent sessions", 
+                    recentResults.Count(), typeof(T).Name);
+                return recentResults;
+            }
+        }
+
+        // For other events, try today first
         var todayGroups = GetTodaysJournalGroups(journalFiles);
         if (todayGroups.Count > 0)
         {
@@ -64,7 +79,16 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             logger.LogInformation(Localization.Instance["JournalService.Information.NoTodayEntries"], typeof(T).Name);
         }
 
-        // Strategy 2: Fallback to latest journal session if today's files have no matching entries
+        // Fallback: Look back through recent days for any event type
+        var fallbackResults = (await GetEntriesFromRecentDaysAsync<T>(journalFiles, maxDaysBack: 7)).ToList();
+        if (fallbackResults.Any())
+        {
+            logger.LogInformation("Found {Count} {Type} entries from recent days", 
+                fallbackResults.Count(), typeof(T).Name);
+            return fallbackResults;
+        }
+
+        // Final fallback to latest journal session
         var latestGroup = GetLatestJournalGroup(journalFiles);
         if (latestGroup.Count == 0)
         {
@@ -78,6 +102,38 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             latestResults.Count, typeof(T).Name);
         
         return latestResults;
+    }
+
+    private async Task<IEnumerable<T>> GetEntriesFromRecentDaysAsync<T>(FileInfo[] journalFiles, int maxDaysBack) 
+        where T : JournalEvent
+    {
+        var groupedFiles = GroupRelatedJournalFiles(journalFiles);
+        var today = DateTime.Today;
+        var cutoffDate = today.AddDays(-maxDaysBack);
+        
+        var recentEntries = new List<T>();
+        
+        // Process groups from most recent to oldest
+        var sortedGroups = groupedFiles
+            .Where(group => ExtractTimestampFromFileName(group.First().Name).Date >= cutoffDate)
+            .OrderByDescending(group => ExtractTimestampFromFileName(group.First().Name))
+            .ToList();
+
+        foreach (var group in sortedGroups)
+        {
+            var groupEntries = await ProcessJournalGroupAsync(group);
+            var typedEntries = groupEntries.OfType<T>().ToList();
+            
+            if (typedEntries.Any())
+            {
+                recentEntries.AddRange(typedEntries);
+                var groupDate = ExtractTimestampFromFileName(group.First().Name).Date;
+                logger.LogInformation("Found {Count} {Type} entries in journal from {Date}", 
+                    typedEntries.Count, typeof(T).Name, groupDate.ToShortDateString());
+            }
+        }
+        
+        return recentEntries.OrderBy(e => e.Timestamp);
     }
 
     public async Task RefreshCacheAsync()
@@ -226,7 +282,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
                 await _cacheSemaphore.WaitAsync();
                 try
                 {
-                    _cache.AddOrUpdate(groupKey, entries, (key, oldValue) => entries);
+                    _cache.AddOrUpdate(groupKey, entries, (_, _) => entries);
                 }
                 finally
                 {
@@ -357,13 +413,12 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
     {
         var allLines = new List<string>();
         
-        // Read files individually and collect lines - FIXED: Don't append extra newlines
+        // Read files individually and collect lines
         foreach (var file in fileGroup.OrderBy(f => f.Name))
         {
             try
             {
                 await using var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                // Use StringReader for most robust cross-platform line splitting
                 using var reader = new StreamReader(fileStream);
                 while (await reader.ReadLineAsync() is { } line)
                 {

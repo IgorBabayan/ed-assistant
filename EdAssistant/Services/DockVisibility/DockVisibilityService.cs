@@ -12,14 +12,15 @@ class DockVisibilityService : IDockVisibilityService
         [PageEnum.MarketConnector] = true,
         [PageEnum.Log] = true
     };
-    private readonly string _settingsPath;
+    
+    private readonly ISettingsService _settingsService;
+    private const string DOCK_VISIBILITY_PREFIX = "DockVisibility";
 
     public event EventHandler<DockVisibilityChangedEventArgs>? VisibilityChanged;
 
-    public DockVisibilityService()
+    public DockVisibilityService(ISettingsService settingsService)
     {
-        _settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EdAssistant", "settings.json");
-
+        _settingsService = settingsService;
         LoadSettings();
     }
 
@@ -37,25 +38,20 @@ class DockVisibilityService : IDockVisibilityService
 
     public void SaveSettings()
     {
-        Directory.CreateDirectory(Path.GetDirectoryName(_settingsPath)!);
-        var json = JsonSerializer.Serialize(_dockVisibility);
-        File.WriteAllText(_settingsPath, json);
+        foreach (var kvp in _dockVisibility)
+        {
+            var settingKey = $"{DOCK_VISIBILITY_PREFIX}.{kvp.Key}";
+            _settingsService.SetSetting(settingKey, kvp.Value);
+        }
     }
 
     public void LoadSettings()
     {
-        if (!File.Exists(_settingsPath))
-            return;
-
-        var json = File.ReadAllText(_settingsPath);
-        var loaded = JsonSerializer.Deserialize<Dictionary<PageEnum, bool>>(json);
-        if (loaded == null)
-            return;
-
-        _dockVisibility.Clear();
-        foreach (var kvp in loaded)
+        foreach (var page in _dockVisibility.Keys.ToList())
         {
-            _dockVisibility[kvp.Key] = kvp.Value;
+            var settingKey = $"{DOCK_VISIBILITY_PREFIX}.{page}";
+            var defaultValue = _dockVisibility[page];
+            _dockVisibility[page] = _settingsService.GetSetting(settingKey, defaultValue);
         }
     }
 }

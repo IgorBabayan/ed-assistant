@@ -12,11 +12,31 @@
     "ParsingJournalEvent": "Error parsing journal event to {0}: {1}",
     "UnknownJournalEvent": "Unknown event type '{0}' encountered, skipping. Line: {1}",
     "LoadingIconError": "Error loading icon: {0}",
-    "FailedToInitialize": "Failed to initialize {0}" 
+    "FailedToInitialize": "Failed to initialize {0}",
+    "FileIOError": "File IO error: {0}. Will retry..."
   },
   "Warnings": {
     "CouldNotReadFile": "Warning: Could not read file {0}: {1}",
     "CouldNotParseEvent": "Warning: Could not parse journal line: {0}... Error: {1}"
+  },
+  "JsonSettingsService": {
+    "Exceptions": {
+      "FailedToReadSettingsFile": "Failed to read settings from file",
+      "FailedToSaveSettingsFile": "Failed to save settings from file",
+      "FailedToLoadSettingsFile": "Failed to load settings from file"
+    }
+  },
+  "JournalWatcher": {
+    "Information": {
+      "StartedWatchingJournalFiles": "Started watching Elite Dangerous journal files in: {0}",
+      "StoppedWatchingJournalFiles": "Stopped watching journal files",
+      "JournalFileModified": "Journal file modified: {0}",
+      "NewJournalFileCreated": "New journal file created: {0}"
+    },
+    "Exceptions": {
+      "ErrorHandlingFileChange": "Error handling file change: {0}",
+      "ErrorHandlingFileCreation": "Error handling file creation: {0}"
+    }
   },
   "JournalService": {
     "Exceptions": {

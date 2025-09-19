@@ -48,6 +48,7 @@ global using EdAssistant.Models.Scan;
 global using EdAssistant.Services.Color;
 global using EdAssistant.Services.Desktop;
 global using EdAssistant.Services.DockVisibility;
+global using EdAssistant.Services.FileWatcher;
 global using EdAssistant.Services.Journal;
 global using EdAssistant.Services.Navigate;
 global using EdAssistant.Services.Settings;

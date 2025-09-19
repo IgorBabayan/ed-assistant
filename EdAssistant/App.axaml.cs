@@ -26,7 +26,15 @@ public partial class App : Application
             navigationService.Initialize(window.NavigationHost);
             navigationService.RegisterViewMappings();
         
-            window.Loaded += async (_, _) => await navigationService.NavigateAsync<HomeViewModel>();
+            var watcher = _host.Services.GetRequiredService<IJournalMonitorService>();
+            window.Loaded += async (_, _) =>
+            {
+                await navigationService.NavigateAsync<HomeViewModel>();
+                
+                var folderService = _host.Services.GetRequiredService<IFolderPickerService>();
+                watcher.Initialize(folderService.GetDefaultJournalsPath());
+            };
+            window.Closing += (_, _) => watcher.Dispose();
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
