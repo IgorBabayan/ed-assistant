@@ -110,6 +110,12 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
             case Outpost:
                 return new IconData("avares://EdAssistant/Assets/Icons/Station/Outpost.png");
             
+            case NavBeacon:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/NavBeacon.png");
+            
+            case FleetCarrier:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/FleetCarrier.png");
+            
             case Asteroid:
                 return new IconData("avares://EdAssistant/Assets/Icons/Station/AsteroidBase.png");
             

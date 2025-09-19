@@ -5,8 +5,7 @@ public class ScanEvent : JournalEvent
     public override JournalEventTypeEnum EventTypeEnum => JournalEventTypeEnum.Scan;
 
     [JsonPropertyName("ScanType")]
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public ScanTypeEnum ScanTypeEnum { get; set; }
+    public string? ScanTypeEnum { get; set; }
 
     [JsonPropertyName("BodyName")]
     public string BodyName { get; set; } = string.Empty;

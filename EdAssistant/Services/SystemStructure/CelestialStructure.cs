@@ -67,7 +67,7 @@ class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructu
         _stationLookup[fssSignal.SignalName] = station;
 
         logger.LogInformation(Localization.Instance["SystemPage.Information.AddedStation"],
-            fssSignal.SignalName, fssSignal.SignalTypeEnum);
+            fssSignal.SignalName, fssSignal.SignalType);
     }
 
     public void BuildHierarchy()
@@ -102,7 +102,7 @@ class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructu
         logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.HierarchyBuildingComplete"]);
     }
 
-    private static Station CreateStationFromScan(FSSSignalDiscoveredEvent scanEvent) =>
+    /*private static Station CreateStationFromScan(FSSSignalDiscoveredEvent scanEvent) =>
         scanEvent.SignalTypeEnum switch
         {
             StationTypeEnum.Outpost => new Outpost { BodyName = scanEvent.SignalName },
@@ -110,8 +110,10 @@ class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructu
             StationTypeEnum.Coriolis => new Coriolis { BodyName = scanEvent.SignalName },
             StationTypeEnum.Orbis => new Orbis { BodyName = scanEvent.SignalName },
             StationTypeEnum.Ocellus => new Ocellus { BodyName = scanEvent.SignalName },
+            StationTypeEnum.NavBeacon => new Ocellus { BodyName = scanEvent.SignalName },
             _ => new UnknownStation { BodyName = scanEvent.SignalName }
-        };
+        };*/
+    private static Station CreateStationFromScan(FSSSignalDiscoveredEvent scanEvent) => new UnknownStation { BodyName = scanEvent.SignalName };
 
     private static CelestialBody CreateBodyFromScan(ScanEvent scanEvent)
     {

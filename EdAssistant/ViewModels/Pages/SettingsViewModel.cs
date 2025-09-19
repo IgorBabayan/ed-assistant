@@ -10,7 +10,6 @@ public sealed partial class SettingsViewModel : PageViewModel
     private readonly IFolderPickerService _folderPickerService;
     private readonly ISettingsService _settingsService;
     private readonly IDockVisibilityService _dockVisibilityService;
-    private readonly IEliteDangerousJournalWatcher _journalWatcher;
     private readonly ILogger<SettingsViewModel> _logger;
     
     public bool Cargo
@@ -133,13 +132,11 @@ public sealed partial class SettingsViewModel : PageViewModel
     public string Version => $"v{Assembly.GetExecutingAssembly().GetName().Version}";
 
     public SettingsViewModel(IFolderPickerService folderPickerService, ISettingsService settingsService, 
-        IDockVisibilityService dockVisibilityService, IEliteDangerousJournalWatcher journalWatcher,
-        ILogger<SettingsViewModel> logger)
+        IDockVisibilityService dockVisibilityService, ILogger<SettingsViewModel> logger)
     {
         _folderPickerService = folderPickerService;
         _settingsService = settingsService;
         _dockVisibilityService = dockVisibilityService;
-        _journalWatcher = journalWatcher;
         _logger = logger;
 
         JournalsFolderPath = folderPickerService.GetDefaultJournalsPath();
@@ -149,7 +146,7 @@ public sealed partial class SettingsViewModel : PageViewModel
     partial void OnJournalsFolderPathChanged(string? value)
     {
         _settingsService.SetSetting("JournalFolderPath", value);
-        _journalWatcher.Restart();
+        //_journalWatcher.Restart();
     }
 
     protected override void OnDispose(bool disposing)

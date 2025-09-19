@@ -12,6 +12,16 @@ public abstract class Station : CelestialBody
     public override string MassInfo => string.Empty;
 }
 
+public class FleetCarrier : Station
+{
+    public override StationTypeEnum TypeEnum => StationTypeEnum.FleetCarrier;
+}
+
+public class NavBeacon : Station
+{
+    public override StationTypeEnum TypeEnum => StationTypeEnum.NavBeacon;
+}
+
 public class Outpost : Station
 {
     public override StationTypeEnum TypeEnum => StationTypeEnum.Outpost;

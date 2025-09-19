@@ -14,8 +14,8 @@ public static class ServiceExtensions
         services.AddSingleton<ITemplateCacheManager, TemplateCacheManager>();
         services.AddSingleton<IResourceService, ResourceService>();
         services.AddSingleton<IJournalService, JournalService>();
-        services.AddSingleton<IEliteDangerousJournalWatcher, EliteDangerousJournalWatcher>();
         services.AddSingleton<IJournalMonitorService, JournalMonitorService>();
+        services.AddSingleton<IJournalIntegrationService, JournalIntegrationService>();
     }
 
     public static void RegisterViewModels(this IServiceCollection services)
