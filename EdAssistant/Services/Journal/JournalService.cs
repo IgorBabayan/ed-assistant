@@ -104,7 +104,108 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
         return latestResults;
     }
 
-    private async Task<IEnumerable<T>> GetEntriesFromRecentDaysAsync<T>(FileInfo[] journalFiles, int maxDaysBack) 
+    public async Task<Dictionary<Type, List<JournalEvent>>> GetLatestJournalEntriesBatchAsync(params Type[] eventTypes)
+    {
+        if (!Directory.Exists(_journalsPath))
+        {
+            throw new DirectoryNotFoundException(string.Format(Localization.Instance["Exceptions.DirectoryNotFound"],
+                _journalsPath));
+        }
+
+        var journalFiles = GetJournalFiles();
+        if (journalFiles.Length == 0)
+        {
+            return eventTypes.ToDictionary(t => t, _ => new List<JournalEvent>());
+        }
+
+        var typeSet = new HashSet<Type>(eventTypes);
+        var results = eventTypes.ToDictionary(t => t, _ => new List<JournalEvent>());
+
+        // Check if any of the requested types are system-related
+        var hasSystemEvents = typeSet.Any(t =>
+            t == typeof(ScanEvent) ||
+            t == typeof(SAAScanCompleteEvent) ||
+            t == typeof(ScanBaryCentreEvent) ||
+            t == typeof(FSSSignalDiscoveredEvent));
+
+        if (hasSystemEvents)
+        {
+            // For system events, look across multiple recent days
+            var recentEntries = await GetEntriesFromRecentDaysBatchAsync(journalFiles, typeSet, maxDaysBack: 7);
+            foreach (var kvp in recentEntries)
+            {
+                if (kvp.Value.Any())
+                {
+                    results[kvp.Key] = kvp.Value;
+                    logger.LogInformation("Found {Count} {Type} entries from recent sessions",
+                        kvp.Value.Count, kvp.Key.Name);
+                }
+            }
+
+            // Return early if we found any system events
+            if (results.Values.Any(list => list.Any()))
+            {
+                return results;
+            }
+        }
+
+        // Fallback to recent days for all event types
+        var fallbackResults = await GetEntriesFromRecentDaysBatchAsync(journalFiles, typeSet, maxDaysBack: 7);
+        foreach (var kvp in fallbackResults)
+        {
+            if (kvp.Value.Any())
+            {
+                results[kvp.Key] = kvp.Value;
+                logger.LogInformation("Found {Count} {Type} entries from recent days",
+                    kvp.Value.Count, kvp.Key.Name);
+            }
+        }
+
+        return results;
+    }
+
+    private async Task<Dictionary<Type, List<JournalEvent>>> GetEntriesFromRecentDaysBatchAsync(
+        FileInfo[] journalFiles, HashSet<Type> eventTypes, int maxDaysBack)
+    {
+        var groupedFiles = GroupRelatedJournalFiles(journalFiles);
+        var today = DateTime.Today;
+        var cutoffDate = today.AddDays(-maxDaysBack);
+
+        var results = eventTypes.ToDictionary(t => t, _ => new List<JournalEvent>());
+
+        // Process groups from most recent to oldest
+        var sortedGroups = groupedFiles
+            .Where(group => ExtractTimestampFromFileName(group.First().Name).Date >= cutoffDate)
+            .OrderByDescending(group => ExtractTimestampFromFileName(group.First().Name))
+            .ToList();
+
+        foreach (var group in sortedGroups)
+        {
+            var groupEntries = await ProcessJournalGroupAsync(group);
+            var groupDate = ExtractTimestampFromFileName(group.First().Name).Date;
+
+            foreach (var eventType in eventTypes)
+            {
+                var typedEntries = groupEntries.Where(e => e.GetType() == eventType).ToList();
+                if (typedEntries.Any())
+                {
+                    results[eventType].AddRange(typedEntries);
+                    logger.LogInformation("Found {Count} {Type} entries in journal from {Date}",
+                        typedEntries.Count, eventType.Name, groupDate.ToShortDateString());
+                }
+            }
+        }
+
+        // Sort all results by timestamp
+        foreach (var kvp in results.ToList())
+        {
+            results[kvp.Key] = kvp.Value.OrderBy(e => e.Timestamp).ToList();
+        }
+
+        return results;
+    }
+
+    private async Task<IEnumerable<T>> GetEntriesFromRecentDaysAsync<T>(FileInfo[] journalFiles, int maxDaysBack)
         where T : JournalEvent
     {
         var groupedFiles = GroupRelatedJournalFiles(journalFiles);

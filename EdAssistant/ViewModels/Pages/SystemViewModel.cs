@@ -36,10 +36,7 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
         IsLoadingStarSystem = true;
         try
         {
-            await LoadBarycenterDataAsync();
-            var fssScans = await LoadFSSScansDataAsync();
-            await LoadSystemDataAsync(fssScans);
-            await LoadSAAScanDataAsync();
+            await LoadAllScanDataAsync();
         }
         catch (Exception exception)
         {
@@ -51,39 +48,39 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
         }
     }
 
-    private async Task LoadBarycenterDataAsync()
+    private async Task LoadAllScanDataAsync()
     {
-        var barycenterScans = (await journalService.GetLatestJournalEntriesAsync<ScanBaryCentreEvent>()).ToList();
+        // Load all scan data types in a single journal pass
+        var scanData = await journalService.GetLatestJournalEntriesBatchAsync(
+            typeof(ScanBaryCentreEvent),
+            typeof(FSSSignalDiscoveredEvent),
+            typeof(ScanEvent),
+            typeof(SAAScanCompleteEvent)
+        );
+
+        // Process barycenter scans
+        var barycenterScans = scanData[typeof(ScanBaryCentreEvent)].Cast<ScanBaryCentreEvent>().ToList();
         foreach (var scan in barycenterScans)
         {
             celestialStructure.AddScanBaryCentreEvent(scan);
         }
-    }
 
-    private async Task<IList<FSSSignalDiscoveredEvent>> LoadFSSScansDataAsync()
-    {
-        var fssScans = (await journalService.GetLatestJournalEntriesAsync<FSSSignalDiscoveredEvent>()).ToList();
-        if (!fssScans.Any())
-            return [];
+        // Get FSS and system scans
+        var fssScans = scanData[typeof(FSSSignalDiscoveredEvent)].Cast<FSSSignalDiscoveredEvent>().ToList();
+        var systemScans = scanData[typeof(ScanEvent)].Cast<ScanEvent>().ToList();
 
-        return fssScans;
-    }
+        // Process system data if we have scans
+        if (systemScans.Any())
+        {
+            ProcessScans(systemScans, fssScans);
+        }
 
-    private async Task LoadSystemDataAsync(IList<FSSSignalDiscoveredEvent> fssScans)
-    {
-        var systemScans = (await journalService.GetLatestJournalEntriesAsync<ScanEvent>()).ToList();
-        if (!systemScans.Any())
-            return;
-        
-        ProcessScans(systemScans, fssScans);
-    }
-
-    private async Task LoadSAAScanDataAsync()
-    {
-        var saaScans = (await journalService.GetLatestJournalEntriesAsync<SAAScanCompleteEvent>()).ToList();
-        if (!saaScans.Any())
-            return;
-        ProcessCompletedScans(saaScans);
+        // Process SAA scans
+        var saaScans = scanData[typeof(SAAScanCompleteEvent)].Cast<SAAScanCompleteEvent>().ToList();
+        if (saaScans.Any())
+        {
+            ProcessCompletedScans(saaScans);
+        }
     }
 
     private static IconData GetIconForCelestialBodyType(CelestialBody body)
