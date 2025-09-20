@@ -19,7 +19,7 @@ class JournalIntegrationService(IJournalMonitorService journalMonitorService, IL
 
             // Start real-time monitoring
             logger.LogInformation("Starting real-time journal monitoring...");
-            await journalMonitorService.StartAsync();
+            journalMonitorService.Start();
             
             logger.LogInformation("Journal service orchestrator initialized successfully");
         }

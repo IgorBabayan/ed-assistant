@@ -15,9 +15,7 @@ public sealed partial class HomeViewModel(IJournalService journalService, ILogge
         IsLoadingRanks = true;
         try
         {
-            await LoadCommanderDataAsync();
-            await LoadRankDataAsync();
-            await LoadProgressDataAsync();
+            await LoadAllDataAsync();
         }
         catch (Exception exception)
         {
@@ -29,37 +27,26 @@ public sealed partial class HomeViewModel(IJournalService journalService, ILogge
         }
     }
 
-    private async Task LoadCommanderDataAsync()
-    {
-        var commander = (await journalService.GetLatestJournalEntriesAsync<CommanderEvent>()).LastOrDefault();
-        var title = commander is not null
-            ? commander.Name
-            : "Commander";
-        
-        WeakReferenceMessenger.Default.Send(new CommanderMessage(title));
-    }
-
-    private async Task LoadRankDataAsync()
+    private async Task LoadAllDataAsync()
     {
         try
         {
-            var rankEvent = (await journalService.GetLatestJournalEntriesAsync<RankEvent>()).LastOrDefault();
+            var batchResults = await journalService.GetLatestJournalEntriesBatchAsync(
+                typeof(CommanderEvent),
+                typeof(RankEvent),
+                typeof(ProgressEvent));
+
+            var commander = batchResults[typeof(CommanderEvent)].OfType<CommanderEvent>().LastOrDefault();
+            var title = commander?.Name ?? "Commander";
+            WeakReferenceMessenger.Default.Send(new CommanderMessage(title));
+
+            var rankEvent = batchResults[typeof(RankEvent)].OfType<RankEvent>().LastOrDefault();
             if (rankEvent is not null)
             {
                 ProcessRank(rankEvent);
             }
-        }
-        catch (Exception exception)
-        {
-            logger.LogWarning(exception, "Failed to load progress data");
-        }
-    }
-    
-    private async Task LoadProgressDataAsync()
-    {
-        try
-        {
-            var progressEvent = (await journalService.GetLatestJournalEntriesAsync<ProgressEvent>()).LastOrDefault();
+
+            var progressEvent = batchResults[typeof(ProgressEvent)].OfType<ProgressEvent>().LastOrDefault();
             if (progressEvent is not null)
             {
                 ProcessProgress(progressEvent);
@@ -67,7 +54,7 @@ public sealed partial class HomeViewModel(IJournalService journalService, ILogge
         }
         catch (Exception exception)
         {
-            logger.LogWarning(exception, "Failed to load progress data");
+            logger.LogWarning(exception, Localization.Instance["HomePage.Exceptions.FailedToInitialize"]);
         }
     }
     

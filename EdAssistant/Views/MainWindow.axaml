@@ -3,12 +3,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:EdAssistant.Views"
+        xmlns:ext="clr-namespace:EdAssistant.Helpers.Extensions"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="EdAssistant.Views.MainWindow"
         WindowStartupLocation="CenterScreen"
         Icon="/Assets/logo.ico"
         CanResize="True"
         SystemDecorations="BorderOnly"
-        Title="EdAssistant">
+        Title="{ext:Localize Common.AppTitle}">
         <views:MainView x:Name="MainView" />
 </Window>

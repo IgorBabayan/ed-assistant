@@ -54,7 +54,6 @@ class JournalService : IJournalService
             return [];
         }
 
-        // For system-related events, look across multiple recent days immediately
         if (typeof(T) == typeof(ScanEvent) || 
             typeof(T) == typeof(SAAScanCompleteEvent) ||
             typeof(T) == typeof(ScanBaryCentreEvent) ||
@@ -63,13 +62,12 @@ class JournalService : IJournalService
             var recentResults = (await GetEntriesFromRecentDaysAsync<T>(journalFiles, maxDaysBack: 7)).ToList();
             if (recentResults.Any())
             {
-                _logger.LogInformation("Found {Count} {Type} entries from recent sessions", 
+                _logger.LogInformation(Localization.Instance["JournalService.Information.FoundEntriesFromRecentSessions"], 
                     recentResults.Count(), typeof(T).Name);
                 return recentResults;
             }
         }
 
-        // For other events, try today first
         var todayGroups = GetTodaysJournalGroups(journalFiles);
         if (todayGroups.Count > 0)
         {
@@ -91,16 +89,14 @@ class JournalService : IJournalService
             _logger.LogInformation(Localization.Instance["JournalService.Information.NoTodayEntries"], typeof(T).Name);
         }
 
-        // Fallback: Look back through recent days for any event type
         var fallbackResults = (await GetEntriesFromRecentDaysAsync<T>(journalFiles, maxDaysBack: 7)).ToList();
         if (fallbackResults.Any())
         {
-            _logger.LogInformation("Found {Count} {Type} entries from recent days", 
+            _logger.LogInformation(Localization.Instance["JournalService.Information.FoundEntriesFromRecentDays"], 
                 fallbackResults.Count(), typeof(T).Name);
             return fallbackResults;
         }
 
-        // Final fallback to latest journal session
         var latestGroup = GetLatestJournalGroup(journalFiles);
         if (latestGroup.Count == 0)
         {
@@ -132,7 +128,6 @@ class JournalService : IJournalService
         var typeSet = new HashSet<Type>(eventTypes);
         var results = eventTypes.ToDictionary(t => t, _ => new List<JournalEvent>());
 
-        // Check if any of the requested types are system-related
         var hasSystemEvents = typeSet.Any(t =>
             t == typeof(ScanEvent) ||
             t == typeof(SAAScanCompleteEvent) ||
@@ -141,33 +136,30 @@ class JournalService : IJournalService
 
         if (hasSystemEvents)
         {
-            // For system events, look across multiple recent days
             var recentEntries = await GetEntriesFromRecentDaysBatchAsync(journalFiles, typeSet, maxDaysBack: 7);
             foreach (var kvp in recentEntries)
             {
                 if (kvp.Value.Any())
                 {
                     results[kvp.Key] = kvp.Value;
-                    _logger.LogInformation("Found {Count} {Type} entries from recent sessions",
+                    _logger.LogInformation(Localization.Instance["JournalService.Information.FoundEntriesFromRecentSessions"],
                         kvp.Value.Count, kvp.Key.Name);
                 }
             }
 
-            // Return early if we found any system events
             if (results.Values.Any(list => list.Any()))
             {
                 return results;
             }
         }
 
-        // Fallback to recent days for all event types
         var fallbackResults = await GetEntriesFromRecentDaysBatchAsync(journalFiles, typeSet, maxDaysBack: 7);
         foreach (var kvp in fallbackResults)
         {
             if (kvp.Value.Any())
             {
                 results[kvp.Key] = kvp.Value;
-                _logger.LogInformation("Found {Count} {Type} entries from recent days",
+                _logger.LogInformation(Localization.Instance["JournalService.Information.FoundEntriesFromRecentDays"],
                     kvp.Value.Count, kvp.Key.Name);
             }
         }
@@ -181,10 +173,8 @@ class JournalService : IJournalService
         var groupedFiles = GroupRelatedJournalFiles(journalFiles);
         var today = DateTime.Today;
         var cutoffDate = today.AddDays(-maxDaysBack);
-
         var results = eventTypes.ToDictionary(t => t, _ => new List<JournalEvent>());
 
-        // Process groups from most recent to oldest
         var sortedGroups = groupedFiles
             .Where(group => ExtractTimestampFromFileName(group.First().Name).Date >= cutoffDate)
             .OrderByDescending(group => ExtractTimestampFromFileName(group.First().Name))
@@ -201,13 +191,12 @@ class JournalService : IJournalService
                 if (typedEntries.Any())
                 {
                     results[eventType].AddRange(typedEntries);
-                    _logger.LogInformation("Found {Count} {Type} entries in journal from {Date}",
+                    _logger.LogInformation(Localization.Instance["JournalService.Information.FoundEntriesInJournalFrom"],
                         typedEntries.Count, eventType.Name, groupDate.ToShortDateString());
                 }
             }
         }
 
-        // Sort all results by timestamp
         foreach (var kvp in results.ToList())
         {
             results[kvp.Key] = kvp.Value.OrderBy(e => e.Timestamp).ToList();
@@ -222,10 +211,8 @@ class JournalService : IJournalService
         var groupedFiles = GroupRelatedJournalFiles(journalFiles);
         var today = DateTime.Today;
         var cutoffDate = today.AddDays(-maxDaysBack);
-        
         var recentEntries = new List<T>();
         
-        // Process groups from most recent to oldest
         var sortedGroups = groupedFiles
             .Where(group => ExtractTimestampFromFileName(group.First().Name).Date >= cutoffDate)
             .OrderByDescending(group => ExtractTimestampFromFileName(group.First().Name))
@@ -240,7 +227,7 @@ class JournalService : IJournalService
             {
                 recentEntries.AddRange(typedEntries);
                 var groupDate = ExtractTimestampFromFileName(group.First().Name).Date;
-                _logger.LogInformation("Found {Count} {Type} entries in journal from {Date}", 
+                _logger.LogInformation(Localization.Instance["JournalService.Information.FoundEntriesInJournalFrom"], 
                     typedEntries.Count, typeof(T).Name, groupDate.ToShortDateString());
             }
         }
@@ -284,10 +271,8 @@ class JournalService : IJournalService
 
     private static string GetJournalBaseName(string fileName)
     {
-        // Extract base name from files like "Journal.2024-01-15T123456.01.log"
-        // Returns "Journal.2024-01-15T123456" without the part number
         var parts = fileName.Split('.');
-        if (parts.Length >= 4) // Journal, date, part, log
+        if (parts.Length >= 4) 
         {
             return string.Join(".", parts.Take(parts.Length - 2));
         }
@@ -321,7 +306,6 @@ class JournalService : IJournalService
             }
             else
             {
-                // Check if any files are newer than last cache update
                 var newestFileTime = journalFiles.Max(f => File.GetLastWriteTime(f.FullName));
                 needsUpdate = newestFileTime > _lastCacheUpdate;
             }
@@ -380,8 +364,6 @@ class JournalService : IJournalService
     private async Task LoadJournalFilesAsync(FileInfo[] journalFiles)
     {
         var groupedFiles = GroupRelatedJournalFiles(journalFiles);
-        
-        // Process groups with controlled concurrency to prevent overwhelming the system
         var semaphore = new SemaphoreSlim(Environment.ProcessorCount, Environment.ProcessorCount);
         var tasks = groupedFiles.Select(async group =>
         {
@@ -442,13 +424,10 @@ class JournalService : IJournalService
         if (journalFiles.Length == 0) 
             return [];
 
-        // Group all files by their base name
         var groupedFiles = GroupRelatedJournalFiles(journalFiles);
         if (groupedFiles.Count == 0) 
             return [];
 
-        // Find the group with the most recent base name (latest timestamp)
-        // Journal files are named like: Journal.2024-01-15T123456.01.log
         var latestGroup = groupedFiles
             .OrderByDescending(group => ExtractTimestampFromFileName(group.First().Name))
             .First();
@@ -464,7 +443,6 @@ class JournalService : IJournalService
         if (journalFiles.Length == 0) 
             return [];
 
-        // Group all files by their base name
         var groupedFiles = GroupRelatedJournalFiles(journalFiles);
         if (groupedFiles.Count == 0) 
             return [];
@@ -472,7 +450,6 @@ class JournalService : IJournalService
         var today = DateTime.Today;
         var todayGroups = new List<List<FileInfo>>();
 
-        // Filter groups to only include those from today
         foreach (var group in groupedFiles)
         {
             var groupTimestamp = ExtractTimestampFromFileName(group.First().Name);
@@ -482,7 +459,6 @@ class JournalService : IJournalService
             }
         }
 
-        // Sort by timestamp to process in chronological order
         todayGroups = todayGroups
             .OrderBy(group => ExtractTimestampFromFileName(group.First().Name))
             .ToList();
@@ -498,13 +474,11 @@ class JournalService : IJournalService
     {
         try
         {
-            // Extract timestamp from "Journal.2024-01-15T123456.01.log" format
             var parts = fileName.Split('.');
             if (parts.Length >= 3)
             {
-                var timestampPart = parts[1]; // "2024-01-15T123456"
+                var timestampPart = parts[1];
                 
-                // Parse the timestamp - Elite Dangerous uses this format in filenames
                 if (DateTime.TryParseExact(timestampPart, "yyyy-MM-ddTHHmmss", 
                     CultureInfo.InvariantCulture, DateTimeStyles.None, out var timestamp))
                 {
@@ -517,15 +491,12 @@ class JournalService : IJournalService
             _logger.LogWarning(exception, Localization.Instance["JournalService.Exceptions.CouldNotExtractTimestamp"], fileName);
         }
 
-        // Fallback to file creation time if timestamp parsing fails
         return DateTime.MinValue;
     }
 
     private async Task<List<JournalEvent>> ProcessJournalGroupAsync(List<FileInfo> fileGroup)
     {
         var allLines = new List<string>();
-        
-        // Read files individually and collect lines
         foreach (var file in fileGroup.OrderBy(f => f.Name))
         {
             try
@@ -553,8 +524,6 @@ class JournalService : IJournalService
     private async Task<List<JournalEvent>> ParseJournalEntries(List<string> lines)
     {
         var entries = new List<JournalEvent>();
-        
-        // Process lines with progress tracking for large files
         var processedLines = 0;
 
         foreach (var line in lines)
@@ -579,7 +548,6 @@ class JournalService : IJournalService
                     trimmedLine[..Math.Min(50, trimmedLine.Length)], exception.Message);
             }
 
-            // Yield control periodically for large files to prevent UI freezing
             if (processedLines % 1000 == 0)
             {
                 await Task.Yield();

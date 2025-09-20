@@ -3,23 +3,21 @@
     "Yes": "Yes",
     "No": "No",
     "Watermark": "Search items",
-    "AppTitle": "Elite Dangerous Assistant"
+    "AppTitle": "Elite Dangerous Assistant",
+    "Unknown": "Unknown"
   },
   "Exceptions": {
     "DirectoryNotFound": "Directory not found: {0}",
-    "FileNotFound": "File not found: {0}",
-    "FailedToLoadFileData": "Failed to load data from {0}",
     "ParsingJournalEvent": "Error parsing journal event to {0}: {1}",
     "UnknownJournalEvent": "Unknown event type '{0}' encountered, skipping. Line: {1}",
     "LoadingIconError": "Error loading icon: {0}",
     "FailedToInitialize": "Failed to initialize {0}",
-    "FileIOError": "File IO error: {0}. Will retry...",
     "FailedToSaveResource": "Failed to save resource '{0}' to '{1}': {2}",
-    "CannotMakeDesktopFileExecutable": "Can't make desktop file executable"
+    "CannotMakeDesktopFileExecutable": "Can't make desktop file executable",
+    "FileIsLocked": "File {0} is locked by Elite Dangerous, will retry later"
   },
   "Warnings": {
-    "CouldNotReadFile": "Warning: Could not read file {0}: {1}",
-    "CouldNotParseEvent": "Warning: Could not parse journal line: {0}... Error: {1}"
+    "CouldNotReadFile": "Warning: Could not read file {0}: {1}"
   },
   "JsonSettingsService": {
     "Exceptions": {
@@ -28,16 +26,44 @@
       "FailedToLoadSettingsFile": "Failed to load settings from file"
     }
   },
+  "FileSystemWatcher": {
+    "Exceptions": {
+      "ErrorOccurred": "File system watcher error occurred"
+    }
+  },
   "JournalWatcher": {
     "Information": {
       "StartedWatchingJournalFiles": "Started watching Elite Dangerous journal files in: {0}",
-      "StoppedWatchingJournalFiles": "Stopped watching journal files",
-      "JournalFileModified": "Journal file modified: {0}",
-      "NewJournalFileCreated": "New journal file created: {0}"
+      "NewJournalFileCreated": "New journal file created: {0}",
+      "JournalMonitoringIsAlreadyRunning": "Journal monitoring is already running",
+      "JournalFolderNotSet": "Journal folder not set",
+      "JournalPathIsNullOrEmpty": "Journal path cannot be null or empty",
+      "RestartingJournalMonitoring": "Restarting journal monitoring. Old path: '{0}', New path: '{1}'",
+      "SuccessfullyRestartedJournalMonitoring": "Successfully restarted journal monitoring with new path: {0}",
+      "AttemptingToRestorePreviousJournalPath": "Attempting to restore previous journal path: {0}",
+      "JournalMonitoringStopped": "Journal monitoring stopped",
+      "ServiceDisposed": "JournalMonitorService disposed",
+      "InitializedPosition": "Initialized position for {0}: {1} bytes",
+      "RestartJournalMonitoringAfterError": "Attempting to restart journal monitoring after error"
+    },
+    "Debug": {
+      "ProcessingChanges": "Processing changes in {0} from position {1}",
+      "ProcessedNewJournalEvents": "Processed {0} new journal events from {1}"
+    },
+    "Warning": {
+      "FailedToParseJournalLine": "Failed to parse journal line: {0}"
     },
     "Exceptions": {
       "ErrorHandlingFileChange": "Error handling file change: {0}",
-      "ErrorHandlingFileCreation": "Error handling file creation: {0}"
+      "ErrorHandlingFileCreation": "Error handling file creation: {0}",
+      "FailedToStartJournalMonitoring": "Failed to start journal monitoring for path: {0}",
+      "FailedToRestartMonitoring": "Failed to restart monitoring with new path: {0}",
+      "FailedToRestorePreviousJournalMonitoring": "Failed to restore previous journal monitoring",
+      "FailedToInitializePosition": "Failed to initialize position for file {0}",
+      "FailedToRestartMonitoringAfterWatcherError": "Failed to restart monitoring after watcher error",
+      "ErrorInvokingJournalEvent": "Error invoking journal event handler for event type: {0}",
+      "ErrorProcessingFileChanges": "Error processing file changes for {0}",
+      "ErrorReadingJournalFile": "Error reading journal file {0}"
     }
   },
   "JournalService": {
@@ -51,7 +77,10 @@
       "NoTodayEntries": "No {0} entries found in today's journal files, falling back to latest session",
       "FoundEntries": "Found {0} {1} entries from latest journal session",
       "FoundLatestJournal": "Found latest journal group with {0} files: {1}",
-      "FoundJournalGroups": "Found {0} journal groups from today with total {1} files"
+      "FoundJournalGroups": "Found {0} journal groups from today with total {1} files",
+      "FoundEntriesFromRecentSessions": "Found {0} {1} entries from recent sessions",
+      "FoundEntriesFromRecentDays": "Found {0} {1} entries from recent days",
+      "FoundEntriesInJournalFrom": "Found {0} {1} entries in journal from {2}"
     }
   },
   "NavigationService": {
