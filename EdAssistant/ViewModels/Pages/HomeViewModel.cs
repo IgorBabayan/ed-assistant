@@ -34,7 +34,7 @@ public sealed partial class HomeViewModel(IJournalService journalService, ILogge
         var commander = (await journalService.GetLatestJournalEntriesAsync<CommanderEvent>()).LastOrDefault();
         var title = commander is not null
             ? commander.Name
-            : Localization.Instance["MainWindow.Title"];
+            : "Commander";
         
         WeakReferenceMessenger.Default.Send(new CommanderMessage(title));
     }

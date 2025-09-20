@@ -139,7 +139,10 @@ public sealed partial class SettingsViewModel : PageViewModel
         _dockVisibilityService = dockVisibilityService;
         _logger = logger;
 
-        JournalsFolderPath = folderPickerService.GetDefaultJournalsPath();
+        if (folderPickerService.TryGetDefaultJournalsPath(out var path))
+        {
+            JournalsFolderPath = path;
+        }
         _dockVisibilityService.VisibilityChanged += OnDockVisibilityChanged;
     }
 

@@ -1,13 +1,26 @@
 namespace EdAssistant.Services.Journal;
 
-class JournalService(IFolderPickerService folderPickerService, ILogger<JournalService> logger,
-    IJournalEventFactory journalFactory) : IJournalService
+class JournalService : IJournalService
 {
-    private readonly string _journalsPath = folderPickerService.GetDefaultJournalsPath();
+    private readonly ILogger<JournalService> _logger;
+    private readonly IJournalEventFactory _journalFactory;
+    private readonly string _journalsPath;
     private readonly ConcurrentDictionary<string, List<JournalEvent>> _cache = new();
     private readonly SemaphoreSlim _cacheSemaphore = new(1, 1);
+    
     private DateTime _lastCacheUpdate = DateTime.MinValue;
     private volatile bool _isUpdating;
+
+    public JournalService(IFolderPickerService folderPickerService, ILogger<JournalService> logger,
+        IJournalEventFactory journalFactory)
+    {
+        _logger = logger;
+        _journalFactory = journalFactory;
+        if (folderPickerService.TryGetDefaultJournalsPath(out var path))
+        {
+            _journalsPath = path;
+        }
+    }
 
     public async Task<IEnumerable<T>> GetAllJournalEntriesAsync<T>() where T : JournalEvent
     {
@@ -32,8 +45,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
     {
         if (!Directory.Exists(_journalsPath))
         {
-            throw new DirectoryNotFoundException(string.Format(Localization.Instance["Exceptions.DirectoryNotFound"],
-                _journalsPath));
+            return [];
         }
 
         var journalFiles = GetJournalFiles();
@@ -51,7 +63,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             var recentResults = (await GetEntriesFromRecentDaysAsync<T>(journalFiles, maxDaysBack: 7)).ToList();
             if (recentResults.Any())
             {
-                logger.LogInformation("Found {Count} {Type} entries from recent sessions", 
+                _logger.LogInformation("Found {Count} {Type} entries from recent sessions", 
                     recentResults.Count(), typeof(T).Name);
                 return recentResults;
             }
@@ -71,19 +83,19 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             var todayResults = allTodayEntries.OfType<T>().OrderBy(e => e.Timestamp).ToList();
             if (todayResults.Count > 0)
             {
-                logger.LogInformation(Localization.Instance["JournalService.Information.FoundTodayEntity"], 
+                _logger.LogInformation(Localization.Instance["JournalService.Information.FoundTodayEntity"], 
                     todayResults.Count, typeof(T).Name);
                 return todayResults;
             }
 
-            logger.LogInformation(Localization.Instance["JournalService.Information.NoTodayEntries"], typeof(T).Name);
+            _logger.LogInformation(Localization.Instance["JournalService.Information.NoTodayEntries"], typeof(T).Name);
         }
 
         // Fallback: Look back through recent days for any event type
         var fallbackResults = (await GetEntriesFromRecentDaysAsync<T>(journalFiles, maxDaysBack: 7)).ToList();
         if (fallbackResults.Any())
         {
-            logger.LogInformation("Found {Count} {Type} entries from recent days", 
+            _logger.LogInformation("Found {Count} {Type} entries from recent days", 
                 fallbackResults.Count(), typeof(T).Name);
             return fallbackResults;
         }
@@ -98,7 +110,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
         var latestEntries = await ProcessJournalGroupAsync(latestGroup);
         var latestResults = latestEntries.OfType<T>().OrderBy(e => e.Timestamp).ToList();
         
-        logger.LogInformation(Localization.Instance["JournalService.Information.FoundEntries"], 
+        _logger.LogInformation(Localization.Instance["JournalService.Information.FoundEntries"], 
             latestResults.Count, typeof(T).Name);
         
         return latestResults;
@@ -108,8 +120,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
     {
         if (!Directory.Exists(_journalsPath))
         {
-            throw new DirectoryNotFoundException(string.Format(Localization.Instance["Exceptions.DirectoryNotFound"],
-                _journalsPath));
+            return [];
         }
 
         var journalFiles = GetJournalFiles();
@@ -137,7 +148,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
                 if (kvp.Value.Any())
                 {
                     results[kvp.Key] = kvp.Value;
-                    logger.LogInformation("Found {Count} {Type} entries from recent sessions",
+                    _logger.LogInformation("Found {Count} {Type} entries from recent sessions",
                         kvp.Value.Count, kvp.Key.Name);
                 }
             }
@@ -156,7 +167,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             if (kvp.Value.Any())
             {
                 results[kvp.Key] = kvp.Value;
-                logger.LogInformation("Found {Count} {Type} entries from recent days",
+                _logger.LogInformation("Found {Count} {Type} entries from recent days",
                     kvp.Value.Count, kvp.Key.Name);
             }
         }
@@ -190,7 +201,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
                 if (typedEntries.Any())
                 {
                     results[eventType].AddRange(typedEntries);
-                    logger.LogInformation("Found {Count} {Type} entries in journal from {Date}",
+                    _logger.LogInformation("Found {Count} {Type} entries in journal from {Date}",
                         typedEntries.Count, eventType.Name, groupDate.ToShortDateString());
                 }
             }
@@ -229,7 +240,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             {
                 recentEntries.AddRange(typedEntries);
                 var groupDate = ExtractTimestampFromFileName(group.First().Name).Date;
-                logger.LogInformation("Found {Count} {Type} entries in journal from {Date}", 
+                _logger.LogInformation("Found {Count} {Type} entries in journal from {Date}", 
                     typedEntries.Count, typeof(T).Name, groupDate.ToShortDateString());
             }
         }
@@ -361,7 +372,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, Localization.Instance["JournalService.Exceptions.ErrorGettingJournalFiles"], _journalsPath);
+            _logger.LogError(exception, Localization.Instance["JournalService.Exceptions.ErrorGettingJournalFiles"], _journalsPath);
             return [];
         }
     }
@@ -442,7 +453,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             .OrderByDescending(group => ExtractTimestampFromFileName(group.First().Name))
             .First();
 
-        logger.LogInformation(Localization.Instance["JournalService.Information.FoundLatestJournal"], latestGroup.Count, 
+        _logger.LogInformation(Localization.Instance["JournalService.Information.FoundLatestJournal"], latestGroup.Count, 
             string.Join(", ", latestGroup.Select(f => f.Name)));
 
         return latestGroup;
@@ -476,7 +487,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             .OrderBy(group => ExtractTimestampFromFileName(group.First().Name))
             .ToList();
 
-        logger.LogInformation(Localization.Instance["JournalService.Information.FoundJournalGroups"], 
+        _logger.LogInformation(Localization.Instance["JournalService.Information.FoundJournalGroups"], 
             todayGroups.Count, 
             todayGroups.Sum(g => g.Count));
 
@@ -503,7 +514,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
         }
         catch (Exception exception)
         {
-            logger.LogWarning(exception, Localization.Instance["JournalService.Exceptions.CouldNotExtractTimestamp"], fileName);
+            _logger.LogWarning(exception, Localization.Instance["JournalService.Exceptions.CouldNotExtractTimestamp"], fileName);
         }
 
         // Fallback to file creation time if timestamp parsing fails
@@ -531,7 +542,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             }
             catch (IOException exception)
             {
-                logger.LogWarning(exception, Localization.Instance["Warnings.CouldNotReadFile"],
+                _logger.LogWarning(exception, Localization.Instance["Warnings.CouldNotReadFile"],
                     file.Name, exception.Message);
             }
         }
@@ -564,7 +575,7 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
             }
             catch (JsonException exception)
             {
-                logger.LogWarning(exception, Localization.Instance["Warnings.Filtering"],
+                _logger.LogWarning(exception, Localization.Instance["Warnings.Filtering"],
                     trimmedLine[..Math.Min(50, trimmedLine.Length)], exception.Message);
             }
 
@@ -595,11 +606,11 @@ class JournalService(IFolderPickerService folderPickerService, ILogger<JournalSe
 
         try
         {
-            return journalFactory.CreateEvent(rawJson);
+            return _journalFactory.CreateEvent(rawJson);
         }
         catch (Exception exception)
         {
-            logger.LogWarning(exception, Localization.Instance["JournalService.Exceptions.FailedToCreateJournalEvent"], rawJson[..Math.Min(100, rawJson.Length)]);
+            _logger.LogWarning(exception, Localization.Instance["JournalService.Exceptions.FailedToCreateJournalEvent"], rawJson[..Math.Min(100, rawJson.Length)]);
             return null;
         }
     }

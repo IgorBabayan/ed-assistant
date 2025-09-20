@@ -38,7 +38,8 @@ public partial class MainViewModel : BaseViewModel, IRecipient<CommanderMessage>
         WeakReferenceMessenger.Default.Register(this);
     }
     
-    public void Receive(CommanderMessage commander) => WindowTitle = $"o7, {commander.Name}!";
+    public void Receive(CommanderMessage commander) => 
+        WindowTitle = string.Format(Localization.Instance["MainWindow.Title"], commander.Name);
 
     protected override void OnDispose(bool disposing)
     {

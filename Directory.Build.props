@@ -1,9 +1,17 @@
 <Project>
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <AvaloniaVersion>11.1.0</AvaloniaVersion>
-    <Version>1.0.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <AvaloniaVersion>11.1.0</AvaloniaVersion>
+        <Version>1.0.0.0</Version>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(MSBuildProjectName)' == 'EDAssistant'">
+        <AssemblyTitle>EDAssistant Core</AssemblyTitle>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(MSBuildProjectName)' == 'EDAssistant.Desktop'">
+        <AssemblyTitle>Elite Dangerous Assistant</AssemblyTitle>
+    </PropertyGroup>
 </Project>

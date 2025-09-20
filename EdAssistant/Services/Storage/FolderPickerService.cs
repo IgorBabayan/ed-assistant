@@ -39,46 +39,47 @@ class FolderPickerService(ISettingsService settingsService, ILogger<FolderPicker
         return result.FirstOrDefault();
     }
 
-    public string GetDefaultJournalsPath()
+    public bool TryGetDefaultJournalsPath(out string path)
     {
-        var path  = settingsService.GetSetting<string>("JournalFolderPath");
-        if (!string.IsNullOrWhiteSpace(path) && TrySetupJournalsPath(ref path))
+        path  = settingsService.GetSetting<string>("JournalFolderPath");
+        if (!string.IsNullOrWhiteSpace(path) && CheckPath(path))
         {
-            return path;
+            return true;
         }
-        
+
+        return TryGetJournalPath(out path);
+    }
+
+    private bool TryGetJournalPath(out string path)
+    {
         var homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         if (OperatingSystem.IsWindows())
         {
             path = Path.Combine(homeFolder, "Saved Games", "Frontier Developments", "Elite Dangerous");
-            if (!TrySetupJournalsPath(ref path))
-            {
-                logger.LogWarning(Localization.Instance["FolderService.Exceptions.NoJournalsPath"]);
-                return string.Empty;
-            }
-            
-            settingsService.SetSetting("JournalFolderPath", path);
-            return path;
         }
-
-        if (OperatingSystem.IsLinux())
+        else if (OperatingSystem.IsLinux())
         {
-            //! TODO: check on Linux to correct path
-            path = Path.Combine(homeFolder, ".steam", "Saved Games", "Frontier Developments", "Elite Dangerous");
-            if (!TrySetupJournalsPath(ref path))
-            {
-                logger.LogWarning(Localization.Instance["FolderService.Exceptions.NoJournalsPath"]);
-                return string.Empty;
-            }
-            
-            settingsService.SetSetting("JournalFolderPath", path);
-            return path;
+            path = Path.Combine(homeFolder, ".steam", "steam", "steamapps", "compatdata", "359320", "pfx", 
+                "drive_c", "users", "steamuser", "Saved Games", "Frontier Developments", "Elite Dangerous");
+        }
+        else
+        {
+            logger.LogWarning(Localization.Instance["FolderService.Exceptions.OSNotSupported"]);
+            path = string.Empty;
+            return false;
         }
         
-        throw new NotImplementedException(Localization.Instance["FolderService.Exceptions.OSNotSupported"]);
-    }
+        if (!CheckPath(path))
+        {
+            logger.LogWarning(Localization.Instance["FolderService.Exceptions.NoJournalsPath"]);
+            return false;
+        }
 
-    private bool TrySetupJournalsPath(ref string path)
+        settingsService.SetSetting("JournalFolderPath", path);
+        return true;
+    }
+    
+    private bool CheckPath(string path)
     {
         if (Directory.Exists(path))
         {

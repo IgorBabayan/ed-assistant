@@ -5,7 +5,7 @@ sealed class JournalMonitorService(IFolderPickerService folderPickerService, IJo
 {
     private FileSystemWatcher? _fileWatcher;
     private readonly Dictionary<string, long> _filePositions = new();
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
     private string? _journalPath;
     private bool _disposed;
 
@@ -24,6 +24,11 @@ sealed class JournalMonitorService(IFolderPickerService folderPickerService, IJo
         }
 
         var journalPath = GetCurrentJournalPath();
+        if (string.IsNullOrWhiteSpace(journalPath) || !Directory.Exists(journalPath))
+        {
+            logger.LogInformation("Journal folder not set");
+            return;
+        }
         await StartMonitoringInternalAsync(journalPath);
     }
 
@@ -106,8 +111,12 @@ sealed class JournalMonitorService(IFolderPickerService folderPickerService, IJo
             return savedPath;
         }
 
+        if (folderPickerService.TryGetDefaultJournalsPath(out var path))
+        {
+            return path;
+        }
         // Fall back to default path
-        return folderPickerService.GetDefaultJournalsPath();
+        return string.Empty;
     }
 
     private async Task StartMonitoringInternalAsync(string journalPath)
