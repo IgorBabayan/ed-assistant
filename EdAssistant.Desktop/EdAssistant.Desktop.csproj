@@ -8,6 +8,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>logo.ico</ApplicationIcon>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="logo.ico" />

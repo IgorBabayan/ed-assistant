@@ -13,7 +13,9 @@
     "UnknownJournalEvent": "Unknown event type '{0}' encountered, skipping. Line: {1}",
     "LoadingIconError": "Error loading icon: {0}",
     "FailedToInitialize": "Failed to initialize {0}",
-    "FileIOError": "File IO error: {0}. Will retry..."
+    "FileIOError": "File IO error: {0}. Will retry...",
+    "FailedToSaveResource": "Failed to save resource '{0}' to '{1}': {2}",
+    "CannotMakeDesktopFileExecutable": "Can't make desktop file executable"
   },
   "Warnings": {
     "CouldNotReadFile": "Warning: Could not read file {0}: {1}",

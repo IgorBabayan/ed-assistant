@@ -53,14 +53,23 @@ class FolderPickerService(ISettingsService settingsService, ILogger<FolderPicker
     private bool TryGetJournalPath(out string path)
     {
         var homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        string[] pathList;
         if (OperatingSystem.IsWindows())
         {
-            path = Path.Combine(homeFolder, "Saved Games", "Frontier Developments", "Elite Dangerous");
+            pathList =
+            [
+                homeFolder, "Saved Games", "Frontier Developments", "Elite Dangerous"
+            ];
+            path = Path.Combine(pathList.AsSpan());
         }
         else if (OperatingSystem.IsLinux())
         {
-            path = Path.Combine(homeFolder, ".steam", "steam", "steamapps", "compatdata", "359320", "pfx", 
-                "drive_c", "users", "steamuser", "Saved Games", "Frontier Developments", "Elite Dangerous");
+            pathList = 
+            [
+                homeFolder, ".steam", "steam", "steamapps", "compatdata", "359320", "pfx", 
+                "drive_c", "users", "steamuser", "Saved Games", "Frontier Developments", "Elite Dangerous"
+            ];
+            path = Path.Combine(pathList.AsSpan());
         }
         else
         {

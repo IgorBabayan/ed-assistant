@@ -98,10 +98,10 @@ public partial class MainViewModel : BaseViewModel, IRecipient<CommanderMessage>
     }
 
     [RelayCommand(CanExecute = nameof(CanCreateDesktopFile))]
-    private void CreateDesktopFile()
+    private async Task CreateDesktopFileAsync()
     {
-        _desktopService.CreateDesktopFile();
-        _desktopService.Save();
+        await _desktopService.CreateDesktopFile();
+        await _desktopService.Save();
     }
     
     [RelayCommand(CanExecute = nameof(CanNavigateTo))]

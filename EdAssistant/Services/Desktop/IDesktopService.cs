@@ -2,6 +2,6 @@
 
 public interface IDesktopService
 {
-    void CreateDesktopFile();
-    void Save();
+    Task CreateDesktopFile();
+    Task Save();
 }

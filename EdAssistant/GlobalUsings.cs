@@ -40,6 +40,7 @@ global using CommunityToolkit.Mvvm.Input;
 global using CommunityToolkit.Mvvm.Messaging;
 global using EdAssistant.DTO;
 global using EdAssistant.DTO.Scan;
+global using EdAssistant.Helpers;
 global using EdAssistant.Helpers.Extensions;
 global using EdAssistant.Helpers.Factory.Journal;
 global using EdAssistant.Models.Enums;
