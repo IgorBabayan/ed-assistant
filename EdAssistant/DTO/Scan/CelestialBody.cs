@@ -3,7 +3,7 @@
 public abstract partial class CelestialBody : ObservableObject
 {
     [ObservableProperty]
-    private IBrush? foregroundBrush;
+    private IBrush? _foregroundBrush;
     
     public string BodyName { get; set; } = string.Empty;
     public virtual int BodyId { get; set; }
@@ -30,4 +30,5 @@ public abstract partial class CelestialBody : ObservableObject
     public double? MeanAnomaly { get; set; }
     public double? RotationPeriod { get; set; }
     public double? AxialTilt { get; set; }
+    public IReadOnlyList<ParentInfo>? Parents { get; set; } = null;
 }

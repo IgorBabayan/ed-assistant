@@ -10,7 +10,7 @@ public enum JournalEventTypeEnum
     Reputation,
     // EngineerProgress,
     // LoadGame,
-    // Location,
+    Location,
     // Docked,
     // Undocked,
     // MarketBuy,

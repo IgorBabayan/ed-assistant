@@ -59,10 +59,11 @@ public partial class App : Application
                     x.AddFilter("Avalonia", LogLevel.Warning);
                 });
 
-                services.AddMemoryCache();
-                services.RegisterServices();
-                services.RegisterViewModels();
-                services.RegisterViews();
+                services.AddMemoryCache()
+                    .RegisterFactories()
+                    .RegisterServices()
+                    .RegisterViewModels()
+                    .RegisterViews();
             })
             .Build();
     }

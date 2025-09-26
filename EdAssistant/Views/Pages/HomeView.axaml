@@ -6,124 +6,253 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:CompileBindings="False"
              x:Class="EdAssistant.Views.Pages.HomeView">
-	<UserControl.Styles>
-		<Style Selector="Border.modern-card">
-			<Setter Property="Background" Value="{DynamicResource Bg.Brush}"/>
-			<Setter Property="BorderBrush" Value="{DynamicResource Border.Brush}"/>
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="CornerRadius" Value="12"/>
-			<Setter Property="Padding" Value="20"/>
-			<Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
-			<Setter Property="Transitions">
-				<Transitions>
-					<DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
-				</Transitions>
-			</Setter>
-		</Style>
+    <UserControl.Styles>
+        <Style Selector="Border.rank-card">
+            <Setter Property="Background" Value="{DynamicResource Bg.Brush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource Border.Brush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="MinWidth" Value="280"/>
+            <Setter Property="MinHeight" Value="120"/>
+            <Setter Property="MaxWidth" Value="400"/>
+            <Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+                </Transitions>
+            </Setter>
+        </Style>
 
-		<Style Selector="Border.modern-card:pointerover">
-			<Setter Property="RenderTransform" Value="scale(1.02)"/>
-			<Setter Property="BoxShadow" Value="0 4 16 0 #2A000000"/>
-		</Style>
+        <Style Selector="Border.rank-card:pointerover">
+            <Setter Property="RenderTransform" Value="scale(1.02)"/>
+            <Setter Property="BoxShadow" Value="0 4 16 0 #2A000000"/>
+        </Style>
 
-		<Style Selector="TextBlock.modern-title">
-			<Setter Property="FontSize" Value="18"/>
-			<Setter Property="FontWeight" Value="SemiBold"/>
-			<Setter Property="Margin" Value="0,0,0,16"/>
-		</Style>
+        <Style Selector="TextBlock.rank-title">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource Text.Primary}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="MaxLines" Value="2"/>
+        </Style>
 
-		<Style Selector="TextBlock.modern-caption">
-			<Setter Property="FontSize" Value="14"/>
-			<Setter Property="Opacity" Value="0.8"/>
-			<Setter Property="Margin" Value="0,0,0,12"/>
-		</Style>
+        <Style Selector="TextBlock.rank-subtitle">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="{DynamicResource Text.Secondary}"/>
+            <Setter Property="Opacity" Value="0.8"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="MaxLines" Value="2"/>
+        </Style>
 
-		<Style Selector="ProgressBar.modern-progress">
-			<Setter Property="Height" Value="6"/>
-			<Setter Property="CornerRadius" Value="3"/>
-			<Setter Property="Background" Value="#E0E0E0"/>
-			<Setter Property="Foreground" Value="{DynamicResource Accent.Brush}" />
-			<Setter Property="Template">
-				<ControlTemplate>
-					<Border Name="PART_Track"
+        <Style Selector="ProgressBar.rank-progress">
+            <Setter Property="Height" Value="6"/>
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="Background" Value="#2A2D35"/>
+            <Setter Property="Foreground" Value="{DynamicResource Accent.Brush}"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Name="PART_Track"
                             Background="{TemplateBinding Background}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             Height="{TemplateBinding Height}">
-						<Border Name="PART_Indicator"
+                        <Border Name="PART_Indicator"
                                 Background="{TemplateBinding Foreground}"
                                 HorizontalAlignment="Left"
                                 CornerRadius="{TemplateBinding CornerRadius}"/>
-					</Border>
-				</ControlTemplate>
-			</Setter>
-		</Style>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
 
-		<Style Selector="TextBlock.progress-value">
-			<Setter Property="FontSize" Value="12"/>
-			<Setter Property="FontWeight" Value="Medium"/>
-			<Setter Property="HorizontalAlignment" Value="Right"/>
-			<Setter Property="Margin" Value="0,4,0,0"/>
-			<Setter Property="Opacity" Value="0.7"/>
-		</Style>
-	</UserControl.Styles>
-	<ScrollViewer HorizontalScrollBarVisibility="Disabled"
+        <Style Selector="TextBlock.progress-text">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="{DynamicResource Text.Secondary}"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Opacity" Value="0.7"/>
+        </Style>
+
+        <!--// Responsive ItemsControl with wrapping //-->
+        <Style Selector="ItemsControl.responsive-grid">
+            <Setter Property="ItemsPanel">
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </Setter>
+        </Style>
+
+        <!--// Compact cards for smaller screens //-->
+        <Style Selector="Border.rank-card.compact">
+            <Setter Property="MinWidth" Value="200"/>
+            <Setter Property="MaxWidth" Value="300"/>
+            <Setter Property="Padding" Value="12"/>
+        </Style>
+
+        <Style Selector="Border.rank-card.compact Image">
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="48"/>
+        </Style>
+
+        <Style Selector="Border.rank-card.compact TextBlock.rank-title">
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style Selector="Border.rank-card.compact TextBlock.rank-subtitle">
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+    </UserControl.Styles>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="Auto"
                   Margin="{DynamicResource Space.4}">
+        <StackPanel Spacing="24" MaxWidth="1400">
+            <!--// Header section //-->
+            <StackPanel Spacing="8">
+                <TextBlock Text="Progress Overview"
+                           FontSize="28"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource Text.Primary}"/>
+                <TextBlock Text="Elite Dangerous Commander Progression"
+                           FontSize="14"
+                           Foreground="{DynamicResource Text.Secondary}"
+                           Opacity="0.7"/>
+            </StackPanel>
 
-		<!--// Header section //-->
-		<StackPanel>
-			<TextBlock Text="Progress Overview"
-                       FontSize="24"
-                       FontWeight="Bold"
-                       Margin="0,0,0,24"/>
-
-			<ItemsControl ItemsSource="{Binding Ranks}">
-				<ItemsControl.ItemsPanel>
-					<ItemsPanelTemplate>
-						<UniformGrid Columns="4"
-                                     HorizontalAlignment="Stretch"/>
-					</ItemsPanelTemplate>
-				</ItemsControl.ItemsPanel>
-
-				<ItemsControl.ItemTemplate>
-					<DataTemplate DataType="dto:RankDTO">
-						<Border Classes="modern-card"
+            <!--// Responsive rank cards using ItemsControl with WrapPanel //-->
+            <ItemsControl ItemsSource="{Binding Ranks}"
+                          Classes="responsive-grid">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="dto:RankDTO">
+                        <Border Classes="rank-card"
                                 Margin="8">
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="Auto"/>
-									<ColumnDefinition Width="Auto"/>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0"
-                                       HorizontalAlignment="Center"
+
+                                <!-- //Rank Icon //-->
+                                <Image Grid.Row="0" 
+                                       Grid.Column="0"
+                                       Grid.RowSpan="2"
+                                       Width="64"
+                                       Height="64"
+                                       Margin="0,0,16,0"
                                        VerticalAlignment="Center"
-                                       Width="120"
-                                       Height="120"
+                                       HorizontalAlignment="Center"
                                        Source="{Binding Rank, Converter={StaticResource RankToIconConverter}}"/>
-                                <StackPanel Grid.Column="1"
-											HorizontalAlignment="Center"
-											VerticalAlignment="Center"
-                                            Margin="10,0,0,0">
-                                    <TextBlock Classes="modern-title"
+
+                                <!--// Rank Info //-->
+                                <StackPanel Grid.Row="0"
+                                            Grid.Column="1"
+                                            Spacing="4"
+                                            VerticalAlignment="Top">
+                                    <TextBlock Classes="rank-title"
                                                Text="{Binding Rank, Converter={StaticResource EnumLocalizationConverter}}"/>
+                                    <TextBlock Classes="rank-subtitle"
+                                               Text="{Binding Title}"/>
+                                </StackPanel>
 
-                                    <TextBlock Classes="modern-caption"
-                                               Text="{Binding Title}"
-                                               TextWrapping="Wrap"/>
-
-                                    <StackPanel>
-                                        <ProgressBar Classes="modern-progress"
-                                                     Value="{Binding Progress}"
-                                                     Maximum="100"/>
-                                        <TextBlock Classes="progress-value"
+                                <!--// Progress Section //-->
+                                <StackPanel Grid.Row="1"
+                                            Grid.Column="1"
+                                            Spacing="6"
+                                            VerticalAlignment="Bottom"
+                                            Margin="0,12,0,0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0"
+                                                   Text="Progress"
+                                                   FontSize="11"
+                                                   FontWeight="Medium"
+                                                   Foreground="{DynamicResource Text.Secondary}"
+                                                   Opacity="0.6"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Classes="progress-text"
                                                    Text="{Binding Progress, StringFormat='{}{0}%'}"/>
+                                    </Grid>
+                                    <ProgressBar Classes="rank-progress"
+                                                 Value="{Binding Progress}"
+                                                 Maximum="100"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!--// Fallback: Vertical layout for very narrow screens //-->
+            <StackPanel Name="MobileLayout" 
+                        IsVisible="False"
+                        Spacing="12">
+                <ItemsControl ItemsSource="{Binding Ranks}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="dto:RankDTO">
+                            <Border Classes="rank-card compact"
+                                    Margin="0,0,0,8"
+                                    MinWidth="0"
+                                    MaxWidth="{Binding $parent[ScrollViewer].Bounds.Width}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <!--// Compact Icon //-->
+                                    <Image Grid.Column="0"
+                                           Width="48" 
+                                           Height="48"
+                                           Margin="0,0,12,0"
+                                           VerticalAlignment="Center"
+                                           Source="{Binding Rank, Converter={StaticResource RankToIconConverter}}"/>
+                                    
+                                    <!--// Compact Info //-->
+                                    <StackPanel Grid.Column="1" 
+                                                Spacing="8"
+                                                VerticalAlignment="Center">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Classes="rank-title"
+                                                       FontSize="14"
+                                                       Text="{Binding Rank, Converter={StaticResource EnumLocalizationConverter}}"/>
+                                            <TextBlock Classes="rank-subtitle"
+                                                       FontSize="12"
+                                                       Text="{Binding Title}"/>
+                                        </StackPanel>
+                                        
+                                        <StackPanel Spacing="4">
+                                            <Grid>
+                                                <TextBlock Text="Progress" 
+                                                           FontSize="10" 
+                                                           Foreground="{DynamicResource Text.Secondary}"/>
+                                                <TextBlock Text="{Binding Progress, StringFormat='{}{0}%'}"
+                                                           FontSize="10"
+                                                           HorizontalAlignment="Right"
+                                                           Foreground="{DynamicResource Text.Secondary}"/>
+                                            </Grid>
+                                            <ProgressBar Classes="rank-progress"
+                                                         Height="4"
+                                                         Value="{Binding Progress}"
+                                                         Maximum="100"/>
+                                        </StackPanel>
                                     </StackPanel>
-								</StackPanel>
-							</Grid>
-						</Border>
-					</DataTemplate>
-				</ItemsControl.ItemTemplate>
-			</ItemsControl>
-		</StackPanel>
-	</ScrollViewer>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

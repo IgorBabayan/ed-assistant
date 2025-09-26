@@ -2,12 +2,9 @@
 
 public interface ICelestialStructure
 {
-    IReadOnlyList<Star> Stars { get; }
-    SystemNode SystemRoot { get; }
-    long SystemAddress { get; set; }
-    string SystemName { get; set; }
-    void AddScanBaryCentreEvent(ScanBaryCentreEvent scanEvent);
+    SystemNode? SystemRoot { get; }
     void AddScanEvent(ScanEvent scanEvent);
     void AddFSSSignalDiscoveredEvent(FSSSignalDiscoveredEvent fssSignal);
+    void AddLocationScan(LocationEvent locationEvent);
     void BuildHierarchy();
 }

@@ -1,24 +1,33 @@
 ﻿namespace EdAssistant.Helpers.Extensions;
 
-public static class ServiceExtensions
+static class ServiceExtensions
 {
-    public static void RegisterServices(this IServiceCollection services)
+    public static IServiceCollection RegisterFactories(this IServiceCollection services)
+    {
+        services.AddSingleton<IJournalEventFactory, JournalEventFactory>();
+        services.AddSingleton<ICelestialBodyFactory, CelestialBodyFactory>();
+        
+        return services;
+    }
+    
+    public static IServiceCollection RegisterServices(this IServiceCollection services)
     {
         services.AddSingleton<IDesktopService, DesktopService>();
         services.AddSingleton<INavigationService, NavigationService>();
         services.AddSingleton<IFolderPickerService, FolderPickerService>();
         services.AddSingleton<IDockVisibilityService, DockVisibilityService>();
         services.AddSingleton<ISettingsService, JsonSettingsService>();
-        services.AddSingleton<IJournalEventFactory, JournalEventFactory>();
         services.AddSingleton<ICelestialStructure, CelestialStructure>();
         services.AddSingleton<ITemplateCacheManager, TemplateCacheManager>();
         services.AddSingleton<IResourceService, ResourceService>();
         services.AddSingleton<IJournalService, JournalService>();
         services.AddSingleton<IJournalMonitorService, JournalMonitorService>();
         services.AddSingleton<IJournalIntegrationService, JournalIntegrationService>();
+        
+        return services;
     }
 
-    public static void RegisterViewModels(this IServiceCollection services)
+    public static IServiceCollection RegisterViewModels(this IServiceCollection services)
     {
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<HomeViewModel>();
@@ -30,9 +39,11 @@ public static class ServiceExtensions
         services.AddSingleton<MarketConnectorViewModel>();
         services.AddSingleton<LogViewModel>();
         services.AddSingleton<SettingsViewModel>();
+
+        return services;
     }
 
-    public static void RegisterViews(this IServiceCollection services)
+    public static IServiceCollection RegisterViews(this IServiceCollection services)
     {
         services.AddSingleton<MainWindow>();
         services.AddSingleton<HomeView>();
@@ -44,5 +55,7 @@ public static class ServiceExtensions
         services.AddSingleton<MarketConnectorView>();
         services.AddSingleton<LogView>();
         services.AddSingleton<SettingsView>();
+        
+        return services;
     }
 }

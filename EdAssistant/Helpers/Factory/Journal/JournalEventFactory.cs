@@ -29,8 +29,9 @@ class JournalEventFactory(ILogger<JournalEventFactory> logger) : IJournalEventFa
             //"SAA" => CreateEvent<SAASignalsFoundEvent>(jsonLine),
             "FSSSignalDiscovered" => CreateEvent<FSSSignalDiscoveredEvent>(jsonLine),
             "SAAScanComplete" => CreateEvent<SAAScanCompleteEvent>(jsonLine),
-            "ScanBaryCentre" => CreateEvent<ScanBaryCentreEvent>(jsonLine),
+            //"ScanBaryCentre" => CreateEvent<ScanBaryCentreEvent>(jsonLine),
             "ShipLocker" => CreateEvent<ShipLockerEvent>(jsonLine),
+            "Location" => CreateEvent<LocationEvent>(jsonLine),
             _ => HandleUnknownEvent(eventType, jsonLine)
         };
     }

@@ -19,6 +19,11 @@
   "Warnings": {
     "CouldNotReadFile": "Warning: Could not read file {0}: {1}"
   },
+  "CelestialBodyFactory": {
+    "Exceptions": {
+      "Unknown": "Unknown event type"
+    }
+  },
   "JsonSettingsService": {
     "Exceptions": {
       "FailedToReadSettingsFile": "Failed to read settings from file",

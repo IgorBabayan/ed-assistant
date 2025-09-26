@@ -2,79 +2,84 @@ namespace EdAssistant.DTO.Scan;
 
 public abstract class Station : CelestialBody
 {
-    public abstract StationTypeEnum TypeEnum { get; }
+    protected abstract SignalTypeEnum StationType { get; }
     
     public override int BodyId => -1;
-    public override string TypeInfo => TypeEnum.ToString();
+    public override string TypeInfo => StationType.ToString();
     public override string DistanceInfo => string.Empty;
     public override string StatusInfo => string.Empty;
     public override string LandableInfo => string.Empty;
     public override string MassInfo => string.Empty;
 }
 
-public class FleetCarrier : Station
+public class UnknownStation : Station
 {
-    public override StationTypeEnum TypeEnum => StationTypeEnum.FleetCarrier;
-}
-
-public class NavBeacon : Station
-{
-    public override StationTypeEnum TypeEnum => StationTypeEnum.NavBeacon;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.Unknown;
 }
 
 public class Outpost : Station
 {
-    public override StationTypeEnum TypeEnum => StationTypeEnum.Outpost;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.Outpost;
 }
 
-public class Asteroid : Station
+public class AsteroidBase : Station
 {
-    public override StationTypeEnum TypeEnum => StationTypeEnum.AsteroidBase;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.AsteroidBase;
 }
 
 public class Coriolis : Station
 {
-    public override StationTypeEnum TypeEnum => StationTypeEnum.Coriolis;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.StationCoriolis;
 }
 
 public class Orbis : Station
 {
-    public override StationTypeEnum TypeEnum => StationTypeEnum.Orbis;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.Orbis;
 }
 
 public class Ocellus : Station
 {
-    public override StationTypeEnum TypeEnum => StationTypeEnum.Ocellus;
-}
-
-public class UnknownStation : Station
-{
-    public override StationTypeEnum TypeEnum => StationTypeEnum.Unknown;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.Ocellus;
 }
 
 public class Installation : Station
 {
-    public override StationTypeEnum TypeEnum => StationTypeEnum.Installation;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.Installation;
 }
 
-public class ConflictZone : Station
+public class Settlement : Station
 {
-    public override StationTypeEnum TypeEnum => StationTypeEnum.ConflictZone;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.Settlement;
 }
 
-public class ResourceExtraction : Station
+public class MegaShip : Station
 {
-    public override StationTypeEnum TypeEnum => StationTypeEnum.ResourceExtraction;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.Megaship;
+}
+
+public class StationMegaShip : Station
+{
+    protected override SignalTypeEnum StationType => SignalTypeEnum.StationMegaShip;
+}
+
+public class FleetCarrier : Station
+{
+    protected override SignalTypeEnum StationType => SignalTypeEnum.FleetCarrier;
+}
+
+public class SquadronCarrier : Station
+{
+    protected override SignalTypeEnum StationType => SignalTypeEnum.SquadronCarrier;
 }
 
 public class Carrier : Station
 {
-    public override StationTypeEnum TypeEnum => StationTypeEnum.Carrier;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.Carrier;
 }
 
 public class USS : Station
 {
-    public override StationTypeEnum TypeEnum => StationTypeEnum.USS;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.USS;
     public string? USSType { get; set; }
     public int? ThreatLevel { get; set; }
     public double? TimeRemaining { get; set; }
@@ -86,17 +91,7 @@ public class USS : Station
         ThreatLevel.HasValue ? $"Threat Level {ThreatLevel}" : base.StatusInfo;
 }
 
-public class NotableStellarPhenomena : Station
-{
-    public override StationTypeEnum TypeEnum => StationTypeEnum.NotableStellarPhenomena;
-}
-
-public class ListeningPost : Station
-{
-    public override StationTypeEnum TypeEnum => StationTypeEnum.ListeningPost;
-}
-
 public class NumberStation : Station
 {
-    public override StationTypeEnum TypeEnum => StationTypeEnum.NumberStation;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.NumberStation;
 }

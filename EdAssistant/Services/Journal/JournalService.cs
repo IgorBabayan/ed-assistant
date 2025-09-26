@@ -128,31 +128,6 @@ class JournalService : IJournalService
         var typeSet = new HashSet<Type>(eventTypes);
         var results = eventTypes.ToDictionary(t => t, _ => new List<JournalEvent>());
 
-        var hasSystemEvents = typeSet.Any(t =>
-            t == typeof(ScanEvent) ||
-            t == typeof(SAAScanCompleteEvent) ||
-            t == typeof(ScanBaryCentreEvent) ||
-            t == typeof(FSSSignalDiscoveredEvent));
-
-        if (hasSystemEvents)
-        {
-            var recentEntries = await GetEntriesFromRecentDaysBatchAsync(journalFiles, typeSet, maxDaysBack: 7);
-            foreach (var kvp in recentEntries)
-            {
-                if (kvp.Value.Any())
-                {
-                    results[kvp.Key] = kvp.Value;
-                    _logger.LogInformation(Localization.Instance["JournalService.Information.FoundEntriesFromRecentSessions"],
-                        kvp.Value.Count, kvp.Key.Name);
-                }
-            }
-
-            if (results.Values.Any(list => list.Any()))
-            {
-                return results;
-            }
-        }
-
         var fallbackResults = await GetEntriesFromRecentDaysBatchAsync(journalFiles, typeSet, maxDaysBack: 7);
         foreach (var kvp in fallbackResults)
         {

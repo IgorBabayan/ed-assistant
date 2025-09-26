@@ -1,23 +1,28 @@
 namespace EdAssistant.Models.Enums;
 
-public enum StationTypeEnum
+public enum SignalTypeEnum
 {
     Unknown,
     
     // Traditional Stations
     Outpost,
     AsteroidBase,
-    Coriolis,
+    StationCoriolis,
     Orbis,
     Ocellus,
+    StationONeilOrbis,
+    StationONeilCylinder,
     
     // Installations and Settlements
     Installation,
     Settlement,
-    MegaShip,
+    StationMegaShip,
+    Megaship,
     
     // Player-owned structures
+    FleetCarrier,
     Carrier,
+    SquadronCarrier,
     
     // Combat zones and extraction sites
     ConflictZone,
@@ -69,5 +74,6 @@ public enum StationTypeEnum
     // Other signal types that may appear
     Checkpoint,
     Scenario,
+    Combat,
     Generic
 }

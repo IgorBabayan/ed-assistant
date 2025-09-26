@@ -47,32 +47,38 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
             IsLoadingStarSystem = false;
         }
     }
-
+    
+    private CelestialBody? FindCelestialBodyByBodyId(int bodyId) =>
+        FindBodyRecursive(celestialStructure.SystemRoot, bodyId);
+    
     private async Task LoadAllScanDataAsync()
     {
         // Load all scan data types in a single journal pass
         var scanData = await journalService.GetLatestJournalEntriesBatchAsync(
-            typeof(ScanBaryCentreEvent),
+            typeof(LocationEvent),
+            //typeof(ScanBaryCentreEvent),
             typeof(FSSSignalDiscoveredEvent),
             typeof(ScanEvent),
             typeof(SAAScanCompleteEvent)
         );
 
-        // Process barycenter scans
-        var barycenterScans = scanData[typeof(ScanBaryCentreEvent)].Cast<ScanBaryCentreEvent>().ToList();
-        foreach (var scan in barycenterScans)
-        {
-            celestialStructure.AddScanBaryCentreEvent(scan);
-        }
-
-        // Get FSS and system scans
+        var locationScan = scanData[typeof(LocationEvent)].Cast<LocationEvent>().ToList().LastOrDefault();
+        if (locationScan is null)
+            return;
+        
+        celestialStructure.AddLocationScan(locationScan);
+        _currentSystemName = locationScan.StarSystem;
+        
         var fssScans = scanData[typeof(FSSSignalDiscoveredEvent)].Cast<FSSSignalDiscoveredEvent>().ToList();
-        var systemScans = scanData[typeof(ScanEvent)].Cast<ScanEvent>().ToList();
-
-        // Process system data if we have scans
-        if (systemScans.Any())
+        foreach (var scan in fssScans)
         {
-            ProcessScans(systemScans, fssScans);
+            celestialStructure.AddFSSSignalDiscoveredEvent(scan);
+        }
+        
+        var systemScans = scanData[typeof(ScanEvent)].Cast<ScanEvent>().ToList();
+        foreach (var scan in systemScans)
+        {
+            celestialStructure.AddScanEvent(scan);
         }
 
         // Process SAA scans
@@ -81,6 +87,17 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
         {
             ProcessCompletedScans(saaScans);
         }
+
+        //! TODO: check in barycenter system
+        // Process barycenter scans
+        /*var barycenterScans = scanData[typeof(ScanBaryCentreEvent)].Cast<ScanBaryCentreEvent>().ToList();
+        foreach (var scan in barycenterScans)
+        {
+            celestialStructure.AddScanBaryCentreEvent(scan);
+        }*/
+
+        celestialStructure.BuildHierarchy();
+        RefreshSystemDisplay();
     }
 
     private static IconData GetIconForCelestialBodyType(CelestialBody body)
@@ -113,7 +130,7 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
             case FleetCarrier:
                 return new IconData("avares://EdAssistant/Assets/Icons/Station/FleetCarrier.png");
             
-            case Asteroid:
+            case AsteroidBase:
                 return new IconData("avares://EdAssistant/Assets/Icons/Station/AsteroidBase.png");
             
             case Coriolis:
@@ -132,16 +149,20 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
     
     private void ProcessScans(IList<ScanEvent> scans, IList<FSSSignalDiscoveredEvent> fssScans)
     {
-        // Get the most recent system from the scans
-        var latestScan = scans.OrderByDescending(s => s.Timestamp).FirstOrDefault();
-        if (latestScan is not null)
+        // Use the system name already set by AddLocationScan to ensure consistency
+        if (string.IsNullOrEmpty(_currentSystemName))
         {
-            _currentSystemName = latestScan.StarSystem;
-            logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.ProcessingScans"], _currentSystemName);
+            var latestScan = scans.OrderByDescending(s => s.Timestamp).FirstOrDefault();
+            if (latestScan is not null)
+            {
+                _currentSystemName = latestScan.StarSystem;
+            }
         }
 
+        logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.ProcessingScans"], _currentSystemName);
+
         // Filter scans to only include those from the current system
-        var systemScans = scans.Where(s => string.Equals(s.StarSystem, _currentSystemName, 
+        var systemScans = scans.Where(s => string.Equals(s.StarSystem, _currentSystemName,
             StringComparison.OrdinalIgnoreCase)).ToList();
 
         // Remove duplicates based on BodyId
@@ -160,27 +181,24 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
             celestialStructure.AddScanEvent(scan);
         }
         
-        if (fssScans.Any())
+        /*if (fssScans.Any())
         {
             var systemFSSScans = fssScans
-                .Where(f => f.SystemAddress == latestScan?.SystemAddress)
+                .Where(f => f.SystemAddress == celestialStructure.SystemAddress)
                 .ToList();
             
             foreach (var fssScan in systemFSSScans)
             {
                 celestialStructure.AddFSSSignalDiscoveredEvent(fssScan);
             }
-        }
+        }*/
 
         // Then build hierarchy using name-based logic
         celestialStructure.BuildHierarchy();
         RefreshSystemDisplay();
         
-        SetDefaultColorRecursive(celestialStructure.SystemRoot);
+        //SetDefaultColorRecursive(celestialStructure.SystemRoot);
     }
-    
-    private CelestialBody? FindCelestialBodyByBodyId(int bodyId) =>
-        FindBodyRecursive(celestialStructure.SystemRoot, bodyId);
 
     private void SetDefaultColorRecursive(CelestialBody body)
     {
@@ -215,9 +233,12 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
     
     private void ProcessCompletedScans(IList<SAAScanCompleteEvent> scans)
     {
+        if (celestialStructure.SystemRoot is null)
+            return;
+        
         SetDefaultColorRecursive(celestialStructure.SystemRoot);
         
-        foreach (var scan in scans.Where(x => celestialStructure.SystemAddress == x.SystemAddress))
+        foreach (var scan in scans.Where(x => celestialStructure.SystemRoot.SystemAddress == x.SystemAddress))
         {
             var body = FindCelestialBodyByBodyId(scan.BodyId);
             if (body is not null)
@@ -239,7 +260,7 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
     
     private IDataTemplate GetNameColumnTemplate() =>
         templateCacheManager.GetOrCreateTemplate("CelestialBodyNameTemplate", () =>
-            new FuncDataTemplate<CelestialBody>((value, _) =>
+            new FuncDataTemplate<CelestialBody?>((value, _) =>
             {
                 var stackPanel = new StackPanel();
                 if (value is null)
@@ -281,10 +302,10 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
     
     private IDataTemplate GetTextColumnTemplate(string propertyName) =>
         templateCacheManager.GetOrCreateTemplate($"TextColumn_{propertyName}", () =>
-            new FuncDataTemplate<CelestialBody>((value, _) =>
+            new FuncDataTemplate<CelestialBody?>((value, _) =>
             {
                 var textBlock = new TextBlock();
-                if (value == null)
+                if (value is null)
                 {
                     return textBlock;
                 }

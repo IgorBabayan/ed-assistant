@@ -43,6 +43,7 @@ global using EdAssistant.DTO.Scan;
 global using EdAssistant.Helpers;
 global using EdAssistant.Helpers.Extensions;
 global using EdAssistant.Helpers.Factory.Journal;
+global using EdAssistant.Helpers.Factory.StarSystem;
 global using EdAssistant.Models.Enums;
 global using EdAssistant.Models.Journal;
 global using EdAssistant.Models.Scan;

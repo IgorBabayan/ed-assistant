@@ -1,70 +1,69 @@
 ﻿namespace EdAssistant.Services.SystemStructure;
 
-class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructure
+class CelestialStructure(ILogger<CelestialStructure> logger, ICelestialBodyFactory celestialBodyFactory) : ICelestialStructure
 {
-    private readonly Dictionary<int, CelestialBody> _bodyLookup = new();
-    private readonly Dictionary<string, Station> _stationLookup = new();
-    private readonly Dictionary<int, int> _directParentMap = new();
-    private readonly HashSet<int> _barycenterIds = new();
     private readonly List<ScanEvent> _allScans = new();
-    private SystemNode? _currentSystem;
-    private string _currentSystemName = string.Empty;
+    private readonly Dictionary<int, CelestialBody> _bodies = new();
+    private readonly Dictionary<string, CelestialBody> _stations = new();
+    private readonly Dictionary<string, CelestialBody> _signals = new();
+    private readonly Dictionary<int, int> _map = new();
 
-    public IReadOnlyList<Star> Stars =>
-        _currentSystem?.Children.OfType<Star>().ToList().AsReadOnly() ?? new List<Star>().AsReadOnly();
-
-    public required long SystemAddress { get; set; }
-    public required string SystemName { get; set; }
-    public SystemNode SystemRoot => _currentSystem!;
-
-    public void AddScanBaryCentreEvent(ScanBaryCentreEvent barycenterEvent)
+    public SystemNode? SystemRoot { get; private set; }
+    
+    public void AddLocationScan(LocationEvent locationEvent)
     {
-        _barycenterIds.Add(barycenterEvent.BodyId);
-        logger.LogInformation(Localization.Instance["SystemPage.Information.NotedBarycenter"], 
-            barycenterEvent.BodyId, barycenterEvent.StarSystem);
+        _bodies.Clear();
+        _stations.Clear();
+        _signals.Clear();
+        _map.Clear();
+        
+        SystemRoot = new SystemNode(locationEvent.StarSystem, locationEvent.SystemAddress);
+        logger.LogInformation(Localization.Instance["SystemPage.Information.SwitchedToSystem"], locationEvent.StarSystem);
     }
 
     public void AddScanEvent(ScanEvent scanEvent)
     {
-        if (!string.Equals(_currentSystemName, scanEvent.StarSystem, StringComparison.OrdinalIgnoreCase))
+        if (scanEvent.SystemAddress != SystemRoot!.SystemAddress &&
+            !string.Equals(scanEvent.StarSystem, SystemRoot!.BodyName, StringComparison.OrdinalIgnoreCase))
         {
-            _currentSystemName = scanEvent.StarSystem;
-            _bodyLookup.Clear();
-            _allScans.Clear();
-            _directParentMap.Clear();
-
-            _currentSystem = new SystemNode(scanEvent.StarSystem, scanEvent.SystemAddress);
-            SystemName = scanEvent.StarSystem;
-            SystemAddress = scanEvent.SystemAddress;
-
-            logger.LogInformation(Localization.Instance["SystemPage.Information.SwitchedToSystem"], scanEvent.StarSystem);
+            return;
         }
-
-        if (string.Equals(_currentSystemName, scanEvent.StarSystem, StringComparison.OrdinalIgnoreCase))
+        
+        if (_allScans.Any(x => x.BodyId == scanEvent.BodyId))
         {
-            if (_allScans.Any(s => s.BodyId == scanEvent.BodyId))
-            {
-                logger.LogInformation(Localization.Instance["SystemPage.Information.DuplicateBodyDetected"], scanEvent.BodyName,
-                    scanEvent.BodyId);
-                return;
-            }
+            logger.LogInformation(Localization.Instance["SystemPage.Information.DuplicateBodyDetected"], 
+                scanEvent.BodyName, scanEvent.BodyId);
+            return;
+        }
+            
+        _allScans.Add(scanEvent);
 
-            _allScans.Add(scanEvent);
-            var body = CreateBodyFromScan(scanEvent);
-            _bodyLookup[scanEvent.BodyId] = body;
-
+        var body = celestialBodyFactory.Create(scanEvent);
+        if (body is not null)
+        {
+            _bodies[scanEvent.BodyId] = body;
+            
             logger.LogInformation(Localization.Instance["SystemPage.Information.AddedBody"], body.BodyName, body.BodyId,
-                scanEvent.StarSystem);
+                scanEvent.StarSystem);   
         }
     }
 
     public void AddFSSSignalDiscoveredEvent(FSSSignalDiscoveredEvent fssSignal)
     {
-        if (SystemAddress != fssSignal.SystemAddress)
+        if (fssSignal.SystemAddress != SystemRoot!.SystemAddress)
             return;
-
-        var station = CreateStationFromScan(fssSignal);
-        _stationLookup[fssSignal.SignalName] = station;
+        
+        var scanEvent = celestialBodyFactory.Create(fssSignal);
+        switch (scanEvent)
+        {
+            case Station:
+                _stations[fssSignal.SignalName] = scanEvent;
+                break;
+            
+            case Signal:
+                _signals[fssSignal.SignalName] = scanEvent;
+                break;
+        }
 
         logger.LogInformation(Localization.Instance["SystemPage.Information.AddedStation"],
             fssSignal.SignalName, fssSignal.SignalType);
@@ -72,352 +71,92 @@ class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructu
 
     public void BuildHierarchy()
     {
-        if (_currentSystem is null)
+        if (SystemRoot is null)
             return;
-
-        logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.BuildingHierarchy"]);
-
-        // Clear existing hierarchy
-        _currentSystem.Children.Clear();
-        foreach (var body in _bodyLookup.Values)
-        {
-            body.Children.Clear();
-        }
-
-        // Clear and rebuild parent-child maps
-        _directParentMap.Clear();
-
-        // Step 1: Build parent-child relationships from scan data
+        
+        SystemRoot.Children.Clear();
+        
+        // Step 0: Build parent-child relationships from scan data
         BuildParentChildMaps();
-
-        // Step 2: Add all stars to system root
-        AddStarsToSystem();
-
-        // Step 3: Build the complete hierarchy tree
-        BuildHierarchyTree();
-
+        
+        // Step 1: Add all stars to system root
+        AddStars();
+        
+        // Step 2: Add all planets to corresponding star
+        AddPlanets();
+        
+        // Step 3: Add belt clusters to corresponding star
+        AddBeltClusters();
+        
         // Step 4: Add stations to appropriate celestial bodies
-        AddStationsToHierarchy();
+        //AddStations();
+        
+        // Step 5: Add signals to system root
+        //AddSignals();
+
+        // Step 6: Build the complete hierarchy tree
+        //BuildHierarchyTree();
 
         logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.HierarchyBuildingComplete"]);
     }
-
-    private static Station CreateStationFromScan(FSSSignalDiscoveredEvent scanEvent)
-    {
-        // Determine station type based on SignalType and SignalName
-        var stationTypeEnum = DetermineStationTypeFromSignal(scanEvent);
     
-        return stationTypeEnum switch
-        {
-            StationTypeEnum.Outpost => new Outpost { BodyName = GetDisplayName(scanEvent) },
-            StationTypeEnum.AsteroidBase => new Asteroid { BodyName = GetDisplayName(scanEvent) },
-            StationTypeEnum.Coriolis => new Coriolis { BodyName = GetDisplayName(scanEvent) },
-            StationTypeEnum.Orbis => new Orbis { BodyName = GetDisplayName(scanEvent) },
-            StationTypeEnum.Ocellus => new Ocellus { BodyName = GetDisplayName(scanEvent) },
-            StationTypeEnum.Installation => new Installation { BodyName = GetDisplayName(scanEvent) },
-            StationTypeEnum.ConflictZone => new ConflictZone { BodyName = GetDisplayName(scanEvent) },
-            StationTypeEnum.ResourceExtraction => new ResourceExtraction { BodyName = GetDisplayName(scanEvent) },
-            StationTypeEnum.Carrier => new Carrier { BodyName = GetDisplayName(scanEvent) },
-            StationTypeEnum.USS => new USS 
-            { 
-                BodyName = GetDisplayName(scanEvent),
-                USSType = scanEvent.USSType,
-                ThreatLevel = scanEvent.ThreatLevel,
-                TimeRemaining = scanEvent.TimeRemaining
-            },
-            StationTypeEnum.NotableStellarPhenomena => new NotableStellarPhenomena { BodyName = GetDisplayName(scanEvent) },
-            StationTypeEnum.ListeningPost => new ListeningPost { BodyName = GetDisplayName(scanEvent) },
-            StationTypeEnum.NumberStation => new NumberStation { BodyName = GetDisplayName(scanEvent) },
-            _ => new UnknownStation { BodyName = GetDisplayName(scanEvent) }
-        };
-    }
+    private IReadOnlyList<T> GetCelestialBody<T>() where T : CelestialBody => 
+        _bodies.Values.OfType<T>().OrderBy(x => x.BodyId).ToList();
 
-    private static StationTypeEnum DetermineStationTypeFromSignal(FSSSignalDiscoveredEvent scanEvent)
-    {
-        // First check if it's explicitly marked as a station
-        if (scanEvent.IsStation == true)
-        {
-            // Try to determine specific station type from SignalName
-            var signalName = scanEvent.SignalName.ToLowerInvariant();
-        
-            if (signalName.Contains("outpost"))
-                return StationTypeEnum.Outpost;
-            if (signalName.Contains("asteroid") || signalName.Contains("mining"))
-                return StationTypeEnum.AsteroidBase;
-            if (signalName.Contains("coriolis"))
-                return StationTypeEnum.Coriolis;
-            if (signalName.Contains("orbis"))
-                return StationTypeEnum.Orbis;
-            if (signalName.Contains("ocellus"))
-                return StationTypeEnum.Ocellus;
-        
-            // Default to installation for unknown station types
-            return StationTypeEnum.Installation;
-        }
-    
-        // Determine type based on SignalType
-        return scanEvent.SignalType.ToLowerInvariant() switch
-        {
-            "resourceextraction" => StationTypeEnum.ResourceExtraction,
-            "conflictzone" => StationTypeEnum.ConflictZone,
-            "installation" => StationTypeEnum.Installation,
-            "carrier" => StationTypeEnum.Carrier,
-            "uss" => StationTypeEnum.USS,
-            "notablestellarphenomena" => StationTypeEnum.NotableStellarPhenomena,
-            _ => DetermineTypeFromSignalName(scanEvent.SignalName)
-        };
-    }
-    
-    private static StationTypeEnum DetermineTypeFromSignalName(string signalName)
-    {
-        var name = signalName.ToLowerInvariant();
-    
-        // Check for specific signal name patterns
-        if (name.Contains("$listeningpost"))
-            return StationTypeEnum.ListeningPost;
-        if (name.Contains("$numberstation"))
-            return StationTypeEnum.NumberStation;
-        if (name.Contains("$uss"))
-            return StationTypeEnum.USS;
-        if (name.Contains("$multiplayer_scenario") && name.Contains("extraction"))
-            return StationTypeEnum.ResourceExtraction;
-        if (name.Contains("$multiplayer_scenario") && name.Contains("conflict"))
-            return StationTypeEnum.ConflictZone;
-        if (name.Contains("carrier"))
-            return StationTypeEnum.Carrier;
-    
-        return StationTypeEnum.Unknown;
-    }
-
-    private static string GetDisplayName(FSSSignalDiscoveredEvent scanEvent)
-    {
-        // Prefer localized name if available, fallback to SignalName
-        if (!string.IsNullOrEmpty(scanEvent.SignalNameLocalised))
-            return scanEvent.SignalNameLocalised;
-    
-        // Clean up the SignalName if it contains special formatting
-        var name = scanEvent.SignalName;
-    
-        // Remove common prefixes and formatting
-        if (name.StartsWith("$") && name.Contains(";"))
-        {
-            // Try to extract meaningful part from names like "$MULTIPLAYER_SCENARIO79_TITLE;"
-            var parts = name.Split('_');
-            if (parts.Length > 1)
-            {
-                return string.Join(" ", parts.Skip(1).Take(parts.Length - 1))
-                    .Replace("TITLE;", "")
-                    .Replace(";", "")
-                    .Trim();
-            }
-        }
-    
-        return name;
-    }
-
-    private static CelestialBody CreateBodyFromScan(ScanEvent scanEvent)
-    {
-        if (scanEvent.StarType is not null)
-        {
-            return new Star
-            {
-                BodyName = scanEvent.BodyName,
-                BodyId = scanEvent.BodyId,
-                BodyType = Localization.Instance["CelestialInfo.Star"],
-                DistanceFromArrivalLS = scanEvent.DistanceFromArrivalLS,
-                WasDiscovered = scanEvent.WasDiscovered,
-                WasMapped = scanEvent.WasMapped,
-                StarType = scanEvent.StarType,
-                Subclass = scanEvent.Subclass,
-                StellarMass = scanEvent.StellarMass,
-                Radius = scanEvent.Radius,
-                AbsoluteMagnitude = scanEvent.AbsoluteMagnitude,
-                AgeMY = scanEvent.AgeMY,
-                SurfaceTemperature = scanEvent.SurfaceTemperature,
-                Luminosity = scanEvent.Luminosity,
-                RotationPeriod = scanEvent.RotationPeriod,
-                AxialTilt = scanEvent.AxialTilt,
-                SemiMajorAxis = scanEvent.SemiMajorAxis,
-                Eccentricity = scanEvent.Eccentricity,
-                OrbitalInclination = scanEvent.OrbitalInclination,
-                Periapsis = scanEvent.Periapsis,
-                OrbitalPeriod = scanEvent.OrbitalPeriod,
-                AscendingNode = scanEvent.AscendingNode,
-                MeanAnomaly = scanEvent.MeanAnomaly,
-                Rings = scanEvent.Rings?.Select(r => new Ring
-                {
-                    BodyName = r.Name,
-                    RingClass = r.RingClass,
-                    MassMT = r.MassMT,
-                    InnerRad = r.InnerRad,
-                    OuterRad = r.OuterRad
-                }).ToList()
-            };
-        }
-
-        if (scanEvent.BodyName.Contains(Localization.Instance["CelestialInfo.BeltCluster"]))
-        {
-            return new BeltCluster
-            {
-                BodyName = scanEvent.BodyName,
-                BodyId = scanEvent.BodyId,
-                BodyType = Localization.Instance["CelestialInfo.BeltCluster"],
-                DistanceFromArrivalLS = scanEvent.DistanceFromArrivalLS,
-                WasDiscovered = scanEvent.WasDiscovered,
-                WasMapped = scanEvent.WasMapped,
-                SemiMajorAxis = scanEvent.SemiMajorAxis,
-                Eccentricity = scanEvent.Eccentricity,
-                OrbitalInclination = scanEvent.OrbitalInclination,
-                Periapsis = scanEvent.Periapsis,
-                OrbitalPeriod = scanEvent.OrbitalPeriod,
-                AscendingNode = scanEvent.AscendingNode,
-                MeanAnomaly = scanEvent.MeanAnomaly
-            };
-        }
-
-        if (scanEvent.BodyName.Contains(Localization.Instance["CelestialInfo.Ring"]))
-        {
-            return new Ring
-            {
-                BodyName = scanEvent.BodyName,
-                BodyId = scanEvent.BodyId,
-                BodyType = Localization.Instance["CelestialInfo.Ring"],
-                DistanceFromArrivalLS = scanEvent.DistanceFromArrivalLS,
-                WasDiscovered = scanEvent.WasDiscovered,
-                WasMapped = scanEvent.WasMapped,
-                SemiMajorAxis = scanEvent.SemiMajorAxis,
-                Eccentricity = scanEvent.Eccentricity,
-                OrbitalInclination = scanEvent.OrbitalInclination,
-                Periapsis = scanEvent.Periapsis,
-                OrbitalPeriod = scanEvent.OrbitalPeriod,
-                AscendingNode = scanEvent.AscendingNode,
-                MeanAnomaly = scanEvent.MeanAnomaly
-            };
-        }
-
-        return new Planet
-        {
-            BodyName = scanEvent.BodyName,
-            BodyId = scanEvent.BodyId,
-            BodyType = Localization.Instance["CelestialInfo.Planet"],
-            DistanceFromArrivalLS = scanEvent.DistanceFromArrivalLS,
-            WasDiscovered = scanEvent.WasDiscovered,
-            WasMapped = scanEvent.WasMapped,
-            TidalLock = scanEvent.TidalLock,
-            TerraformState = scanEvent.TerraformState,
-            PlanetClass = scanEvent.PlanetClass,
-            Atmosphere = scanEvent.Atmosphere,
-            AtmosphereType = scanEvent.AtmosphereType,
-            AtmosphereComposition = scanEvent.AtmosphereComposition,
-            Volcanism = scanEvent.Volcanism,
-            MassEM = scanEvent.MassEM,
-            SurfaceGravity = scanEvent.SurfaceGravity,
-            SurfaceTemperature = scanEvent.SurfaceTemperature,
-            SurfacePressure = scanEvent.SurfacePressure,
-            Landable = scanEvent.Landable,
-            Materials = scanEvent.Materials,
-            Composition = scanEvent.Composition,
-            RotationPeriod = scanEvent.RotationPeriod,
-            AxialTilt = scanEvent.AxialTilt,
-            SemiMajorAxis = scanEvent.SemiMajorAxis,
-            Eccentricity = scanEvent.Eccentricity,
-            OrbitalInclination = scanEvent.OrbitalInclination,
-            Periapsis = scanEvent.Periapsis,
-            OrbitalPeriod = scanEvent.OrbitalPeriod,
-            AscendingNode = scanEvent.AscendingNode,
-            MeanAnomaly = scanEvent.MeanAnomaly,
-            ReserveLevel = scanEvent.ReserveLevel,
-            Rings = scanEvent.Rings?.Select(r => new Ring
-            {
-                BodyName = r.Name,
-                RingClass = r.RingClass,
-                MassMT = r.MassMT,
-                InnerRad = r.InnerRad,
-                OuterRad = r.OuterRad
-            }).ToList()
-        };
-    }
-
-    private void BuildParentChildMaps()
-    {
-        foreach (var scan in _allScans)
-        {
-            var bodyId = scan.BodyId;
-            var directParentId = FindDirectParentId(scan.Parents);
-            if (directParentId.HasValue)
-            {
-                _directParentMap[bodyId] = directParentId.Value;
-            }
-        }
-    }
-
-    private int? FindDirectParentId(List<ParentInfo>? parents)
+    private int? FindDirectParentId(IReadOnlyList<ParentInfo>? parents)
     {
         if (parents == null || !parents.Any())
             return null;
 
-        // Walk through parent chain to find the most direct resolvable parent
         foreach (var parent in parents)
         {
             // Direct star parent - this is what we want
-            if (parent.Star.HasValue && _bodyLookup.ContainsKey(parent.Star.Value))
+            if (parent.Star.HasValue && _bodies.ContainsKey(parent.Star.Value))
             {
                 return parent.Star.Value;
             }
 
             // Direct planet parent - this is what we want for moons
-            if (parent.Planet.HasValue && _bodyLookup.ContainsKey(parent.Planet.Value))
+            if (parent.Planet.HasValue && _bodies.ContainsKey(parent.Planet.Value))
             {
                 return parent.Planet.Value;
             }
 
             // Direct ring parent
-            if (parent.Ring.HasValue && _bodyLookup.ContainsKey(parent.Ring.Value))
+            if (parent.Ring.HasValue && _bodies.ContainsKey(parent.Ring.Value))
             {
                 return parent.Ring.Value;
             }
         }
 
-        // If we only have Null parents (barycenters), we need to find the best star
-        // Since we can't place objects under barycenters, find the most appropriate star
-        return FindBestStarForBarycenterChild(parents);
+        return FindStarInBarycenter(parents);
     }
 
-    private int? FindBestStarForBarycenterChild(List<ParentInfo> parents)
+    private int? FindStarInBarycenter(IReadOnlyList<ParentInfo> parents)
     {
-        // Get all available stars
-        var stars = _bodyLookup.Values.OfType<Star>().ToList();
+        var stars = _bodies.Values.OfType<Star>().ToList();
         if (!stars.Any())
             return null;
-
-        // Single star system - assign to that star
+        
         if (stars.Count == 1)
             return stars.First().BodyId;
-
-        // For binary/multiple star systems, analyze barycenter relationships
-        // Find which stars are part of the same barycenter as the child
-        var barycenterIds = parents.Where(p => p.Null.HasValue).Select(p => p.Null!.Value).ToList();
         
+        var barycenterIds = parents.Where(p => p.Null.HasValue).Select(p => p.Null!.Value).ToList();
         if (barycenterIds.Any())
         {
-            // Find stars that share the same immediate barycenter as this child
-            var candidateStars = FindStarsInSameBarycenter(barycenterIds, stars);
+            var candidateStars = FindStarsInBarycenter(barycenterIds, stars);
             if (candidateStars.Any())
             {
-                // Return the primary star (lowest BodyId) from the barycenter group
                 return candidateStars.OrderBy(s => s.BodyId).First().BodyId;
             }
         }
-
-        // Fallback: assign to the primary star (lowest BodyId)
+        
         return stars.OrderBy(s => s.BodyId).First().BodyId;
     }
-
-    private List<Star> FindStarsInSameBarycenter(List<int> childBarycenterIds, List<Star> allStars)
+    
+    private List<Star> FindStarsInBarycenter(List<int> childBarycenterIds, List<Star> allStars)
     {
         var candidateStars = new List<Star>();
-
-        // Find stars that belong to the same barycenter as the child
         foreach (var star in allStars)
         {
             var starScan = _allScans.FirstOrDefault(s => s.BodyId == star.BodyId);
@@ -428,7 +167,6 @@ class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructu
                     .Select(p => p.Null!.Value)
                     .ToList();
 
-                // Check if this star shares any barycenter with the child
                 if (starBarycenterIds.Intersect(childBarycenterIds).Any())
                 {
                     candidateStars.Add(star);
@@ -436,7 +174,6 @@ class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructu
             }
             else
             {
-                // Stars without parents are primary stars - include them if no specific barycenter match
                 if (!candidateStars.Any())
                 {
                     candidateStars.Add(star);
@@ -447,119 +184,75 @@ class CelestialStructure(ILogger<CelestialStructure> logger) : ICelestialStructu
         return candidateStars;
     }
 
-    private void AddStarsToSystem()
+    private void BuildParentChildMaps()
     {
-        if (_currentSystem is null)
-            return;
-        
-        var stars = _bodyLookup.Values.OfType<Star>().OrderBy(s => s.BodyId).ToList();
+        foreach (var scan in _allScans)
+        {
+            var bodyId = scan.BodyId;
+            var directParentId = FindDirectParentId(scan.Parents);
+            if (directParentId.HasValue)
+            {
+                _map[bodyId] = directParentId.Value;
+            }
+        }
+    }
+    
+    private void AddStars()
+    {
+        var stars = GetCelestialBody<Star>();
         foreach (var star in stars)
         {
-            _currentSystem.Children.Add(star);
+            SystemRoot!.Children.Add(star);
             logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.AddedStar"], star.BodyName);
         }
     }
 
-    private void BuildHierarchyTree()
+    private void AddPlanets()
     {
-        // Process non-star bodies and place them under their direct parents
-        var nonStarBodies = _bodyLookup.Values.Where(body => !(body is Star)).ToList();
-        foreach (var body in nonStarBodies)
+        var planets = GetCelestialBody<Planet>();
+        foreach (var planet in planets)
         {
-            if (_directParentMap.TryGetValue(body.BodyId, out var parentId) &&
-                _bodyLookup.TryGetValue(parentId, out var parentBody))
+            if (_map.TryGetValue(planet.BodyId, out var parentId)
+                && _bodies.TryGetValue(parentId, out var parentBody))
             {
-                // Add to correct parent
-                if (body is BeltCluster && parentBody is Star)
+                if (parentBody is Star)
                 {
-                    // Insert belt clusters before other children
-                    var insertIndex = parentBody.Children.TakeWhile(c => c is BeltCluster).Count();
-                    parentBody.Children.Insert(insertIndex, body);
-                    logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.AddedBeltCluster"], body.BodyName, parentBody.BodyName);
+                    var insertIndex = parentBody.Children.TakeWhile(c => c is Planet).Count();
+                    parentBody.Children.Insert(insertIndex, planet);
+                    logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.AddedBeltCluster"],
+                        planet.BodyName, parentBody.BodyName);
                 }
                 else
                 {
-                    parentBody.Children.Add(body);
-
-                    switch (body)
-                    {
-                        case Planet:
-                            logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.AddedPlanet"], body.BodyName, parentBody.BodyName);
-                            break;
-                        case BeltCluster:
-                            logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.AddedBeltCluster"], body.BodyName, parentBody.BodyName);
-                            break;
-                        default:
-                            logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.AddedMoon"], body.BodyName, parentBody.BodyName);
-                            break;
-                    }
+                    parentBody.Children.Add(planet);
+                    logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.AddedPlanet"],
+                        planet.BodyName, parentBody.BodyName);
                 }
             }
             else
             {
-                // Fallback: add to first star
-                var fallbackStar = _bodyLookup.Values.OfType<Star>().OrderBy(s => s.BodyId).FirstOrDefault();
-                if (fallbackStar != null)
+                var star = GetCelestialBody<Star>().FirstOrDefault();
+                if (star is not null)
                 {
-                    fallbackStar.Children.Add(body);
-                    logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.AddedOrphanedBody"], body.BodyName);
+                    star.Children.Add(planet);
+                    logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.AddedOrphanedBody"],
+                        planet.BodyName);
                 }
-            }
+            } 
         }
     }
 
-    private void AddStationsToHierarchy()
+    private void AddBeltClusters()
     {
-        foreach (var station in _stationLookup.Values)
+        var beltClusters = GetCelestialBody<BeltCluster>();
+        foreach (var beltCluster in beltClusters)
         {
-            // Find the best celestial body to attach this station to
-            var targetBody = FindBestBodyForStation(station);
-            if (targetBody is not null)
-            {
-                targetBody.Children.Add(station);
-                logger.LogInformation(Localization.Instance["SystemPage.Information.AddedStation"],
-                    station.BodyName, targetBody.BodyName);
-            }
-            else
-            {
-                // Fallback: add to the main star or system root
-                var mainStar = _bodyLookup.Values.OfType<Star>().FirstOrDefault();
-                if (mainStar is not null)
-                {
-                    mainStar.Children.Add(station);
-                    logger.LogInformation(Localization.Instance["SystemPage.Information.AddedOrphanedStation"], station.BodyName);
-                }
-                else
-                {
-                    _currentSystem?.Children.Add(station);
-                    logger.LogInformation(Localization.Instance["SystemPage.Information.AddedOrphanedStation"], station.BodyName);
-                }
-            }
+            var parentId = FindDirectParentId(beltCluster.Parents);
+            if (parentId is null)
+                continue;
+            
+            var parent = SystemRoot!.Children.FirstOrDefault(p => p.BodyId == parentId);
+            //if (parent is null)
         }
-    }
-
-    private CelestialBody? FindBestBodyForStation(Station station)
-    {
-        // Strategy 1: Try to match by name similarity
-        // For example, if station is "Babbage Base" and there's a body "Babbage", match them
-        var stationNameParts = station.BodyName.ToLowerInvariant()
-            .Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-        foreach (var body in _bodyLookup.Values)
-        {
-            var bodyNameParts = body.BodyName.ToLowerInvariant()
-                .Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-            // Check if any significant part of the names match
-            if (stationNameParts.Intersect(bodyNameParts).Any())
-            {
-                return body;
-            }
-        }
-
-        // Strategy 2: Default placement near star (don't know yet how to place it correctly)
-        return _bodyLookup.Values.OfType<Star>()
-            .OrderBy(x => x.BodyId)
-            .FirstOrDefault();
     }
 }
