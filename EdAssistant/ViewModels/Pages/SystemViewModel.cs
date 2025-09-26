@@ -4,8 +4,6 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
     ICelestialStructure celestialStructure, ITemplateCacheManager templateCacheManager, IResourceService resourceService)
     : PageViewModel(logger)
 {
-    private string _currentSystemName = string.Empty;
-    
     [ObservableProperty]
     private HierarchicalTreeDataGridSource<CelestialBody>? _starSystem;
     
@@ -67,7 +65,6 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
             return;
         
         celestialStructure.AddLocationScan(locationScan);
-        _currentSystemName = locationScan.StarSystem;
         
         var fssScans = scanData[typeof(FSSSignalDiscoveredEvent)].Cast<FSSSignalDiscoveredEvent>().ToList();
         foreach (var scan in fssScans)
@@ -128,6 +125,7 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
                 return new IconData("avares://EdAssistant/Assets/Icons/Station/NavBeacon.png");
             
             case FleetCarrier:
+            case SquadronCarrier:
                 return new IconData("avares://EdAssistant/Assets/Icons/Station/FleetCarrier.png");
             
             case AsteroidBase:
@@ -147,59 +145,6 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
         }
     }
     
-    private void ProcessScans(IList<ScanEvent> scans, IList<FSSSignalDiscoveredEvent> fssScans)
-    {
-        // Use the system name already set by AddLocationScan to ensure consistency
-        if (string.IsNullOrEmpty(_currentSystemName))
-        {
-            var latestScan = scans.OrderByDescending(s => s.Timestamp).FirstOrDefault();
-            if (latestScan is not null)
-            {
-                _currentSystemName = latestScan.StarSystem;
-            }
-        }
-
-        logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.ProcessingScans"], _currentSystemName);
-
-        // Filter scans to only include those from the current system
-        var systemScans = scans.Where(s => string.Equals(s.StarSystem, _currentSystemName,
-            StringComparison.OrdinalIgnoreCase)).ToList();
-
-        // Remove duplicates based on BodyId
-        var uniqueScans = systemScans
-            .GroupBy(s => s.BodyId)
-            .Select(g => g.First()) // Take first occurrence of each BodyId
-            .OrderBy(s => s.BodyId)
-            .ToList();
-
-        logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.ProcessingUniqueScan"], uniqueScans.Count, 
-            _currentSystemName, systemScans.Count - uniqueScans.Count);
-
-        // Add all scans first
-        foreach (var scan in uniqueScans)
-        {
-            celestialStructure.AddScanEvent(scan);
-        }
-        
-        /*if (fssScans.Any())
-        {
-            var systemFSSScans = fssScans
-                .Where(f => f.SystemAddress == celestialStructure.SystemAddress)
-                .ToList();
-            
-            foreach (var fssScan in systemFSSScans)
-            {
-                celestialStructure.AddFSSSignalDiscoveredEvent(fssScan);
-            }
-        }*/
-
-        // Then build hierarchy using name-based logic
-        celestialStructure.BuildHierarchy();
-        RefreshSystemDisplay();
-        
-        //SetDefaultColorRecursive(celestialStructure.SystemRoot);
-    }
-
     private void SetDefaultColorRecursive(CelestialBody body)
     {
         body.ForegroundBrush ??= resourceService.GetBrush("Text.Primary");
@@ -211,6 +156,9 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
 
     private void RefreshSystemDisplay()
     {
+        if (celestialStructure.SystemRoot is null)
+            return;
+        
         var systemRootCollection = new List<CelestialBody> { celestialStructure.SystemRoot };
         StarSystem = new HierarchicalTreeDataGridSource<CelestialBody>(systemRootCollection)
         {

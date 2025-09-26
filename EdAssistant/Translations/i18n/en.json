@@ -165,7 +165,8 @@
   "SystemPage": {
     "Initializing": "Initializing System page data",
     "Exceptions": {
-      "FailedToInitialize": "Failed to initialize system page data"
+      "FailedToInitialize": "Failed to initialize system page data",
+      "FailedToAddEvent": "Failed to add event type {0}"
     },
     "Information": {
       "NotedBarycenter": "Noted barycenter {0} in system {1}",

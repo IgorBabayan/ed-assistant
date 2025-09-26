@@ -14,7 +14,7 @@ public abstract class Station : CelestialBody
 
 public class UnknownStation : Station
 {
-    protected override SignalTypeEnum StationType => SignalTypeEnum.Unknown;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.UnknownStation;
 }
 
 public class Outpost : Station
@@ -34,22 +34,17 @@ public class Coriolis : Station
 
 public class Orbis : Station
 {
-    protected override SignalTypeEnum StationType => SignalTypeEnum.Orbis;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.StationONeilOrbis;
 }
 
 public class Ocellus : Station
 {
-    protected override SignalTypeEnum StationType => SignalTypeEnum.Ocellus;
+    protected override SignalTypeEnum StationType => SignalTypeEnum.StationONeilCylinder;
 }
 
 public class Installation : Station
 {
     protected override SignalTypeEnum StationType => SignalTypeEnum.Installation;
-}
-
-public class Settlement : Station
-{
-    protected override SignalTypeEnum StationType => SignalTypeEnum.Settlement;
 }
 
 public class MegaShip : Station
@@ -70,28 +65,4 @@ public class FleetCarrier : Station
 public class SquadronCarrier : Station
 {
     protected override SignalTypeEnum StationType => SignalTypeEnum.SquadronCarrier;
-}
-
-public class Carrier : Station
-{
-    protected override SignalTypeEnum StationType => SignalTypeEnum.Carrier;
-}
-
-public class USS : Station
-{
-    protected override SignalTypeEnum StationType => SignalTypeEnum.USS;
-    public string? USSType { get; set; }
-    public int? ThreatLevel { get; set; }
-    public double? TimeRemaining { get; set; }
-    
-    public override string TypeInfo => 
-        !string.IsNullOrEmpty(USSType) ? $"USS ({USSType})" : "USS";
-    
-    public override string StatusInfo => 
-        ThreatLevel.HasValue ? $"Threat Level {ThreatLevel}" : base.StatusInfo;
-}
-
-public class NumberStation : Station
-{
-    protected override SignalTypeEnum StationType => SignalTypeEnum.NumberStation;
 }

@@ -15,9 +15,8 @@ public class FSSSignalDiscoveredEvent : JournalEvent
 
     [JsonPropertyName("SignalType")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public SignalTypeEnum SignalType { get; set; } = SignalTypeEnum.Unknown;
+    public SignalTypeEnum? SignalType { get; set; }
 
-    // Additional properties that may be present depending on signal type
     [JsonPropertyName("IsStation")]
     public bool? IsStation { get; set; }
 

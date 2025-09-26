@@ -38,13 +38,20 @@ class CelestialStructure(ILogger<CelestialStructure> logger, ICelestialBodyFacto
             
         _allScans.Add(scanEvent);
 
-        var body = celestialBodyFactory.Create(scanEvent);
-        if (body is not null)
+        try
         {
-            _bodies[scanEvent.BodyId] = body;
+            var body = celestialBodyFactory.Create(scanEvent);
+            if (body is not null)
+            {
+                _bodies[scanEvent.BodyId] = body;
             
-            logger.LogInformation(Localization.Instance["SystemPage.Information.AddedBody"], body.BodyName, body.BodyId,
-                scanEvent.StarSystem);   
+                logger.LogInformation(Localization.Instance["SystemPage.Information.AddedBody"], body.BodyName, body.BodyId,
+                    scanEvent.StarSystem);   
+            }
+        }
+        catch (Exception exception)
+        {
+            logger.LogInformation(exception, Localization.Instance["SystemPage.Exceptions.FailedToAddEvent"], scanEvent.ScanTypeEnum);
         }
     }
 
@@ -52,21 +59,29 @@ class CelestialStructure(ILogger<CelestialStructure> logger, ICelestialBodyFacto
     {
         if (fssSignal.SystemAddress != SystemRoot!.SystemAddress)
             return;
-        
-        var scanEvent = celestialBodyFactory.Create(fssSignal);
-        switch (scanEvent)
-        {
-            case Station:
-                _stations[fssSignal.SignalName] = scanEvent;
-                break;
-            
-            case Signal:
-                _signals[fssSignal.SignalName] = scanEvent;
-                break;
-        }
 
-        logger.LogInformation(Localization.Instance["SystemPage.Information.AddedStation"],
-            fssSignal.SignalName, fssSignal.SignalType);
+        try
+        {
+            var scanEvent = celestialBodyFactory.Create(fssSignal);
+            switch (scanEvent)
+            {
+                case Station:
+                    _stations[fssSignal.SignalName] = scanEvent;
+                    break;
+            
+                case Signal:
+                    _signals[fssSignal.SignalName] = scanEvent;
+                    break;
+            }
+
+            logger.LogInformation(Localization.Instance["SystemPage.Information.AddedStation"],
+                fssSignal.SignalName, fssSignal.SignalType);
+        }
+        catch (Exception exception)
+        {
+            logger.LogInformation(exception, Localization.Instance["SystemPage.Exceptions.FailedToAddEvent"],
+                fssSignal.SignalType);
+        }
     }
 
     public void BuildHierarchy()
@@ -89,19 +104,22 @@ class CelestialStructure(ILogger<CelestialStructure> logger, ICelestialBodyFacto
         AddBeltClusters();
         
         // Step 4: Add stations to appropriate celestial bodies
-        //AddStations();
+        AddStations();
         
         // Step 5: Add signals to system root
-        //AddSignals();
-
-        // Step 6: Build the complete hierarchy tree
-        //BuildHierarchyTree();
+        AddSignals();
 
         logger.LogInformation(Localization.Instance["SystemPage.ScanProcess.HierarchyBuildingComplete"]);
     }
-    
+
     private IReadOnlyList<T> GetCelestialBody<T>() where T : CelestialBody => 
         _bodies.Values.OfType<T>().OrderBy(x => x.BodyId).ToList();
+    
+    private IReadOnlyList<T> GetStation<T>() where T : Station => 
+        _stations.Values.OfType<T>().OrderBy(x => x.BodyId).ToList();
+    
+    private IReadOnlyList<T> GetSignals<T>() where T : Signal => 
+        _signals.Values.OfType<T>().OrderBy(x => x.BodyId).ToList();
 
     private int? FindDirectParentId(IReadOnlyList<ParentInfo>? parents)
     {
@@ -252,7 +270,65 @@ class CelestialStructure(ILogger<CelestialStructure> logger, ICelestialBodyFacto
                 continue;
             
             var parent = SystemRoot!.Children.FirstOrDefault(p => p.BodyId == parentId);
-            //if (parent is null)
+            if (parent is null)
+            {
+                parent = GetCelestialBody<Star>().FirstOrDefault();
+                if (parent is null)
+                    continue;
+            }
+                
+            var index = parent.Children.TakeWhile(c => c is BeltCluster).Count();
+            parent.Children.Insert(index, beltCluster);
+        }
+    }
+
+    private void AddStations()
+    {
+        var stations = GetStation<Station>();
+        foreach (var station in stations)
+        {
+            var parentId = FindDirectParentId(station.Parents);
+            CelestialBody? parent;
+            if (parentId is null)
+            {
+                parent = SystemRoot!.Children.FirstOrDefault();
+                if (parent is null)
+                    continue;
+            }
+            else
+            {
+                parent = SystemRoot!.Children.FirstOrDefault(x => x.BodyId == parentId);
+                if (parent is null)
+                    continue;
+            }
+            
+            var index = parent!.Children.TakeWhile(c => c is Station).Count();
+            parent.Children.Insert(index, station);
+        }
+    }
+
+    private void AddSignals()
+    {
+        var signals = GetSignals<Signal>();
+        foreach (var signal in signals)
+        {
+            var parentId = FindDirectParentId(signal.Parents);
+            CelestialBody? parent;
+            if (parentId is null)
+            {
+                parent = SystemRoot!.Children.FirstOrDefault();
+                if (parent is null)
+                    continue;
+            }
+            else
+            {
+                parent = SystemRoot!.Children.FirstOrDefault(x => x.BodyId == parentId);
+                if (parent is null)
+                    continue;
+            }
+            
+            var index = parent!.Children.TakeWhile(c => c is Station).Count();
+            parent.Children.Insert(index, signal);
         }
     }
 }
