@@ -140,8 +140,25 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
             case Ocellus:
                 return new IconData("avares://EdAssistant/Assets/Icons/Station/Ocellus.png");
             
+            case ConflictZone:
+                return new IconData("avares://EdAssistant/Assets/Icons/Signals/Conflict Zone.png");
+            
+            case ResourceExtraction:
+                return new IconData("avares://EdAssistant/Assets/Icons/Signals/Resources.png");
+            
+            case Megaship:
+                return new IconData("avares://EdAssistant/Assets/Icons/Signals/Megaship.png");
+            
+            case StationMegaship:
+                return new IconData("avares://EdAssistant/Assets/Icons/Signals/StationMegaship.png");
+            
+            case Installation:
+                return new IconData("avares://EdAssistant/Assets/Icons/Signals/Installation.png");
+            
             default:
-                return new IconData("avares://EdAssistant/Assets/Icons/Default/Unknown.png");
+                return new IconData(body is Signal 
+                    ? "avares://EdAssistant/Assets/Icons/Signals/Signal.png"
+                    : "avares://EdAssistant/Assets/Icons/Default/Unknown.png");
         }
     }
     

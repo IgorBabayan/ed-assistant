@@ -2,7 +2,7 @@
 
 public abstract partial class PageViewModel(ILogger<PageViewModel>? logger = null) : BaseViewModel, IAsyncInitializable
 {
-    private readonly object _initializationLock = new object();
+    private readonly object _initializationLock = new();
     
     [ObservableProperty]
     private bool _isInitialized;

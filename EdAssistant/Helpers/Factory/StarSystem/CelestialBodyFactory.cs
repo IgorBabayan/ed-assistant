@@ -169,7 +169,7 @@ class CelestialBodyFactory(ILogger<CelestialBodyFactory> logger)  : ICelestialBo
     private static CelestialBody CreateSignal(FSSSignalDiscoveredEvent scanEvent) =>
         scanEvent.SignalType switch
         {
-            SignalTypeEnum.ConflictZone => new ConflictZone { BodyName = GetDisplayName(scanEvent) },
+            SignalTypeEnum.ConflictZone or SignalTypeEnum.Combat => new ConflictZone { BodyName = GetDisplayName(scanEvent) },
             SignalTypeEnum.ResourceExtraction => new ResourceExtraction { BodyName = GetDisplayName(scanEvent) },
             _ => new UnknownSignal { BodyName = GetDisplayName(scanEvent) },
         };
@@ -183,10 +183,11 @@ class CelestialBodyFactory(ILogger<CelestialBodyFactory> logger)  : ICelestialBo
             SignalTypeEnum.StationONeilOrbis => new Orbis { BodyName = GetDisplayName(scanEvent) },
             SignalTypeEnum.StationONeilCylinder => new Ocellus { BodyName = GetDisplayName(scanEvent) },
             SignalTypeEnum.Installation => new Installation { BodyName = GetDisplayName(scanEvent) },
-            SignalTypeEnum.Megaship => new MegaShip { BodyName = GetDisplayName(scanEvent) },
-            SignalTypeEnum.StationMegaShip => new StationMegaShip { BodyName = GetDisplayName(scanEvent) },
+            SignalTypeEnum.Megaship => new Megaship { BodyName = GetDisplayName(scanEvent) },
+            SignalTypeEnum.StationMegaShip => new StationMegaship { BodyName = GetDisplayName(scanEvent) },
             SignalTypeEnum.FleetCarrier => new FleetCarrier { BodyName = GetDisplayName(scanEvent) },
             SignalTypeEnum.SquadronCarrier => new SquadronCarrier { BodyName = GetDisplayName(scanEvent) },
+            SignalTypeEnum.NavBeacon => new NavBeacon { BodyName = GetDisplayName(scanEvent) },
             _ => new UnknownStation { BodyName = GetDisplayName(scanEvent) },
         };
     

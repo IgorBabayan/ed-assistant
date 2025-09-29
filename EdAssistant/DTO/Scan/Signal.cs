@@ -19,18 +19,16 @@ public class UnknownSignal : Signal
 public class ConflictZone : Signal
 {
     protected override SignalTypeEnum SignalType => SignalTypeEnum.ConflictZone;
+    public override string TypeInfo => Localization.Instance["CelestialBodyFactory.Signal.ConflictZone"];
 }
 public class ResourceExtraction : Signal
 {
     protected override SignalTypeEnum SignalType => SignalTypeEnum.ResourceExtraction;
+    public override string TypeInfo => Localization.Instance["CelestialBodyFactory.Signal.ResourceExtraction"];
 }
 
 public class NavBeacon : Signal
 {
     protected override SignalTypeEnum SignalType => SignalTypeEnum.NavBeacon;
-}
-
-public class Combat : Signal
-{
-    protected override SignalTypeEnum SignalType => SignalTypeEnum.Combat;
+    public override string TypeInfo => Localization.Instance["CelestialBodyFactory.Signal.NavBeacon"];
 }
