@@ -10,6 +10,24 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
     [ObservableProperty]
     private bool _isLoadingStarSystem;
     
+    // Filter properties
+    [ObservableProperty]
+    private string _searchText = string.Empty;
+    
+    [ObservableProperty]
+    private bool _showStars = true;
+    
+    [ObservableProperty]
+    private bool _showPlanets = true;
+    
+    [ObservableProperty]
+    private bool _showStations = true;
+    
+    [ObservableProperty]
+    private bool _showSignals = true;
+    
+    public bool HasNoItems => !(StarSystem?.Items ?? []).Any();
+    
     private static CelestialBody? FindBodyRecursive(CelestialBody? root, int bodyId)
     {
         if (root is null)
@@ -46,6 +64,12 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
         }
     }
     
+    partial void OnSearchTextChanged(string value) => ApplyFilters();
+    partial void OnShowStarsChanged(bool value) => ApplyFilters();
+    partial void OnShowPlanetsChanged(bool value) => ApplyFilters();
+    partial void OnShowStationsChanged(bool value) => ApplyFilters();
+    partial void OnShowSignalsChanged(bool value) => ApplyFilters();
+    
     private CelestialBody? FindCelestialBodyByBodyId(int bodyId) =>
         FindBodyRecursive(celestialStructure.SystemRoot, bodyId);
     
@@ -54,7 +78,6 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
         // Load all scan data types in a single journal pass
         var scanData = await journalService.GetLatestJournalEntriesBatchAsync(
             typeof(LocationEvent),
-            //typeof(ScanBaryCentreEvent),
             typeof(FSSSignalDiscoveredEvent),
             typeof(ScanEvent),
             typeof(SAAScanCompleteEvent)
@@ -85,83 +108,65 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
             ProcessCompletedScans(saaScans);
         }
 
-        //! TODO: check in barycenter system
-        // Process barycenter scans
-        /*var barycenterScans = scanData[typeof(ScanBaryCentreEvent)].Cast<ScanBaryCentreEvent>().ToList();
-        foreach (var scan in barycenterScans)
-        {
-            celestialStructure.AddScanBaryCentreEvent(scan);
-        }*/
-
         celestialStructure.BuildHierarchy();
         RefreshSystemDisplay();
     }
-
-    private static IconData GetIconForCelestialBodyType(CelestialBody body)
+    
+    private void ApplyFilters()
     {
-        switch (body)
-        {
-            case SystemNode:
-                return new IconData("avares://EdAssistant/Assets/Icons/Star/System.png");
-            
-            case Star:
-                return new IconData("avares://EdAssistant/Assets/Icons/Star/Star.png");
-
-            case Planet planet:
-            {
-                var isLandable = planet.Landable!.Value;
-                var fileName = isLandable ? "Landable" : "Non-Landable";
-                return new IconData($"avares://EdAssistant/Assets/Icons/Star/{fileName}.png");
-            }
-            
-            case BeltCluster:
-            case Ring:
-                return new IconData("avares://EdAssistant/Assets/Icons/Star/Asteroid.png");
-            
-            case Outpost:
-                return new IconData("avares://EdAssistant/Assets/Icons/Station/Outpost.png");
-            
-            case NavBeacon:
-                return new IconData("avares://EdAssistant/Assets/Icons/Station/NavBeacon.png");
-            
-            case FleetCarrier:
-            case SquadronCarrier:
-                return new IconData("avares://EdAssistant/Assets/Icons/Station/FleetCarrier.png");
-            
-            case AsteroidBase:
-                return new IconData("avares://EdAssistant/Assets/Icons/Station/AsteroidBase.png");
-            
-            case Coriolis:
-                return new IconData("avares://EdAssistant/Assets/Icons/Station/Coriolis.png");
-            
-            case Orbis:
-                return new IconData("avares://EdAssistant/Assets/Icons/Station/Orbis.png");
-            
-            case Ocellus:
-                return new IconData("avares://EdAssistant/Assets/Icons/Station/Ocellus.png");
-            
-            case ConflictZone:
-                return new IconData("avares://EdAssistant/Assets/Icons/Signals/Conflict Zone.png");
-            
-            case ResourceExtraction:
-                return new IconData("avares://EdAssistant/Assets/Icons/Signals/Resources.png");
-            
-            case Megaship:
-                return new IconData("avares://EdAssistant/Assets/Icons/Signals/Megaship.png");
-            
-            case StationMegaship:
-                return new IconData("avares://EdAssistant/Assets/Icons/Signals/StationMegaship.png");
-            
-            case Installation:
-                return new IconData("avares://EdAssistant/Assets/Icons/Signals/Installation.png");
-            
-            default:
-                return new IconData(body is Signal 
-                    ? "avares://EdAssistant/Assets/Icons/Signals/Signal.png"
-                    : "avares://EdAssistant/Assets/Icons/Default/Unknown.png");
-        }
+        RefreshSystemDisplay();
     }
     
+    private bool ShouldIncludeBody(CelestialBody body)
+    {
+        // Search text filter
+        if (!string.IsNullOrWhiteSpace(SearchText))
+        {
+            var matchesSearch = (body.BodyName?.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                                (body.DisplayName?.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                                (body.TypeInfo?.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ?? false);
+            
+            if (!matchesSearch)
+                return false;
+        }
+        
+        // Type filters - check concrete type
+        var typeMatch = body switch
+        {
+            Star => ShowStars,
+            Planet => ShowPlanets,
+            Station => ShowStations,
+            Signal => ShowSignals,
+            SystemNode => true,
+            BeltCluster => ShowPlanets,
+            Ring => ShowPlanets,
+            _ => true 
+        };
+        
+        return typeMatch;
+    }
+    
+    private IEnumerable<CelestialBody> GetFilteredChildren(CelestialBody body)
+    {
+        foreach (var child in body.Children)
+        {
+            // Check if child matches filters
+            if (ShouldIncludeBody(child))
+            {
+                yield return child;
+                continue;
+            }
+            
+            // If child doesn't match, check if any of its descendants match
+            var filteredGrandchildren = GetFilteredChildren(child).ToList();
+            if (filteredGrandchildren.Any())
+            {
+                // Child doesn't match but has matching descendants, so include it
+                yield return child;
+            }
+        }
+    }
+
     private void SetDefaultColorRecursive(CelestialBody body)
     {
         body.ForegroundBrush ??= resourceService.GetBrush("Text.Primary");
@@ -184,7 +189,7 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
                 new HierarchicalExpanderColumn<CelestialBody>(
                     new TemplateColumn<CelestialBody>("Name", 
                         GetNameColumnTemplate()),
-                    x => x.SubItems),
+                    GetFilteredChildren),
                 new TemplateColumn<CelestialBody>("Type", GetTextColumnTemplate(nameof(CelestialBody.TypeInfo))),
                 new TemplateColumn<CelestialBody>("Distance", GetTextColumnTemplate(nameof(CelestialBody.DistanceInfo))),
                 new TemplateColumn<CelestialBody>("Status", GetTextColumnTemplate(nameof(CelestialBody.StatusInfo))),
@@ -194,6 +199,7 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
         };
         
         SetDefaultColorRecursive(celestialStructure.SystemRoot);
+        OnPropertyChanged(nameof(HasNoItems));
     }
     
     private void ProcessCompletedScans(IList<SAAScanCompleteEvent> scans)
@@ -211,7 +217,8 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
                 if (scan.ProbesUsed < scan.EfficiencyTarget)
                 {
                     body.ForegroundBrush = resourceService.GetBrush("Success.Brush");
-                } else if (scan.ProbesUsed == scan.EfficiencyTarget)
+                } 
+                else if (scan.ProbesUsed == scan.EfficiencyTarget)
                 {
                     body.ForegroundBrush = resourceService.GetBrush("Warning.Brush");
                 }
@@ -296,5 +303,70 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
         var cacheKey = $"icon_{body.TypeInfo.ToLowerInvariant()}";
         return templateCacheManager.GetOrCreateIcon(cacheKey, () => 
             GetIconForCelestialBodyType(body));
+    }
+    
+    private static IconData GetIconForCelestialBodyType(CelestialBody body)
+    {
+        switch (body)
+        {
+            case SystemNode:
+                return new IconData("avares://EdAssistant/Assets/Icons/Star/System.png");
+            
+            case Star:
+                return new IconData("avares://EdAssistant/Assets/Icons/Star/Star.png");
+
+            case Planet planet:
+            {
+                var isLandable = planet.Landable!.Value;
+                var fileName = isLandable ? "Landable" : "Non-Landable";
+                return new IconData($"avares://EdAssistant/Assets/Icons/Star/{fileName}.png");
+            }
+            
+            case BeltCluster:
+            case Ring:
+                return new IconData("avares://EdAssistant/Assets/Icons/Star/Asteroid.png");
+            
+            case Outpost:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/Outpost.png");
+            
+            case NavBeacon:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/NavBeacon.png");
+            
+            case FleetCarrier:
+            case SquadronCarrier:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/FleetCarrier.png");
+            
+            case AsteroidBase:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/AsteroidBase.png");
+            
+            case Coriolis:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/Coriolis.png");
+            
+            case Orbis:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/Orbis.png");
+            
+            case Ocellus:
+                return new IconData("avares://EdAssistant/Assets/Icons/Station/Ocellus.png");
+            
+            case ConflictZone:
+                return new IconData("avares://EdAssistant/Assets/Icons/Signals/Conflict Zone.png");
+            
+            case ResourceExtraction:
+                return new IconData("avares://EdAssistant/Assets/Icons/Signals/Resources.png");
+            
+            case Megaship:
+                return new IconData("avares://EdAssistant/Assets/Icons/Signals/Megaship.png");
+            
+            case StationMegaship:
+                return new IconData("avares://EdAssistant/Assets/Icons/Signals/StationMegaship.png");
+            
+            case Installation:
+                return new IconData("avares://EdAssistant/Assets/Icons/Signals/Installation.png");
+            
+            default:
+                return new IconData(body is Signal 
+                    ? "avares://EdAssistant/Assets/Icons/Signals/Signal.png"
+                    : "avares://EdAssistant/Assets/Icons/Default/Unknown.png");
+        }
     }
 }

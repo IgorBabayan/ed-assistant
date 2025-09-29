@@ -180,6 +180,7 @@
     }
   },
   "SystemPage": {
+    "Title": "System information",
     "Initializing": "Initializing System page data",
     "Exceptions": {
       "FailedToInitialize": "Failed to initialize system page data",
@@ -204,6 +205,12 @@
       "SystemChanged": "System changed from '{0}' to '{1}'",
       "ProcessingScans": "Processing scans for system: {0}",
       "ProcessingUniqueScan": "Processing {0} unique scan events for system '{1}' (removed {3} duplicates)..."
+    },
+    "Filters": {
+      "Stars": "Stars",
+      "Planets": "Planets",
+      "Stations": "Stations",
+      "Signals": "Signals"
     }
   },
   "StoragePage": {

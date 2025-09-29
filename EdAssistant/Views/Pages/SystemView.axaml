@@ -2,10 +2,118 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:EdAssistant.ViewModels.Pages"
+             xmlns:ext="clr-namespace:EdAssistant.Helpers.Extensions"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
              x:CompileBindings="False"
-             x:Class="EdAssistant.Views.Pages.SystemView">
-	<Grid Margin="{DynamicResource Space.4}">
-        <TreeDataGrid Source="{Binding StarSystem}" />
+             x:Class="EdAssistant.Views.Pages.SystemView"
+             x:DataType="vm:SystemViewModel">
+    <Grid Margin="{DynamicResource Space.4}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--// Header Section with Filters //-->
+        <Grid Grid.Row="0" 
+              Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!--// Title and Search //-->
+            <StackPanel Grid.Column="0"
+                        Orientation="Vertical" 
+                        Spacing="12">
+                <TextBlock Text="{ext:Localize SystemPage.Title}"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource Text.Primary}"/>
+
+                <TextBox Text="{Binding SearchText}"
+                         Watermark="{ext:Localize Common.Watermark}"
+                         Classes="search"/>
+            </StackPanel>
+
+            <!--// Filter Chips Row //-->
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        Spacing="8"
+                        VerticalAlignment="Bottom">
+                
+                <!--// Type Filters //-->
+                <ToggleButton IsChecked="{Binding ShowStars}"
+                              Content="{ext:Localize SystemPage.Filters.Stars}"
+                              Classes="filter"
+                              CornerRadius="20"
+                              Padding="16,8"
+                              FontSize="13"
+                              FontWeight="Medium"/>
+
+                <ToggleButton IsChecked="{Binding ShowPlanets}"
+                              Content="{ext:Localize SystemPage.Filters.Planets}"
+                              Classes="filter"
+                              CornerRadius="20"
+                              Padding="16,8"
+                              FontSize="13"
+                              FontWeight="Medium"/>
+
+                <ToggleButton IsChecked="{Binding ShowStations}"
+                              Content="{ext:Localize SystemPage.Filters.Stations}"
+                              Classes="filter"
+                              CornerRadius="20"
+                              Padding="16,8"
+                              FontSize="13"
+                              FontWeight="Medium"/>
+
+                <ToggleButton IsChecked="{Binding ShowSignals}"
+                              Content="{ext:Localize SystemPage.Filters.Signals}"
+                              Classes="filter"
+                              CornerRadius="20"
+                              Padding="16,8"
+                              FontSize="13"
+                              FontWeight="Medium"/>
+            </StackPanel>
+        </Grid>
+
+        <!--// TreeDataGrid //-->
+        <TreeDataGrid Grid.Row="1" 
+                      Source="{Binding StarSystem}"
+                      IsVisible="{Binding !HasNoItems}"/>
+
+        <!--// Empty State //-->
+        <StackPanel Grid.Row="1"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Spacing="16"
+                    IsVisible="{Binding HasNoItems}">
+
+            <Border Background="{DynamicResource Card.Icon.Background}"
+                    Width="64"
+                    Height="64"
+                    CornerRadius="32"
+                    HorizontalAlignment="Center">
+                <Border Background="{DynamicResource Text.Tertiary}"
+                        Width="32"
+                        Height="32"
+                        CornerRadius="16"
+                        Opacity="0.3"/>
+            </Border>
+
+            <StackPanel Spacing="8" 
+                        HorizontalAlignment="Center">
+                <TextBlock Text="{ext:Localize Filtering.NoItemsFound}"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           Foreground="{DynamicResource Text.Primary}"/>
+
+                <TextBlock Text="{ext:Localize Filtering.AdjustingFilters}"
+                           FontSize="14"
+                           HorizontalAlignment="Center"
+                           Foreground="{DynamicResource Text.Secondary}"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </UserControl>
