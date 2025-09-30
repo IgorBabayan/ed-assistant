@@ -8,10 +8,6 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
     private HierarchicalTreeDataGridSource<CelestialBody>? _starSystem;
     
     [ObservableProperty]
-    private bool _isLoadingStarSystem;
-    
-    // Filter properties
-    [ObservableProperty]
     private string _searchText = string.Empty;
     
     [ObservableProperty]
@@ -49,7 +45,8 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
     protected override async Task OnInitializeAsync()
     {
         logger.LogInformation(Localization.Instance["SystemPage.Initializing"]);
-        IsLoadingStarSystem = true;
+        WeakReferenceMessenger.Default.Send(new LoadingMessage(true));
+        
         try
         {
             await LoadAllScanDataAsync();
@@ -60,7 +57,7 @@ public sealed partial class SystemViewModel(IJournalService journalService, ILog
         }
         finally
         {
-            IsLoadingStarSystem = false;
+            WeakReferenceMessenger.Default.Send(new LoadingMessage(false));
         }
     }
     

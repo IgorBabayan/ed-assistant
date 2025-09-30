@@ -4,7 +4,8 @@
     "No": "No",
     "Watermark": "Search items",
     "AppTitle": "Elite Dangerous Assistant",
-    "Unknown": "Unknown"
+    "Unknown": "Unknown",
+    "Loading": "Loading..."
   },
   "Exceptions": {
     "DirectoryNotFound": "Directory not found: {0}",

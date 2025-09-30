@@ -3,9 +3,6 @@
 public sealed partial class CargoViewModel(IJournalService journalService, ILogger<CargoViewModel> logger)
     : PageViewModel(logger)
 {
-    [ObservableProperty]
-    private bool _isCargoLoading;
-    
     private readonly List<CargoInventoryItemDTO> _allItems = [];
 
     [ObservableProperty]
@@ -19,7 +16,8 @@ public sealed partial class CargoViewModel(IJournalService journalService, ILogg
     protected override async Task OnInitializeAsync()
     {
         logger.LogInformation(Localization.Instance["CargoPage.Initializing"]);
-        IsCargoLoading = true;
+        WeakReferenceMessenger.Default.Send(new LoadingMessage(true));
+        
         try
         {
             await LoadCargoDataAsync();
@@ -30,7 +28,7 @@ public sealed partial class CargoViewModel(IJournalService journalService, ILogg
         }
         finally
         {
-            IsCargoLoading = false;
+            WeakReferenceMessenger.Default.Send(new LoadingMessage(false));
         }
     }
     

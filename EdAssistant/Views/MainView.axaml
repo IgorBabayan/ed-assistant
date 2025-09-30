@@ -7,6 +7,7 @@
              x:Class="EdAssistant.Views.MainView"
              xmlns:views="clr-namespace:EdAssistant.Views"
              xmlns:ext="clr-namespace:EdAssistant.Helpers.Extensions"
+             xmlns:components="clr-namespace:EdAssistant.Views.Components"
              x:DataType="vm:MainViewModel">
     <Border Background="{StaticResource Bg.Brush}"
             BorderBrush="{StaticResource Border.Brush}">
@@ -71,9 +72,12 @@
 			<views:SidebarNavigation Grid.RowSpan="2"
 									 Grid.Row="0"
                                      Grid.Column="0"/>
-            <ContentControl Grid.Row="1" 
-							Grid.Column="1"
-							x:Name="PART_NavigationContent" />
+			<Grid Grid.Row="1" 
+			      Grid.Column="1">
+				<ContentControl x:Name="PART_NavigationContent" />
+    
+				<components:LoadingOverlay IsLoading="{Binding IsLoading}" />
+			</Grid>
 		</Grid>
     </Border>
 </UserControl>

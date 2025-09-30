@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="EdAssistant.Views.Components.LoadingOverlay"
+             x:Name="Root">
+    <UserControl.Styles>
+        <Style Selector="Border.loading-overlay">
+            <Setter Property="Background" Value="{DynamicResource Bg.Brush}"/>
+            <Setter Property="Opacity" Value="0.98"/>
+        </Style>
+
+        <Style Selector="Border.loading-container">
+            <Setter Property="Background" Value="{DynamicResource Bg.Brush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource Border.Brush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="40"/>
+            <Setter Property="BoxShadow" Value="0 8 32 0 #30000000"/>
+        </Style>
+
+        <Style Selector="TextBlock.loading-text">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="{DynamicResource Text.Primary}"/>
+            <Setter Property="Margin" Value="0,16,0,0"/>
+        </Style>
+
+        <Style Selector="Ellipse#LoadingSpinner">
+            <Style.Animations>
+                <Animation Duration="0:0:1.5" IterationCount="Infinite">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="(RotateTransform.Angle)" Value="0"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="(RotateTransform.Angle)" Value="360"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </UserControl.Styles>
+
+    <Border Classes="loading-overlay"
+            IsVisible="{Binding #Root.IsLoading}"
+            ZIndex="999">
+        <Grid HorizontalAlignment="Center"
+              VerticalAlignment="Center">
+            <Border Classes="loading-container">
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Spacing="16">
+                    <!--// Loading Spinner //-->
+                    <Viewbox Width="60" Height="60">
+                        <Canvas Width="100" Height="100">
+                            <Ellipse Width="100" Height="100"
+                                     Stroke="{DynamicResource Border.Brush}"
+                                     StrokeThickness="8"
+                                     Opacity="0.3"/>
+                            <Ellipse Width="100" Height="100"
+                                     Stroke="{DynamicResource Accent.Brush}"
+                                     StrokeThickness="8"
+                                     StrokeDashArray="70,30"
+                                     RenderTransformOrigin="0.5,0.5"
+                                     Name="LoadingSpinner">
+                                <Ellipse.RenderTransform>
+                                    <RotateTransform Angle="0"/>
+                                </Ellipse.RenderTransform>
+                            </Ellipse>
+                        </Canvas>
+                    </Viewbox>
+
+                    <!--// Loading Text //-->
+                    <TextBlock Classes="loading-text"
+                               Text="{Binding #Root.LoadingText}"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

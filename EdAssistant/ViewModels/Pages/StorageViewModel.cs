@@ -23,9 +23,6 @@ public sealed partial class StorageViewModel(IJournalService journalService, ILo
     [ObservableProperty]
     private string _searchText = string.Empty;
     
-    [ObservableProperty]
-    private bool _isLoadingStorage;
-
     public bool HasNoItems => FilteredItems.Count == 0;
 
     public string ItemsText => string.Format(Localization.Instance["StorageWindow.Items"], FilteredItems.Count(item => item.CategoryEnum == ItemCategoryEnum.Items));
@@ -42,7 +39,8 @@ public sealed partial class StorageViewModel(IJournalService journalService, ILo
     protected override async Task OnInitializeAsync()
     {
         logger.LogInformation(Localization.Instance["StoragePage.Initializing"]);
-        IsLoadingStorage = true;
+        WeakReferenceMessenger.Default.Send(new LoadingMessage(true));
+        
         try
         {
             await LoadStorageDataAsync();
@@ -53,7 +51,7 @@ public sealed partial class StorageViewModel(IJournalService journalService, ILo
         }
         finally
         {
-            IsLoadingStorage = false;
+            WeakReferenceMessenger.Default.Send(new LoadingMessage(false));
         }
     }
 

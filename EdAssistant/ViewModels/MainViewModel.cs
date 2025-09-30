@@ -1,6 +1,6 @@
 ﻿namespace EdAssistant.ViewModels;
 
-public partial class MainViewModel : BaseViewModel, IRecipient<CommanderMessage>
+public partial class MainViewModel : BaseViewModel, IRecipient<CommanderMessage>, IRecipient<LoadingMessage>
 {
     private readonly INavigationService _navigationService;
     private readonly IDesktopService _desktopService;
@@ -12,6 +12,9 @@ public partial class MainViewModel : BaseViewModel, IRecipient<CommanderMessage>
 
     [ObservableProperty]
     private string? _windowTitle;
+    
+    [ObservableProperty]
+    private bool _isLoading;
 
     public static bool CanCreateDesktopFile => OperatingSystem.IsLinux();
     public bool IsCargo => _dockVisibilityService.GetVisibility(PageEnum.Cargo);
@@ -35,11 +38,14 @@ public partial class MainViewModel : BaseViewModel, IRecipient<CommanderMessage>
         _navigationService.Navigated += OnNavigated;
         _dockVisibilityService.VisibilityChanged += OnDockVisibilityChanged;
         
-        WeakReferenceMessenger.Default.Register(this);
+        WeakReferenceMessenger.Default.Register<CommanderMessage>(this);
+        WeakReferenceMessenger.Default.Register<LoadingMessage>(this);
     }
     
-    public void Receive(CommanderMessage commander) => 
-        WindowTitle = string.Format(Localization.Instance["MainWindow.Title"], commander.Name);
+    public void Receive(CommanderMessage message) => 
+        WindowTitle = string.Format(Localization.Instance["MainWindow.Title"], message.Name);
+
+    public void Receive(LoadingMessage message) => IsLoading = message.IsLoaded;
 
     protected override void OnDispose(bool disposing)
     {

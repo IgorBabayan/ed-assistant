@@ -20,9 +20,6 @@ public sealed partial class MaterialsViewModel(IJournalService journalService, I
     [ObservableProperty]
     private string _searchText = string.Empty;
     
-    [ObservableProperty]
-    private bool _isLoadingMaterials;
-
     public bool HasNoItems => FilteredItems.Count == 0;
 
     public string RawText => string.Format(Localization.Instance["MaterialsPage.Raw"], FilteredItems.Count(item => item.CategoryEnum == MaterialCategoryEnum.Raw));
@@ -32,7 +29,8 @@ public sealed partial class MaterialsViewModel(IJournalService journalService, I
     protected override async Task OnInitializeAsync()
     {
         logger.LogInformation(Localization.Instance["MaterialsPage.Initializing"]);
-        IsLoadingMaterials = true;
+        WeakReferenceMessenger.Default.Send(new LoadingMessage(true));
+        
         try
         {
             await LoadMaterialsDataAsync();
@@ -43,7 +41,7 @@ public sealed partial class MaterialsViewModel(IJournalService journalService, I
         }
         finally
         {
-            IsLoadingMaterials = false;
+            WeakReferenceMessenger.Default.Send(new LoadingMessage(false));
         }
     }
     

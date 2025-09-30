@@ -6,13 +6,12 @@ public sealed partial class HomeViewModel(IJournalService journalService, ILogge
     [ObservableProperty]
     private ObservableCollection<RankDTO> _ranks = new();
     
-    [ObservableProperty]
-    private bool _isLoadingRanks;
 
     protected override async Task OnInitializeAsync()
     {
         logger.LogInformation(Localization.Instance["HomePage.Initializing"]);
-        IsLoadingRanks = true;
+        WeakReferenceMessenger.Default.Send(new LoadingMessage(true));
+        
         try
         {
             await LoadAllDataAsync();
@@ -23,7 +22,7 @@ public sealed partial class HomeViewModel(IJournalService journalService, ILogge
         }
         finally
         {
-            IsLoadingRanks = false;
+            WeakReferenceMessenger.Default.Send(new LoadingMessage(false));
         }
     }
 

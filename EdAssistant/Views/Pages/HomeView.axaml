@@ -76,7 +76,6 @@
             <Setter Property="Opacity" Value="0.7"/>
         </Style>
 
-        <!--// Responsive ItemsControl with wrapping //-->
         <Style Selector="ItemsControl.responsive-grid">
             <Setter Property="ItemsPanel">
                 <ItemsPanelTemplate>
@@ -85,7 +84,6 @@
             </Setter>
         </Style>
 
-        <!--// Compact cards for smaller screens //-->
         <Style Selector="Border.rank-card.compact">
             <Setter Property="MinWidth" Value="200"/>
             <Setter Property="MaxWidth" Value="300"/>
@@ -104,155 +102,194 @@
         <Style Selector="Border.rank-card.compact TextBlock.rank-subtitle">
             <Setter Property="FontSize" Value="12"/>
         </Style>
+
+        <!--// Loading Screen Styles //-->
+        <Style Selector="Border.loading-overlay">
+            <Setter Property="Background" Value="{DynamicResource Bg.Brush}"/>
+            <Setter Property="Opacity" Value="0.98"/>
+        </Style>
+
+        <Style Selector="Border.loading-container">
+            <Setter Property="Background" Value="{DynamicResource Bg.Brush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource Border.Brush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="40"/>
+            <Setter Property="BoxShadow" Value="0 8 32 0 #30000000"/>
+        </Style>
+
+        <Style Selector="TextBlock.loading-text">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="{DynamicResource Text.Primary}"/>
+            <Setter Property="Margin" Value="0,16,0,0"/>
+        </Style>
+
+        <!--// Loading Spinner Animation //-->
+        <Style Selector="Ellipse#LoadingSpinner">
+            <Style.Animations>
+                <Animation Duration="0:0:1.5" IterationCount="Infinite">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="(RotateTransform.Angle)" Value="0"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="(RotateTransform.Angle)" Value="360"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
     </UserControl.Styles>
 
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                  VerticalScrollBarVisibility="Auto"
-                  Margin="{DynamicResource Space.4}">
-        <StackPanel Spacing="24" MaxWidth="1400">
-            <!--// Header section //-->
-            <StackPanel Spacing="8">
-                <TextBlock Text="Progress Overview"
-                           FontSize="28"
-                           FontWeight="Bold"
-                           Foreground="{DynamicResource Text.Primary}"/>
-                <TextBlock Text="Elite Dangerous Commander Progression"
-                           FontSize="14"
-                           Foreground="{DynamicResource Text.Secondary}"
-                           Opacity="0.7"/>
-            </StackPanel>
+    <Grid>
+        <!--// Main Content //-->
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto"
+                      Margin="{DynamicResource Space.4}">
+            <StackPanel Spacing="24" MaxWidth="1400">
+                <!--// Header section //-->
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Progress Overview"
+                               FontSize="28"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource Text.Primary}"/>
+                    <TextBlock Text="Elite Dangerous Commander Progression"
+                               FontSize="14"
+                               Foreground="{DynamicResource Text.Secondary}"
+                               Opacity="0.7"/>
+                </StackPanel>
 
-            <!--// Responsive rank cards using ItemsControl with WrapPanel //-->
-            <ItemsControl ItemsSource="{Binding Ranks}"
-                          Classes="responsive-grid">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="dto:RankDTO">
-                        <Border Classes="rank-card"
-                                Margin="8">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- //Rank Icon //-->
-                                <Image Grid.Row="0" 
-                                       Grid.Column="0"
-                                       Grid.RowSpan="2"
-                                       Width="64"
-                                       Height="64"
-                                       Margin="0,0,16,0"
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Center"
-                                       Source="{Binding Rank, Converter={StaticResource RankToIconConverter}}"/>
-
-                                <!--// Rank Info //-->
-                                <StackPanel Grid.Row="0"
-                                            Grid.Column="1"
-                                            Spacing="4"
-                                            VerticalAlignment="Top">
-                                    <TextBlock Classes="rank-title"
-                                               Text="{Binding Rank, Converter={StaticResource EnumLocalizationConverter}}"/>
-                                    <TextBlock Classes="rank-subtitle"
-                                               Text="{Binding Title}"/>
-                                </StackPanel>
-
-                                <!--// Progress Section //-->
-                                <StackPanel Grid.Row="1"
-                                            Grid.Column="1"
-                                            Spacing="6"
-                                            VerticalAlignment="Bottom"
-                                            Margin="0,12,0,0">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0"
-                                                   Text="Progress"
-                                                   FontSize="11"
-                                                   FontWeight="Medium"
-                                                   Foreground="{DynamicResource Text.Secondary}"
-                                                   Opacity="0.6"/>
-                                        <TextBlock Grid.Column="1"
-                                                   Classes="progress-text"
-                                                   Text="{Binding Progress, StringFormat='{}{0}%'}"/>
-                                    </Grid>
-                                    <ProgressBar Classes="rank-progress"
-                                                 Value="{Binding Progress}"
-                                                 Maximum="100"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-
-            <!--// Fallback: Vertical layout for very narrow screens //-->
-            <StackPanel Name="MobileLayout" 
-                        IsVisible="False"
-                        Spacing="12">
-                <ItemsControl ItemsSource="{Binding Ranks}">
+                <!--// Responsive rank cards using ItemsControl with WrapPanel //-->
+                <ItemsControl ItemsSource="{Binding Ranks}"
+                              Classes="responsive-grid">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="dto:RankDTO">
-                            <Border Classes="rank-card compact"
-                                    Margin="0,0,0,8"
-                                    MinWidth="0"
-                                    MaxWidth="{Binding $parent[ScrollViewer].Bounds.Width}">
+                            <Border Classes="rank-card"
+                                    Margin="8">
                                 <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    
-                                    <!--// Compact Icon //-->
-                                    <Image Grid.Column="0"
-                                           Width="48" 
-                                           Height="48"
-                                           Margin="0,0,12,0"
+
+                                    <!--// Rank Icon //-->
+                                    <Image Grid.Row="0"
+                                           Grid.Column="0"
+                                           Grid.RowSpan="2"
+                                           Width="64"
+                                           Height="64"
+                                           Margin="0,0,16,0"
                                            VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
                                            Source="{Binding Rank, Converter={StaticResource RankToIconConverter}}"/>
-                                    
-                                    <!--// Compact Info //-->
-                                    <StackPanel Grid.Column="1" 
-                                                Spacing="8"
-                                                VerticalAlignment="Center">
-                                        <StackPanel Spacing="2">
-                                            <TextBlock Classes="rank-title"
-                                                       FontSize="14"
-                                                       Text="{Binding Rank, Converter={StaticResource EnumLocalizationConverter}}"/>
-                                            <TextBlock Classes="rank-subtitle"
-                                                       FontSize="12"
-                                                       Text="{Binding Title}"/>
-                                        </StackPanel>
-                                        
-                                        <StackPanel Spacing="4">
-                                            <Grid>
-                                                <TextBlock Text="Progress" 
-                                                           FontSize="10" 
-                                                           Foreground="{DynamicResource Text.Secondary}"/>
-                                                <TextBlock Text="{Binding Progress, StringFormat='{}{0}%'}"
-                                                           FontSize="10"
-                                                           HorizontalAlignment="Right"
-                                                           Foreground="{DynamicResource Text.Secondary}"/>
-                                            </Grid>
-                                            <ProgressBar Classes="rank-progress"
-                                                         Height="4"
-                                                         Value="{Binding Progress}"
-                                                         Maximum="100"/>
-                                        </StackPanel>
+
+                                    <!--// Rank Info //-->
+                                    <StackPanel Grid.Row="0"
+                                                Grid.Column="1"
+                                                Spacing="4"
+                                                VerticalAlignment="Top">
+                                        <TextBlock Classes="rank-title"
+                                                   Text="{Binding Rank, Converter={StaticResource EnumLocalizationConverter}}"/>
+                                        <TextBlock Classes="rank-subtitle"
+                                                   Text="{Binding Title}"/>
+                                    </StackPanel>
+
+                                    <!--// Progress Section //-->
+                                    <StackPanel Grid.Row="1"
+                                                Grid.Column="1"
+                                                Spacing="6"
+                                                VerticalAlignment="Bottom"
+                                                Margin="0,12,0,0">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0"
+                                                       Text="Progress"
+                                                       FontSize="11"
+                                                       FontWeight="Medium"
+                                                       Foreground="{DynamicResource Text.Secondary}"
+                                                       Opacity="0.6"/>
+                                            <TextBlock Grid.Column="1"
+                                                       Classes="progress-text"
+                                                       Text="{Binding Progress, StringFormat='{}{0}%'}"/>
+                                        </Grid>
+                                        <ProgressBar Classes="rank-progress"
+                                                     Value="{Binding Progress}"
+                                                     Maximum="100"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+
+                <!--// Fallback: Vertical layout for very narrow screens //-->
+                <StackPanel Name="MobileLayout"
+                            IsVisible="False"
+                            Spacing="12">
+                    <ItemsControl ItemsSource="{Binding Ranks}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="dto:RankDTO">
+                                <Border Classes="rank-card compact"
+                                        Margin="0,0,0,8"
+                                        MinWidth="0"
+                                        MaxWidth="{Binding $parent[ScrollViewer].Bounds.Width}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!--// Compact Icon //-->
+                                        <Image Grid.Column="0"
+                                               Width="48"
+                                               Height="48"
+                                               Margin="0,0,12,0"
+                                               VerticalAlignment="Center"
+                                               Source="{Binding Rank, Converter={StaticResource RankToIconConverter}}"/>
+
+                                        <!--// Compact Info //-->
+                                        <StackPanel Grid.Column="1"
+                                                    Spacing="8"
+                                                    VerticalAlignment="Center">
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Classes="rank-title"
+                                                           FontSize="14"
+                                                           Text="{Binding Rank, Converter={StaticResource EnumLocalizationConverter}}"/>
+                                                <TextBlock Classes="rank-subtitle"
+                                                           FontSize="12"
+                                                           Text="{Binding Title}"/>
+                                            </StackPanel>
+
+                                            <StackPanel Spacing="4">
+                                                <Grid>
+                                                    <TextBlock Text="Progress"
+                                                               FontSize="10"
+                                                               Foreground="{DynamicResource Text.Secondary}"/>
+                                                    <TextBlock Text="{Binding Progress, StringFormat='{}{0}%'}"
+                                                               FontSize="10"
+                                                               HorizontalAlignment="Right"
+                                                               Foreground="{DynamicResource Text.Secondary}"/>
+                                                </Grid>
+                                                <ProgressBar Classes="rank-progress"
+                                                             Height="4"
+                                                             Value="{Binding Progress}"
+                                                             Maximum="100"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
-    </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
 </UserControl>
