@@ -1,6 +1,4 @@
-﻿using ED.Assistant.Data;
-using ED.Assistant.Data.Services.Path;
-using Microsoft.Extensions.DependencyInjection;
+﻿using ED.Assistant.Data.Services.Path;
 
 namespace ED.Assistant.Tests.Services;
 
