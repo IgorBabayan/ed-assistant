@@ -1,0 +1,15 @@
+﻿namespace ED.Assistant.Data.Services.Path;
+
+public interface IPathFinder
+{
+    string GetPathToLogs();
+}
+
+class PathFinder : IPathFinder
+{
+    private readonly IPlatformPathResolver _resolver;
+
+    public PathFinder(IPlatformPathResolver resolver) => _resolver = resolver;
+
+    public string GetPathToLogs() => _resolver.GetLogsPath();
+}
