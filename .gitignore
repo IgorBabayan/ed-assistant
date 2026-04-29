@@ -1,0 +1,38 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / VS Code / VS
+.vs/
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# NuGet
+*.nupkg
+packages/
+
+# Dotnet
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Avalonia / MAUI (if relevant)
+*.apk
+*.aab
+*.app
+
+# Test results
+TestResults/

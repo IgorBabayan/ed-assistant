@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="../ED.Assistant.Data/ED.Assistant.Data.csproj" Id="4c2a59ef-1ff4-4e57-bed6-a24e00dc1c04" />
+  <Project Path="../ED.Assistant.Tests/ED.Assistant.Tests.csproj" Id="c9eec30b-7f5d-4639-9e96-0570ca228754" />
+  <Project Path="ED.Assistant.csproj" />
+</Solution>
