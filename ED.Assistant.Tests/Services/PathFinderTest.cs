@@ -29,7 +29,7 @@ public sealed class PathFinderTest
         var actual = resolver.GetLogsPath();
 
         Assert.IsFalse(string.IsNullOrWhiteSpace(actual));
-        StringAssert.Contains(actual, "Elite Dangerous");
+        StringAssert.Contains(actual, Path.Combine("Saved Games", "Frontier Developments", "Elite Dangerous"));
     }
 
     [TestMethod]

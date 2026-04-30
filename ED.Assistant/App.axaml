@@ -1,6 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="ED.Assistant.App"
+    xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
     
@@ -14,6 +15,8 @@
   
     <Application.Styles>
         <FluentTheme />
+        <materialIcons:MaterialIconStyles />
         <StyleInclude Source="avares://ED.Assistant/Styles/TextBlock.axaml" />
+        <StyleInclude Source="avares://ED.Assistant/Styles/Button.axaml" />
     </Application.Styles>
 </Application>

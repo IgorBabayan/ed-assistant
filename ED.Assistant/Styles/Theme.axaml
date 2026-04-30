@@ -1,6 +1,9 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <Thickness x:Key="MarginLeft15">15,0,0,0</Thickness>
+    <Thickness x:Key="MarginRight15">0,0,15,0</Thickness>
+
     <Color x:Key="ColorBackground">#0B0F14</Color>
     <Color x:Key="PrimaryAccent">#00D4FF</Color>
     <Color x:Key="SecondaryAccent">#FF8C00</Color>

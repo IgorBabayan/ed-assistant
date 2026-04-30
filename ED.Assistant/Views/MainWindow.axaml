@@ -1,65 +1,119 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:ED.Assistant.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="ED.Assistant.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Background="Transparent"
-        Title="ED Assistant"
-        WindowDecorations="None"
-        WindowStartupLocation="CenterScreen">
+		xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:vm="using:ED.Assistant.ViewModels"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		x:Class="ED.Assistant.Views.MainWindow"
+		x:DataType="vm:MainWindowViewModel"
+		Icon="/Assets/avalonia-logo.ico"
+		Background="Transparent"
+		Title="ED Assistant"
+		WindowDecorations="None"
+		WindowStartupLocation="CenterScreen">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
+		to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
 
-    <Border Background="{StaticResource BackgroundBrush}">
+	<Border Background="{StaticResource BackgroundBrush}">
 		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="36" />
 				<RowDefinition Height="*" />
 				<RowDefinition Height="36" />
-            </Grid.RowDefinitions>
+			</Grid.RowDefinitions>
 
-            <Border Grid.Row="0"
-                    Background="Transparent"
-                    PointerPressed="OnPointerPressed">
-                <Grid>
-                    <Grid.ColumnDefinitions>
+			<!-- Title bar -->
+			<Border Grid.Row="0"
+					Background="Transparent"
+					PointerPressed="OnPointerPressed">
+				<Grid>
+					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto" />
 						<ColumnDefinition Width="*" />
 						<ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+					</Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0"
-                               Classes="primary"
-                               Text="ED Assistant"
-                               Margin="15,0,0,0"
-                               FontWeight="Bold"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center" />
+					<TextBlock Grid.Column="0"
+							   Classes="primary"
+							   Text="ED Assistant"
+							   Margin="{StaticResource MarginLeft15}"
+							   FontWeight="Bold"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center" />
 
-                    <StackPanel Grid.Column="2"
-                                Margin="0,0,15,0"
-                                Orientation="Horizontal"
-                                Spacing="5">
-						<Button Content="_"
-                                Click="OnMinimizeClick"/>
+					<StackPanel Grid.Column="1"
+								Orientation="Horizontal"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Spacing="5">
+						<TextBlock Text="{Binding CMDR}" />
+						<TextBlock Text="/" />
+						<TextBlock Text="{Binding Ship}" />
+						<TextBlock Text="/" />
+						<TextBlock Text="{Binding Status}" />
+					</StackPanel>
 
-                        <Button Content="o"
-                                Click="OnMaximizeClick"/>
+					<StackPanel Grid.Column="2"
+								Orientation="Horizontal"
+								VerticalAlignment="Top">
+						<Button Command="{Binding LoadCommand}"
+								Margin="{StaticResource MarginRight15}">
+							<materialIcons:MaterialIcon Kind="Reload"
+														Classes="app-button"/>
+						</Button>
 
-                        <Button Content="x"
-                                Click="OnCloseClick"/>
-                    </StackPanel>
-                </Grid>
-            </Border>
-            <TextBlock Grid.Row="1" Text="{Binding Greeting}" />
-        </Grid>
-    </Border>
+						<Button Click="OnMinimizeClick">
+							<materialIcons:MaterialIcon Kind="WindowMinimize"
+														Classes="app-button"/>
+						</Button>
+
+						<Button Click="OnMaximizeClick">
+							<materialIcons:MaterialIcon Kind="WindowMaximize"
+														Classes="app-button"/>
+						</Button>
+
+						<Button Click="OnCloseClick">
+							<materialIcons:MaterialIcon Kind="WindowClose"
+														Classes="app-button"/>
+						</Button>
+					</StackPanel>
+				</Grid>
+			</Border>
+
+			<!-- Conent -->
+			<Grid Grid.Row="1">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="100" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+			</Grid>
+
+			<!-- Status bar -->
+			<Border Grid.Row="2">
+				<Grid ColumnSpacing="5">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
+
+					<TextBlock Grid.Column="0"
+							   Text="Ready"
+							   Margin="{StaticResource MarginLeft15}" />
+
+					<TextBlock Grid.Column="1"
+							   Text="...log file..." />
+
+					<TextBlock Grid.Column="2"
+							   Text="...last event..."
+							   Margin="{StaticResource MarginRight15}" />
+				</Grid>
+			</Border>
+		</Grid>
+	</Border>
 </Window>
