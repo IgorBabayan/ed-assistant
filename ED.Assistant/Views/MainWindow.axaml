@@ -7,7 +7,9 @@
         x:Class="ED.Assistant.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="ED.Assistant"
+        Background="Transparent"
+        Title="ED Assistant"
+        WindowDecorations="None"
         WindowStartupLocation="CenterScreen">
 
     <Design.DataContext>
@@ -16,6 +18,48 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Border Background="{StaticResource BackgroundBrush}">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="36" />
+				<RowDefinition Height="*" />
+				<RowDefinition Height="36" />
+            </Grid.RowDefinitions>
 
+            <Border Grid.Row="0"
+                    Background="Transparent"
+                    PointerPressed="OnPointerPressed">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               Classes="primary"
+                               Text="ED Assistant"
+                               Margin="15,0,0,0"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+
+                    <StackPanel Grid.Column="2"
+                                Margin="0,0,15,0"
+                                Orientation="Horizontal"
+                                Spacing="5">
+						<Button Content="_"
+                                Click="OnMinimizeClick"/>
+
+                        <Button Content="o"
+                                Click="OnMaximizeClick"/>
+
+                        <Button Content="x"
+                                Click="OnCloseClick"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <TextBlock Grid.Row="1" Text="{Binding Greeting}" />
+        </Grid>
+    </Border>
 </Window>
