@@ -4,6 +4,8 @@ using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using ED.Assistant.ViewModels;
 using ED.Assistant.Views;
+using ED.Assistant.Services.DialogService;
+using ED.Assistant.Extensions;
 
 namespace ED.Assistant;
 
@@ -15,10 +17,9 @@ public partial class App : Application
     {
         // Create service collection and register services from ED.Assistant.Data
         var services = new ServiceCollection();
-        services.RegisterServices();
-
-        // Register UI types (viewmodels) here so they can be resolved from the provider.
-        services.AddSingleton<MainWindowViewModel>();
+        services.RegisterDataServices()
+            .RegisterViewModels()
+			.RegisterServices();
 
         // Build provider and keep a reference to it for later use.
         var provider = services.BuildServiceProvider();

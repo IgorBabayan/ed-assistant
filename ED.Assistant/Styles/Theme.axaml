@@ -9,11 +9,15 @@
     <Color x:Key="SecondaryAccent">#FF8C00</Color>
     <Color x:Key="PrimaryText">#E6EDF3</Color>
     <Color x:Key="SecondaryText">#E6EDF3</Color>
+    <Color x:Key="CardBackground">#101820</Color>
+    <Color x:Key="CardBorder">#1F2A36</Color>
 
     <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource ColorBackground}" />
     <SolidColorBrush x:Key="PrimaryAccentBrush" Color="{StaticResource PrimaryAccent}" />
     <SolidColorBrush x:Key="SecondaryAccentBrush" Color="{StaticResource SecondaryAccent}" />
     <SolidColorBrush x:Key="PrimaryTextBrush" Color="{StaticResource PrimaryText}" />
     <SolidColorBrush x:Key="SecondaryTextBrush" Color="{StaticResource SecondaryText}" />
+    <SolidColorBrush x:Key="CardBackgroundBrush" Color="{StaticResource CardBackground}" />
+    <SolidColorBrush x:Key="CardBorderBrush" Color="{StaticResource CardBorder}" />
 
 </ResourceDictionary>

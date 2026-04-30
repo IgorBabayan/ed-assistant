@@ -1,10 +1,20 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using ED.Assistant.Services.DialogService;
 
 namespace ED.Assistant.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    [ObservableProperty]
+	private readonly IDialogService _dialogService;
+	private readonly ISettingsViewModel _settingsViewModel;
+
+	public MainWindowViewModel(IDialogService dialogService, ISettingsViewModel settingsViewModel)
+	{
+		_dialogService = dialogService;
+		_settingsViewModel = settingsViewModel;
+	}
+
+	[ObservableProperty]
     private string? _cMDR = "o7, Commander";
 
 	[ObservableProperty]
@@ -18,4 +28,10 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         
     }
+
+	[RelayCommand]
+	private async Task Settings()
+	{
+		await _dialogService.ShowDialogAsync<SettingsViewModel, bool>(_settingsViewModel);
+	}
 }

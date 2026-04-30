@@ -8,11 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
-    <AvaloniaXaml Remove="Views\Windows\**" />
-    <Compile Remove="Views\Windows\**" />
-    <EmbeddedResource Remove="Views\Windows\**" />
-    <None Remove="Views\Windows\**" />
   </ItemGroup>
 
   <ItemGroup>

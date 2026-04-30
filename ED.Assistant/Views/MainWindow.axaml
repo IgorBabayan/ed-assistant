@@ -61,9 +61,14 @@
 					<StackPanel Grid.Column="2"
 								Orientation="Horizontal"
 								VerticalAlignment="Top">
-						<Button Command="{Binding LoadCommand}"
-								Margin="{StaticResource MarginRight15}">
+						<Button Command="{Binding LoadCommand}">
 							<materialIcons:MaterialIcon Kind="Reload"
+														Classes="app-button"/>
+						</Button>
+
+						<Button Command="{Binding SettingsCommand}"
+								Margin="{StaticResource MarginRight15}">
+							<materialIcons:MaterialIcon Kind="Settings"
 														Classes="app-button"/>
 						</Button>
 
@@ -88,9 +93,27 @@
 			<!-- Conent -->
 			<Grid Grid.Row="1">
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="100" />
 					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
+
+				<ContentControl Grid.Column="0" />
+
+				<!-- Sidebar -->
+				<Border Grid.Column="1"
+						Classes="sidebar">
+					<StackPanel Margin="12"
+								Width="200"
+								Spacing="8"
+								HorizontalAlignment="Center">
+
+						<Button Classes="sidebar-button" Content="Dashboard"/>
+						<Button Classes="sidebar-button" Content="System"/>
+						<Button Classes="sidebar-button" Content="Bodies"/>
+						<Button Classes="sidebar-button" Content="Signals"/>
+						<Button Classes="sidebar-button" Content="Journal"/>
+					</StackPanel>
+				</Border>
 			</Grid>
 
 			<!-- Status bar -->
@@ -104,12 +127,18 @@
 
 					<TextBlock Grid.Column="0"
 							   Text="Ready"
+							   VerticalAlignment="Center"
+							   HorizontalAlignment="Left"
 							   Margin="{StaticResource MarginLeft15}" />
 
 					<TextBlock Grid.Column="1"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center"
 							   Text="...log file..." />
 
 					<TextBlock Grid.Column="2"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center"
 							   Text="...last event..."
 							   Margin="{StaticResource MarginRight15}" />
 				</Grid>

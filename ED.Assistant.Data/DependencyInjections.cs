@@ -5,7 +5,7 @@ namespace ED.Assistant.Data;
 
 public static class DependencyInjections
 {
-    public static void RegisterServices(this IServiceCollection services)
+    public static IServiceCollection RegisterDataServices(this IServiceCollection services)
     {
         services.AddSingleton<WindowsPathResolver>();
         services.AddSingleton<LinuxPathResolver>();
@@ -26,5 +26,6 @@ public static class DependencyInjections
         });
 
         services.AddSingleton<IPathFinder, PathFinder>();
+        return services;
     }
 }
