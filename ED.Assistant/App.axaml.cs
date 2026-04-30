@@ -19,7 +19,8 @@ public partial class App : Application
         var services = new ServiceCollection();
         services.RegisterDataServices()
             .RegisterViewModels()
-			.RegisterServices();
+			.RegisterServices()
+            .RegisterWindows();
 
         // Build provider and keep a reference to it for later use.
         var provider = services.BuildServiceProvider();

@@ -1,9 +1,56 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="ED.Assistant.SettingsWindow"
-        Title="SettingsWindow">
-  Welcome to Avalonia!
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		x:Class="ED.Assistant.SettingsWindow"
+		WindowDecorations="None"
+		WindowStartupLocation="Manual"
+		TransparencyLevelHint="Transparent"
+		Background="Transparent"
+		SizeToContent="Manual"
+		CanResize="False"
+		ShowInTaskbar="False">
+	<Grid Background="Transparent">
+		<!-- Overlay background -->
+		<Border Background="{DynamicResource TransparentBackgroundBrush}" />
+
+		<!-- Dialog content -->
+		<Border Background="{DynamicResource CardBackgroundBrush}"
+				CornerRadius="12"
+				Padding="20"
+				Width="600"
+				Height="400"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center">
+
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="36"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="36"/>
+				</Grid.RowDefinitions>
+
+				<TextBlock Grid.Row="0"
+						   Classes="primary"
+						   Text="Settings"
+						   FontSize="20"
+						   FontWeight="Bold" />
+
+				<!-- your settings UI here -->
+
+				<StackPanel Grid.Row="2"
+							Spacing="5"
+							Orientation="Horizontal"
+							HorizontalAlignment="Right">
+					<Button Content="Save"
+							Background="{DynamicResource SecondaryAccentBrush}"/>
+
+					<Button Content="Cancel"/>
+				</StackPanel>
+				
+			</Grid>
+
+		</Border>
+	</Grid>
 </Window>

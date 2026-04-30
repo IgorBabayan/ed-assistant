@@ -6,9 +6,9 @@ namespace ED.Assistant.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
 	private readonly IDialogService _dialogService;
-	private readonly ISettingsViewModel _settingsViewModel;
+	private readonly SettingsViewModel _settingsViewModel;
 
-	public MainWindowViewModel(IDialogService dialogService, ISettingsViewModel settingsViewModel)
+	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel)
 	{
 		_dialogService = dialogService;
 		_settingsViewModel = settingsViewModel;
@@ -30,8 +30,6 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
 	[RelayCommand]
-	private async Task Settings()
-	{
-		await _dialogService.ShowDialogAsync<SettingsViewModel, bool>(_settingsViewModel);
-	}
+	private async Task Settings() 
+		=> await _dialogService.ShowDialogAsync<SettingsViewModel, bool>(_settingsViewModel);
 }

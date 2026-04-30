@@ -61,28 +61,33 @@
 					<StackPanel Grid.Column="2"
 								Orientation="Horizontal"
 								VerticalAlignment="Top">
-						<Button Command="{Binding LoadCommand}">
+						<Button Classes="app-button"
+								Command="{Binding LoadCommand}">
 							<materialIcons:MaterialIcon Kind="Reload"
 														Classes="app-button"/>
 						</Button>
 
-						<Button Command="{Binding SettingsCommand}"
+						<Button Classes="app-button"
+								Command="{Binding SettingsCommand}"
 								Margin="{StaticResource MarginRight15}">
 							<materialIcons:MaterialIcon Kind="Settings"
 														Classes="app-button"/>
 						</Button>
 
-						<Button Click="OnMinimizeClick">
+						<Button Classes="app-button"
+								Click="OnMinimizeClick">
 							<materialIcons:MaterialIcon Kind="WindowMinimize"
 														Classes="app-button"/>
 						</Button>
 
-						<Button Click="OnMaximizeClick">
+						<Button Classes="app-button"
+								Click="OnMaximizeClick">
 							<materialIcons:MaterialIcon Kind="WindowMaximize"
 														Classes="app-button"/>
 						</Button>
 
-						<Button Click="OnCloseClick">
+						<Button Classes="app-button"
+								Click="OnCloseClick">
 							<materialIcons:MaterialIcon Kind="WindowClose"
 														Classes="app-button"/>
 						</Button>
@@ -107,11 +112,11 @@
 								Spacing="8"
 								HorizontalAlignment="Center">
 
-						<Button Classes="sidebar-button" Content="Dashboard"/>
-						<Button Classes="sidebar-button" Content="System"/>
-						<Button Classes="sidebar-button" Content="Bodies"/>
-						<Button Classes="sidebar-button" Content="Signals"/>
-						<Button Classes="sidebar-button" Content="Journal"/>
+						<Button Classes="app-button sidebar-button" Content="Dashboard"/>
+						<Button Classes="app-button sidebar-button" Content="System"/>
+						<Button Classes="app-button sidebar-button" Content="Bodies"/>
+						<Button Classes="app-button sidebar-button" Content="Signals"/>
+						<Button Classes="app-button sidebar-button" Content="Journal"/>
 					</StackPanel>
 				</Border>
 			</Grid>

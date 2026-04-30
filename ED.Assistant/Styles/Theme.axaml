@@ -11,6 +11,7 @@
     <Color x:Key="SecondaryText">#E6EDF3</Color>
     <Color x:Key="CardBackground">#101820</Color>
     <Color x:Key="CardBorder">#1F2A36</Color>
+    <Color x:Key="TransparentBackground">#80000000</Color>
 
     <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource ColorBackground}" />
     <SolidColorBrush x:Key="PrimaryAccentBrush" Color="{StaticResource PrimaryAccent}" />
@@ -19,5 +20,6 @@
     <SolidColorBrush x:Key="SecondaryTextBrush" Color="{StaticResource SecondaryText}" />
     <SolidColorBrush x:Key="CardBackgroundBrush" Color="{StaticResource CardBackground}" />
     <SolidColorBrush x:Key="CardBorderBrush" Color="{StaticResource CardBorder}" />
+    <SolidColorBrush x:Key="TransparentBackgroundBrush" Color="{StaticResource TransparentBackground}" />
 
 </ResourceDictionary>
