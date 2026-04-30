@@ -16,7 +16,8 @@ internal static class ServiceCollectionExtensions
 
 	public static IServiceCollection RegisterServices(this IServiceCollection services)
 	{
-		services.AddSingleton<IDialogService, DialogService>();
+		services.AddSingleton<IDialogService, DialogService>()
+			.AddSingleton<IFolderPickerService, FolderPickerService>();
 		return services;
 	}
 

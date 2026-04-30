@@ -1,6 +1,5 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
+﻿using Avalonia.Controls;
+using ED.Assistant.Extensions;
 using ED.Assistant.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,7 +20,7 @@ class DialogService : IDialogService
 	public async Task<TResult?> ShowDialogAsync<TViewModel, TResult>(TViewModel viewModel)
 		where TViewModel : ViewModelBase
 	{
-		var owner = GetMainWindow();
+		var owner = Utils.GetMainWindow();
 		Window dialog = viewModel switch
 		{
 			ConfirmDialogViewModel => _serviceProvider.GetRequiredService<ConfirmDialogWindow>(),
@@ -35,16 +34,5 @@ class DialogService : IDialogService
 		dialog.Height = owner.Bounds.Height;
 		dialog.Position = owner.Position;
 		return await dialog.ShowDialog<TResult?>(owner);
-	}
-
-	private static Window GetMainWindow()
-	{
-		if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
-			&& desktop.MainWindow is not null)
-		{
-			return desktop.MainWindow;
-		}
-
-		throw new InvalidOperationException("MainWindow not found.");
 	}
 }

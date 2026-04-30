@@ -1,5 +1,5 @@
 ﻿namespace ED.Assistant.ViewModels;
 
-public class ConfirmDialogViewModel : ViewModelBase
+public partial class ConfirmDialogViewModel : ViewModelBase
 {
 }

@@ -61,35 +61,30 @@
 					<StackPanel Grid.Column="2"
 								Orientation="Horizontal"
 								VerticalAlignment="Top">
-						<Button Classes="app-button"
+						<Button Classes="window-button"
 								Command="{Binding LoadCommand}">
-							<materialIcons:MaterialIcon Kind="Reload"
-														Classes="app-button"/>
+							<materialIcons:MaterialIcon Kind="Reload"/>
 						</Button>
 
-						<Button Classes="app-button"
+						<Button Classes="window-button"
 								Command="{Binding SettingsCommand}"
 								Margin="{StaticResource MarginRight15}">
-							<materialIcons:MaterialIcon Kind="Settings"
-														Classes="app-button"/>
+							<materialIcons:MaterialIcon Kind="Settings"/>
 						</Button>
 
-						<Button Classes="app-button"
+						<Button Classes="window-button"
 								Click="OnMinimizeClick">
-							<materialIcons:MaterialIcon Kind="WindowMinimize"
-														Classes="app-button"/>
+							<materialIcons:MaterialIcon Kind="WindowMinimize"/>
 						</Button>
 
-						<Button Classes="app-button"
+						<Button Classes="window-button"
 								Click="OnMaximizeClick">
-							<materialIcons:MaterialIcon Kind="WindowMaximize"
-														Classes="app-button"/>
+							<materialIcons:MaterialIcon Kind="WindowMaximize"/>
 						</Button>
 
-						<Button Classes="app-button"
+						<Button Classes="window-button close"
 								Click="OnCloseClick">
-							<materialIcons:MaterialIcon Kind="WindowClose"
-														Classes="app-button"/>
+							<materialIcons:MaterialIcon Kind="WindowClose"/>
 						</Button>
 					</StackPanel>
 				</Grid>
@@ -112,11 +107,11 @@
 								Spacing="8"
 								HorizontalAlignment="Center">
 
-						<Button Classes="app-button sidebar-button" Content="Dashboard"/>
-						<Button Classes="app-button sidebar-button" Content="System"/>
-						<Button Classes="app-button sidebar-button" Content="Bodies"/>
-						<Button Classes="app-button sidebar-button" Content="Signals"/>
-						<Button Classes="app-button sidebar-button" Content="Journal"/>
+						<Button Classes="sidebar-button active" Content="Dashboard"/>
+						<Button Classes="sidebar-button" Content="System"/>
+						<Button Classes="sidebar-button" Content="Bodies"/>
+						<Button Classes="sidebar-button" Content="Signals"/>
+						<Button Classes="sidebar-button" Content="Journal"/>
 					</StackPanel>
 				</Border>
 			</Grid>
