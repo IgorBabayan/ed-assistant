@@ -9,7 +9,7 @@ public partial class SettingsViewModel : ViewModelBase
 	private readonly IFolderPickerService _folderPickerService;
 
 	[ObservableProperty]
-	private string? _logFolder = null;
+	private string? _logFolder = string.Empty;
 
 	public event Action<bool?>? CloseRequested;
 
@@ -18,7 +18,7 @@ public partial class SettingsViewModel : ViewModelBase
 		_pathFinder = pathFinder;
 		_folderPickerService = folderPickerService;
 
-		LogFolder = _pathFinder.GetPathToLogs();
+		LogFolder = _pathFinder.GetPathToLogs() ?? string.Empty;
 	}
 
 	[RelayCommand]
@@ -29,7 +29,7 @@ public partial class SettingsViewModel : ViewModelBase
 	}
 
 	[RelayCommand]
-	private async Task Cancel() => CloseRequested?.Invoke(true);
+	private void Cancel() => CloseRequested?.Invoke(false);
 
 	[RelayCommand]
 	private async Task OpenFolder()

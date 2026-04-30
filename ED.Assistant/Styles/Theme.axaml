@@ -22,4 +22,7 @@
     <SolidColorBrush x:Key="CardBorderBrush" Color="{StaticResource CardBorder}" />
     <SolidColorBrush x:Key="TransparentBackgroundBrush" Color="{StaticResource TransparentBackground}" />
 
+    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#3A4B66"/>
+    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#3A4B66"/>
+    <SolidColorBrush x:Key="TextControlBorderBrush" Color="#3A4B66"/>
 </ResourceDictionary>
