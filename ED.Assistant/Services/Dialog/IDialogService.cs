@@ -8,7 +8,7 @@ namespace ED.Assistant.Services.DialogService;
 public interface IDialogService
 {
 	Task<TResult?> ShowDialogAsync<TViewModel, TResult>(TViewModel viewModel)
-		   where TViewModel : ViewModelBase;
+		   where TViewModel : BaseViewModel;
 }
 
 class DialogService : IDialogService
@@ -18,7 +18,7 @@ class DialogService : IDialogService
 	public DialogService(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
 
 	public async Task<TResult?> ShowDialogAsync<TViewModel, TResult>(TViewModel viewModel)
-		where TViewModel : ViewModelBase
+		where TViewModel : BaseViewModel
 	{
 		var owner = Utils.GetMainWindow();
 		Window dialog = viewModel switch

@@ -9,4 +9,43 @@
 	<Style Selector="TextBlock.primary">
 		<Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
 	</Style>
+
+	<Style Selector="TextBlock.dashboard-card-header">
+		<Setter Property="Foreground" Value="#7EA7FF"/>
+		<Setter Property="FontSize" Value="12"/>
+		<Setter Property="FontWeight" Value="SemiBold"/>
+	</Style>
+
+	<Style Selector="TextBlock.dashboard-system-name">
+		<Setter Property="Foreground" Value="#E6EDF3"/>
+		<Setter Property="FontSize" Value="32"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+	</Style>
+
+	<Style Selector="TextBlock.dashboard-commander-name">
+		<Setter Property="Foreground" Value="#E6EDF3"/>
+		<Setter Property="FontSize" Value="22"/>
+		<Setter Property="FontWeight" Value="SemiBold"/>
+	</Style>
+
+	<Style Selector="TextBlock.dashboard-label">
+		<Setter Property="Foreground" Value="#7D8DA6"/>
+		<Setter Property="FontSize" Value="12"/>
+	</Style>
+
+	<Style Selector="TextBlock.dashboard-value">
+		<Setter Property="Foreground" Value="#E6EDF3"/>
+		<Setter Property="FontSize" Value="14"/>
+	</Style>
+
+	<Style Selector="TextBlock.dashboard-rank">
+		<Setter Property="Foreground" Value="#FFB86B"/>
+		<Setter Property="FontSize" Value="13"/>
+	</Style>
+
+	<Style Selector="TextBlock.signal-title">
+		<Setter Property="Foreground" Value="#E6EDF3"/>
+		<Setter Property="FontSize" Value="15"/>
+		<Setter Property="FontWeight" Value="SemiBold"/>
+	</Style>
 </Styles>

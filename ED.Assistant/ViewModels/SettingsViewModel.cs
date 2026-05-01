@@ -4,7 +4,7 @@ using ED.Assistant.Services.DialogService;
 
 namespace ED.Assistant.ViewModels;
 
-public partial class SettingsViewModel : ViewModelBase
+public partial class SettingsViewModel : BaseViewModel
 {
 	private readonly IPathFinder _pathFinder;
 	private readonly IFolderPickerService _folderPickerService;

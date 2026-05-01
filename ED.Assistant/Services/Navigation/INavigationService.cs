@@ -5,7 +5,7 @@ namespace ED.Assistant.Services.Navigation;
 
 public interface INavigationService
 {
-	void NavigateTo<TViewModel>() where TViewModel : ViewModelBase;
+	void NavigateTo<TViewModel>() where TViewModel : BaseViewModel;
 }
 
 class NavigationService : INavigationService
@@ -21,6 +21,6 @@ class NavigationService : INavigationService
 		_navigationStore = navigationStore;
 	}
 
-	public void NavigateTo<TViewModel>() where TViewModel : ViewModelBase 
+	public void NavigateTo<TViewModel>() where TViewModel : BaseViewModel 
 		=> _navigationStore.CurrentViewModel = _serviceProvider.GetRequiredService<TViewModel>();
 }
