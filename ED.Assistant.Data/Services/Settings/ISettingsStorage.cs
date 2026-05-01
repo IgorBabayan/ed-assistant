@@ -41,8 +41,3 @@ class SettingsStorage : ISettingsStorage
 			?? new AppSettings();
 	}
 }
-
-public static class SettingsStorageFactory
-{
-	public static ISettingsStorage Create() => new SettingsStorage();
-}

@@ -1,7 +1,7 @@
 ﻿using ED.Assistant.Data.Models.Config;
 using ED.Assistant.Data.Services.Settings;
 
-namespace ED.Assistant.Tests.Services;
+namespace ED.Assistant.Tests;
 
 [TestClass]
 public sealed class StorageTest
@@ -13,7 +13,7 @@ public sealed class StorageTest
 		Directory.CreateDirectory(tempDir);
 
 		var filePath = Path.Combine(tempDir, "config.json");
-		var storage = SettingsStorageFactory.Create();
+		var storage = new SettingsStorage();
 		var settings = new AppSettings
 		{
 			LogFolder = "test-folder"

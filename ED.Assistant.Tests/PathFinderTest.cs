@@ -1,6 +1,6 @@
 ﻿using ED.Assistant.Data.Services.Path;
 
-namespace ED.Assistant.Tests.Services;
+namespace ED.Assistant.Tests;
 
 [TestClass]
 public sealed class PathFinderTest
