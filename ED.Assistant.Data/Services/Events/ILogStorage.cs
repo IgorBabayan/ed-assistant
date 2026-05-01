@@ -1,22 +1,25 @@
 ﻿using ED.Assistant.Data.Models.Events;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
 using IOPath = System.IO.Path;
 
 namespace ED.Assistant.Data.Services.Events;
 
 public interface ILogStorage
 {
-	Task LoadAllLogs(string logFolder, CancellationToken cancellationToken = default);
-	Task LoadLastLogs(string logFolder, CancellationToken cancellationToken = default);
+	Task<JournalState> LoadAllLogsAsync(string logFolder, CancellationToken cancellationToken = default);
+	Task<JournalState> LoadLastLogsAsync(string logFolder, CancellationToken cancellationToken = default);
 }
 
 class LogStorage : ILogStorage
 {
-	public async Task LoadAllLogs(string logFolder, CancellationToken cancellationToken = default)
+	private readonly IJournalEventDispatcher _dispatcher;
+
+	public LogStorage(IJournalEventDispatcher dispatcher) => _dispatcher = dispatcher;
+
+	public async Task<JournalState> LoadAllLogsAsync(string logFolder, CancellationToken cancellationToken = default)
 	{
-		EnsureLogFolderExists(logFolder);
+		/*EnsureLogFolderExists(logFolder);
 
 		var files = Directory.GetFiles(logFolder, "Journal.*.log")
 			.Select(path =>
@@ -45,11 +48,11 @@ class LogStorage : ILogStorage
 			.ToDictionary(
 				g => g.Key,
 				g => g.Select(x => x.Path).ToList()
-			);
-		
+			);*/
+		throw new NotImplementedException();
 	}
 
-	public async Task LoadLastLogs(string logFolder, CancellationToken cancellationToken = default)
+	public async Task<JournalState> LoadLastLogsAsync(string logFolder, CancellationToken cancellationToken = default)
 	{
 		EnsureLogFolderExists(logFolder);
 
@@ -57,7 +60,7 @@ class LogStorage : ILogStorage
 		if (latestDayLogs?.Any() == false)
 			throw new Exception("Log files not found");
 
-		await ParseData(latestDayLogs!, cancellationToken);
+		return await ParseDataAsync(latestDayLogs!, cancellationToken);
 	}
 
 	private static void EnsureLogFolderExists(string logFolder)
@@ -75,12 +78,12 @@ class LogStorage : ILogStorage
 		foreach (var filePath in filePaths)
 		{
 			await using var stream = new FileStream(filePath, new FileStreamOptions
-			   {
-				   Mode = FileMode.Open,
-				   Access = FileAccess.Read,
-				   Share = FileShare.ReadWrite,
-				   Options = FileOptions.Asynchronous | FileOptions.SequentialScan
-			   });
+			{
+				Mode = FileMode.Open,
+				Access = FileAccess.Read,
+				Share = FileShare.ReadWrite,
+				Options = FileOptions.Asynchronous | FileOptions.SequentialScan
+			});
 			using var reader = new StreamReader(stream);
 
 			while (await reader.ReadLineAsync(cancellationToken) is { } line)
@@ -90,7 +93,7 @@ class LogStorage : ILogStorage
 		}
 	}
 
-	private static IEnumerable<string>? GetLatestDayLogs(string logFolder) 
+	private static IEnumerable<string>? GetLatestDayLogs(string logFolder)
 		=> Directory.GetFiles(logFolder, "Journal.*.log")
 			.Select(path =>
 			{
@@ -118,19 +121,17 @@ class LogStorage : ILogStorage
 			.Select(x => x!.Path)
 			.ToList() ?? [];
 
-	private static async Task ParseData(IEnumerable<string> latestDayLogs, CancellationToken cancellationToken = default)
+	private async Task<JournalState> ParseDataAsync(IEnumerable<string> latestDayLogs, CancellationToken cancellationToken = default)
 	{
-		CommanderEvent? commander = null;
-		await foreach (var line in ReadLinesFromFilesAsync(latestDayLogs!, cancellationToken))
-		{
-			if (line.Contains(CommanderEvent.EventNameJSON))
-			{
-				var obj = JsonSerializer.Deserialize<CommanderEvent>(line);
-				if (obj is not null)
-					commander = obj;
-			}
+		var state = new JournalState();
 
-			//! TODO: add other implementations for other events we want to track, e.g. FSDJump, Docked, Undocked, etc.
-		}
+		//! TODO: add other implementations for other events we want to track, e.g. FSDJump, Docked, Undocked, etc.
+		_dispatcher.On<CommanderEvent>(CommanderEvent.EventName, e => state.Commander = e);
+		_dispatcher.On<LoadGameEvent>(LoadGameEvent.EventName, e => state.LoadGame = e);
+
+		await _dispatcher.DispatchAsync(ReadLinesFromFilesAsync(latestDayLogs, cancellationToken),
+			cancellationToken);
+
+		return state;
 	}
 }

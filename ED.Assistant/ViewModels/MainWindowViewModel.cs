@@ -11,6 +11,13 @@ public partial class MainWindowViewModel : ViewModelBase
 	private readonly IPathFinder _pathFinder;
 	private readonly SettingsViewModel _settingsViewModel;
 
+	private class DefaultState
+	{
+		public const string CMDR = "o7, Commander";
+		public const string Ship = "Ship not found";
+		public const string Status = "Ready";
+	}
+
 	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
 		ILogStorage logStorage, IPathFinder pathFinder)
 	{
@@ -21,18 +28,21 @@ public partial class MainWindowViewModel : ViewModelBase
 	}
 
 	[ObservableProperty]
-    private string? _cMDR = "o7, Commander";
+    private string? _cMDR = DefaultState.CMDR;
 
 	[ObservableProperty]
-	private string? _ship = "Ship not found";
+	private string? _ship = DefaultState.Ship;
 
 	[ObservableProperty]
-	private string? _status = "Ready";
+	private string? _status = DefaultState.Status;
 
 	[RelayCommand]
     private async Task Load(CancellationToken cancellationToken)
     {
-        await _logStorage.LoadLastLogs(_pathFinder.GetPathToLogs(), cancellationToken);
+        var state = await _logStorage.LoadLastLogsAsync(_pathFinder.GetPathToLogs(), cancellationToken);
+
+		if (!string.IsNullOrWhiteSpace(state.Commander?.Name))
+			CMDR = $"o7, {state.Commander.Name}";
 	}
 
 	[RelayCommand]

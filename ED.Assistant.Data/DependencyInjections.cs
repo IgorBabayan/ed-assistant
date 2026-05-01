@@ -1,7 +1,9 @@
-﻿using ED.Assistant.Data.Services.Events;
+﻿using ED.Assistant.Data.Services;
+using ED.Assistant.Data.Services.Events;
 using ED.Assistant.Data.Services.Path;
 using ED.Assistant.Data.Services.Settings;
 using Microsoft.Extensions.DependencyInjection;
+using static ED.Assistant.Data.Services.IJournalEventDispatcher;
 
 namespace ED.Assistant.Data;
 
@@ -29,7 +31,8 @@ public static class DependencyInjections
 
         services.AddSingleton<IPathFinder, PathFinder>()
             .AddSingleton<ISettingsStorage, SettingsStorage>()
-            .AddSingleton<ILogStorage, LogStorage>();
+            .AddSingleton<ILogStorage, LogStorage>()
+            .AddSingleton<IJournalEventDispatcher, JournalEventDispatcher>();
         return services;
     }
 }

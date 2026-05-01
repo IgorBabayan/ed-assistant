@@ -1,16 +1,18 @@
 ﻿namespace ED.Assistant.Data.Models.Events;
 
-public class CommanderEvent
+public class CommanderEvent : IJournalEvent
 {
 	internal const string EventName = "Commander";
-	internal const string EventNameJSON = "\"event\":\"Commander\"";
+
+	[JsonPropertyName("Event")]
+	public string Event { get; set; } = string.Empty;
 
 	[JsonPropertyName("Name")]
-	public string? Name { get; set; }
+	public string? Name { get; set; } = default;
 
 	[JsonPropertyName("FID")]
-	public string? FID { get; set; }
+	public string? FID { get; set; } = default;
 
 	[JsonPropertyName("timestamp")]
-	public DateTime Timestamp { get; set; }
+	public DateTime Timestamp { get; set; } = default;
 }
