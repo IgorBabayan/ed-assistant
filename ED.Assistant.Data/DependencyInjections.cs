@@ -31,8 +31,7 @@ public static class DependencyInjections
 
         services.AddSingleton<IPathFinder, PathFinder>()
             .AddSingleton<ISettingsStorage, SettingsStorage>()
-            .AddSingleton<ILogStorage, LogStorage>()
-            .AddSingleton<IJournalEventDispatcher, JournalEventDispatcher>();
+            .AddSingleton<ILogStorage, LogStorage>();
         return services;
     }
 }

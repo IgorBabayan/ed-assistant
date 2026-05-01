@@ -1,6 +1,7 @@
 ﻿using ED.Assistant.Data.Models.Events;
 using ED.Assistant.Services.DialogService;
 using ED.Assistant.Services.Journal;
+using System.ComponentModel;
 
 namespace ED.Assistant.ViewModels;
 
@@ -34,6 +35,15 @@ public partial class MainWindowViewModel : BaseViewModel
 		_settingsViewModel = settingsViewModel;
 
 		NavigationStore = navigationStore;
+
+		if (NavigationStore is INotifyPropertyChanged notify)
+		{
+			notify.PropertyChanged += (_, e) =>
+			{
+				if (e.PropertyName == nameof(NavigationStore.CurrentViewModel))
+					LoadCommand.NotifyCanExecuteChanged();
+			};
+		}
 	}
 
 	[RelayCommand]

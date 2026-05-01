@@ -13,10 +13,6 @@ public interface ILogStorage
 
 class LogStorage : ILogStorage
 {
-	private readonly IJournalEventDispatcher _dispatcher;
-
-	public LogStorage(IJournalEventDispatcher dispatcher) => _dispatcher = dispatcher;
-
 	public async Task<JournalState> LoadAllLogsAsync(string logFolder, CancellationToken cancellationToken = default)
 	{
 		/*EnsureLogFolderExists(logFolder);
@@ -124,13 +120,14 @@ class LogStorage : ILogStorage
 	private async Task<JournalState> ParseDataAsync(IEnumerable<string> latestDayLogs, CancellationToken cancellationToken = default)
 	{
 		var state = new JournalState();
+		var dispatcher = new JournalEventDispatcher();
 
-		_dispatcher.On<CommanderEvent>(CommanderEvent.EventName, e => state.Commander = e);
-		_dispatcher.On<LoadGameEvent>(LoadGameEvent.EventName, e => state.LoadGame = e);
-		_dispatcher.On<MaterialsEvent>(MaterialsEvent.EventName, e => state.Materials = e);
-		_dispatcher.On<RankEvent>(RankEvent.EventName, e => state.Ranks = e);
+		dispatcher.On<CommanderEvent>(CommanderEvent.EventName, e => state.Commander = e);
+		dispatcher.On<LoadGameEvent>(LoadGameEvent.EventName, e => state.LoadGame = e);
+		dispatcher.On<MaterialsEvent>(MaterialsEvent.EventName, e => state.Materials = e);
+		dispatcher.On<RankEvent>(RankEvent.EventName, e => state.Ranks = e);
 
-		await _dispatcher.DispatchAsync(ReadLinesFromFilesAsync(latestDayLogs, cancellationToken),
+		await dispatcher.DispatchAsync(ReadLinesFromFilesAsync(latestDayLogs, cancellationToken),
 			cancellationToken);
 
 		return state;

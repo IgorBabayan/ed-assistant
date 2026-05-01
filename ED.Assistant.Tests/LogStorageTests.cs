@@ -1,6 +1,4 @@
-﻿using ED.Assistant.Data.Models.Events;
-using ED.Assistant.Data.Services;
-using ED.Assistant.Data.Services.Events;
+﻿using ED.Assistant.Data.Services.Events;
 
 namespace ED.Assistant.Tests;
 
@@ -10,21 +8,21 @@ public class LogStorageTests
 	[TestMethod]
 	public async Task LoadLastLogsAsync_Should_Throw_When_LogFolder_Is_Null()
 	{
-		var storage = new LogStorage(new FakeJournalEventDispatcher());
+		var storage = new LogStorage();
 		await Assert.ThrowsAsync<ArgumentNullException>(() => storage.LoadLastLogsAsync(null!));
 	}
 
 	[TestMethod]
 	public async Task LoadLastLogsAsync_Should_Throw_When_LogFolder_Is_Empty()
 	{
-		var storage = new LogStorage(new FakeJournalEventDispatcher());
+		var storage = new LogStorage();
 		await Assert.ThrowsAsync<ArgumentNullException>(() => storage.LoadLastLogsAsync(""));
 	}
 
 	[TestMethod]
 	public async Task LoadLastLogsAsync_Should_Throw_When_LogFolder_Does_Not_Exist()
 	{
-		var storage = new LogStorage(new FakeJournalEventDispatcher());
+		var storage = new LogStorage();
 		await Assert.ThrowsAsync<DirectoryNotFoundException>(() => storage.LoadLastLogsAsync("not-existing-folder"));
 	}
 
@@ -35,7 +33,7 @@ public class LogStorageTests
 
 		try
 		{
-			var storage = new LogStorage(new FakeJournalEventDispatcher());
+			var storage = new LogStorage();
 			await Assert.ThrowsAsync<Exception>(() => storage.LoadLastLogsAsync(folder));
 		}
 		finally
@@ -47,56 +45,63 @@ public class LogStorageTests
 	[TestMethod]
 	public async Task LoadLastLogsAsync_Should_Read_All_Journal_Files_From_Latest_Day()
 	{
-		var folder = CreateTempFolder();
+		// Arrange
+		using var temp = new TempDirectory();
 
-		try
-		{
-			await File.WriteAllLinesAsync(Path.Combine(folder, "Journal.2026-04-30T082047.01.log"),
-				["old-day-line"]);
+		await File.WriteAllTextAsync(Path.Combine(temp.Path, "Journal.2026-04-29T100000.01.log"),
+			"""
+        { "timestamp":"2026-04-29T10:00:00Z", "event":"Commander", "FID":"F1", "Name":"OLD_DAY" }
+        """);
 
-			await File.WriteAllLinesAsync(Path.Combine(folder, "Journal.2026-05-01T060000.01.log"),
-				["latest-day-line-1"]);
+		await File.WriteAllTextAsync(Path.Combine(temp.Path, "Journal.2026-04-30T080000.01.log"),
+			"""
+        { "timestamp":"2026-04-30T08:00:00Z", "event":"Commander", "FID":"F2", "Name":"FIRST_FILE" }
+        """);
 
-			await File.WriteAllLinesAsync(Path.Combine(folder, "Journal.2026-05-01T070000.01.log"),
-				["latest-day-line-2"]);
+		await File.WriteAllTextAsync(Path.Combine(temp.Path, "Journal.2026-04-30T120000.01.log"),
+			"""
+        { "timestamp":"2026-04-30T12:00:00Z", "event":"Commander", "FID":"F3", "Name":"SECOND_FILE" }
+        """);
 
-			var dispatcher = new FakeJournalEventDispatcher();
-			var storage = new LogStorage(dispatcher);
+		var storage = new LogStorage();
 
-			await storage.LoadLastLogsAsync(folder);
+		// Act
+		var state = await storage.LoadLastLogsAsync(temp.Path);
 
-			CollectionAssert.AreEqual(new[] { "latest-day-line-1", "latest-day-line-2" },
-				dispatcher.Lines);
-		}
-		finally
-		{
-			Directory.Delete(folder, true);
-		}
+		// Assert
+		Assert.IsNotNull(state.Commander);
+		Assert.AreEqual("SECOND_FILE", state.Commander.Name);
 	}
 
 	[TestMethod]
 	public async Task LoadLastLogsAsync_Should_Read_Latest_Day_Files_In_DateTime_Order()
 	{
-		var folder = CreateTempFolder();
+		// Arrange
+		using var temp = new TempDirectory();
 
-		try
-		{
-			await File.WriteAllLinesAsync(Path.Combine(folder, "Journal.2026-05-01T070000.01.log"),
-				["second"]);
+		await File.WriteAllTextAsync(Path.Combine(temp.Path, "Journal.2026-04-30T180000.01.log"),
+			"""
+        { "timestamp":"2026-04-30T18:00:00Z", "event":"Commander", "FID":"F3", "Name":"LAST" }
+        """);
 
-			await File.WriteAllLinesAsync(Path.Combine(folder, "Journal.2026-05-01T060000.01.log"),
-				["first"]);
+		await File.WriteAllTextAsync(Path.Combine(temp.Path, "Journal.2026-04-30T080000.01.log"),
+			"""
+        { "timestamp":"2026-04-30T08:00:00Z", "event":"Commander", "FID":"F1", "Name":"FIRST" }
+        """);
 
-			var dispatcher = new FakeJournalEventDispatcher();
-			var storage = new LogStorage(dispatcher);
+		await File.WriteAllTextAsync(Path.Combine(temp.Path, "Journal.2026-04-30T120000.01.log"),
+			"""
+        { "timestamp":"2026-04-30T12:00:00Z", "event":"Commander", "FID":"F2", "Name":"MIDDLE" }
+        """);
 
-			await storage.LoadLastLogsAsync(folder);
-			CollectionAssert.AreEqual(new[] { "first", "second" }, dispatcher.Lines);
-		}
-		finally
-		{
-			Directory.Delete(folder, true);
-		}
+		var storage = new LogStorage();
+
+		// Act
+		var state = await storage.LoadLastLogsAsync(temp.Path);
+
+		// Assert
+		Assert.IsNotNull(state.Commander);
+		Assert.AreEqual("LAST", state.Commander.Name);
 	}
 
 	private static string CreateTempFolder()
@@ -106,19 +111,17 @@ public class LogStorageTests
 		return folder;
 	}
 
-	private sealed class FakeJournalEventDispatcher : IJournalEventDispatcher
+	internal sealed class TempDirectory : IDisposable
 	{
-		public List<string> Lines { get; } = [];
+		public string Path { get; } = System.IO.Path.Combine(System.IO.Path.GetTempPath(),
+			Guid.NewGuid().ToString("N"));
 
-		public void On<TEvent>(string eventName, Action<TEvent> handler)
-			where TEvent : IJournalEvent { }
+		public TempDirectory() => Directory.CreateDirectory(Path);
 
-		public async Task DispatchAsync(IAsyncEnumerable<string> lines, CancellationToken cancellationToken = default)
+		public void Dispose()
 		{
-			await foreach (var line in lines.WithCancellation(cancellationToken))
-			{
-				Lines.Add(line);
-			}
+			if (Directory.Exists(Path))
+				Directory.Delete(Path, recursive: true);
 		}
 	}
 }
