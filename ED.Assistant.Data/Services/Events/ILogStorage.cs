@@ -125,9 +125,10 @@ class LogStorage : ILogStorage
 	{
 		var state = new JournalState();
 
-		//! TODO: add other implementations for other events we want to track, e.g. FSDJump, Docked, Undocked, etc.
 		_dispatcher.On<CommanderEvent>(CommanderEvent.EventName, e => state.Commander = e);
 		_dispatcher.On<LoadGameEvent>(LoadGameEvent.EventName, e => state.LoadGame = e);
+		_dispatcher.On<MaterialsEvent>(MaterialsEvent.EventName, e => state.Materials = e);
+		_dispatcher.On<RankEvent>(RankEvent.EventName, e => state.Ranks = e);
 
 		await _dispatcher.DispatchAsync(ReadLinesFromFilesAsync(latestDayLogs, cancellationToken),
 			cancellationToken);

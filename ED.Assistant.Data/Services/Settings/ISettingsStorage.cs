@@ -7,7 +7,6 @@ public interface ISettingsStorage
 {
 	Task SaveAsync(string filePath, AppSettings settings, CancellationToken cancellationToken = default);
 	Task<AppSettings> LoadAsync(string filePath, CancellationToken cancellationToken = default);
-
 }
 
 class SettingsStorage : ISettingsStorage

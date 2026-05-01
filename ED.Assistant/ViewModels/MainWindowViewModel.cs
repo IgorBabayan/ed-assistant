@@ -18,23 +18,27 @@ public partial class MainWindowViewModel : ViewModelBase
 		public const string Status = "Ready";
 	}
 
-	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
-		ILogStorage logStorage, IPathFinder pathFinder)
-	{
-		_dialogService = dialogService;
-		_settingsViewModel = settingsViewModel;
-		_logStorage = logStorage;
-		_pathFinder = pathFinder;
-	}
-
 	[ObservableProperty]
-    private string? _cMDR = DefaultState.CMDR;
+	private string? _cMDR = DefaultState.CMDR;
 
 	[ObservableProperty]
 	private string? _ship = DefaultState.Ship;
 
 	[ObservableProperty]
 	private string? _status = DefaultState.Status;
+
+	public INavigationStore NavigationStore { get; }
+
+	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
+		ILogStorage logStorage, IPathFinder pathFinder, INavigationStore navigationStore)
+	{
+		_dialogService = dialogService;
+		_settingsViewModel = settingsViewModel;
+		_logStorage = logStorage;
+		_pathFinder = pathFinder;
+
+		NavigationStore = navigationStore;
+	}
 
 	[RelayCommand]
     private async Task Load(CancellationToken cancellationToken)
@@ -43,6 +47,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
 		if (!string.IsNullOrWhiteSpace(state.Commander?.Name))
 			CMDR = $"o7, {state.Commander.Name}";
+
+		if (!string.IsNullOrWhiteSpace(state.LoadGame?.ShipFullTitle))
+			Ship = state.LoadGame.ShipFullTitle;
 	}
 
 	[RelayCommand]

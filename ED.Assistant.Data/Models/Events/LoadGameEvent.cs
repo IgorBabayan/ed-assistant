@@ -1,10 +1,27 @@
 ﻿namespace ED.Assistant.Data.Models.Events;
 
-public class LoadGameEvent : IJournalEvent
+public class LoadGameEvent : BaseJournalEvent
 {
 	internal const string EventName = "LoadGame";
 
-	public string Event => throw new NotImplementedException();
+	[JsonPropertyName("Ship")]
+	public string Ship { get; set; } = string.Empty;
 
-	public DateTime Timestamp => throw new NotImplementedException();
+	[JsonPropertyName("ShipName")]
+	public string ShipName { get; set; } = string.Empty;
+
+	[JsonPropertyName("ShipIdent")]
+	public string ShipIdent { get; set; } = string.Empty;
+
+	[JsonPropertyName("FuelLevel")]
+	public double FuelLevel { get; set; } = default;
+
+	[JsonPropertyName("FuelCapacity")]
+	public double FuelCapacity { get; set; } = default;
+
+	[JsonPropertyName("Credits")]
+	public decimal Credits { get; set; }
+
+	[JsonIgnore]
+	public string ShipFullTitle => $"{Ship} {ShipName} ({ShipIdent})";
 }

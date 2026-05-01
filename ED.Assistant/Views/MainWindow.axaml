@@ -7,7 +7,7 @@
 		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 		x:Class="ED.Assistant.Views.MainWindow"
 		x:DataType="vm:MainWindowViewModel"
-		Icon="/Assets/avalonia-logo.ico"
+		Icon="/Assets/logo.ico"
 		Background="Transparent"
 		Title="ED Assistant"
 		WindowDecorations="None"
@@ -97,11 +97,13 @@
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
 
-				<ContentControl Grid.Column="0" />
+				<ContentControl Grid.Column="0"
+								Content="{Binding NavigationStore.CurrentViewModel}"/>
 
 				<!-- Sidebar -->
 				<Border Grid.Column="1"
-						Classes="sidebar">
+						Classes="sidebar"
+						Margin="{DynamicResource MarginTopBottom15}">
 					<StackPanel Margin="12"
 								Width="200"
 								Spacing="8"

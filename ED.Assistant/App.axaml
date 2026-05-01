@@ -2,6 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="ED.Assistant.App"
     xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+    xmlns:views="using:ED.Assistant"
+    xmlns:vm="using:ED.Assistant.ViewModels"
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
     
@@ -20,4 +22,10 @@
         <StyleInclude Source="avares://ED.Assistant/Styles/Button.axaml" />
         <StyleInclude Source="avares://ED.Assistant/Styles/Border.axaml" />
     </Application.Styles>
+
+    <Application.DataTemplates>
+        <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+            <views:DashboardView />
+        </DataTemplate>
+    </Application.DataTemplates>
 </Application>

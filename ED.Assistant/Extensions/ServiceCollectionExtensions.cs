@@ -1,4 +1,5 @@
 ﻿using ED.Assistant.Services.DialogService;
+using ED.Assistant.Services.Navigation;
 using ED.Assistant.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,14 +11,17 @@ internal static class ServiceCollectionExtensions
 	{
 		services.AddSingleton<MainWindowViewModel>()
 			.AddSingleton<ConfirmDialogViewModel>()
-			.AddSingleton<SettingsViewModel>();
+			.AddSingleton<SettingsViewModel>()
+			.AddSingleton<DashboardViewModel>();
 		return services;
 	}
 
 	public static IServiceCollection RegisterServices(this IServiceCollection services)
 	{
 		services.AddSingleton<IDialogService, DialogService>()
-			.AddSingleton<IFolderPickerService, FolderPickerService>();
+			.AddSingleton<IFolderPickerService, FolderPickerService>()
+			.AddSingleton<INavigationStore, NavigationStore>()
+			.AddSingleton<INavigationService, NavigationService>();
 		return services;
 	}
 
