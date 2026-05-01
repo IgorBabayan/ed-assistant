@@ -65,7 +65,7 @@
 
                 <Separator/>
 
-                <ItemsControl ItemsSource="{Binding Commander.Ranks}">
+                <ItemsControl ItemsSource="{Binding Ranks}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid ColumnDefinitions="90,*,80"

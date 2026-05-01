@@ -1,6 +1,8 @@
-﻿using ED.Assistant.Data.Services.Path;
+﻿using ED.Assistant.Data.Models.Events;
+using ED.Assistant.Data.Services.Path;
 using ED.Assistant.Data.Services.Settings;
 using ED.Assistant.Services.DialogService;
+using ED.Assistant.Services.Journal;
 
 namespace ED.Assistant.ViewModels;
 
@@ -16,7 +18,7 @@ public partial class SettingsViewModel : BaseViewModel
 	public event Action<bool?>? CloseRequested;
 
 	public SettingsViewModel(IPathFinder pathFinder, IFolderPickerService folderPickerService,
-		ISettingsStorage settingsStorage)
+		ISettingsStorage settingsStorage, IJournalStateStore stateStore) : base(stateStore)
 	{
 		_pathFinder = pathFinder;
 		_folderPickerService = folderPickerService;
@@ -47,4 +49,6 @@ public partial class SettingsViewModel : BaseViewModel
 			LogFolder = folder;
 		}
 	}
+
+	protected override void UpdateFromState(JournalState state) { }
 }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.Assistant.Extensions;
 
-internal static class ServiceCollectionExtensions
+static class ServiceCollectionExtensions
 {
 	public static IServiceCollection RegisterViewModels(this IServiceCollection services)
 	{

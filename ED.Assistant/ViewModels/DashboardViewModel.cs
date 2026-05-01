@@ -1,7 +1,9 @@
-﻿using ED.Assistant.Data.Models.Events;
+﻿using ED.Assistant.Data.Models.Enums;
+using ED.Assistant.Data.Models.Events;
 using ED.Assistant.Data.Services.Events;
 using ED.Assistant.Data.Services.Path;
 using ED.Assistant.DTO;
+using ED.Assistant.Extensions;
 using ED.Assistant.Services.Journal;
 using System.Collections.ObjectModel;
 
@@ -50,10 +52,54 @@ public partial class DashboardViewModel : BaseViewModel, ILoadableViewModel
 		if (rank is null)
 			return;
 
-		
-		Ranks!.Add(new()
+		Ranks!.Clear();
+		Ranks.Add(new()
 		{
-			Name = 
-		})
+			Name = "Combat",
+			Progress = rank.Combat,
+			Level = ((CombatRankEnum)rank.Combat).GetDisplayName()
+		});
+		Ranks.Add(new()
+		{
+			Name = "Trade",
+			Progress = rank.Trade,
+			Level = ((TradeRankEnum)rank.Trade).GetDisplayName()
+		});
+		Ranks.Add(new()
+		{
+			Name = "Explore",
+			Progress = rank.Explore,
+			Level = ((ExploreRankEnum)rank.Explore).GetDisplayName()
+		});
+		Ranks.Add(new()
+		{
+			Name = "Soldier",
+			Progress = rank.Soldier,
+			Level = ((SoldierRankEnum)rank.Soldier).GetDisplayName()
+		});
+		Ranks.Add(new()
+		{
+			Name = "Exobiologist",
+			Progress = rank.Exobiologist,
+			Level = ((ExobiologistRankEnum)rank.Exobiologist).GetDisplayName()
+		});
+		Ranks.Add(new()
+		{
+			Name = "CQC",
+			Progress = rank.CQC,
+			Level = ((CQCRankEnum)rank.CQC).GetDisplayName()
+		});
+		Ranks.Add(new()
+		{
+			Name = "Empire",
+			Progress = rank.Empire,
+			Level = ((EmpireRankEnum)rank.Empire).GetDisplayName()
+		});
+		Ranks.Add(new()
+		{
+			Name = "Federation",
+			Progress = rank.Federation,
+			Level = ((FederationRankEnum)rank.Federation).GetDisplayName()
+		});
 	}
 }
