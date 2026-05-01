@@ -1,10 +1,22 @@
-﻿namespace ED.Assistant.Data.Services.Path;
+﻿using IOPath = System.IO.Path;
+
+namespace ED.Assistant.Data.Services.Path;
 
 public class WindowsPathResolver : IPlatformPathResolver
 {
     public string GetLogsPath()
     {
-        var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        return System.IO.Path.Combine(localAppData, "Saved Games", "Frontier Developments", "Elite Dangerous");
+        var profileFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        return IOPath.Combine(profileFolder, "Saved Games", "Frontier Developments", "Elite Dangerous");
     }
+
+	public string GetConfigPath()
+    {
+		var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var configFolderPath = IOPath.Combine(localAppData, "ED Assistant");
+        if (!Directory.Exists(configFolderPath))
+            Directory.CreateDirectory(configFolderPath);
+
+        return IOPath.Combine(configFolderPath, "config.json");
+	}
 }

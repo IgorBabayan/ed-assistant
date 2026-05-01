@@ -3,4 +3,5 @@
 public interface IPlatformPathResolver
 {
     string GetLogsPath();
+    string GetConfigPath();
 }

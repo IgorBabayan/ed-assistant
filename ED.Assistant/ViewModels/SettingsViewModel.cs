@@ -1,4 +1,5 @@
 ﻿using ED.Assistant.Data.Services.Path;
+using ED.Assistant.Data.Services.Settings;
 using ED.Assistant.Services.DialogService;
 
 namespace ED.Assistant.ViewModels;
@@ -7,24 +8,29 @@ public partial class SettingsViewModel : ViewModelBase
 {
 	private readonly IPathFinder _pathFinder;
 	private readonly IFolderPickerService _folderPickerService;
+	private readonly ISettingsStorage _settingsStorage;
 
 	[ObservableProperty]
 	private string? _logFolder = string.Empty;
 
 	public event Action<bool?>? CloseRequested;
 
-	public SettingsViewModel(IPathFinder pathFinder, IFolderPickerService folderPickerService)
+	public SettingsViewModel(IPathFinder pathFinder, IFolderPickerService folderPickerService,
+		ISettingsStorage settingsStorage)
 	{
 		_pathFinder = pathFinder;
 		_folderPickerService = folderPickerService;
+		_settingsStorage = settingsStorage;
 
 		LogFolder = _pathFinder.GetPathToLogs() ?? string.Empty;
 	}
 
 	[RelayCommand]
-	private async Task Save()
+	private async Task Save(CancellationToken cancellationToken = default)
 	{
-		//! TODO: Implement saving settings logic here
+		var path = _pathFinder.GetConfigPath();
+		await _settingsStorage.SaveAsync(path, new() { LogFolder = LogFolder }, cancellationToken);
+
 		CloseRequested?.Invoke(true);
 	}
 

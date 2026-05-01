@@ -1,4 +1,6 @@
-﻿using ED.Assistant.Data.Services.Path;
+﻿using ED.Assistant.Data.Services.Events;
+using ED.Assistant.Data.Services.Path;
+using ED.Assistant.Data.Services.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.Assistant.Data;
@@ -25,7 +27,9 @@ public static class DependencyInjections
             throw new PlatformNotSupportedException("Unsupported OS");
         });
 
-        services.AddSingleton<IPathFinder, PathFinder>();
+        services.AddSingleton<IPathFinder, PathFinder>()
+            .AddSingleton<ISettingsStorage, SettingsStorage>()
+            .AddSingleton<ILogStorage, LogStorage>();
         return services;
     }
 }

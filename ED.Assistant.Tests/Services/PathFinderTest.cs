@@ -5,16 +5,10 @@ namespace ED.Assistant.Tests.Services;
 [TestClass]
 public sealed class PathFinderTest
 {
-    [TestInitialize]
-    public void Setup()
-    {
-        
-    }
-
     [TestMethod]
     public void WindowsPathToLog_Should_Return_EliteDangerous_Log_Folder()
     {
-        var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         var expected = Path.Combine(localAppData, "Saved Games", "Frontier Developments", "Elite Dangerous");
         var resolver = new WindowsPathResolver();
         var actual = resolver.GetLogsPath();
@@ -37,6 +31,7 @@ public sealed class PathFinderTest
     {
         var resolver = new LinuxPathResolver();
         Assert.Throws<NotImplementedException>(() => resolver.GetLogsPath());
+        Assert.Throws<NotImplementedException>(() => resolver.GetConfigPath());
     }
 
     [TestMethod]
@@ -44,5 +39,17 @@ public sealed class PathFinderTest
     {
         var resolver = new MacPathResolver();
         Assert.Throws<NotImplementedException>(() => resolver.GetLogsPath());
+        Assert.Throws<NotImplementedException>(() => resolver.GetConfigPath());
     }
+
+	[TestMethod]
+    public void GetConfigPath_Should_Return_EliteDangerous_Config_File()
+    {
+		var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+		var expected = Path.Combine(localAppData, "ED Assistant", "config.json");
+		var resolver = new WindowsPathResolver();
+		var actual = resolver.GetConfigPath();
+
+		Assert.AreEqual(expected, actual);
+	}
 }

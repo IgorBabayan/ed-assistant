@@ -3,6 +3,7 @@
 public interface IPathFinder
 {
     string GetPathToLogs();
+	string GetConfigPath();
 }
 
 class PathFinder : IPathFinder
@@ -12,4 +13,6 @@ class PathFinder : IPathFinder
     public PathFinder(IPlatformPathResolver resolver) => _resolver = resolver;
 
     public string GetPathToLogs() => _resolver.GetLogsPath();
+
+    public string GetConfigPath() => _resolver.GetConfigPath();
 }
