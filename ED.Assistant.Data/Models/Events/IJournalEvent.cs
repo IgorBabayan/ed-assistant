@@ -2,15 +2,15 @@
 
 public interface IJournalEvent
 {
-	string Event { get; }
-	DateTime Timestamp { get; }
+	string Event { get; set; }
+	DateTime Timestamp { get; set; }
 }
 
 public abstract class BaseJournalEvent : IJournalEvent
 {
-	[JsonPropertyName("Event")]
-	public string Event { get; } = string.Empty;
+	[JsonPropertyName("event")]
+	public string Event { get; set; } = string.Empty;
 
 	[JsonPropertyName("timestamp")]
-	public DateTime Timestamp { get; } = default;
+	public DateTime Timestamp { get; set; } = default;
 }
