@@ -42,7 +42,7 @@
 						   FontWeight="Bold" />
 
 				<Grid Grid.Row="1"
-					  ColumnSpacing="5"
+					  ColumnSpacing="{DynamicResource Spacing5}"
 					  VerticalAlignment="Top">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto"/>
@@ -63,7 +63,7 @@
 				</Grid>
 
 				<StackPanel Grid.Row="3"
-							Spacing="5"
+							Spacing="{DynamicResource Spacing5}"
 							Orientation="Horizontal"
 							HorizontalAlignment="Right">
 					<Button Content="Save"

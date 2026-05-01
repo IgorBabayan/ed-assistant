@@ -68,16 +68,22 @@
                 <ItemsControl ItemsSource="{Binding Ranks}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid ColumnDefinitions="90,*,80"
-                                  Margin="0,4">
+                            <Grid Margin="0,4"
+                                  ColumnSpacing="{DynamicResource Spacing5}">
+                                <Grid.ColumnDefinitions>
+									<ColumnDefinition Width="90"/>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="80"/>
+                                </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0"
                                            Text="{Binding Name}"
                                            Classes="dashboard-label"/>
 
                                 <ProgressBar Grid.Column="1"
                                              Minimum="0"
-                                             Maximum="100"
-                                             Value="{Binding Progress}"
+                                             Maximum="{Binding Maximum}"
+                                             Value="{Binding Value}"
+                                             Foreground="{DynamicResource SecondaryAccentBrush}"
                                              Height="6"/>
 
                                 <TextBlock Grid.Column="2"

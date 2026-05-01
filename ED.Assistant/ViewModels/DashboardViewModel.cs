@@ -47,6 +47,9 @@ public partial class DashboardViewModel : BaseViewModel, ILoadableViewModel
 		LoadGame = state?.LoadGame;
 	}
 
+	private static ushort GetMaxRank<TEnum>()
+		where TEnum : struct, Enum => Enum.GetValues<TEnum>().Select(x => Convert.ToUInt16(x)).Max();
+
 	private void ParseCommanderRanks(RankEvent? rank)
 	{
 		if (rank is null)
@@ -56,49 +59,57 @@ public partial class DashboardViewModel : BaseViewModel, ILoadableViewModel
 		Ranks.Add(new()
 		{
 			Name = "Combat",
-			Progress = rank.Combat,
+			Value = rank.Combat,
+			Maximum = GetMaxRank<CombatRankEnum>(),
 			Level = ((CombatRankEnum)rank.Combat).GetDisplayName()
 		});
 		Ranks.Add(new()
 		{
 			Name = "Trade",
-			Progress = rank.Trade,
+			Value = rank.Trade,
+			Maximum = GetMaxRank<TradeRankEnum>(),
 			Level = ((TradeRankEnum)rank.Trade).GetDisplayName()
 		});
 		Ranks.Add(new()
 		{
 			Name = "Explore",
-			Progress = rank.Explore,
+			Value = rank.Explore,
+			Maximum = GetMaxRank<ExploreRankEnum>(),
 			Level = ((ExploreRankEnum)rank.Explore).GetDisplayName()
 		});
 		Ranks.Add(new()
 		{
 			Name = "Soldier",
-			Progress = rank.Soldier,
+			Value = rank.Soldier,
+			Maximum = GetMaxRank<SoldierRankEnum>(),
 			Level = ((SoldierRankEnum)rank.Soldier).GetDisplayName()
 		});
 		Ranks.Add(new()
 		{
 			Name = "Exobiologist",
-			Progress = rank.Exobiologist,
+			Value = rank.Exobiologist,
+			Maximum = GetMaxRank<ExobiologistRankEnum>(),
 			Level = ((ExobiologistRankEnum)rank.Exobiologist).GetDisplayName()
 		});
 		Ranks.Add(new()
 		{
 			Name = "CQC",
-			Progress = rank.CQC,
+			Value = rank.CQC,
+			Maximum = GetMaxRank<CQCRankEnum>(),
 			Level = ((CQCRankEnum)rank.CQC).GetDisplayName()
 		});
 		Ranks.Add(new()
 		{
 			Name = "Empire",
-			Progress = rank.Empire,
+			Value = rank.Empire,
+			Maximum = GetMaxRank<EmpireRankEnum>(),
 			Level = ((EmpireRankEnum)rank.Empire).GetDisplayName()
 		});
 		Ranks.Add(new()
 		{
 			Name = "Federation",
-			Progress = rank.Federation,
+			Value = rank.Federation,
+			Maximum = GetMaxRank<FederationRankEnum>(),
 			Level = ((FederationRankEnum)rank.Federation).GetDisplayName()
 		});
 	}

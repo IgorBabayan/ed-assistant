@@ -1,10 +1,13 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <Thickness x:Key="MarginLeft15">15,0,0,0</Thickness>
     <Thickness x:Key="MarginRight15">0,0,15,0</Thickness>
     <Thickness x:Key="MarginTopBottom15">0,15,0,15</Thickness>
     <Thickness x:Key="Margin15">15</Thickness>
+
+    <sys:Double x:Key="Spacing5">5</sys:Double>
 
     <Color x:Key="ColorBackground">#0B0F14</Color>
     <Color x:Key="PrimaryAccent">#00D4FF</Color>

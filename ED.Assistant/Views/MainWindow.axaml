@@ -50,7 +50,7 @@
 								Orientation="Horizontal"
 								VerticalAlignment="Center"
 								HorizontalAlignment="Center"
-								Spacing="5">
+								Spacing="{DynamicResource Spacing5}">
 						<TextBlock Text="{Binding CMDR}" />
 						<TextBlock Text="/" />
 						<TextBlock Text="{Binding Ship}" />
@@ -106,7 +106,7 @@
 						Margin="{DynamicResource MarginTopBottom15}">
 					<StackPanel Margin="12"
 								Width="200"
-								Spacing="8"
+								Spacing="{DynamicResource Spacing5}"
 								HorizontalAlignment="Center">
 
 						<Button Classes="sidebar-button active" Content="Dashboard"/>
@@ -120,7 +120,7 @@
 
 			<!-- Status bar -->
 			<Border Grid.Row="2">
-				<Grid ColumnSpacing="5">
+				<Grid ColumnSpacing="{DynamicResource Spacing5}">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="*" />
 						<ColumnDefinition Width="Auto" />
