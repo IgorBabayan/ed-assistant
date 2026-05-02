@@ -57,37 +57,95 @@
 				<TextBlock Text="{Binding SelectedBody.Type}"
 						   Classes="dashboard-label"/>
 
-				<Grid ColumnDefinitions="160,*"
-					  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
-					  RowSpacing="8"
+				<Grid RowSpacing="8"
 					  ColumnSpacing="16">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="160"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
 
-					<TextBlock Grid.Row="0" Text="Scan type" Classes="dashboard-label"/>
-					<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedBody.Scan.ScanType}" Classes="dashboard-value"/>
+					<TextBlock Grid.Row="0"
+							   Text="Scan type"
+							   Classes="dashboard-label"/>
+					<TextBlock Grid.Row="0"
+							   Grid.Column="1"
+							   Text="{Binding SelectedBody.Scan.ScanType}"
+							   Classes="dashboard-value"/>
 
-					<TextBlock Grid.Row="1" Text="Planet class" Classes="dashboard-label"/>
-					<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedBody.Scan.PlanetClass}" Classes="dashboard-value"/>
+					<TextBlock Grid.Row="1"
+							   Text="Planet class"
+							   Classes="dashboard-label"/>
+					<TextBlock Grid.Row="1"
+							   Grid.Column="1"
+							   Text="{Binding SelectedBody.Scan.PlanetClass}"
+							   Classes="dashboard-value"/>
 
-					<TextBlock Grid.Row="2" Text="Star type" Classes="dashboard-label"/>
-					<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedBody.Scan.StarType}" Classes="dashboard-value"/>
+					<TextBlock Grid.Row="2"
+							   Text="Star type"
+							   Classes="dashboard-label"/>
+					<TextBlock Grid.Row="2"
+							   Grid.Column="1"
+							   Text="{Binding SelectedBody.Scan.StarType}"
+							   Classes="dashboard-value"/>
 
-					<TextBlock Grid.Row="3" Text="Mass" Classes="dashboard-label"/>
-					<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedBody.Scan.StellarMass}" Classes="dashboard-value"/>
+					<TextBlock Grid.Row="3"
+							   Text="Mass"
+							   Classes="dashboard-label"/>
+					<TextBlock Grid.Row="3"
+							   Grid.Column="1"
+							   Text="{Binding SelectedBody.Scan.StellarMass}"
+							   Classes="dashboard-value"/>
 
-					<TextBlock Grid.Row="4" Text="Radius" Classes="dashboard-label"/>
-					<TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding SelectedBody.RadiusKm}" Classes="dashboard-value"/>
+					<TextBlock Grid.Row="4"
+							   Text="Radius"
+							   Classes="dashboard-label"/>
+					<TextBlock Grid.Row="4"
+							   Grid.Column="1"
+							   Text="{Binding SelectedBody.RadiusKm}"
+							   Classes="dashboard-value"/>
 
-					<TextBlock Grid.Row="5" Text="Temperature" Classes="dashboard-label"/>
-					<TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding SelectedBody.SurfaceTemperatureK}" Classes="dashboard-value"/>
+					<TextBlock Grid.Row="5"
+							   Text="Temperature"
+							   Classes="dashboard-label"/>
+					<TextBlock Grid.Row="5"
+							   Grid.Column="1"
+							   Text="{Binding SelectedBody.SurfaceTemperatureK}"
+							   Classes="dashboard-value"/>
 
-					<TextBlock Grid.Row="6" Text="Luminosity" Classes="dashboard-label"/>
-					<TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding SelectedBody.Scan.Luminosity}" Classes="dashboard-value"/>
+					<TextBlock Grid.Row="6"
+							   Text="Luminosity"
+							   Classes="dashboard-label"/>
+					<TextBlock Grid.Row="6"
+							   Grid.Column="1"
+							   Text="{Binding SelectedBody.Scan.Luminosity}"
+							   Classes="dashboard-value"/>
 
-					<TextBlock Grid.Row="7" Text="Discovered" Classes="dashboard-label"/>
-					<TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding SelectedBody.Scan.WasDiscovered}" Classes="dashboard-value"/>
+					<TextBlock Grid.Row="7"
+							   Text="Discovered"
+							   Classes="dashboard-label"/>
+					<TextBlock Grid.Row="7"
+							   Grid.Column="1"
+							   Text="{Binding SelectedBody.Scan.WasDiscovered}"
+							   Classes="dashboard-value"/>
 
-					<TextBlock Grid.Row="8" Text="Mapped" Classes="dashboard-label"/>
-					<TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding SelectedBody.Scan.WasMapped}" Classes="dashboard-value"/>
+					<TextBlock Grid.Row="8"
+							   Text="Mapped"
+							   Classes="dashboard-label"/>
+					<TextBlock Grid.Row="8"
+							   Grid.Column="1"
+							   Text="{Binding SelectedBody.Scan.WasMapped}"
+							   Classes="dashboard-value"/>
 				</Grid>
 			</StackPanel>
 		</Border>

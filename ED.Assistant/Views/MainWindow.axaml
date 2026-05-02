@@ -117,7 +117,7 @@
 						<Button Classes="sidebar-button"
 								Classes.active="{Binding IsMaterialActive}"
 								Command="{Binding NavigateToMaterialViewCommand}"
-								Content="Dashboard"/>
+								Content="Materials"/>
 						<Border Classes="separator"/>
 						<Button Classes="sidebar-button"
 								Classes.active="{Binding IsSystemActive}"

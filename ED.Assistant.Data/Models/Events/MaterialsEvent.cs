@@ -24,4 +24,9 @@ public class MaterialItem
 
 	[JsonPropertyName("Count")]
 	public ushort Count { get; set; } = default;
+
+	[JsonInclude]
+	public string FullName => string.IsNullOrWhiteSpace(NameLocalised)
+		? $"{char.ToUpper(Name[0])}{Name[1..]}"
+		: NameLocalised;
 }

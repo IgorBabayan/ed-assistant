@@ -19,6 +19,7 @@ static class ServiceCollectionExtensions
 			.AddSingleton<BodiesViewModel>()
 			.AddSingleton<SignalsViewModel>()
 			.AddSingleton<JournalViewModel>()
+			.AddSingleton<MaterialItemViewModel>()
 			.AddSingleton<MaterialViewModel>();
 		return services;
 	}

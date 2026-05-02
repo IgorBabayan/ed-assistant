@@ -119,7 +119,7 @@ public partial class MainWindowViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private void NavigateToMaterialViewCommand()
+	private void NavigateToMaterialView()
 	{
 		if (NavigationStore.CurrentViewModel is not MaterialViewModel)
 		{
