@@ -1,4 +1,5 @@
-﻿using ED.Assistant.Services.SystemBuilder;
+﻿using ED.Assistant.Data.Models.Events;
+using ED.Assistant.Services.SystemBuilder;
 using System.Collections.ObjectModel;
 
 namespace ED.Assistant.Models;
@@ -11,6 +12,7 @@ public partial class SystemBodyNodeViewModel : ObservableObject
 	public SystemBodyNode Model { get; }
 	public string Name => Model.Name;
 	public string Type => Model.Type;
+	public ScanEvent? Scan => Model.Scan;
 	public ObservableCollection<SystemBodyNodeViewModel> Children { get; }
 
 	public SystemBodyNodeViewModel(SystemBodyNode model)

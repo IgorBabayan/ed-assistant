@@ -8,121 +8,91 @@ public interface ISystemStructureBuilder
 	SystemStructure Build(JournalState state);
 }
 
-class SystemStructureBuilder : ISystemStructureBuilder
+public sealed class SystemStructureBuilder : ISystemStructureBuilder
 {
 	public SystemStructure Build(JournalState state)
 	{
 		ArgumentNullException.ThrowIfNull(state);
 
 		if (state.FSDJump is null)
-			throw new ArgumentException($"{nameof(state.FSDJump)} event is required to build system structure.", nameof(state));
+			throw new ArgumentException("FSDJump is required");
 
-		var root = new SystemBodyNode
-		{
-			BodyId = -1,
-			Name = state.FSDJump.StarSystem,
-			Kind = SystemBodyKind.System
-		};
-
+		var currentSystemAddress = state.FSDJump.SystemAddress;
 		var structure = new SystemStructure
 		{
-			Root = root
+			Name = state.FSDJump.StarSystem
 		};
 
-		BuildHierarchy(structure, state);
+		var scans = state.Scans?.Values
+			.Where(x => x.SystemAddress == currentSystemAddress)
+			.ToList() ?? [];
+
+		var nodes = new Dictionary<int, SystemBodyNode>();
+		foreach (var scan in scans)
+		{
+			var node = GetOrCreateNode(nodes, scan);
+			node.Scan = scan;
+		}
+
+		foreach (var scan in scans)
+		{
+			if (!nodes.TryGetValue(scan.BodyId, out var node))
+				continue;
+
+			var parentId = GetParentId(scan);
+			if (parentId is not null && nodes.TryGetValue(parentId.Value, out var parent))
+			{
+				parent.Children.Add(node);
+			}
+			else
+			{
+				structure.Roots.Add(node);
+			}
+		}
 
 		return structure;
 	}
 
-	private static void BuildHierarchy(SystemStructure structure, JournalState state)
+	private static SystemBodyNode GetOrCreateNode(Dictionary<int, SystemBodyNode> nodes, ScanEvent scan)
 	{
-		var systemAddress = state.FSDJump!.SystemAddress;
+		if (nodes.TryGetValue(scan.BodyId, out var existing))
+			return existing;
 
-		var barycentres = state.BaryCentres?.Values
-			.Where(x => x.SystemAddress == systemAddress)
-			.ToList() ?? [];
-
-		var scans = state.Scans?.Values
-			.Where(x => x.SystemAddress == systemAddress)
-			.ToList() ?? [];
-
-		var nodesByBodyId = new Dictionary<int, SystemBodyNode>();
-
-		foreach (var barycentre in barycentres)
+		var node = new SystemBodyNode
 		{
-			nodesByBodyId[barycentre.BodyId] = new SystemBodyNode
-			{
-				BodyId = barycentre.BodyId,
-				Name = $"Barycentre {barycentre.BodyId}",
-				Kind = SystemBodyKind.Barycentre
-			};
-		}
+			Name = scan.BodyName,
+			BodyId = scan.BodyId,
+			Type = GetType(scan)
+		};
 
-		foreach (var scan in scans)
-		{
-			nodesByBodyId[scan.BodyId] = new SystemBodyNode
-			{
-				BodyId = scan.BodyId,
-				Name = scan.BodyName,
-				Kind = GetBodyKind(scan)
-			};
-		}
-
-		foreach (var barycentre in barycentres)
-		{
-			var node = nodesByBodyId[barycentre.BodyId];
-
-			var parentId = GetNearestParentBodyId(barycentre.Parents);
-
-			AttachNode(structure.Root, nodesByBodyId, node, parentId);
-		}
-
-		foreach (var scan in scans)
-		{
-			var node = nodesByBodyId[scan.BodyId];
-
-			var parentId = GetNearestParentBodyId(scan.Parents);
-
-			AttachNode(structure.Root, nodesByBodyId, node, parentId);
-		}
+		nodes[scan.BodyId] = node;
+		return node;
 	}
 
-	private static void AttachNode(
-		SystemBodyNode root,
-		Dictionary<int, SystemBodyNode> nodesByBodyId,
-		SystemBodyNode node,
-		int? parentId)
+	private static int? GetParentId(ScanEvent scan)
 	{
-		if (parentId is not null &&
-			nodesByBodyId.TryGetValue(parentId.Value, out var parentNode) &&
-			parentNode != node)
-		{
-			parentNode.Children.Add(node);
-			return;
-		}
-
-		root.Children.Add(node);
-	}
-
-	private static int? GetNearestParentBodyId(IEnumerable<Parent>? parents)
-	{
-		if (parents?.Any() != true)
+		if (scan.Parents is null)
 			return null;
 
-		return parents!.First().BodyId;
+		foreach (var parent in scan.Parents)
+		{
+			if (parent.Type == ParentType.Null)
+				continue;
+
+			return parent.BodyId;
+		}
+
+		return null;
 	}
 
-	private static SystemBodyKind GetBodyKind(ScanEvent scan)
+	private static string GetType(ScanEvent scan)
 	{
-		if (!string.IsNullOrWhiteSpace(scan.StarType))
-			return SystemBodyKind.Star;
+		if (!string.IsNullOrEmpty(scan.StarType))
+			return "Star";
 
-		if (!string.IsNullOrWhiteSpace(scan.PlanetClass))
-			return SystemBodyKind.Planet;
+		if (!string.IsNullOrEmpty(scan.PlanetClass))
+			return "Planet";
 
-		if (scan.BodyName.Contains("Belt", StringComparison.OrdinalIgnoreCase))
-			return SystemBodyKind.AsteroidBelt;
-
-		return SystemBodyKind.Unknown;
+		return "Unknown";
 	}
 }

@@ -91,7 +91,11 @@ class LogStorage : ILogStorage
 		aggregator.RegisterLast<LoadGameEvent>(LoadGameEvent.EventName, e => state.LoadGame = e);
 		aggregator.RegisterLast<MaterialsEvent>(MaterialsEvent.EventName, e => state.Materials = e);
 		aggregator.RegisterLast<RankEvent>(RankEvent.EventName, e => state.Ranks = e);
-		aggregator.RegisterLast<FSDJumpEvent>(FSDJumpEvent.EventName, e => state.FSDJump = e);
+		aggregator.RegisterLast<FSDJumpEvent>(FSDJumpEvent.EventName, e =>
+		{
+			state.FSDJump = e;
+			state.Scans.Clear();
+		});
 
 		aggregator.RegisterByKey<ScanEvent, int>(ScanEvent.EventName, e => e.BodyId, state.Scans);
 		aggregator.RegisterByKey<BaryCentreEvent, int>(BaryCentreEvent.EventName, e => e.BodyId,

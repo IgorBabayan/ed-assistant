@@ -33,7 +33,8 @@ public partial class SystemViewModel : BaseViewModel, ILoadableViewModel
 		Bodies.Clear();
 
 		var structure = _structureBuilder.Build(state);
-		Bodies.Add(new SystemBodyNodeViewModel(structure.Root));
+		foreach (var root in structure.Roots)
+			Bodies.Add(new SystemBodyNodeViewModel(root));
 		SelectedBody = Bodies.FirstOrDefault();
 	}
 

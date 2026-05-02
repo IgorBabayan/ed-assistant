@@ -6,32 +6,33 @@
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:DataType="vm:SystemViewModel"
 			 x:Class="ED.Assistant.SystemView">
-	<Grid Grid.Row="1"
-		  ColumnSpacing="16">
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="380"/>
-			<ColumnDefinition Width="*"/>
-		</Grid.ColumnDefinitions>
+	<Grid ColumnSpacing="16">
+	<Grid.ColumnDefinitions>
+		<ColumnDefinition Width="2*" MinWidth="380"/>
+		<ColumnDefinition Width="3*" MinWidth="420"/>
+	</Grid.ColumnDefinitions>
 
-		<Border Classes="dashboard-card">
-			<Grid RowSpacing="12">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="*"/>
-				</Grid.RowDefinitions>
+	<Border Classes="dashboard-card">
+		<Grid RowSpacing="12">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
 
-				<TextBlock Text="SYSTEM STRUCTURE"
-						   Classes="dashboard-card-header"/>
+			<TextBlock Text="SYSTEM STRUCTURE"
+					   Classes="dashboard-card-header"/>
 
-				<TreeView Grid.Row="1"
+			<ScrollViewer Grid.Row="1"
+						  HorizontalScrollBarVisibility="Auto"
+						  VerticalScrollBarVisibility="Auto">
+				<TreeView Classes="system-tree"
 						  ItemsSource="{Binding Bodies}"
 						  SelectedItem="{Binding SelectedBody, Mode=TwoWay}">
 					<TreeView.ItemTemplate>
 						<TreeDataTemplate ItemsSource="{Binding Children}">
 							<StackPanel Orientation="Horizontal"
-										HorizontalAlignment="Left"
-										VerticalAlignment="Center"
-										Spacing="8">
+										Spacing="8"
+										Margin="4,2">
 								<TextBlock Text="{Binding Type}"
 										   Classes="dashboard-label"/>
 								<TextBlock Text="{Binding Name}"
@@ -40,21 +41,55 @@
 						</TreeDataTemplate>
 					</TreeView.ItemTemplate>
 				</TreeView>
+			</ScrollViewer>
+		</Grid>
+	</Border>
+
+	<Border Grid.Column="1"
+			Classes="dashboard-card">
+		<StackPanel Spacing="12">
+			<TextBlock Text="BODY DETAILS"
+					   Classes="dashboard-card-header"/>
+
+			<TextBlock Text="{Binding SelectedBody.Name}"
+					   Classes="dashboard-system-name"/>
+
+			<TextBlock Text="{Binding SelectedBody.Type}"
+					   Classes="dashboard-label"/>
+
+			<Grid ColumnDefinitions="160,*"
+				  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+				  RowSpacing="8"
+				  ColumnSpacing="16">
+
+				<TextBlock Grid.Row="0" Text="Scan type" Classes="dashboard-label"/>
+				<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedBody.Scan.ScanType}" Classes="dashboard-value"/>
+
+				<TextBlock Grid.Row="1" Text="Planet class" Classes="dashboard-label"/>
+				<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedBody.Scan.PlanetClass}" Classes="dashboard-value"/>
+
+				<TextBlock Grid.Row="2" Text="Star type" Classes="dashboard-label"/>
+				<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedBody.Scan.StarType}" Classes="dashboard-value"/>
+
+				<TextBlock Grid.Row="3" Text="Mass" Classes="dashboard-label"/>
+				<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedBody.Scan.StellarMass}" Classes="dashboard-value"/>
+
+				<TextBlock Grid.Row="4" Text="Radius" Classes="dashboard-label"/>
+				<TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding SelectedBody.Scan.Radius}" Classes="dashboard-value"/>
+
+				<TextBlock Grid.Row="5" Text="Temperature" Classes="dashboard-label"/>
+				<TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding SelectedBody.Scan.SurfaceTemperature}" Classes="dashboard-value"/>
+
+				<TextBlock Grid.Row="6" Text="Luminosity" Classes="dashboard-label"/>
+				<TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding SelectedBody.Scan.Luminosity}" Classes="dashboard-value"/>
+
+				<TextBlock Grid.Row="7" Text="Discovered" Classes="dashboard-label"/>
+				<TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding SelectedBody.Scan.WasDiscovered}" Classes="dashboard-value"/>
+
+				<TextBlock Grid.Row="8" Text="Mapped" Classes="dashboard-label"/>
+				<TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding SelectedBody.Scan.WasMapped}" Classes="dashboard-value"/>
 			</Grid>
-		</Border>
-
-		<Border Grid.Column="1"
-				Classes="dashboard-card">
-			<StackPanel Spacing="12">
-				<TextBlock Text="BODY DETAILS"
-						   Classes="dashboard-card-header"/>
-
-				<TextBlock Text="{Binding SelectedBody.Name}"
-						   Classes="dashboard-system-name"/>
-
-				<TextBlock Text="{Binding SelectedBody.Type}"
-						   Classes="dashboard-label"/>
-			</StackPanel>
-		</Border>
-	</Grid>
+		</StackPanel>
+	</Border>
+</Grid>
 </UserControl>

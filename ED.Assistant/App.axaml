@@ -21,6 +21,7 @@
 		<StyleInclude Source="avares://ED.Assistant/Styles/TextBlock.axaml" />
 		<StyleInclude Source="avares://ED.Assistant/Styles/Button.axaml" />
 		<StyleInclude Source="avares://ED.Assistant/Styles/Border.axaml" />
+		<StyleInclude Source="avares://ED.Assistant/Styles/TreeView.axaml" />
 	</Application.Styles>
 
 	<Application.DataTemplates>
