@@ -33,7 +33,8 @@
                            Classes="dashboard-system-name"/>
 
                 <UniformGrid Columns="2"
-                             Rows="2">
+                             Rows="2"
+                             RowSpacing="{StaticResource Spacing15}">
                     <StackPanel>
                         <TextBlock Text="Star Type" Classes="dashboard-label"/>
                         <TextBlock Text="{Binding CurrentSystem.BodyType}" Classes="dashboard-value"/>

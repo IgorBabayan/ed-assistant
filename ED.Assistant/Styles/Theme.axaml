@@ -8,6 +8,7 @@
     <Thickness x:Key="Margin15">15</Thickness>
 
     <sys:Double x:Key="Spacing5">5</sys:Double>
+    <sys:Double x:Key="Spacing15">15</sys:Double>
 
     <Color x:Key="ColorBackground">#0B0F14</Color>
     <Color x:Key="PrimaryAccent">#00D4FF</Color>
