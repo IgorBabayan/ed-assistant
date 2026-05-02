@@ -13,7 +13,11 @@ static class ServiceCollectionExtensions
 		services.AddSingleton<MainWindowViewModel>()
 			.AddSingleton<ConfirmDialogViewModel>()
 			.AddSingleton<SettingsViewModel>()
-			.AddSingleton<DashboardViewModel>();
+			.AddSingleton<DashboardViewModel>()
+			.AddSingleton<SystemViewModel>()
+			.AddSingleton<BodiesViewModel>()
+			.AddSingleton<SignalsViewModel>()
+			.AddSingleton<JournalViewModel>();
 		return services;
 	}
 

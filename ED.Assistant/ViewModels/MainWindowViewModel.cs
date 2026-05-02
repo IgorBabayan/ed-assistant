@@ -1,6 +1,7 @@
 ﻿using ED.Assistant.Data.Models.Events;
 using ED.Assistant.Services.DialogService;
 using ED.Assistant.Services.Journal;
+using ED.Assistant.Services.Navigation;
 using System.ComponentModel;
 
 namespace ED.Assistant.ViewModels;
@@ -8,6 +9,7 @@ namespace ED.Assistant.ViewModels;
 public partial class MainWindowViewModel : BaseViewModel
 {
 	private readonly IDialogService _dialogService;
+	private readonly INavigationService _navigationService;
 	private readonly SettingsViewModel _settingsViewModel;
 
 	private class DefaultState
@@ -29,10 +31,12 @@ public partial class MainWindowViewModel : BaseViewModel
 	public INavigationStore NavigationStore { get; }
 
 	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
-		INavigationStore navigationStore, IJournalStateStore stateStore) : base(stateStore)
+		INavigationStore navigationStore, IJournalStateStore stateStore,
+		INavigationService navigationService) : base(stateStore)
 	{
 		_dialogService = dialogService;
 		_settingsViewModel = settingsViewModel;
+		_navigationService = navigationService;
 
 		NavigationStore = navigationStore;
 
@@ -44,6 +48,47 @@ public partial class MainWindowViewModel : BaseViewModel
 					LoadCommand.NotifyCanExecuteChanged();
 			};
 		}
+	}
+
+	protected override void UpdateFromState(JournalState state)
+	{
+		CMDR = $"o7, {state.Commander?.Name ?? "Commander"}";
+		Ship = state.LoadGame?.ShipFullTitle ?? DefaultState.Ship;
+	}
+
+	[RelayCommand]
+	private void NavigateToDashboardView()
+	{
+		if (NavigationStore.CurrentViewModel is not DashboardViewModel)
+			_navigationService.NavigateTo<DashboardViewModel>();
+	}
+
+	[RelayCommand]
+	private void NavigateToSystemView()
+	{
+		if (NavigationStore.CurrentViewModel is not SystemViewModel)
+			_navigationService.NavigateTo<SystemViewModel>();
+	}
+
+	[RelayCommand]
+	private void NavigateToBodiesView()
+	{
+		if (NavigationStore.CurrentViewModel is not BodiesViewModel)
+			_navigationService.NavigateTo<BodiesViewModel>();
+	}
+
+	[RelayCommand]
+	private void NavigateToSignalsView()
+	{
+		if (NavigationStore.CurrentViewModel is not SignalsViewModel)
+			_navigationService.NavigateTo<SignalsViewModel>();
+	}
+
+	[RelayCommand]
+	private void NavigateToJournalView()
+	{
+		if (NavigationStore.CurrentViewModel is not JournalViewModel)
+			_navigationService.NavigateTo<JournalViewModel>();
 	}
 
 	[RelayCommand]
@@ -58,10 +103,4 @@ public partial class MainWindowViewModel : BaseViewModel
 	}
 
 	private bool CanLoad() => NavigationStore.CurrentViewModel is ILoadableViewModel;
-
-	protected override void UpdateFromState(JournalState state)
-	{
-		CMDR = $"o7, {state.Commander?.Name ?? "Commander"}";
-		Ship = state.LoadGame?.ShipFullTitle ?? DefaultState.Ship;
-	}
 }

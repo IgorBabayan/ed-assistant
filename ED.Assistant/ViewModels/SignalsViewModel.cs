@@ -3,14 +3,13 @@ using ED.Assistant.Services.Journal;
 
 namespace ED.Assistant.ViewModels;
 
-public partial class SignalViewModel : BaseViewModel
+public partial class SignalsViewModel : BaseViewModel
 {
-	public SignalViewModel(IJournalStateStore stateStore) : base(stateStore)
+	public SignalsViewModel(IJournalStateStore stateStore) : base(stateStore)
 	{
 	}
 
 	protected override void UpdateFromState(JournalState state)
 	{
-		throw new NotImplementedException();
 	}
 }

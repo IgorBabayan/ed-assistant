@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ED.Assistant.Extensions;
-using ED.Assistant.Services.DialogService;
 using ED.Assistant.Services.Navigation;
 using ED.Assistant.ViewModels;
 using ED.Assistant.Views;

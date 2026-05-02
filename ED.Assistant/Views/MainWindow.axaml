@@ -109,11 +109,21 @@
 								Spacing="{DynamicResource Spacing5}"
 								HorizontalAlignment="Center">
 
-						<Button Classes="sidebar-button active" Content="Dashboard"/>
-						<Button Classes="sidebar-button" Content="System"/>
-						<Button Classes="sidebar-button" Content="Bodies"/>
-						<Button Classes="sidebar-button" Content="Signals"/>
-						<Button Classes="sidebar-button" Content="Journal"/>
+						<Button Classes="sidebar-button active"
+								Command="{Binding NavigateToDashboardViewCommand}"
+								Content="Dashboard"/>
+						<Button Classes="sidebar-button"
+								Command="{Binding NavigateToSystemViewCommand}"
+								Content="System"/>
+						<Button Classes="sidebar-button"
+								Command="{Binding NavigateToBodiesViewCommand}"
+								Content="Bodies"/>
+						<Button Classes="sidebar-button"
+								Command="{Binding NavigateToSignalsViewCommand}"
+								Content="Signals"/>
+						<Button Classes="sidebar-button"
+								Command="{Binding NavigateToJournalViewCommand}"
+								Content="Journal"/>
 					</StackPanel>
 				</Border>
 			</Grid>
