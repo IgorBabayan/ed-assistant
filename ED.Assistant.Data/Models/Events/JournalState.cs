@@ -8,5 +8,6 @@ public sealed class JournalState
 	public RankEvent? Ranks { get; set; }
 	public FSDJumpEvent? FSDJump { get; set; }
 
-	//public IReadOnlyList<SignalInfo> Signals { get; init; } = [];
+	public Dictionary<int, ScanEvent> Scans { get; } = new();
+	public Dictionary<int, ScanBaryCentreEvent> BaryCentres { get; } = new();
 }

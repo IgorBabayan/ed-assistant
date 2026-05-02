@@ -7,47 +7,11 @@ namespace ED.Assistant.Data.Services.Events;
 
 public interface ILogStorage
 {
-	Task<JournalState> LoadAllLogsAsync(string logFolder, CancellationToken cancellationToken = default);
 	Task<JournalState> LoadLastLogsAsync(string logFolder, CancellationToken cancellationToken = default);
 }
 
 class LogStorage : ILogStorage
 {
-	public async Task<JournalState> LoadAllLogsAsync(string logFolder, CancellationToken cancellationToken = default)
-	{
-		/*EnsureLogFolderExists(logFolder);
-
-		var files = Directory.GetFiles(logFolder, "Journal.*.log")
-			.Select(path =>
-			{
-				var fileName = IOPath.GetFileNameWithoutExtension(path);
-
-				// Journal.2026-04-30T082047.01
-				var parts = fileName.Split('.');
-
-				// parts[1] = 2026-04-30T082047
-				var datePart = parts[1];
-
-				var date = DateTime.ParseExact(
-					datePart,
-					"yyyy-MM-ddTHHmmss",
-					CultureInfo.InvariantCulture
-				);
-
-				return new
-				{
-					Path = path,
-					date.Date
-				};
-			})
-			.GroupBy(x => x.Date)
-			.ToDictionary(
-				g => g.Key,
-				g => g.Select(x => x.Path).ToList()
-			);*/
-		throw new NotImplementedException();
-	}
-
 	public async Task<JournalState> LoadLastLogsAsync(string logFolder, CancellationToken cancellationToken = default)
 	{
 		EnsureLogFolderExists(logFolder);
@@ -121,12 +85,17 @@ class LogStorage : ILogStorage
 	{
 		var state = new JournalState();
 		var dispatcher = new JournalEventDispatcher();
+		var aggregator = new JournalStateAggregator(dispatcher);
 
-		dispatcher.On<CommanderEvent>(CommanderEvent.EventName, e => state.Commander = e);
-		dispatcher.On<LoadGameEvent>(LoadGameEvent.EventName, e => state.LoadGame = e);
-		dispatcher.On<MaterialsEvent>(MaterialsEvent.EventName, e => state.Materials = e);
-		dispatcher.On<RankEvent>(RankEvent.EventName, e => state.Ranks = e);
-		dispatcher.On<FSDJumpEvent>(FSDJumpEvent.EventName, e => state.FSDJump = e);
+		aggregator.RegisterLast<CommanderEvent>(CommanderEvent.EventName, e => state.Commander = e);
+		aggregator.RegisterLast<LoadGameEvent>(LoadGameEvent.EventName, e => state.LoadGame = e);
+		aggregator.RegisterLast<MaterialsEvent>(MaterialsEvent.EventName, e => state.Materials = e);
+		aggregator.RegisterLast<RankEvent>(RankEvent.EventName, e => state.Ranks = e);
+		aggregator.RegisterLast<FSDJumpEvent>(FSDJumpEvent.EventName, e => state.FSDJump = e);
+
+		aggregator.RegisterByKey<ScanEvent, int>(ScanEvent.EventName, e => e.BodyId, state.Scans);
+		aggregator.RegisterByKey<ScanBaryCentreEvent, int>(ScanBaryCentreEvent.EventName, e => e.BodyId,
+			state.BaryCentres);
 
 		await dispatcher.DispatchAsync(ReadLinesFromFilesAsync(latestDayLogs, cancellationToken),
 			cancellationToken);
