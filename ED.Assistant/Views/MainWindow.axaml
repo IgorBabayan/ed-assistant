@@ -115,6 +115,11 @@
 								Command="{Binding NavigateToDashboardViewCommand}"
 								Content="Dashboard"/>
 						<Button Classes="sidebar-button"
+								Classes.active="{Binding IsMaterialActive}"
+								Command="{Binding NavigateToMaterialViewCommand}"
+								Content="Dashboard"/>
+						<Border Classes="separator"/>
+						<Button Classes="sidebar-button"
 								Classes.active="{Binding IsSystemActive}"
 								Command="{Binding NavigateToSystemViewCommand}"
 								Content="System"/>
@@ -126,6 +131,7 @@
 								Classes.active="{Binding IsSignalsActive}"
 								Command="{Binding NavigateToSignalsViewCommand}"
 								Content="Signals"/>
+						<Border Classes="separator"/>
 						<Button Classes="sidebar-button"
 								Classes.active="{Binding IsJournalActive}"
 								Command="{Binding NavigateToJournalViewCommand}"
