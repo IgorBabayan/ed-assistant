@@ -93,6 +93,9 @@ public sealed class SystemStructureBuilder : ISystemStructureBuilder
 		if (!string.IsNullOrEmpty(scan.PlanetClass))
 			return "Planet";
 
+		if (scan.BodyName.Contains("Belt Cluster"))
+			return "Belt Cluster";
+
 		return "Unknown";
 	}
 }

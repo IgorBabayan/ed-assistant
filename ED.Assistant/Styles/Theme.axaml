@@ -1,34 +1,45 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <Thickness x:Key="MarginLeft15">15,0,0,0</Thickness>
-    <Thickness x:Key="MarginRight15">0,0,15,0</Thickness>
-    <Thickness x:Key="MarginTopBottom15">0,15,0,15</Thickness>
-    <Thickness x:Key="Margin15">15</Thickness>
+	<Thickness x:Key="MarginLeft15">15,0,0,0</Thickness>
+	<Thickness x:Key="MarginRight15">0,0,15,0</Thickness>
+	<Thickness x:Key="MarginTopBottom15">0,15,0,15</Thickness>
+	<Thickness x:Key="Margin15">15</Thickness>
 
-    <sys:Double x:Key="Spacing5">5</sys:Double>
-    <sys:Double x:Key="Spacing15">15</sys:Double>
+	<sys:Double x:Key="Spacing5">5</sys:Double>
+	<sys:Double x:Key="Spacing15">15</sys:Double>
 
-    <Color x:Key="ColorBackground">#0B0F14</Color>
-    <Color x:Key="PrimaryAccent">#00D4FF</Color>
-    <Color x:Key="SecondaryAccent">#FF8C00</Color>
-    <Color x:Key="PrimaryText">#E6EDF3</Color>
-    <Color x:Key="SecondaryText">#E6EDF3</Color>
-    <Color x:Key="CardBackground">#101820</Color>
-    <Color x:Key="CardBorder">#1F2A36</Color>
-    <Color x:Key="TransparentBackground">#80000000</Color>
+	<Color x:Key="ColorBackground">#0B0F14</Color>
+	<Color x:Key="PrimaryAccent">#00D4FF</Color>
+	<Color x:Key="SecondaryAccent">#FF8C00</Color>
+	<Color x:Key="PrimaryText">#E6EDF3</Color>
+	<Color x:Key="SecondaryText">#E6EDF3</Color>
+	<Color x:Key="CardBackground">#101820</Color>
+	<Color x:Key="CardBorder">#1F2A36</Color>
+	<Color x:Key="TransparentBackground">#80000000</Color>
 
-    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource ColorBackground}" />
-    <SolidColorBrush x:Key="PrimaryAccentBrush" Color="{StaticResource PrimaryAccent}" />
-    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="{StaticResource SecondaryAccent}" />
-    <SolidColorBrush x:Key="PrimaryTextBrush" Color="{StaticResource PrimaryText}" />
-    <SolidColorBrush x:Key="SecondaryTextBrush" Color="{StaticResource SecondaryText}" />
-    <SolidColorBrush x:Key="CardBackgroundBrush" Color="{StaticResource CardBackground}" />
-    <SolidColorBrush x:Key="CardBorderBrush" Color="{StaticResource CardBorder}" />
-    <SolidColorBrush x:Key="TransparentBackgroundBrush" Color="{StaticResource TransparentBackground}" />
+	<SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource ColorBackground}" />
+	<SolidColorBrush x:Key="PrimaryAccentBrush" Color="{StaticResource PrimaryAccent}" />
+	<SolidColorBrush x:Key="SecondaryAccentBrush" Color="{StaticResource SecondaryAccent}" />
+	<SolidColorBrush x:Key="PrimaryTextBrush" Color="{StaticResource PrimaryText}" />
+	<SolidColorBrush x:Key="SecondaryTextBrush" Color="{StaticResource SecondaryText}" />
+	<SolidColorBrush x:Key="CardBackgroundBrush" Color="{StaticResource CardBackground}" />
+	<SolidColorBrush x:Key="CardBorderBrush" Color="{StaticResource CardBorder}" />
+	<SolidColorBrush x:Key="TransparentBackgroundBrush" Color="{StaticResource TransparentBackground}" />
 
-    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#3A4B66"/>
-    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#3A4B66"/>
-    <SolidColorBrush x:Key="TextControlBorderBrush" Color="#3A4B66"/>
+	<SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#3A4B66"/>
+	<SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#3A4B66"/>
+	<SolidColorBrush x:Key="TextControlBorderBrush" Color="#3A4B66"/>
+
+	<CornerRadius x:Key="ControlCornerRadius">6</CornerRadius>
+
+	<SolidColorBrush x:Key="TreeViewItemBackgroundPointerOver"
+					 Color="{StaticResource SecondaryAccent}" />
+
+	<SolidColorBrush x:Key="TreeViewItemBackgroundSelected"
+					 Color="{StaticResource PrimaryAccent}" />
+
+	<SolidColorBrush x:Key="TreeViewItemBackgroundSelectedPointerOver"
+					 Color="{StaticResource PrimaryAccent}" />
 </ResourceDictionary>

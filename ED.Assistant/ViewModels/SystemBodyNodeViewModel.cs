@@ -14,6 +14,8 @@ public partial class SystemBodyNodeViewModel : ObservableObject
 	public string Type => Model.Type;
 	public ScanEvent? Scan => Model.Scan;
 	public ObservableCollection<SystemBodyNodeViewModel> Children { get; }
+	public string RadiusKm => Scan is null ? "-" : $"{Scan.Radius / 1000d:N0} km";
+	public string SurfaceTemperatureK => Scan is null ? "-" : $"{Scan.SurfaceTemperature:N0} K";
 
 	public SystemBodyNodeViewModel(SystemBodyNode model)
 	{

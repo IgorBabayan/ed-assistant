@@ -31,11 +31,13 @@
 	<Style Selector="TextBlock.dashboard-label">
 		<Setter Property="Foreground" Value="#7D8DA6"/>
 		<Setter Property="FontSize" Value="12"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
 	</Style>
 
 	<Style Selector="TextBlock.dashboard-value">
 		<Setter Property="Foreground" Value="#E6EDF3"/>
 		<Setter Property="FontSize" Value="14"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
 	</Style>
 
 	<Style Selector="TextBlock.dashboard-rank">
