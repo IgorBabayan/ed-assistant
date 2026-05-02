@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ED.Assistant.Extensions;
-using ED.Assistant.Services.Navigation;
 using ED.Assistant.ViewModels;
 using ED.Assistant.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,9 +31,6 @@ public partial class App : Application
             {
                 DataContext = provider.GetRequiredService<MainWindowViewModel>(),
             };
-
-			var navigation = provider.GetRequiredService<INavigationService>();
-			navigation.NavigateTo<DashboardViewModel>();
 		}
 
         base.OnFrameworkInitializationCompleted();

@@ -109,19 +109,24 @@
 								Spacing="{DynamicResource Spacing5}"
 								HorizontalAlignment="Center">
 
-						<Button Classes="sidebar-button active"
+						<Button Classes="sidebar-button"
+								Classes.active="{Binding IsDashboardActive}"
 								Command="{Binding NavigateToDashboardViewCommand}"
 								Content="Dashboard"/>
 						<Button Classes="sidebar-button"
+								Classes.active="{Binding IsSystemActive}"
 								Command="{Binding NavigateToSystemViewCommand}"
 								Content="System"/>
 						<Button Classes="sidebar-button"
+								Classes.active="{Binding IsBodiesActive}"
 								Command="{Binding NavigateToBodiesViewCommand}"
 								Content="Bodies"/>
 						<Button Classes="sidebar-button"
+								Classes.active="{Binding IsSignalsActive}"
 								Command="{Binding NavigateToSignalsViewCommand}"
 								Content="Signals"/>
 						<Button Classes="sidebar-button"
+								Classes.active="{Binding IsJournalActive}"
 								Command="{Binding NavigateToJournalViewCommand}"
 								Content="Journal"/>
 					</StackPanel>

@@ -30,13 +30,21 @@ public partial class MainWindowViewModel : BaseViewModel
 
 	public INavigationStore NavigationStore { get; }
 
+	public bool IsDashboardActive => NavigationStore.CurrentViewModel is DashboardViewModel;
+	public bool IsSystemActive => NavigationStore.CurrentViewModel is SystemViewModel;
+	public bool IsBodiesActive => NavigationStore.CurrentViewModel is BodiesViewModel;
+	public bool IsSignalsActive => NavigationStore.CurrentViewModel is SignalsViewModel;
+	public bool IsJournalActive => NavigationStore.CurrentViewModel is JournalViewModel;
+
 	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
 		INavigationStore navigationStore, IJournalStateStore stateStore,
 		INavigationService navigationService) : base(stateStore)
 	{
 		_dialogService = dialogService;
 		_settingsViewModel = settingsViewModel;
+
 		_navigationService = navigationService;
+		_navigationService.NavigateTo<DashboardViewModel>();
 
 		NavigationStore = navigationStore;
 
@@ -60,35 +68,50 @@ public partial class MainWindowViewModel : BaseViewModel
 	private void NavigateToDashboardView()
 	{
 		if (NavigationStore.CurrentViewModel is not DashboardViewModel)
+		{
 			_navigationService.NavigateTo<DashboardViewModel>();
+			RaiseActiveProperty();
+		}
 	}
 
 	[RelayCommand]
 	private void NavigateToSystemView()
 	{
 		if (NavigationStore.CurrentViewModel is not SystemViewModel)
+		{
 			_navigationService.NavigateTo<SystemViewModel>();
+			RaiseActiveProperty();
+		}
 	}
 
 	[RelayCommand]
 	private void NavigateToBodiesView()
 	{
 		if (NavigationStore.CurrentViewModel is not BodiesViewModel)
+		{
 			_navigationService.NavigateTo<BodiesViewModel>();
+			RaiseActiveProperty();
+		}
 	}
 
 	[RelayCommand]
 	private void NavigateToSignalsView()
 	{
 		if (NavigationStore.CurrentViewModel is not SignalsViewModel)
+		{
 			_navigationService.NavigateTo<SignalsViewModel>();
+			RaiseActiveProperty();
+		}
 	}
 
 	[RelayCommand]
 	private void NavigateToJournalView()
 	{
 		if (NavigationStore.CurrentViewModel is not JournalViewModel)
+		{
 			_navigationService.NavigateTo<JournalViewModel>();
+			RaiseActiveProperty();
+		}
 	}
 
 	[RelayCommand]
@@ -103,4 +126,12 @@ public partial class MainWindowViewModel : BaseViewModel
 	}
 
 	private bool CanLoad() => NavigationStore.CurrentViewModel is ILoadableViewModel;
+	private void RaiseActiveProperty()
+	{
+		OnPropertyChanged(nameof(IsDashboardActive));
+		OnPropertyChanged(nameof(IsSystemActive));
+		OnPropertyChanged(nameof(IsBodiesActive));
+		OnPropertyChanged(nameof(IsSignalsActive));
+		OnPropertyChanged(nameof(IsJournalActive));
+	}
 }
