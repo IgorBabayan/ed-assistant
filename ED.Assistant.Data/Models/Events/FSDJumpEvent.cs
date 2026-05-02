@@ -44,11 +44,14 @@ public class FSDJumpEvent : BaseJournalEvent
 	public string BodyType { get; set; } = string.Empty;
 
 	[JsonPropertyName("JumpDist")]
-	public float JumpDist { get; set; }
+	public double JumpDist { get; set; }
 
 	[JsonPropertyName("FuelUsed")]
-	public float FuelUsed { get; set; }
+	public double FuelUsed { get; set; }
 
 	[JsonPropertyName("FuelLevel")]
-	public float FuelLevel { get; set; }
+	public double FuelLevel { get; set; }
+
+	[JsonPropertyName("SystemGovernment_Localised")]
+	public string Government { get; set; } = string.Empty;
 }

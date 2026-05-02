@@ -1,4 +1,5 @@
 ﻿using ED.Assistant.Data.Models.Events;
+using ED.Assistant.Data.Services.Events;
 using ED.Assistant.Data.Services.Path;
 using ED.Assistant.Data.Services.Settings;
 using ED.Assistant.Services.DialogService;
@@ -8,7 +9,6 @@ namespace ED.Assistant.ViewModels;
 
 public partial class SettingsViewModel : BaseViewModel
 {
-	private readonly IPathFinder _pathFinder;
 	private readonly IFolderPickerService _folderPickerService;
 	private readonly ISettingsStorage _settingsStorage;
 
@@ -17,10 +17,10 @@ public partial class SettingsViewModel : BaseViewModel
 
 	public event Action<bool?>? CloseRequested;
 
-	public SettingsViewModel(IPathFinder pathFinder, IFolderPickerService folderPickerService,
-		ISettingsStorage settingsStorage, IJournalStateStore stateStore) : base(stateStore)
+	public SettingsViewModel(ILogStorage logStorage, IPathFinder pathFinder, 
+		IFolderPickerService folderPickerService, ISettingsStorage settingsStorage,
+		IJournalStateStore stateStore) : base(logStorage, pathFinder, stateStore)
 	{
-		_pathFinder = pathFinder;
 		_folderPickerService = folderPickerService;
 		_settingsStorage = settingsStorage;
 

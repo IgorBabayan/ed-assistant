@@ -1,8 +1,60 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="ED.Assistant.SystemView">
-  <TextBlock Foreground="Orange" FontSize="48">System</TextBlock>
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:ED.Assistant.ViewModels"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:DataType="vm:SystemViewModel"
+			 x:Class="ED.Assistant.SystemView">
+	<Grid Grid.Row="1"
+		  ColumnSpacing="16">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="380"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+
+		<Border Classes="dashboard-card">
+			<Grid RowSpacing="12">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<TextBlock Text="SYSTEM STRUCTURE"
+						   Classes="dashboard-card-header"/>
+
+				<TreeView Grid.Row="1"
+						  ItemsSource="{Binding Bodies}"
+						  SelectedItem="{Binding SelectedBody, Mode=TwoWay}">
+					<TreeView.ItemTemplate>
+						<TreeDataTemplate ItemsSource="{Binding Children}">
+							<StackPanel Orientation="Horizontal"
+										HorizontalAlignment="Left"
+										VerticalAlignment="Center"
+										Spacing="8">
+								<TextBlock Text="{Binding Type}"
+										   Classes="dashboard-label"/>
+								<TextBlock Text="{Binding Name}"
+										   Classes="dashboard-value"/>
+							</StackPanel>
+						</TreeDataTemplate>
+					</TreeView.ItemTemplate>
+				</TreeView>
+			</Grid>
+		</Border>
+
+		<Border Grid.Column="1"
+				Classes="dashboard-card">
+			<StackPanel Spacing="12">
+				<TextBlock Text="BODY DETAILS"
+						   Classes="dashboard-card-header"/>
+
+				<TextBlock Text="{Binding SelectedBody.Name}"
+						   Classes="dashboard-system-name"/>
+
+				<TextBlock Text="{Binding SelectedBody.Type}"
+						   Classes="dashboard-label"/>
+			</StackPanel>
+		</Border>
+	</Grid>
 </UserControl>

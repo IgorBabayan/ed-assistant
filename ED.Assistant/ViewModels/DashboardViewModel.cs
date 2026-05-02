@@ -11,9 +11,6 @@ namespace ED.Assistant.ViewModels;
 
 public partial class DashboardViewModel : BaseViewModel, ILoadableViewModel
 {
-	private readonly ILogStorage _logStorage;
-	private readonly IPathFinder _pathFinder;
-
 	[ObservableProperty]
 	private CommanderEvent? _commander = default;
 
@@ -27,11 +24,7 @@ public partial class DashboardViewModel : BaseViewModel, ILoadableViewModel
 	private FSDJumpEvent? _currentSystem = default;
 
 	public DashboardViewModel(ILogStorage logStorage, IPathFinder pathFinder,
-		IJournalStateStore stateStore) : base(stateStore)
-	{
-		_logStorage = logStorage;
-		_pathFinder = pathFinder;
-	}
+		IJournalStateStore stateStore) : base(logStorage, pathFinder, stateStore) { }
 
 	[RelayCommand]
 	private async Task Load(CancellationToken cancellationToken = default)

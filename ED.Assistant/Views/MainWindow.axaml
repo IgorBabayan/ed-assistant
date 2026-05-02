@@ -98,6 +98,7 @@
 				</Grid.ColumnDefinitions>
 
 				<ContentControl Grid.Column="0"
+								Padding="{DynamicResource Margin15}"
 								Content="{Binding NavigationStore.CurrentViewModel}"/>
 
 				<!-- Sidebar -->

@@ -1,4 +1,6 @@
 ﻿using ED.Assistant.Data.Models.Events;
+using ED.Assistant.Data.Services.Events;
+using ED.Assistant.Data.Services.Path;
 using ED.Assistant.Services.DialogService;
 using ED.Assistant.Services.Journal;
 using ED.Assistant.Services.Navigation;
@@ -38,7 +40,8 @@ public partial class MainWindowViewModel : BaseViewModel
 
 	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
 		INavigationStore navigationStore, IJournalStateStore stateStore,
-		INavigationService navigationService) : base(stateStore)
+		INavigationService navigationService, ILogStorage logStorage,
+		IPathFinder pathFinder) : base(logStorage, pathFinder, stateStore)
 	{
 		_dialogService = dialogService;
 		_settingsViewModel = settingsViewModel;

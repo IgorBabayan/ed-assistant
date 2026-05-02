@@ -1,6 +1,7 @@
 ﻿using ED.Assistant.Services.DialogService;
 using ED.Assistant.Services.Journal;
 using ED.Assistant.Services.Navigation;
+using ED.Assistant.Services.SystemBuilder;
 using ED.Assistant.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,7 +28,8 @@ static class ServiceCollectionExtensions
 			.AddSingleton<IFolderPickerService, FolderPickerService>()
 			.AddSingleton<IJournalStateStore, JournalStateStore>()
 			.AddSingleton<INavigationStore, NavigationStore>()
-			.AddSingleton<INavigationService, NavigationService>();
+			.AddSingleton<INavigationService, NavigationService>()
+			.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
 		return services;
 	}
 

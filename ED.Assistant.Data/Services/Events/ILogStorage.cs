@@ -16,7 +16,8 @@ class LogStorage : ILogStorage
 	{
 		EnsureLogFolderExists(logFolder);
 
-		var latestDayLogs = GetLatestDayLogs(logFolder);
+		//var latestDayLogs = GetLatestDayLogs(logFolder);
+		var latestDayLogs = GetLatestDayLogs("C:\\Elite logs");
 		if (latestDayLogs?.Any() == false)
 			throw new Exception("Log files not found");
 
