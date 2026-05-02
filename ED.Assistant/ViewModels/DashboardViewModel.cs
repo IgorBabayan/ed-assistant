@@ -23,6 +23,9 @@ public partial class DashboardViewModel : BaseViewModel, ILoadableViewModel
 	[ObservableProperty]
 	private ObservableCollection<RankDTO>? _ranks = new();
 
+	[ObservableProperty]
+	private FSDJumpEvent? _currentSystem = default;
+
 	public DashboardViewModel(ILogStorage logStorage, IPathFinder pathFinder,
 		IJournalStateStore stateStore) : base(stateStore)
 	{
@@ -45,6 +48,7 @@ public partial class DashboardViewModel : BaseViewModel, ILoadableViewModel
 		ParseCommanderRanks(state?.Ranks);
 
 		LoadGame = state?.LoadGame;
+		CurrentSystem = state?.FSDJump;
 	}
 
 	private static ushort GetMaxRank<TEnum>()

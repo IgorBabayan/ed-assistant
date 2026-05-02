@@ -7,28 +7,36 @@
 			 x:Class="ED.Assistant.DashboardView"
 			 x:DataType="vm:DashboardViewModel"
 			 Margin="{DynamicResource Margin15}">
-	<Grid RowDefinitions="Auto,*,Auto"
-          ColumnDefinitions="2*,*"
-          Margin="20"
+	<Grid Margin="20"
           RowSpacing="16"
           ColumnSpacing="16">
+        <Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+			<ColumnDefinition Width="2*"/>
+			<ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
         <!-- Current System -->
-        <!--<Border Grid.Row="0"
+        <Border Grid.Row="0"
                 Grid.Column="0"
                 Classes="dashboard-card">
             <StackPanel Spacing="10">
                 <TextBlock Text="CURRENT SYSTEM"
                            Classes="dashboard-card-header"/>
 
-                <TextBlock Text="{Binding CurrentSystem.Name}"
+                <TextBlock Text="{Binding CurrentSystem.StarSystem}"
                            Classes="dashboard-system-name"/>
 
                 <UniformGrid Columns="2"
                              Rows="2">
                     <StackPanel>
                         <TextBlock Text="Star Type" Classes="dashboard-label"/>
-                        <TextBlock Text="{Binding CurrentSystem.StarType}" Classes="dashboard-value"/>
+                        <TextBlock Text="{Binding CurrentSystem.BodyType}" Classes="dashboard-value"/>
                     </StackPanel>
 
                     <StackPanel>
@@ -47,7 +55,7 @@
                     </StackPanel>
                 </UniformGrid>
             </StackPanel>
-        </Border>-->
+        </Border>
 
         <!-- CMDR Profile -->
         <Border Grid.Row="0"

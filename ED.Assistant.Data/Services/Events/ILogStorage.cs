@@ -126,6 +126,7 @@ class LogStorage : ILogStorage
 		dispatcher.On<LoadGameEvent>(LoadGameEvent.EventName, e => state.LoadGame = e);
 		dispatcher.On<MaterialsEvent>(MaterialsEvent.EventName, e => state.Materials = e);
 		dispatcher.On<RankEvent>(RankEvent.EventName, e => state.Ranks = e);
+		dispatcher.On<FSDJumpEvent>(FSDJumpEvent.EventName, e => state.FSDJump = e);
 
 		await dispatcher.DispatchAsync(ReadLinesFromFilesAsync(latestDayLogs, cancellationToken),
 			cancellationToken);

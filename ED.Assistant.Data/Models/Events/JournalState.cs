@@ -6,6 +6,7 @@ public sealed class JournalState
 	public LoadGameEvent? LoadGame { get; set; }
 	public MaterialsEvent? Materials { get; set; }
 	public RankEvent? Ranks { get; set; }
+	public FSDJumpEvent? FSDJump { get; set; }
 
 	//public IReadOnlyList<SignalInfo> Signals { get; init; } = [];
 }
