@@ -31,8 +31,10 @@ public partial class SystemViewModel : BaseViewModel, ILoadableViewModel
 
 		CurrentSystem = state.FSDJump;
 		Bodies.Clear();
-		
+
 		var structure = _structureBuilder.Build(state);
+		Bodies.Add(new SystemBodyNodeViewModel(structure.Root));
+		SelectedBody = Bodies.FirstOrDefault();
 	}
 
 	[RelayCommand]

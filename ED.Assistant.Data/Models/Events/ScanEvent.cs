@@ -75,4 +75,10 @@ public class ScanEvent : BaseJournalEvent
 
 	[JsonPropertyName("WasFootfalled")]
 	public bool WasFootfalled { get; set; }
+
+	[JsonPropertyName("Parents")]
+	public IEnumerable<Parent>? Parents { get; set; } = default;
+
+	[JsonPropertyName("PlanetClass")]
+	public string PlanetClass { get; set; } = string.Empty;
 }

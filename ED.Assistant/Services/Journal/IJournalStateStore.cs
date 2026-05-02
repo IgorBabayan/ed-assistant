@@ -4,7 +4,7 @@ namespace ED.Assistant.Services.Journal;
 
 public interface IJournalStateStore
 {
-	JournalState State { get; }
+	JournalState CurrentState { get; }
 	event EventHandler<JournalState>? StateChanged;
 
 	void Update(JournalState state);
@@ -14,15 +14,15 @@ class JournalStateStore : IJournalStateStore
 {
 	private readonly object _lock = new();
 
-	private JournalState _state = new();
+	private JournalState _currentState = new();
 
-	public JournalState State
+	public JournalState CurrentState
 	{
 		get
 		{
 			lock (_lock)
 			{
-				return _state;
+				return _currentState;
 			}
 		}
 	}
@@ -31,12 +31,11 @@ class JournalStateStore : IJournalStateStore
 
 	public void Update(JournalState newState)
 	{
-		if (newState is null)
-			throw new ArgumentNullException(nameof(newState));
+		ArgumentNullException.ThrowIfNull(newState);
 
 		lock (_lock)
 		{
-			_state = newState;
+			_currentState = newState;
 		}
 
 		StateChanged?.Invoke(this, newState);

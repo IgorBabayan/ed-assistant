@@ -21,6 +21,12 @@ class NavigationService : INavigationService
 		_navigationStore = navigationStore;
 	}
 
-	public void NavigateTo<TViewModel>() where TViewModel : BaseViewModel 
-		=> _navigationStore.CurrentViewModel = _serviceProvider.GetRequiredService<TViewModel>();
+	public void NavigateTo<TViewModel>() where TViewModel : BaseViewModel
+	{
+		var viewModel = _serviceProvider.GetRequiredService<TViewModel>();
+		_navigationStore.CurrentViewModel = viewModel;
+
+		if (viewModel is INavigationAware navigationAware)
+			navigationAware.OnNavigatedTo();
+	}
 }

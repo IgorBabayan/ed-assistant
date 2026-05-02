@@ -16,8 +16,7 @@ class LogStorage : ILogStorage
 	{
 		EnsureLogFolderExists(logFolder);
 
-		//var latestDayLogs = GetLatestDayLogs(logFolder);
-		var latestDayLogs = GetLatestDayLogs("C:\\Elite logs");
+		var latestDayLogs = GetLatestDayLogs(logFolder);
 		if (latestDayLogs?.Any() == false)
 			throw new Exception("Log files not found");
 
@@ -95,7 +94,7 @@ class LogStorage : ILogStorage
 		aggregator.RegisterLast<FSDJumpEvent>(FSDJumpEvent.EventName, e => state.FSDJump = e);
 
 		aggregator.RegisterByKey<ScanEvent, int>(ScanEvent.EventName, e => e.BodyId, state.Scans);
-		aggregator.RegisterByKey<ScanBaryCentreEvent, int>(ScanBaryCentreEvent.EventName, e => e.BodyId,
+		aggregator.RegisterByKey<BaryCentreEvent, int>(BaryCentreEvent.EventName, e => e.BodyId,
 			state.BaryCentres);
 
 		await dispatcher.DispatchAsync(ReadLinesFromFilesAsync(latestDayLogs, cancellationToken),

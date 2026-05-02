@@ -1,4 +1,5 @@
-﻿using ED.Assistant.Data.Models.Events;
+﻿using ED.Assistant.Data.Converters;
+using ED.Assistant.Data.Models.Events;
 using System.Text.Json;
 
 namespace ED.Assistant.Data.Services;
@@ -63,11 +64,11 @@ sealed class JournalEventDispatcher : IJournalEventDispatcher
 		{
 			PropertyNameCaseInsensitive = true
 		};
+		_jsonOptions.Converters.Add(new ParentConverter());
 	}
 
 	public void On<TEvent>(string eventName, Action<TEvent> handler)
-	   where TEvent : IJournalEvent 
-	   => _subscriptions.Add(new EventSubscription<TEvent>(eventName, handler, _jsonOptions));
+	   where TEvent : IJournalEvent => _subscriptions.Add(new EventSubscription<TEvent>(eventName, handler, _jsonOptions));
 
 	public async Task DispatchAsync(IAsyncEnumerable<string> lines, CancellationToken cancellationToken = default)
 	{

@@ -9,5 +9,5 @@ public sealed class JournalState
 	public FSDJumpEvent? FSDJump { get; set; }
 
 	public Dictionary<int, ScanEvent> Scans { get; } = new();
-	public Dictionary<int, ScanBaryCentreEvent> BaryCentres { get; } = new();
+	public Dictionary<int, BaryCentreEvent> BaryCentres { get; } = new();
 }

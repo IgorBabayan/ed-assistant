@@ -6,7 +6,12 @@ using ED.Assistant.Services.Journal;
 
 namespace ED.Assistant.ViewModels;
 
-public abstract class BaseViewModel : ObservableObject
+public interface INavigationAware
+{
+	void OnNavigatedTo();
+}
+
+public abstract class BaseViewModel : ObservableObject, INavigationAware
 {
 	protected readonly IJournalStateStore _stateStore;
 	protected readonly ILogStorage _logStorage;
@@ -20,11 +25,15 @@ public abstract class BaseViewModel : ObservableObject
 
 		_stateStore = stateStore;
 		_stateStore.StateChanged += OnStateChanged;
-
-		UpdateFromState(_stateStore.State);
 	}
 
 	protected abstract void UpdateFromState(JournalState state);
+
+	public void OnNavigatedTo()
+	{
+		if (_stateStore.CurrentState is not null)
+			UpdateFromState(_stateStore.CurrentState);
+	}
 
 	private void OnStateChanged(object? sender, JournalState state) => UpdateFromState(state);
 }

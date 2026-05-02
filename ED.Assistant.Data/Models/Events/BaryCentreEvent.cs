@@ -1,6 +1,6 @@
 ﻿namespace ED.Assistant.Data.Models.Events;
 
-public class ScanBaryCentreEvent : BaseJournalEvent
+public class BaryCentreEvent : BaseJournalEvent
 {
 	internal const string EventName = "ScanBaryCentre";
 
@@ -12,4 +12,7 @@ public class ScanBaryCentreEvent : BaseJournalEvent
 
 	[JsonPropertyName("SystemAddress")]
 	public long SystemAddress { get; set; }
+
+	[JsonPropertyName("Parents")]
+	public IEnumerable<Parent>? Parents { get; set; } = default;
 }
