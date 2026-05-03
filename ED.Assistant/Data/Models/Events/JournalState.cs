@@ -11,4 +11,5 @@ public sealed class JournalState
 
 	public Dictionary<int, ScanEvent> Scans { get; } = new();
 	public Dictionary<int, BaryCentreEvent> BaryCentres { get; } = new();
+	public Dictionary<int, FSSBodySignalsEvent> FSSSignals { get; } = new();
 }

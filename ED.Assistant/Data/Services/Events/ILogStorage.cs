@@ -97,9 +97,11 @@ class LogStorage : ILogStorage
 		{
 			state.FSDJump = e;
 			state.Scans.Clear();
+			state.FSSSignals.Clear();
 		});
 
 		aggregator.RegisterByKey<ScanEvent, int>(ScanEvent.EventName, e => e.BodyId, state.Scans);
+		aggregator.RegisterByKey<FSSBodySignalsEvent, int>(FSSBodySignalsEvent.EventName, e => e.BodyId, state.FSSSignals);
 		aggregator.RegisterByKey<BaryCentreEvent, int>(BaryCentreEvent.EventName, e => e.BodyId,
 			state.BaryCentres);
 

@@ -5,7 +5,9 @@ public sealed class ScanType : IEquatable<ScanType>, IEquatable<string>
 	public static readonly ScanType AutoScan = new("AutoScan");
 	public static readonly ScanType Detailed = new("Detailed");
 
-	private readonly string _value;
+	private readonly string? _value;
+
+	private ScanType() { }
 
 	private ScanType(string value) => _value = value;
 
@@ -27,11 +29,11 @@ public sealed class ScanType : IEquatable<ScanType>, IEquatable<string>
 
 	public static bool operator !=(string? left, ScanType? right) => !(left == right);
 
-	public static explicit operator string(ScanType scanType) => scanType._value;
+	public static explicit operator string(ScanType scanType) => scanType._value!;
 
-	public override string ToString() => _value;
+	public override string ToString() => _value!;
 
-	public override int GetHashCode()  => StringComparer.OrdinalIgnoreCase.GetHashCode(_value);
+	public override int GetHashCode()  => StringComparer.OrdinalIgnoreCase.GetHashCode(_value!);
 
 	public override bool Equals(object? obj) => obj switch
 	{
