@@ -45,6 +45,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ED.Assistant.Data\ED.Assistant.Data.csproj" />
+    <Folder Include="Data\" />
   </ItemGroup>
 </Project>

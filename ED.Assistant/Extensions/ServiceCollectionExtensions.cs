@@ -1,4 +1,7 @@
-﻿using ED.Assistant.Services.DialogService;
+﻿using ED.Assistant.Data.Services.Events;
+using ED.Assistant.Data.Services.Path;
+using ED.Assistant.Data.Services.Settings;
+using ED.Assistant.Services.DialogService;
 using ED.Assistant.Services.Journal;
 using ED.Assistant.Services.Navigation;
 using ED.Assistant.Services.SystemBuilder;
@@ -9,6 +12,29 @@ namespace ED.Assistant.Extensions;
 
 static class ServiceCollectionExtensions
 {
+	public static IServiceCollection RegisterDataServices(this IServiceCollection services)
+	{
+		services.AddSingleton<WindowsPathResolver>();
+		services.AddSingleton<LinuxPathResolver>();
+		services.AddSingleton<MacPathResolver>();
+
+		services.AddSingleton<IPlatformPathResolver>(sp =>
+		{
+			if (OperatingSystem.IsWindows())
+				return sp.GetRequiredService<WindowsPathResolver>();
+
+			if (OperatingSystem.IsLinux())
+				return sp.GetRequiredService<LinuxPathResolver>();
+
+			if (OperatingSystem.IsMacOS())
+				return sp.GetRequiredService<MacPathResolver>();
+
+			throw new PlatformNotSupportedException("Unsupported OS");
+		});
+		
+		return services;
+	}
+
 	public static IServiceCollection RegisterViewModels(this IServiceCollection services)
 	{
 		services.AddSingleton<MainWindowViewModel>()
@@ -26,7 +52,10 @@ static class ServiceCollectionExtensions
 
 	public static IServiceCollection RegisterServices(this IServiceCollection services)
 	{
-		services.AddSingleton<IDialogService, DialogService>()
+		services.AddSingleton<IPathFinder, PathFinder>()
+			.AddSingleton<ISettingsStorage, SettingsStorage>()
+			.AddSingleton<ILogStorage, LogStorage>()
+			.AddSingleton<IDialogService, DialogService>()
 			.AddSingleton<IFolderPickerService, FolderPickerService>()
 			.AddSingleton<IJournalStateStore, JournalStateStore>()
 			.AddSingleton<INavigationStore, NavigationStore>()

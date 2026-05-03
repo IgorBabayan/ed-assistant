@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ED.Assistant.Data\ED.Assistant.Data.csproj" />
+    <ProjectReference Include="..\ED.Assistant\ED.Assistant.csproj" />
   </ItemGroup>
 
   <ItemGroup>
