@@ -1,7 +1,4 @@
-﻿using ED.Assistant.Data.Models.Events;
-using ED.Assistant.Data.Services.Events;
-using ED.Assistant.Data.Services.Path;
-using ED.Assistant.Services.Journal;
+﻿using ED.Assistant.Services.Journal;
 using System.Collections.ObjectModel;
 
 namespace ED.Assistant.ViewModels;
@@ -39,10 +36,13 @@ public partial class ShipLockerViewModel : LoadableViewModel
 	[ObservableProperty]
 	private string selectedSort = "Name";
 
-	public ShipLockerViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore)
-		: base(journalLoader, stateStore) { }
+	protected override bool ActivateOnNavigation => true;
 
-	protected override void UpdateFromState(JournalState state)
+	public ShipLockerViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
+		IMemoryCache memoryCache) : base(journalLoader, stateStore, memoryCache) { }
+
+	protected override async Task UpdateFromStateAsync(JournalState state,
+		CancellationToken cancellationToken = default)
 	{
 		if (state?.ShipLocker is null)
 			return;

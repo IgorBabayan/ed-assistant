@@ -5,7 +5,8 @@ namespace ED.Assistant.Services.Navigation;
 
 public interface INavigationService
 {
-	void NavigateTo<TViewModel>() where TViewModel : LoadableViewModel;
+	Task NavigateToAsync<TViewModel>(CancellationToken cancellationToken = default)
+		where TViewModel : LoadableViewModel;
 }
 
 class NavigationService : INavigationService
@@ -21,12 +22,13 @@ class NavigationService : INavigationService
 		_navigationStore = navigationStore;
 	}
 
-	public void NavigateTo<TViewModel>() where TViewModel : LoadableViewModel
+	public async Task NavigateToAsync<TViewModel>(CancellationToken cancellationToken = default)
+		where TViewModel : LoadableViewModel
 	{
 		var viewModel = _serviceProvider.GetRequiredService<TViewModel>();
 		_navigationStore.CurrentViewModel = viewModel;
 
 		if (viewModel is INavigationAware navigationAware)
-			navigationAware.OnNavigatedTo();
+			await navigationAware.OnNavigatedToAsync(cancellationToken);
 	}
 }

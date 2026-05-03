@@ -1,5 +1,4 @@
-﻿using ED.Assistant.Data.Models.Events;
-using ED.Assistant.Models;
+﻿using ED.Assistant.Models;
 using ED.Assistant.Services.Journal;
 using ED.Assistant.Services.SystemBuilder;
 using System.Collections.ObjectModel;
@@ -19,8 +18,8 @@ public partial class SystemViewModel : LoadableViewModel
 	public ObservableCollection<SystemBodyNodeViewModel> Bodies { get; } = [];
 
 	public SystemViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
-		ISystemStructureBuilder structureBuilder) : base(journalLoader, stateStore) 
-		=> _structureBuilder = structureBuilder;
+		ISystemStructureBuilder structureBuilder, IMemoryCache memoryCache)
+		: base(journalLoader, stateStore, memoryCache) => _structureBuilder = structureBuilder;
 
 	protected override void UpdateFromState(JournalState state)
 	{

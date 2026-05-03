@@ -1,5 +1,4 @@
-﻿using ED.Assistant.Data.Models.Events;
-using ED.Assistant.Services.SystemBuilder;
+﻿using ED.Assistant.Services.SystemBuilder;
 using System.Collections.ObjectModel;
 
 namespace ED.Assistant.Models;

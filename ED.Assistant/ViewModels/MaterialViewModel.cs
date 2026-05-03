@@ -35,10 +35,13 @@ public partial class MaterialViewModel : LoadableViewModel
 	[ObservableProperty]
 	private string selectedSort = "Name";
 
-	public MaterialViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore)
-		: base(journalLoader, stateStore) { }
+	protected override bool ActivateOnNavigation => true;
 
-	protected override void UpdateFromState(JournalState state)
+	public MaterialViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
+		IMemoryCache memoryCache) : base(journalLoader, stateStore, memoryCache) { }
+
+	protected override async Task UpdateFromStateAsync(JournalState state,
+		CancellationToken cancellationToken = default)
 	{
 		if (state?.Materials is null)
 			return;
@@ -146,7 +149,7 @@ public partial class MaterialViewModel : LoadableViewModel
 	}
 }
 
-public sealed partial class MaterialItemViewModel : ObservableObject
+public sealed partial class MaterialItemViewModel : BaseViewModel
 {
 	public string Name { get; init; } = string.Empty;
 

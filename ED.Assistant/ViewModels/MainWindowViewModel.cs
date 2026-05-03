@@ -37,17 +37,17 @@ public partial class MainWindowViewModel : LoadableViewModel
 	public bool IsShipLockerActive => NavigationStore.CurrentViewModel is ShipLockerViewModel;
 
 	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
-		INavigationStore navigationStore, IJournalStateStore stateStore,
+		INavigationStore navigationStore, IJournalStateStore stateStore, IMemoryCache memoryCache,
 		INavigationService navigationService, IJournalLoaderService journalLoader)
-		: base(journalLoader, stateStore)
+		: base(journalLoader, stateStore, memoryCache)
 	{
+		NavigationStore = navigationStore;
+
 		_dialogService = dialogService;
 		_settingsViewModel = settingsViewModel;
-
 		_navigationService = navigationService;
-		_navigationService.NavigateTo<DashboardViewModel>();
 
-		NavigationStore = navigationStore;
+		_ = InitializeAsync();
 
 		if (NavigationStore is INotifyPropertyChanged notify)
 		{
@@ -66,61 +66,61 @@ public partial class MainWindowViewModel : LoadableViewModel
 	}
 
 	[RelayCommand]
-	private void NavigateToDashboardView()
+	private async Task NavigateToDashboardView(CancellationToken cancellationToken = default)
 	{
 		if (NavigationStore.CurrentViewModel is not DashboardViewModel)
 		{
-			_navigationService.NavigateTo<DashboardViewModel>();
+			await _navigationService.NavigateToAsync<DashboardViewModel>();
 			RaiseActiveProperty();
 		}
 	}
 
 	[RelayCommand]
-	private void NavigateToSystemView()
+	private async Task NavigateToSystemView(CancellationToken cancellationToken = default)
 	{
 		if (NavigationStore.CurrentViewModel is not SystemViewModel)
 		{
-			_navigationService.NavigateTo<SystemViewModel>();
+			await _navigationService.NavigateToAsync<SystemViewModel>();
 			RaiseActiveProperty();
 		}
 	}
 
 	[RelayCommand]
-	private void NavigateToSignalsView()
+	private async Task NavigateToSignalsView(CancellationToken cancellationToken = default)
 	{
 		if (NavigationStore.CurrentViewModel is not SignalsViewModel)
 		{
-			_navigationService.NavigateTo<SignalsViewModel>();
+			await _navigationService.NavigateToAsync<SignalsViewModel>();
 			RaiseActiveProperty();
 		}
 	}
 
 	[RelayCommand]
-	private void NavigateToJournalView()
+	private async Task NavigateToJournalView(CancellationToken cancellationToken = default)
 	{
 		if (NavigationStore.CurrentViewModel is not JournalViewModel)
 		{
-			_navigationService.NavigateTo<JournalViewModel>();
+			await _navigationService.NavigateToAsync<JournalViewModel>();
 			RaiseActiveProperty();
 		}
 	}
 
 	[RelayCommand]
-	private void NavigateToMaterialView()
+	private async Task NavigateToMaterialView(CancellationToken cancellationToken = default)
 	{
 		if (NavigationStore.CurrentViewModel is not MaterialViewModel)
 		{
-			_navigationService.NavigateTo<MaterialViewModel>();
+			await _navigationService.NavigateToAsync<MaterialViewModel>();
 			RaiseActiveProperty();
 		}
 	}
 
 	[RelayCommand]
-	private void NavigateToShipLockerView()
+	private async Task NavigateToShipLockerView(CancellationToken cancellationToken = default)
 	{
 		if (NavigationStore.CurrentViewModel is not ShipLockerViewModel)
 		{
-			_navigationService.NavigateTo<ShipLockerViewModel>();
+			await _navigationService.NavigateToAsync<ShipLockerViewModel>();
 			RaiseActiveProperty();
 		}
 	}
@@ -137,5 +137,16 @@ public partial class MainWindowViewModel : LoadableViewModel
 		OnPropertyChanged(nameof(IsJournalActive));
 		OnPropertyChanged(nameof(IsMaterialActive));
 		OnPropertyChanged(nameof(IsShipLockerActive));
+	}
+
+	private async Task InitializeAsync()
+	{
+		try
+		{
+			await _navigationService.NavigateToAsync<DashboardViewModel>();
+		}
+		catch (Exception)
+		{
+		}
 	}
 }

@@ -2,6 +2,7 @@
 using ED.Assistant.DTO;
 using ED.Assistant.Extensions;
 using ED.Assistant.Services.Journal;
+using Microsoft.Extensions.Caching.Memory;
 using System.Collections.ObjectModel;
 
 namespace ED.Assistant.ViewModels;
@@ -20,13 +21,14 @@ public partial class DashboardViewModel : LoadableViewModel
 	[ObservableProperty]
 	private FSDJumpEvent? _currentSystem = default;
 
-	public DashboardViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore)
-		: base(journalLoader, stateStore) { }
+	public DashboardViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
+		IMemoryCache memoryCache) : base(journalLoader, stateStore, memoryCache) { }
 
-	protected override void UpdateFromState(JournalState state)
+	protected override async Task UpdateFromStateAsync(JournalState state,
+		CancellationToken cancellationToken = default)
 	{
 		Commander = state?.Commander;
-		ParseCommanderRanks(state?.Ranks);
+		await Task.Run(() => ParseCommanderRanks(state?.Ranks), cancellationToken);
 
 		LoadGame = state?.LoadGame;
 		CurrentSystem = state?.FSDJump;
