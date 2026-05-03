@@ -1,6 +1,4 @@
-﻿using ED.Assistant.Services.Journal;
-
-namespace ED.Assistant.ViewModels;
+﻿namespace ED.Assistant.ViewModels;
 
 public partial class SignalsViewModel : LoadableViewModel
 {

@@ -1,5 +1,4 @@
 ﻿using ED.Assistant.Services.DialogService;
-using ED.Assistant.Services.Journal;
 using ED.Assistant.Services.Navigation;
 using System.ComponentModel;
 

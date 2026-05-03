@@ -1,39 +1,54 @@
-﻿using ED.Assistant.Services.Journal;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 namespace ED.Assistant.ViewModels;
 
 public partial class MaterialViewModel : LoadableViewModel
 {
 	public ObservableCollection<MaterialItemViewModel> Materials { get; } = [];
-
 	public ObservableCollection<MaterialItemViewModel> FilteredMaterials { get; } = [];
-
 	public ObservableCollection<MaterialSummaryViewModel> MaterialSummaries { get; } = [];
 
 	public IReadOnlyList<string> Categories { get; } =
 	[
-		"All",
-		"Raw",
-		"Manufactured",
-		"Encoded"
+		Options.Category.All,
+		Options.Category.Raw,
+		Options.Category.Manufactured,
+		Options.Category.Encoded
 	];
 
 	public IReadOnlyList<string> SortOptions { get; } =
 	[
-		"Name",
-		"Category",
-		"Count"
+		Options.Sort.Name,
+		Options.Sort.Category,
+		Options.Sort.Count
 	];
 
 	[ObservableProperty]
 	private string searchText = string.Empty;
 
 	[ObservableProperty]
-	private string selectedCategory = "All";
+	private string selectedCategory = Options.Category.All;
 
 	[ObservableProperty]
-	private string selectedSort = "Name";
+	private string selectedSort = Options.Sort.Name;
+
+	private class Options
+	{
+		internal class Category
+		{
+			internal const string All = "All";
+			internal const string Raw = "Raw";
+			internal const string Manufactured = "Manufactured";
+			internal const string Encoded = "Encoded";
+		}
+
+		internal class  Sort
+		{
+			internal const string Name = "Name";
+			internal const string Category = "Category";
+			internal const string Count = "Count";
+		}
+	}
 
 	protected override bool ActivateOnNavigation => true;
 
@@ -43,14 +58,24 @@ public partial class MaterialViewModel : LoadableViewModel
 	protected override async Task UpdateFromStateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
 	{
-		if (state?.Materials is null)
+		if (state.Materials is null)
 			return;
+
+		var materials = await Task.Run(() =>
+		{
+			var result = new List<MaterialItemViewModel>();
+
+			AddMaterials(result, state.Materials.Raw, Options.Category.Raw);
+			AddMaterials(result, state.Materials.Manufactured, Options.Category.Manufactured);
+			AddMaterials(result, state.Materials.Encoded, Options.Category.Encoded);
+
+			return result.OrderBy(x => x.Name).ToList();
+		}, cancellationToken);
 
 		Materials.Clear();
 
-		AddMaterials(state.Materials.Raw, "Raw");
-		AddMaterials(state.Materials.Manufactured, "Manufactured");
-		AddMaterials(state.Materials.Encoded, "Encoded");
+		foreach (var material in materials)
+			Materials.Add(material);
 
 		BuildSummaries();
 		ApplyFilters();
@@ -62,19 +87,31 @@ public partial class MaterialViewModel : LoadableViewModel
 
 	partial void OnSelectedSortChanged(string value) => ApplyFilters();
 
-	private void AddMaterials(IEnumerable<MaterialItem>? source, string category)
+	private void AddMaterials(List<MaterialItemViewModel> target, IEnumerable<MaterialItem>? source,
+		string category)
 	{
 		if (source is null)
 			return;
 
 		foreach (var material in source)
 		{
-			Materials.Add(new MaterialItemViewModel
-			{
-				Name = material.FullName,
-				Category = category,
-				Count = material.Count
-			});
+			var viewModel = GetOrCreateCachedViewModel(
+				cacheKey: $"material:{category}:{material.Name}",
+				model: material,
+				create: x => new MaterialItemViewModel
+				{
+					Name = x.FullName,
+					Category = category,
+					Count = x.Count
+				},
+				update: (vm, x) =>
+				{
+					vm.Name = x.FullName;
+					vm.Category = category;
+					vm.Count = x.Count;
+				});
+
+			target.Add(viewModel);
 		}
 	}
 
@@ -82,14 +119,10 @@ public partial class MaterialViewModel : LoadableViewModel
 	{
 		var query = Materials.AsEnumerable();
 		if (!string.IsNullOrWhiteSpace(SearchText))
-		{
 			query = query.Where(x => x.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
-		}
 
 		if (SelectedCategory != "All")
-		{
 			query = query.Where(x => x.Category == SelectedCategory);
-		}
 
 		query = SelectedSort switch
 		{
@@ -107,55 +140,33 @@ public partial class MaterialViewModel : LoadableViewModel
 	{
 		MaterialSummaries.Clear();
 
-		var raw = Materials
-			.Where(x => x.Category == "Raw")
-			.Sum(x => x.Count);
-
-		var manufactured = Materials
-			.Where(x => x.Category == "Manufactured")
-			.Sum(x => x.Count);
-
-		var encoded = Materials
-			.Where(x => x.Category == "Encoded")
-			.Sum(x => x.Count);
-
-		var lowStock = Materials
-			.Count(x => x.Count < x.MaxCapacity * 0.25);
-
 		MaterialSummaries.Add(new()
 		{
-			Title = "Raw",
-			Value = raw
+			Title = Options.Category.Raw,
+			Value = Materials.Where(x => x.Category == Options.Category.Raw).Sum(x => x.Count)
 		});
 
 		MaterialSummaries.Add(new()
 		{
-			Title = "Manufactured",
-			Value = manufactured
+			Title = Options.Category.Manufactured,
+			Value = Materials.Where(x => x.Category == Options.Category.Manufactured).Sum(x => x.Count)
 		});
 
 		MaterialSummaries.Add(new()
 		{
-			Title = "Encoded",
-			Value = encoded
-		});
-
-		MaterialSummaries.Add(new()
-		{
-			Title = "Low stock",
-			Value = lowStock,
-			Subtitle = "< 25%"
+			Title = Options.Category.Encoded,
+			Value = Materials.Where(x => x.Category == Options.Category.Encoded).Sum(x => x.Count)
 		});
 	}
 }
 
 public sealed partial class MaterialItemViewModel : BaseViewModel
 {
-	public string Name { get; init; } = string.Empty;
+	public string Name { get; set; } = string.Empty;
 
-	public string Category { get; init; } = string.Empty;
+	public string Category { get; set; } = string.Empty;
 
-	public int Count { get; init; }
+	public int Count { get; set; }
 
 	public int MaxCapacity => Category switch
 	{

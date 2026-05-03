@@ -8,3 +8,4 @@ global using System.Linq;
 global using System.Text.Json.Serialization;
 global using ED.Assistant.Data.Models.Events;
 global using Microsoft.Extensions.Caching.Memory;
+global using ED.Assistant.Services.Journal;
