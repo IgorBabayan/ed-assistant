@@ -118,6 +118,10 @@
 								Classes.active="{Binding IsMaterialActive}"
 								Command="{Binding NavigateToMaterialViewCommand}"
 								Content="Materials"/>
+						<Button Classes="sidebar-button"
+								Classes.active="{Binding IsShipLockerActive}"
+								Command="{Binding NavigateToShipLockerViewCommand}"
+								Content="Ship locker"/>
 						<Border Classes="separator"/>
 						<Button Classes="sidebar-button"
 								Classes.active="{Binding IsSystemActive}"

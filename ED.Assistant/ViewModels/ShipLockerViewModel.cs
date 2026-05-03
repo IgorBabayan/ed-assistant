@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace ED.Assistant.ViewModels;
 
-public partial class MaterialViewModel : BaseViewModel, ILoadableViewModel
+public partial class ShipLockerViewModel : BaseViewModel, ILoadableViewModel
 {
 	public ObservableCollection<MaterialItemViewModel> Materials { get; } = [];
 
@@ -17,9 +17,10 @@ public partial class MaterialViewModel : BaseViewModel, ILoadableViewModel
 	public IReadOnlyList<string> Categories { get; } =
 	[
 		"All",
-		"Raw",
-		"Manufactured",
-		"Encoded"
+		"Items",
+		"Components",
+		"Consumables",
+		"Data"
 	];
 
 	public IReadOnlyList<string> SortOptions { get; } =
@@ -38,19 +39,18 @@ public partial class MaterialViewModel : BaseViewModel, ILoadableViewModel
 	[ObservableProperty]
 	private string selectedSort = "Name";
 
-	public MaterialViewModel(ILogStorage logStorage, IPathFinder pathFinder, IJournalStateStore stateStore)
-		: base(logStorage, pathFinder, stateStore) { }
+	public ShipLockerViewModel(ILogStorage logStorage, IPathFinder pathFinder, 
+		IJournalStateStore stateStore) : base(logStorage, pathFinder, stateStore) { }
 
 	protected override void UpdateFromState(JournalState state)
 	{
-		if (state?.Materials is null)
+		if (state?.ShipLocker is null)
 			return;
 
-		Materials.Clear();
-
-		AddMaterials(state.Materials.Raw, "Raw");
-		AddMaterials(state.Materials.Manufactured, "Manufactured");
-		AddMaterials(state.Materials.Encoded, "Encoded");
+		AddMaterials(state.ShipLocker.Items, "Items");
+		AddMaterials(state.ShipLocker.Components, "Components");
+		AddMaterials(state.ShipLocker.Consumables, "Consumables");
+		AddMaterials(state.ShipLocker.Data, "Data");
 
 		BuildSummaries();
 		ApplyFilters();
@@ -116,16 +116,20 @@ public partial class MaterialViewModel : BaseViewModel, ILoadableViewModel
 	{
 		MaterialSummaries.Clear();
 
-		var raw = Materials
-			.Where(x => x.Category == "Raw")
+		var items = Materials
+			.Where(x => x.Category == "Items")
 			.Sum(x => x.Count);
 
-		var manufactured = Materials
-			.Where(x => x.Category == "Manufactured")
+		var components = Materials
+			.Where(x => x.Category == "Components")
 			.Sum(x => x.Count);
 
-		var encoded = Materials
-			.Where(x => x.Category == "Encoded")
+		var consumables = Materials
+			.Where(x => x.Category == "Consumables")
+			.Sum(x => x.Count);
+
+		var data = Materials
+			.Where(x => x.Category == "Data")
 			.Sum(x => x.Count);
 
 		var lowStock = Materials
@@ -133,20 +137,26 @@ public partial class MaterialViewModel : BaseViewModel, ILoadableViewModel
 
 		MaterialSummaries.Add(new()
 		{
-			Title = "Raw",
-			Value = raw
+			Title = "Items",
+			Value = items
 		});
 
 		MaterialSummaries.Add(new()
 		{
-			Title = "Manufactured",
-			Value = manufactured
+			Title = "Components",
+			Value = components
 		});
 
 		MaterialSummaries.Add(new()
 		{
-			Title = "Encoded",
-			Value = encoded
+			Title = "Consumables",
+			Value = consumables
+		});
+
+		MaterialSummaries.Add(new()
+		{
+			Title = "Data",
+			Value = data
 		});
 
 		MaterialSummaries.Add(new()
@@ -156,32 +166,4 @@ public partial class MaterialViewModel : BaseViewModel, ILoadableViewModel
 			Subtitle = "< 25%"
 		});
 	}
-}
-
-public sealed partial class MaterialItemViewModel : ObservableObject
-{
-	public string Name { get; init; } = string.Empty;
-
-	public string Category { get; init; } = string.Empty;
-
-	public int Count { get; init; }
-
-	public int MaxCapacity => Category switch
-	{
-		"Raw" => 300,
-		"Manufactured" => 250,
-		"Encoded" => 250,
-		_ => 300
-	};
-
-	public string StockText => $"{Count} / {MaxCapacity}";
-}
-
-public sealed class MaterialSummaryViewModel
-{
-	public string Title { get; init; } = string.Empty;
-
-	public int Value { get; init; }
-
-	public string? Subtitle { get; init; }
 }

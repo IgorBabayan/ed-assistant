@@ -37,6 +37,7 @@ public partial class MainWindowViewModel : BaseViewModel
 	public bool IsSignalsActive => NavigationStore.CurrentViewModel is SignalsViewModel;
 	public bool IsJournalActive => NavigationStore.CurrentViewModel is JournalViewModel;
 	public bool IsMaterialActive => NavigationStore.CurrentViewModel is MaterialViewModel;
+	public bool IsShipLockerActive => NavigationStore.CurrentViewModel is ShipLockerViewModel;
 
 	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
 		INavigationStore navigationStore, IJournalStateStore stateStore,
@@ -118,6 +119,16 @@ public partial class MainWindowViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
+	private void NavigateToShipLockerView()
+	{
+		if (NavigationStore.CurrentViewModel is not ShipLockerViewModel)
+		{
+			_navigationService.NavigateTo<ShipLockerViewModel>();
+			RaiseActiveProperty();
+		}
+	}
+
+	[RelayCommand]
 	private async Task Settings() 
 		=> await _dialogService.ShowDialogAsync<SettingsViewModel, bool>(_settingsViewModel);
 
@@ -137,5 +148,6 @@ public partial class MainWindowViewModel : BaseViewModel
 		OnPropertyChanged(nameof(IsSignalsActive));
 		OnPropertyChanged(nameof(IsJournalActive));
 		OnPropertyChanged(nameof(IsMaterialActive));
+		OnPropertyChanged(nameof(IsShipLockerActive));
 	}
 }
