@@ -8,7 +8,7 @@ public interface ISystemStructureBuilder
 	SystemStructure Build(JournalState state);
 }
 
-public sealed class SystemStructureBuilder : ISystemStructureBuilder
+sealed class SystemStructureBuilder : ISystemStructureBuilder
 {
 	public SystemStructure Build(JournalState state)
 	{

@@ -27,6 +27,8 @@ public sealed class ScanType : IEquatable<ScanType>, IEquatable<string>
 
 	public static bool operator !=(string? left, ScanType? right) => !(left == right);
 
+	public static explicit operator string(ScanType scanType) => scanType._value;
+
 	public override string ToString() => _value;
 
 	public override int GetHashCode()  => StringComparer.OrdinalIgnoreCase.GetHashCode(_value);

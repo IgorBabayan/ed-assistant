@@ -3,6 +3,8 @@
 public sealed class ParentType : IEquatable<ParentType>, IEquatable<string>
 {
 	public static readonly ParentType Null = new("Null");
+	public static readonly ParentType Star = new("Star");
+	public static readonly ParentType BaryCentre = new("BaryCentre");
 
 	private readonly string _value;
 
@@ -25,6 +27,8 @@ public sealed class ParentType : IEquatable<ParentType>, IEquatable<string>
 	public static bool operator ==(string? left, ParentType? right) => right == left;
 
 	public static bool operator !=(string? left, ParentType? right) => !(left == right);
+
+	public static explicit operator string(ParentType parentType) => parentType._value;
 
 	public override string ToString() => _value;
 
