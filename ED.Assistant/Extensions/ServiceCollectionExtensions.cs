@@ -42,7 +42,6 @@ static class ServiceCollectionExtensions
 			.AddSingleton<SettingsViewModel>()
 			.AddSingleton<DashboardViewModel>()
 			.AddSingleton<SystemViewModel>()
-			.AddSingleton<BodiesViewModel>()
 			.AddSingleton<SignalsViewModel>()
 			.AddSingleton<JournalViewModel>()
 			.AddSingleton<MaterialItemViewModel>()

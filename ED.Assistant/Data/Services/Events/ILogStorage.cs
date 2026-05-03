@@ -92,6 +92,7 @@ class LogStorage : ILogStorage
 		aggregator.RegisterLast<LoadGameEvent>(LoadGameEvent.EventName, e => state.LoadGame = e);
 		aggregator.RegisterLast<MaterialsEvent>(MaterialsEvent.EventName, e => state.Materials = e);
 		aggregator.RegisterLast<RankEvent>(RankEvent.EventName, e => state.Ranks = e);
+		aggregator.RegisterLast<ShipLockerEvent>(ShipLockerEvent.EventName, e => state.ShipLocker = e);
 		aggregator.RegisterLast<FSDJumpEvent>(FSDJumpEvent.EventName, e =>
 		{
 			state.FSDJump = e;

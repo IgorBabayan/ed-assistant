@@ -124,10 +124,6 @@
 								Command="{Binding NavigateToSystemViewCommand}"
 								Content="System"/>
 						<Button Classes="sidebar-button"
-								Classes.active="{Binding IsBodiesActive}"
-								Command="{Binding NavigateToBodiesViewCommand}"
-								Content="Bodies"/>
-						<Button Classes="sidebar-button"
 								Classes.active="{Binding IsSignalsActive}"
 								Command="{Binding NavigateToSignalsViewCommand}"
 								Content="Signals"/>

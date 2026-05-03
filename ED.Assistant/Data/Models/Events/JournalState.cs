@@ -7,6 +7,7 @@ public sealed class JournalState
 	public MaterialsEvent? Materials { get; set; }
 	public RankEvent? Ranks { get; set; }
 	public FSDJumpEvent? FSDJump { get; set; }
+	public ShipLockerEvent? ShipLocker { get; set; }
 
 	public Dictionary<int, ScanEvent> Scans { get; } = new();
 	public Dictionary<int, BaryCentreEvent> BaryCentres { get; } = new();

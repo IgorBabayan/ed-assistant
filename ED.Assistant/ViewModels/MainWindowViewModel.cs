@@ -34,7 +34,6 @@ public partial class MainWindowViewModel : BaseViewModel
 
 	public bool IsDashboardActive => NavigationStore.CurrentViewModel is DashboardViewModel;
 	public bool IsSystemActive => NavigationStore.CurrentViewModel is SystemViewModel;
-	public bool IsBodiesActive => NavigationStore.CurrentViewModel is BodiesViewModel;
 	public bool IsSignalsActive => NavigationStore.CurrentViewModel is SignalsViewModel;
 	public bool IsJournalActive => NavigationStore.CurrentViewModel is JournalViewModel;
 	public bool IsMaterialActive => NavigationStore.CurrentViewModel is MaterialViewModel;
@@ -89,16 +88,6 @@ public partial class MainWindowViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private void NavigateToBodiesView()
-	{
-		if (NavigationStore.CurrentViewModel is not BodiesViewModel)
-		{
-			_navigationService.NavigateTo<BodiesViewModel>();
-			RaiseActiveProperty();
-		}
-	}
-
-	[RelayCommand]
 	private void NavigateToSignalsView()
 	{
 		if (NavigationStore.CurrentViewModel is not SignalsViewModel)
@@ -145,7 +134,6 @@ public partial class MainWindowViewModel : BaseViewModel
 	{
 		OnPropertyChanged(nameof(IsDashboardActive));
 		OnPropertyChanged(nameof(IsSystemActive));
-		OnPropertyChanged(nameof(IsBodiesActive));
 		OnPropertyChanged(nameof(IsSignalsActive));
 		OnPropertyChanged(nameof(IsJournalActive));
 		OnPropertyChanged(nameof(IsMaterialActive));

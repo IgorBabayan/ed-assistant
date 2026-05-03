@@ -33,10 +33,6 @@
 			<views:SystemView />
 		</DataTemplate>
 
-		<DataTemplate DataType="{x:Type vm:BodiesViewModel}">
-			<views:BodiesView />
-		</DataTemplate>
-
 		<DataTemplate DataType="{x:Type vm:SignalsViewModel}">
 			<views:SignalsView />
 		</DataTemplate>

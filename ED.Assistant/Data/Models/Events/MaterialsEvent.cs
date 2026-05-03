@@ -13,20 +13,3 @@ public class MaterialsEvent : BaseJournalEvent
 	[JsonPropertyName("Encoded")]
 	public IEnumerable<MaterialItem>? Encoded { get; set; } = default;
 }
-
-public class MaterialItem
-{
-	[JsonPropertyName("Name")]
-	public string Name { get; set; } = string.Empty;
-
-	[JsonPropertyName("Name_Localised")]
-	public string NameLocalised { get; set; } = string.Empty;
-
-	[JsonPropertyName("Count")]
-	public ushort Count { get; set; } = default;
-
-	[JsonInclude]
-	public string FullName => string.IsNullOrWhiteSpace(NameLocalised)
-		? $"{char.ToUpper(Name[0])}{Name[1..]}"
-		: NameLocalised;
-}
