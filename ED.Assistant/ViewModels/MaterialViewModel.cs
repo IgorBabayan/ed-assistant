@@ -1,7 +1,4 @@
-﻿using ED.Assistant.Data.Models.Events;
-using ED.Assistant.Data.Services.Events;
-using ED.Assistant.Data.Services.Path;
-using ED.Assistant.Services.Journal;
+﻿using ED.Assistant.Services.Journal;
 using System.Collections.ObjectModel;
 
 namespace ED.Assistant.ViewModels;

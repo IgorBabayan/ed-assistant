@@ -19,7 +19,8 @@ public partial class App : Application
         services.RegisterDataServices()
 			.RegisterServices()
 			.RegisterViewModels()
-            .RegisterWindows();
+            .RegisterWindows()
+            .AddMemoryCache();
 
         // Build provider and keep a reference to it for later use.
         var provider = services.BuildServiceProvider();

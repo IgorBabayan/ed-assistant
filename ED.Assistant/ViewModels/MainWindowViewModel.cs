@@ -1,6 +1,4 @@
-﻿using ED.Assistant.Data.Services.Events;
-using ED.Assistant.Data.Services.Path;
-using ED.Assistant.Services.DialogService;
+﻿using ED.Assistant.Services.DialogService;
 using ED.Assistant.Services.Journal;
 using ED.Assistant.Services.Navigation;
 using System.ComponentModel;
