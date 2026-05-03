@@ -1,7 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using ED.Assistant.Data.Models.Events;
-using ED.Assistant.Data.Services.Events;
-using ED.Assistant.Data.Services.Path;
+﻿using ED.Assistant.Data.Models.Events;
 using ED.Assistant.Services.Journal;
 
 namespace ED.Assistant.ViewModels;
@@ -11,17 +8,19 @@ public interface INavigationAware
 	void OnNavigatedTo();
 }
 
-public abstract class BaseViewModel : ObservableObject, INavigationAware
+public abstract class BaseViewModel : ObservableObject
 {
-	protected readonly IJournalStateStore _stateStore;
-	protected readonly ILogStorage _logStorage;
-	protected readonly IPathFinder _pathFinder;
+	
+}
 
-	protected BaseViewModel(ILogStorage logStorage, IPathFinder pathFinder,
-		IJournalStateStore stateStore)
+public abstract partial class LoadableViewModel : BaseViewModel, INavigationAware
+{
+	private readonly IJournalLoaderService _journalLoader;
+	protected readonly IJournalStateStore _stateStore;
+
+	protected LoadableViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore)
 	{
-		_logStorage = logStorage;
-		_pathFinder = pathFinder;
+		_journalLoader = journalLoader;
 
 		_stateStore = stateStore;
 		_stateStore.StateChanged += OnStateChanged;
@@ -36,4 +35,8 @@ public abstract class BaseViewModel : ObservableObject, INavigationAware
 	}
 
 	private void OnStateChanged(object? sender, JournalState state) => UpdateFromState(state);
+
+	[RelayCommand]
+	private Task Load(CancellationToken cancellationToken = default)
+		=> _journalLoader.LoadLastLogsAsync(cancellationToken);
 }

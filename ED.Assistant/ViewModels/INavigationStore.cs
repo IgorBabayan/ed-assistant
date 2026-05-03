@@ -2,11 +2,11 @@
 
 public interface INavigationStore
 {
-	BaseViewModel? CurrentViewModel { get; set; }
+	LoadableViewModel? CurrentViewModel { get; set; }
 }
 
 partial class NavigationStore : ObservableObject, INavigationStore
 {
 	[ObservableProperty]
-	private BaseViewModel? currentViewModel = default;
+	private LoadableViewModel? currentViewModel = default;
 }

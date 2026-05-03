@@ -1,7 +1,4 @@
 ﻿using ED.Assistant.Data.Models.Enums;
-using ED.Assistant.Data.Models.Events;
-using ED.Assistant.Data.Services.Events;
-using ED.Assistant.Data.Services.Path;
 using ED.Assistant.DTO;
 using ED.Assistant.Extensions;
 using ED.Assistant.Services.Journal;
@@ -9,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace ED.Assistant.ViewModels;
 
-public partial class DashboardViewModel : BaseViewModel, ILoadableViewModel
+public partial class DashboardViewModel : LoadableViewModel
 {
 	[ObservableProperty]
 	private CommanderEvent? _commander = default;
@@ -23,17 +20,8 @@ public partial class DashboardViewModel : BaseViewModel, ILoadableViewModel
 	[ObservableProperty]
 	private FSDJumpEvent? _currentSystem = default;
 
-	public DashboardViewModel(ILogStorage logStorage, IPathFinder pathFinder,
-		IJournalStateStore stateStore) : base(logStorage, pathFinder, stateStore) { }
-
-	[RelayCommand]
-	private async Task Load(CancellationToken cancellationToken = default)
-	{
-		var folder = _pathFinder.GetPathToLogs();
-		var state = await _logStorage.LoadLastLogsAsync(folder, cancellationToken);
-
-		_stateStore.Update(state);
-	}
+	public DashboardViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore)
+		: base(journalLoader, stateStore) { }
 
 	protected override void UpdateFromState(JournalState state)
 	{

@@ -1,5 +1,4 @@
-﻿using ED.Assistant.Data.Models.Events;
-using ED.Assistant.Data.Services.Events;
+﻿using ED.Assistant.Data.Services.Events;
 using ED.Assistant.Data.Services.Path;
 using ED.Assistant.Services.DialogService;
 using ED.Assistant.Services.Journal;
@@ -8,7 +7,7 @@ using System.ComponentModel;
 
 namespace ED.Assistant.ViewModels;
 
-public partial class MainWindowViewModel : BaseViewModel
+public partial class MainWindowViewModel : LoadableViewModel
 {
 	private readonly IDialogService _dialogService;
 	private readonly INavigationService _navigationService;
@@ -41,8 +40,8 @@ public partial class MainWindowViewModel : BaseViewModel
 
 	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
 		INavigationStore navigationStore, IJournalStateStore stateStore,
-		INavigationService navigationService, ILogStorage logStorage,
-		IPathFinder pathFinder) : base(logStorage, pathFinder, stateStore)
+		INavigationService navigationService, IJournalLoaderService journalLoader)
+		: base(journalLoader, stateStore)
 	{
 		_dialogService = dialogService;
 		_settingsViewModel = settingsViewModel;
@@ -132,15 +131,6 @@ public partial class MainWindowViewModel : BaseViewModel
 	private async Task Settings() 
 		=> await _dialogService.ShowDialogAsync<SettingsViewModel, bool>(_settingsViewModel);
 
-	[RelayCommand(CanExecute = nameof(CanLoad))]
-	private async Task Load()
-	{
-		if (NavigationStore.CurrentViewModel is ILoadableViewModel loadable)
-			await loadable.LoadCommand.ExecuteAsync(null);
-	}
-
-	private bool CanLoad() => NavigationStore.CurrentViewModel is ILoadableViewModel;
-	
 	private void RaiseActiveProperty()
 	{
 		OnPropertyChanged(nameof(IsDashboardActive));

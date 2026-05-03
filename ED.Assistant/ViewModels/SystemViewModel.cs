@@ -1,6 +1,4 @@
 ﻿using ED.Assistant.Data.Models.Events;
-using ED.Assistant.Data.Services.Events;
-using ED.Assistant.Data.Services.Path;
 using ED.Assistant.Models;
 using ED.Assistant.Services.Journal;
 using ED.Assistant.Services.SystemBuilder;
@@ -8,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace ED.Assistant.ViewModels;
 
-public partial class SystemViewModel : BaseViewModel, ILoadableViewModel
+public partial class SystemViewModel : LoadableViewModel
 {
 	private readonly ISystemStructureBuilder _structureBuilder;
 
@@ -20,9 +18,9 @@ public partial class SystemViewModel : BaseViewModel, ILoadableViewModel
 
 	public ObservableCollection<SystemBodyNodeViewModel> Bodies { get; } = [];
 
-	public SystemViewModel(ILogStorage logStorage, IPathFinder pathFinder,
-		IJournalStateStore stateStore, ISystemStructureBuilder structureBuilder)
-		: base(logStorage, pathFinder, stateStore) => _structureBuilder = structureBuilder;
+	public SystemViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
+		ISystemStructureBuilder structureBuilder) : base(journalLoader, stateStore) 
+		=> _structureBuilder = structureBuilder;
 
 	protected override void UpdateFromState(JournalState state)
 	{
@@ -36,14 +34,5 @@ public partial class SystemViewModel : BaseViewModel, ILoadableViewModel
 		foreach (var root in structure.Roots)
 			Bodies.Add(new SystemBodyNodeViewModel(root));
 		SelectedBody = Bodies.FirstOrDefault();
-	}
-
-	[RelayCommand]
-	private async Task Load(CancellationToken cancellationToken = default)
-	{
-		var folder = _pathFinder.GetPathToLogs();
-		var state = await _logStorage.LoadLastLogsAsync(folder, cancellationToken);
-
-		_stateStore.Update(state);
 	}
 }

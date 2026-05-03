@@ -58,6 +58,7 @@ static class ServiceCollectionExtensions
 			.AddSingleton<IDialogService, DialogService>()
 			.AddSingleton<IFolderPickerService, FolderPickerService>()
 			.AddSingleton<IJournalStateStore, JournalStateStore>()
+			.AddSingleton<IJournalLoaderService, JournalLoaderService>()
 			.AddSingleton<INavigationStore, NavigationStore>()
 			.AddSingleton<INavigationService, NavigationService>()
 			.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();

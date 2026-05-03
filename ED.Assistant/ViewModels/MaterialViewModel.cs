@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace ED.Assistant.ViewModels;
 
-public partial class MaterialViewModel : BaseViewModel, ILoadableViewModel
+public partial class MaterialViewModel : LoadableViewModel
 {
 	public ObservableCollection<MaterialItemViewModel> Materials { get; } = [];
 
@@ -38,8 +38,8 @@ public partial class MaterialViewModel : BaseViewModel, ILoadableViewModel
 	[ObservableProperty]
 	private string selectedSort = "Name";
 
-	public MaterialViewModel(ILogStorage logStorage, IPathFinder pathFinder, IJournalStateStore stateStore)
-		: base(logStorage, pathFinder, stateStore) { }
+	public MaterialViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore)
+		: base(journalLoader, stateStore) { }
 
 	protected override void UpdateFromState(JournalState state)
 	{
@@ -54,15 +54,6 @@ public partial class MaterialViewModel : BaseViewModel, ILoadableViewModel
 
 		BuildSummaries();
 		ApplyFilters();
-	}
-
-	[RelayCommand]
-	private async Task Load(CancellationToken cancellationToken = default)
-	{
-		var folder = _pathFinder.GetPathToLogs();
-		var state = await _logStorage.LoadLastLogsAsync(folder, cancellationToken);
-
-		_stateStore.Update(state);
 	}
 
 	partial void OnSearchTextChanged(string value) => ApplyFilters();
