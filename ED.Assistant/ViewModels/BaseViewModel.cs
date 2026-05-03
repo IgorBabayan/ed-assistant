@@ -1,5 +1,4 @@
-﻿using ED.Assistant.Data.Models.Events;
-using ED.Assistant.Services.Journal;
+﻿using ED.Assistant.Services.Journal;
 
 namespace ED.Assistant.ViewModels;
 
@@ -13,10 +12,12 @@ public abstract class BaseViewModel : ObservableObject
 	
 }
 
-public abstract partial class LoadableViewModel : BaseViewModel, INavigationAware
+public abstract partial class LoadableViewModel : BaseViewModel, INavigationAware, IDisposable
 {
 	private readonly IJournalLoaderService _journalLoader;
-	protected readonly IJournalStateStore _stateStore;
+	private readonly IJournalStateStore _stateStore;
+
+	private bool _disposed;
 
 	protected LoadableViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore)
 	{
@@ -32,6 +33,15 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 	{
 		if (_stateStore.CurrentState is not null)
 			UpdateFromState(_stateStore.CurrentState);
+	}
+
+	public void Dispose()
+	{
+		if (_disposed)
+			return;
+
+		_stateStore.StateChanged -= OnStateChanged;
+		_disposed = true;
 	}
 
 	private void OnStateChanged(object? sender, JournalState state) => UpdateFromState(state);
