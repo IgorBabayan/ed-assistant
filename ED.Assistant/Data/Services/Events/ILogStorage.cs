@@ -54,7 +54,7 @@ class LogStorage : ILogStorage
 		}
 	}
 
-	private static IEnumerable<string>? GetLatestDayLogs(string logFolder)
+	private static List<string>? GetLatestDayLogs(string logFolder)
 		=> Directory.GetFiles(logFolder, "Journal.*.log")
 			.Select(path =>
 			{
@@ -82,7 +82,7 @@ class LogStorage : ILogStorage
 			.Select(x => x!.Path)
 			.ToList() ?? [];
 
-	private async Task<JournalState> ParseDataAsync(IEnumerable<string> latestDayLogs, CancellationToken cancellationToken = default)
+	private static async Task<JournalState> ParseDataAsync(IEnumerable<string> latestDayLogs, CancellationToken cancellationToken = default)
 	{
 		var state = new JournalState();
 		var dispatcher = new JournalEventDispatcher();

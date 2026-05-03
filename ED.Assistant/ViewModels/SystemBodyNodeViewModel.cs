@@ -1,8 +1,7 @@
 ﻿using ED.Assistant.Services.SystemBuilder;
-using ED.Assistant.ViewModels;
 using System.Collections.ObjectModel;
 
-namespace ED.Assistant.Models;
+namespace ED.Assistant.ViewModels;
 
 public partial class SystemBodyNodeViewModel : BaseViewModel
 {
@@ -39,6 +38,12 @@ public partial class SystemBodyNodeViewModel : BaseViewModel
 		IsStar ? $"{Scan.StellarMass:N2} SM"
 			   : $"{Scan.MassEM:N2} EM";
 
+	public ObservableCollection<SignalItemViewModel> Signals { get; } = [];
+
+	public bool HasSignals => Signals.Count > 0;
+
+	public int SignalsTotalCount => Signals.Sum(x => x.Count);
+
 	public SystemBodyNodeViewModel(SystemBodyNode node)
 	{
 		Name = node.Name;
@@ -48,5 +53,21 @@ public partial class SystemBodyNodeViewModel : BaseViewModel
 
 		foreach (var child in node.Children)
 			Children.Add(new SystemBodyNodeViewModel(child));
+	}
+}
+
+public sealed class SignalItemViewModel
+{
+	public string Type { get; }
+	public string Name { get; }
+	public int Count { get; }
+
+	public SignalItemViewModel(SignalItem signal)
+	{
+		Type = signal.Type;
+		Name = string.IsNullOrWhiteSpace(signal.Name)
+			? signal.Type
+			: signal.Name;
+		Count = signal.Count;
 	}
 }

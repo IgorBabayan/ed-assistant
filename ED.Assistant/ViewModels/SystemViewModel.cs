@@ -1,5 +1,4 @@
-﻿using ED.Assistant.Models;
-using ED.Assistant.Services.SystemBuilder;
+﻿using ED.Assistant.Services.SystemBuilder;
 using System.Collections.ObjectModel;
 
 namespace ED.Assistant.ViewModels;

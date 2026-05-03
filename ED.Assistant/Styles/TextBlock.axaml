@@ -50,4 +50,35 @@
 		<Setter Property="FontSize" Value="15"/>
 		<Setter Property="FontWeight" Value="SemiBold"/>
 	</Style>
+
+	<Style Selector="Border.signal-row">
+		<Setter Property="CornerRadius" Value="10"/>
+		<Setter Property="Padding" Value="10"/>
+		<Setter Property="Margin" Value="0,0,0,6"/>
+		<Setter Property="Background" Value="#16222D"/>
+	</Style>
+
+	<Style Selector="Border.signal-dot">
+		<Setter Property="Width" Value="10"/>
+		<Setter Property="Height" Value="10"/>
+		<Setter Property="CornerRadius" Value="5"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Background" Value="{StaticResource CardBorderBrush}"/>
+	</Style>
+
+	<Style Selector="Border.signal-dot[Tag=$SAA_SignalType_Biological]">
+		<Setter Property="Background" Value="#45D483"/>
+	</Style>
+
+	<Style Selector="Border.signal-dot[Tag=$SAA_SignalType_Geological]">
+		<Setter Property="Background" Value="#D89A4A"/>
+	</Style>
+
+	<Style Selector="Border.signal-dot[Tag=$SAA_SignalType_Human]">
+		<Setter Property="Background" Value="#4FA3FF"/>
+	</Style>
+
+	<Style Selector="Border.signal-dot[Tag=Xeno]">
+		<Setter Property="Background" Value="#B86CFF"/>
+	</Style>
 </Styles>

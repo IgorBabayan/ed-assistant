@@ -32,6 +32,12 @@ sealed class SystemStructureBuilder : ISystemStructureBuilder
 		{
 			var node = GetOrCreateNode(nodes, scan);
 			node.Scan = scan;
+
+			if (state.FSSSignals.TryGetValue(scan.BodyId, out var signals) &&
+				signals.SystemAddress == scan.SystemAddress)
+			{
+				node.Signals = signals;
+			}
 		}
 
 		foreach (var scan in scans)

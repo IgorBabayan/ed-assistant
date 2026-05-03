@@ -248,6 +248,51 @@
 								   Classes="dashboard-value"/>
 					</Grid>
 
+					<Border Classes="dashboard-card"
+							Padding="12"
+							Margin="0,8,0,0">
+						<StackPanel Spacing="10">
+							<Grid ColumnDefinitions="*,Auto">
+								<TextBlock Text="SIGNALS"
+										   Classes="dashboard-card-header"/>
+
+								<TextBlock Grid.Column="1"
+										   Text="{Binding SelectedBody.SignalsTotalCount}"
+										   Classes="dashboard-value"/>
+							</Grid>
+
+							<ItemsControl ItemsSource="{Binding SelectedBody.Signals}">
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Border Classes="signal-row">
+											<Grid ColumnDefinitions="Auto,*,Auto"
+												  ColumnSpacing="10">
+												<Border Classes="signal-dot"
+														Tag="{Binding Type}"/>
+
+												<StackPanel Grid.Column="1">
+													<TextBlock Text="{Binding Name}"
+															   Classes="dashboard-value"/>
+
+													<TextBlock Text="{Binding Type}"
+															   Classes="dashboard-label"/>
+												</StackPanel>
+
+												<TextBlock Grid.Column="2"
+														   Text="{Binding Count}"
+														   Classes="dashboard-value"
+														   VerticalAlignment="Center"/>
+											</Grid>
+										</Border>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+
+							<TextBlock Text="No signals detected"
+									   Classes="dashboard-label"
+									   IsVisible="{Binding !SelectedBody.HasSignals}"/>
+						</StackPanel>
+					</Border>
 				</StackPanel>
 			</ScrollViewer>
 		</Border>

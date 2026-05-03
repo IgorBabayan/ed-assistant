@@ -19,4 +19,6 @@ public sealed class SystemBodyNode
 	public List<SystemBodyNode> Children { get; } = new();
 
 	public ScanEvent? Scan { get; set; }
+
+	public FSSBodySignalsEvent? Signals { get; set; }
 }
