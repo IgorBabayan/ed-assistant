@@ -22,9 +22,7 @@
 				<TextBlock Text="SYSTEM STRUCTURE"
 						   Classes="dashboard-card-header"/>
 
-				<ScrollViewer Grid.Row="1"
-							  HorizontalScrollBarVisibility="Auto"
-							  VerticalScrollBarVisibility="Auto">
+				<ScrollViewer Grid.Row="1">
 					<TreeView Classes="system-tree"
 							  ItemsSource="{Binding Bodies}"
 							  SelectedItem="{Binding SelectedBody, Mode=TwoWay}">
@@ -47,107 +45,209 @@
 
 		<Border Grid.Column="1"
 				Classes="dashboard-card">
-			<StackPanel Spacing="12">
-				<TextBlock Text="BODY DETAILS"
-						   Classes="dashboard-card-header"/>
-
-				<TextBlock Text="{Binding SelectedBody.Name}"
-						   Classes="dashboard-system-name"/>
-
-				<TextBlock Text="{Binding SelectedBody.Type}"
-						   Classes="dashboard-label"/>
-
-				<Grid RowSpacing="8"
-					  ColumnSpacing="16">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="160"/>
-						<ColumnDefinition Width="*"/>
-					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-					</Grid.RowDefinitions>
-
-					<TextBlock Grid.Row="0"
-							   Text="Scan type"
+			<ScrollViewer VerticalScrollBarVisibility="Auto">
+				<StackPanel Spacing="12">
+					<TextBlock Text="BODY DETAILS"
+							   Classes="dashboard-card-header"/>
+					<TextBlock Text="{Binding SelectedBody.Name}"
+							   Classes="dashboard-system-name"/>
+					<TextBlock Text="{Binding SelectedBody.Type}"
 							   Classes="dashboard-label"/>
-					<TextBlock Grid.Row="0"
-							   Grid.Column="1"
-							   Text="{Binding SelectedBody.Scan.ScanType}"
-							   Classes="dashboard-value"/>
 
-					<TextBlock Grid.Row="1"
-							   Text="Planet class"
-							   Classes="dashboard-label"/>
-					<TextBlock Grid.Row="1"
-							   Grid.Column="1"
-							   Text="{Binding SelectedBody.Scan.PlanetClass}"
-							   Classes="dashboard-value"/>
+					<Grid RowSpacing="6"
+						  ColumnSpacing="12">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="160"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
 
-					<TextBlock Grid.Row="2"
-							   Text="Star type"
-							   Classes="dashboard-label"/>
-					<TextBlock Grid.Row="2"
-							   Grid.Column="1"
-							   Text="{Binding SelectedBody.Scan.StarType}"
-							   Classes="dashboard-value"/>
+						<TextBlock Text="Scan type"
+								   Classes="dashboard-label"/>
+						<TextBlock Grid.Column="1"
+								   Text="{Binding SelectedBody.Scan.ScanType}"
+								   Classes="dashboard-value"/>
 
-					<TextBlock Grid.Row="3"
-							   Text="Mass"
-							   Classes="dashboard-label"/>
-					<TextBlock Grid.Row="3"
-							   Grid.Column="1"
-							   Text="{Binding SelectedBody.Scan.StellarMass}"
-							   Classes="dashboard-value"/>
+						<TextBlock Grid.Row="1"
+								   Text="Distance"
+								   Classes="dashboard-label"/>
+						<TextBlock Grid.Row="1"
+								   Grid.Column="1"
+								   Text="{Binding SelectedBody.DistanceLs}"
+								   Classes="dashboard-value"/>
 
-					<TextBlock Grid.Row="4"
-							   Text="Radius"
-							   Classes="dashboard-label"/>
-					<TextBlock Grid.Row="4"
-							   Grid.Column="1"
-							   Text="{Binding SelectedBody.RadiusKm}"
-							   Classes="dashboard-value"/>
+						<TextBlock Grid.Row="2"
+								   Text="Radius"
+								   Classes="dashboard-label"/>
+						<TextBlock Grid.Row="2"
+								   Grid.Column="1"
+								   Text="{Binding SelectedBody.RadiusKm}"
+								   Classes="dashboard-value"/>
 
-					<TextBlock Grid.Row="5"
-							   Text="Temperature"
-							   Classes="dashboard-label"/>
-					<TextBlock Grid.Row="5"
-							   Grid.Column="1"
-							   Text="{Binding SelectedBody.SurfaceTemperatureK}"
-							   Classes="dashboard-value"/>
+						<TextBlock Grid.Row="3"
+								   Text="Temperature"
+								   Classes="dashboard-label"/>
+						<TextBlock Grid.Row="3"
+								   Grid.Column="1"
+								   Text="{Binding SelectedBody.SurfaceTemperatureK}"
+								   Classes="dashboard-value"/>
+					</Grid>
 
-					<TextBlock Grid.Row="6"
-							   Text="Luminosity"
-							   Classes="dashboard-label"/>
-					<TextBlock Grid.Row="6"
-							   Grid.Column="1"
-							   Text="{Binding SelectedBody.Scan.Luminosity}"
-							   Classes="dashboard-value"/>
+					<Border Classes="dashboard-card"
+							IsVisible="{Binding SelectedBody.IsStar}">
+						<Grid RowSpacing="6"
+							  ColumnSpacing="12">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="160"/>
+								<ColumnDefinition Width="*"/>
+							</Grid.ColumnDefinitions>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+							</Grid.RowDefinitions>
 
-					<TextBlock Grid.Row="7"
-							   Text="Discovered"
-							   Classes="dashboard-label"/>
-					<TextBlock Grid.Row="7"
-							   Grid.Column="1"
-							   Text="{Binding SelectedBody.Scan.WasDiscovered}"
-							   Classes="dashboard-value"/>
+							<TextBlock Text="Star type"
+									   Classes="dashboard-label"/>
+							<TextBlock Grid.Column="1"
+									   Text="{Binding SelectedBody.Scan.StarType}"
+									   Classes="dashboard-value"/>
 
-					<TextBlock Grid.Row="8"
-							   Text="Mapped"
-							   Classes="dashboard-label"/>
-					<TextBlock Grid.Row="8"
-							   Grid.Column="1"
-							   Text="{Binding SelectedBody.Scan.WasMapped}"
-							   Classes="dashboard-value"/>
-				</Grid>
-			</StackPanel>
+							<TextBlock Grid.Row="1"
+									   Text="Mass"
+									   Classes="dashboard-label"/>
+							<TextBlock Grid.Row="1"
+									   Grid.Column="1"
+									   Text="{Binding SelectedBody.Mass}"
+									   Classes="dashboard-value"/>
+
+							<TextBlock Grid.Row="2"
+									   Text="Luminosity"
+									   Classes="dashboard-label"/>
+							<TextBlock Grid.Row="2"
+									   Grid.Column="1"
+									   Text="{Binding SelectedBody.Scan.Luminosity}"
+									   Classes="dashboard-value"/>
+
+							<TextBlock Grid.Row="3"
+									   Text="Age"
+									   Classes="dashboard-label"/>
+							<TextBlock Grid.Row="3"
+									   Grid.Column="1"
+									   Text="{Binding SelectedBody.Scan.Age}"
+									   Classes="dashboard-value"/>
+						</Grid>
+					</Border>
+
+					<Border Classes="dashboard-card"
+							IsVisible="{Binding SelectedBody.IsPlanet}">
+						<Grid RowSpacing="6"
+							  ColumnSpacing="12">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="160"/>
+								<ColumnDefinition Width="*"/>
+							</Grid.ColumnDefinitions>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+							</Grid.RowDefinitions>
+
+							<TextBlock Text="Planet class"
+									   Classes="dashboard-label"/>
+							<TextBlock Grid.Column="1"
+									   Text="{Binding SelectedBody.Scan.PlanetClass}"
+									   Classes="dashboard-value"/>
+
+							<TextBlock Grid.Row="1"
+									   Text="Mass"
+									   Classes="dashboard-label"/>
+							<TextBlock Grid.Row="1"
+									   Grid.Column="1"
+									   Text="{Binding SelectedBody.Mass}"
+									   Classes="dashboard-value"/>
+
+							<TextBlock Grid.Row="2"
+									   Text="Gravity"
+									   Classes="dashboard-label"/>
+							<TextBlock Grid.Row="2"
+									   Grid.Column="1"
+									   Text="{Binding SelectedBody.Gravity}"
+									   Classes="dashboard-value"/>
+
+							<TextBlock Grid.Row="3"
+									   Text="Atmosphere"
+									   Classes="dashboard-label"/>
+							<TextBlock Grid.Row="3"
+									   Grid.Column="1"
+									   Text="{Binding SelectedBody.Scan.Atmosphere}"
+									   TextWrapping="Wrap"
+									   Classes="dashboard-value"/>
+
+							<TextBlock Grid.Row="4"
+									   Text="Terraform"
+									   Classes="dashboard-label"/>
+							<TextBlock Grid.Row="4"
+									   Grid.Column="1"
+									   Text="{Binding SelectedBody.Scan.TerraformState}"
+									   Classes="dashboard-value"/>
+
+							<TextBlock Grid.Row="5"
+									   Text="Landable"
+									   Classes="dashboard-label"/>
+							<TextBlock Grid.Row="5"
+									   Grid.Column="1"
+									   Text="{Binding SelectedBody.Scan.IsLandable}"
+									   Classes="dashboard-value"/>
+						</Grid>
+					</Border>
+
+					<Grid RowSpacing="6"
+						  ColumnSpacing="12">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="160"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
+
+						<TextBlock Text="Discovered"
+								   Classes="dashboard-label"/>
+						<TextBlock Grid.Column="1"
+								   Text="{Binding SelectedBody.Scan.WasDiscovered}"
+								   Classes="dashboard-value"/>
+
+						<TextBlock Grid.Row="1"
+								   Text="Mapped"
+								   Classes="dashboard-label"/>
+						<TextBlock Grid.Row="1"
+								   Grid.Column="1"
+								   Text="{Binding SelectedBody.Scan.WasMapped}"
+								   Classes="dashboard-value"/>
+
+						<TextBlock Grid.Row="2"
+								   Text="Footfall"
+								   Classes="dashboard-label"/>
+						<TextBlock Grid.Row="2"
+								   Grid.Column="1"
+								   Text="{Binding SelectedBody.Scan.WasFootfalled}"
+								   Classes="dashboard-value"/>
+					</Grid>
+
+				</StackPanel>
+			</ScrollViewer>
 		</Border>
 	</Grid>
 </UserControl>
