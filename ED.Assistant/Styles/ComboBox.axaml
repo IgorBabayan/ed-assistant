@@ -1,0 +1,112 @@
+<Styles xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Design.PreviewWith>
+		<Border Padding="20">
+			<!-- Add Controls for Previewer Here -->
+		</Border>
+	</Design.PreviewWith>
+
+	<!-- Add Styles Here -->
+	<Style Selector="ComboBox">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate>
+					<Grid>
+						<Border Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}"
+								CornerRadius="8">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="Auto"/>
+								</Grid.ColumnDefinitions>
+
+								<ContentPresenter Margin="10,4"
+												  VerticalAlignment="Center"
+												  Content="{TemplateBinding SelectionBoxItem}"/>
+								<TextBlock Grid.Column="1"
+										   Text="▼"
+										   Margin="8,0"
+										   VerticalAlignment="Center"/>
+							</Grid>
+						</Border>
+
+						<Popup x:Name="PART_Popup"
+							   IsOpen="{TemplateBinding IsDropDownOpen}"
+							   Placement="Bottom"
+							   MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
+							   IsLightDismissEnabled="True">
+							<Border Background="{DynamicResource CardBackgroundBrush}"
+									BorderBrush="{DynamicResource CardBorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Padding="4">
+								<ScrollViewer>
+									<ItemsPresenter/>
+								</ScrollViewer>
+							</Border>
+						</Popup>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style Selector="ComboBoxItem">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate>
+					<Border x:Name="Root"
+							Padding="8,6"
+							CornerRadius="6"
+							Background="Transparent">
+						<ContentPresenter/>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style Selector="ComboBoxItem">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border x:Name="Root"
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						Padding="{TemplateBinding Padding}"
+						CornerRadius="{TemplateBinding CornerRadius}">
+					<TextBlock Text="{TemplateBinding Content}"
+							   Background="Transparent"
+							   VerticalAlignment="Center"/>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+
+		<Setter Property="CornerRadius" Value="6"/>
+		<Setter Property="Padding" Value="8,6"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderThickness" Value="0"/>
+	</Style>
+
+	<Style Selector="ComboBoxItem:pointerover /template/ Border#Root">
+		<Setter Property="Background" Value="{DynamicResource SecondaryAccentBrush}"/>
+	</Style>
+
+	<Style Selector="ComboBoxItem:selected /template/ Border#Root">
+		<Setter Property="Background" Value="{DynamicResource PrimaryAccentBrush}"/>
+	</Style>
+
+	<Style Selector="ComboBoxItem:selected">
+		<Setter Property="Background" Value="Transparent"/>
+	</Style>
+
+	<Style Selector="ComboBoxItem /template/ Border#Root">
+		<Setter Property="Transitions">
+			<Transitions>
+				<BrushTransition Property="Background" Duration="0:0:0.15"/>
+			</Transitions>
+		</Setter>
+	</Style>
+</Styles>

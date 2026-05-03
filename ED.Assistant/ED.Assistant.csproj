@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <AvaloniaXaml Remove="Styles\Border.axaml" />
+    <AvaloniaXaml Remove="Styles\ComboBox.axaml" />
     <AvaloniaXaml Remove="Styles\TextBlock.axaml" />
     <AvaloniaXaml Remove="Styles\Theme.axaml" />
     <AvaloniaXaml Remove="Styles\TreeView.axaml" />
@@ -25,6 +26,7 @@
 
   <ItemGroup>
     <AvaloniaResource Include="Styles\Border.axaml" />
+    <AvaloniaResource Include="Styles\ComboBox.axaml" />
     <AvaloniaResource Include="Styles\TextBlock.axaml" />
     <AvaloniaResource Include="Styles\Theme.axaml" />
     <AvaloniaResource Include="Styles\TreeView.axaml" />
