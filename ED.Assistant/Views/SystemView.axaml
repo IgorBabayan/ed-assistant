@@ -270,13 +270,9 @@
 												<Border Classes="signal-dot"
 														Tag="{Binding Type}"/>
 
-												<StackPanel Grid.Column="1">
-													<TextBlock Text="{Binding Name}"
-															   Classes="dashboard-value"/>
-
-													<TextBlock Text="{Binding Type}"
-															   Classes="dashboard-label"/>
-												</StackPanel>
+												<TextBlock Grid.Column="1"
+														   Text="{Binding Name}"
+														   Classes="dashboard-value"/>
 
 												<TextBlock Grid.Column="2"
 														   Text="{Binding Count}"

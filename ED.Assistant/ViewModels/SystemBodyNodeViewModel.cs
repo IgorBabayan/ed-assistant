@@ -53,6 +53,9 @@ public partial class SystemBodyNodeViewModel : BaseViewModel
 
 		foreach (var child in node.Children)
 			Children.Add(new SystemBodyNodeViewModel(child));
+
+		foreach (var signal in node.Signals?.Signals ?? [])
+			Signals.Add(new SignalItemViewModel(signal));
 	}
 }
 
