@@ -1,4 +1,6 @@
-﻿namespace ED.Assistant.Data.Models.Events;
+﻿using ED.Assistant.DTO;
+
+namespace ED.Assistant.Data.Models.Events;
 
 public class ScanEvent : BaseJournalEvent
 {
@@ -81,4 +83,40 @@ public class ScanEvent : BaseJournalEvent
 
 	[JsonPropertyName("PlanetClass")]
 	public string PlanetClass { get; set; } = string.Empty;
+
+	[JsonPropertyName("DistanceFromArrivalLS")]
+	public double DistanceFromArrivalLS { get; set; }
+
+	[JsonPropertyName("TerraformState")]
+	public string TerraformState { get; set; } = string.Empty;
+
+	[JsonPropertyName("Atmosphere")]
+	public string Atmosphere { get; set; } = string.Empty;
+
+	[JsonPropertyName("AtmosphereType")]
+	public string AtmosphereType { get; set; } = string.Empty;
+
+	[JsonPropertyName("AtmosphereComposition")]
+	public IEnumerable<CompositionItem>? AtmosphereCompositions { get; set; } = default;
+
+	[JsonPropertyName("Volcanism")]
+	public string Volcanism { get; set; } = string.Empty;
+
+	[JsonPropertyName("MassEM")]
+	public double MassEM { get; set; }
+
+	[JsonPropertyName("SurfaceGravity")]
+	public double SurfaceGravity { get; set; }
+
+	[JsonPropertyName("SurfacePressure")]
+	public double SurfacePressure { get; set; }
+
+	[JsonPropertyName("Landable")]
+	public bool IsLandable { get; set; }
+
+	[JsonPropertyName("Materials")]
+	public IEnumerable<CompositionItem>? Materials { get; set; } = default;
+
+	[JsonPropertyName("Composition")]
+	public Composition? Composition { get; set; } = default;
 }
