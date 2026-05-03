@@ -71,6 +71,8 @@
 								   Classes="dashboard-label"/>
 						<TextBlock Grid.Column="1"
 								   Text="{Binding SelectedBody.Scan.ScanType}"
+								   Foreground="{Binding SelectedBody.Scan.ScanType,
+								   Converter={StaticResource ScanTypeForegroundConverter}}"
 								   Classes="dashboard-value"/>
 
 						<TextBlock Grid.Row="1"

@@ -1,4 +1,5 @@
 <Application xmlns="https://github.com/avaloniaui"
+             xmlns:converters="using:ED.Assistant.Converters"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 x:Class="ED.Assistant.App"
 			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
@@ -11,7 +12,9 @@
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceInclude Source="avares://ED.Assistant/Styles/Theme.axaml" />
-		</ResourceDictionary.MergedDictionaries>
+			</ResourceDictionary.MergedDictionaries>
+
+			<converters:ScanTypeForegroundConverter x:Key="ScanTypeForegroundConverter"/>
 		</ResourceDictionary>
 	</Application.Resources>
 
