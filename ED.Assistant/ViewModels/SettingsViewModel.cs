@@ -11,10 +11,10 @@ public partial class SettingsViewModel : BaseViewModel
 	private readonly IPathFinder _pathFinder;
 
 	[ObservableProperty]
-	private string? _logFolder = string.Empty;
+	public partial string? LogFolder { get; set; } = string.Empty;
 
 	[ObservableProperty]
-	private bool _enableAutoWatch;
+	public partial bool EnableAutoWatch { get; set; }
 
 	public event Action<bool?>? CloseRequested;
 

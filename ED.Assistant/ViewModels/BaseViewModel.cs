@@ -36,8 +36,8 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 	private bool _isActivated;
 
 	[ObservableProperty]
-	private bool isActivating;
-	
+	public partial bool IsActivating { get; set; }
+
 	protected LoadableViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
 		IMemoryCache memoryCache)
 	{

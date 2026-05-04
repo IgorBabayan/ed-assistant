@@ -26,25 +26,25 @@ public partial class MainWindowViewModel : LoadableViewModel
 	}
 
 	[ObservableProperty]
-	private string _cMDR = DefaultState.CMDR;
+	public partial string CMDR { get; set; } = DefaultState.CMDR;
 
 	[ObservableProperty]
-	private string _ship = DefaultState.Ship;
+	public partial string Ship { get; set; } = DefaultState.Ship;
 
 	[ObservableProperty]
-	private string _status = DefaultState.Status;
+	public partial string Status { get; set; } = DefaultState.Status;
 
 	[ObservableProperty]
-	private string _logFile = DefaultState.LogFile;
+	public partial string LogFile { get; set; } = DefaultState.LogFile;
 
 	[ObservableProperty]
-	private string _lastEvent = DefaultState.LastEvent;
+	public partial string LastEvent { get; set; } = DefaultState.LastEvent;
 
 	[ObservableProperty]
-	private string _watchStatus = DefaultState.WatchStatus;
+	public partial string WatchStatus { get; set; } = DefaultState.WatchStatus;
 
 	[ObservableProperty]
-	private bool _isAutoWatchEnabled;
+	public partial bool IsAutoWatchEnabled { get; set; }
 
 	public INavigationStore NavigationStore { get; }
 
@@ -93,7 +93,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 		LogFile = state.FileName ?? DefaultState.LogFile;
 		LastEvent = string.IsNullOrWhiteSpace(state.LastEvent?.Event)
 			? DefaultState.LastEvent
-			: $"event: '${state.LastEvent!.Event}'";
+			: $"event: '{state.LastEvent!.Event}'";
 	}
 
 	partial void OnIsAutoWatchEnabledChanged(bool value) => _ = UpdateWatchStatus(value);
@@ -103,7 +103,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	{
 		if (NavigationStore.CurrentViewModel is not DashboardViewModel)
 		{
-			await _navigationService.NavigateToAsync<DashboardViewModel>();
+			await _navigationService.NavigateToAsync<DashboardViewModel>(cancellationToken);
 			RaiseActiveProperty();
 		}
 	}
@@ -113,7 +113,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	{
 		if (NavigationStore.CurrentViewModel is not SystemViewModel)
 		{
-			await _navigationService.NavigateToAsync<SystemViewModel>();
+			await _navigationService.NavigateToAsync<SystemViewModel>(cancellationToken);
 			RaiseActiveProperty();
 		}
 	}
@@ -123,7 +123,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	{
 		if (NavigationStore.CurrentViewModel is not SignalsViewModel)
 		{
-			await _navigationService.NavigateToAsync<SignalsViewModel>();
+			await _navigationService.NavigateToAsync<SignalsViewModel>(cancellationToken);
 			RaiseActiveProperty();
 		}
 	}
@@ -133,7 +133,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	{
 		if (NavigationStore.CurrentViewModel is not JournalViewModel)
 		{
-			await _navigationService.NavigateToAsync<JournalViewModel>();
+			await _navigationService.NavigateToAsync<JournalViewModel>(cancellationToken);
 			RaiseActiveProperty();
 		}
 	}
@@ -143,7 +143,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	{
 		if (NavigationStore.CurrentViewModel is not MaterialViewModel)
 		{
-			await _navigationService.NavigateToAsync<MaterialViewModel>();
+			await _navigationService.NavigateToAsync<MaterialViewModel>(cancellationToken);
 			RaiseActiveProperty();
 		}
 	}
@@ -153,7 +153,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	{
 		if (NavigationStore.CurrentViewModel is not ShipLockerViewModel)
 		{
-			await _navigationService.NavigateToAsync<ShipLockerViewModel>();
+			await _navigationService.NavigateToAsync<ShipLockerViewModel>(cancellationToken);
 			RaiseActiveProperty();
 		}
 	}
@@ -183,7 +183,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	{
 		try
 		{
-			await _navigationService.NavigateToAsync<DashboardViewModel>();
+			await _navigationService.NavigateToAsync<DashboardViewModel>(cancellationToken);
 			await _journalLoader.LoadLastLogsAsync(cancellationToken);
 
 			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);

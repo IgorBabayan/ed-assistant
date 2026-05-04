@@ -25,13 +25,13 @@ public partial class ShipLockerViewModel : LoadableViewModel
 	];
 
 	[ObservableProperty]
-	private string searchText = string.Empty;
+	public partial string SearchText { get; set; } = string.Empty;
 
 	[ObservableProperty]
-	private string selectedCategory = Options.Categories.All;
+	public partial string SelectedCategory { get; set; } = Options.Categories.All;
 
 	[ObservableProperty]
-	private string selectedSort = Options.Sort.Name;
+	public partial string SelectedSort { get; set; } = Options.Sort.Name;
 
 	private class Options
 	{

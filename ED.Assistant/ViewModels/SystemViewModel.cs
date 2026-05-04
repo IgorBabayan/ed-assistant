@@ -8,11 +8,11 @@ public partial class SystemViewModel : LoadableViewModel
 	private readonly ISystemStructureBuilder _structureBuilder;
 
 	[ObservableProperty]
-	private FSDJumpEvent? _currentSystem;
+	public partial FSDJumpEvent? CurrentSystem { get; set; }
 
 	[ObservableProperty]
-	private SystemBodyNodeViewModel? _selectedBody;
-
+	public partial SystemBodyNodeViewModel? SelectedBody { get; set; }
+	
 	public ObservableCollection<SystemBodyNodeViewModel> Bodies { get; } = [];
 
 	public SystemViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,

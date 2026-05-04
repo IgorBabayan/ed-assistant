@@ -1,8 +1,6 @@
 ﻿using ED.Assistant.Data.Models.Enums;
 using ED.Assistant.DTO;
 using ED.Assistant.Extensions;
-using ED.Assistant.Services.Journal;
-using Microsoft.Extensions.Caching.Memory;
 using System.Collections.ObjectModel;
 
 namespace ED.Assistant.ViewModels;
@@ -10,16 +8,16 @@ namespace ED.Assistant.ViewModels;
 public partial class DashboardViewModel : LoadableViewModel
 {
 	[ObservableProperty]
-	private CommanderEvent? _commander = default;
-
+	public partial CommanderEvent? Commander { get; set; } = default;
+	
 	[ObservableProperty]
-	private LoadGameEvent? _loadGame = default;
-
+	public partial LoadGameEvent? LoadGame { get; set; } = default;
+	
 	[ObservableProperty]
-	private ObservableCollection<RankDTO>? _ranks = new();
-
+	public partial ObservableCollection<RankDTO>? Ranks { get; set; } = new();
+	
 	[ObservableProperty]
-	private FSDJumpEvent? _currentSystem = default;
+	public partial FSDJumpEvent? CurrentSystem { get; set; } = default;
 
 	public DashboardViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
 		IMemoryCache memoryCache) : base(journalLoader, stateStore, memoryCache) { }

@@ -8,5 +8,5 @@ public interface INavigationStore
 partial class NavigationStore : ObservableObject, INavigationStore
 {
 	[ObservableProperty]
-	private LoadableViewModel? currentViewModel = default;
+	public partial LoadableViewModel? CurrentViewModel { get; set; } = default;
 }
