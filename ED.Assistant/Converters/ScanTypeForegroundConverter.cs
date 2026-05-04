@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
+using ED.Assistant.Data.Types;
 using System.Globalization;
 
 namespace ED.Assistant.Converters;
@@ -16,8 +17,8 @@ public sealed class ScanTypeForegroundConverter : IValueConverter
 
 		return value?.ToString() switch
 		{
-			"AutoScan" => resources["SecondaryTextBrush"] as IBrush ?? Brushes.Gray,
-			"Detailed" => resources["PrimaryAccentBrush"] as IBrush ?? Brushes.DeepSkyBlue,
+			var t when t == ScanType.AutoScan => resources["SecondaryTextBrush"] as IBrush ?? Brushes.Gray,
+			var t when t == ScanType.Detailed => resources["PrimaryAccentBrush"] as IBrush ?? Brushes.DeepSkyBlue,
 			_ => resources["PrimaryTextBrush"] as IBrush ?? Brushes.White
 		};
 	}

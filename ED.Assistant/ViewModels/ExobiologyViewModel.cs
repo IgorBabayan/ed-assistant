@@ -1,4 +1,5 @@
 ﻿using ED.Assistant.Data.Types;
+using ED.Assistant.Helpers;
 using System.Collections.ObjectModel;
 
 namespace ED.Assistant.ViewModels;
@@ -58,8 +59,8 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 						Name = latest.Species,
 						Variant = latest.Variant,
 						CollectedCount = collectedCount,
-						BaseValue = "—",
-						Distance = "—"
+						BaseValue = Constants.EmptyValue,
+						Distance = Constants.EmptyValue
 					});
 				}
 
@@ -72,11 +73,11 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 					planet.Signals.Add(new OrganicSignalViewModel
 					{
 						Type = genus.Genus,
-						Name = "—",
-						Variant = "—",
+						Name = Constants.EmptyValue,
+						Variant = Constants.EmptyValue,
 						CollectedCount = 0,
-						BaseValue = "—",
-						Distance = "—"
+						BaseValue = Constants.EmptyValue,
+						Distance = Constants.EmptyValue
 					});
 				}
 
@@ -85,11 +86,11 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 					planet.Signals.Add(new OrganicSignalViewModel
 					{
 						Type = "Biological",
-						Name = "—",
-						Variant = "—",
+						Name = Constants.EmptyValue,
+						Variant = Constants.EmptyValue,
 						CollectedCount = 0,
-						BaseValue = "—",
-						Distance = "—"
+						BaseValue = Constants.EmptyValue,
+						Distance = Constants.EmptyValue
 					});
 				}
 
