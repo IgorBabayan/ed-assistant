@@ -12,6 +12,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	private readonly INavigationService _navigationService;
 	private readonly ISettingsStorage _settingsStorage;
 	private readonly IPathFinder _pathFinder;
+	private readonly IJournalWatchService _journalWatchService;
 	private readonly SettingsViewModel _settingsViewModel;
 
 	private class DefaultState
@@ -57,10 +58,12 @@ public partial class MainWindowViewModel : LoadableViewModel
 	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
 		INavigationStore navigationStore, IJournalStateStore stateStore, IMemoryCache memoryCache,
 		INavigationService navigationService, IJournalLoaderService journalLoader,
-		ISettingsStorage settingsStorage, IPathFinder pathFinder) : base(journalLoader, stateStore, memoryCache)
+		ISettingsStorage settingsStorage, IPathFinder pathFinder,
+		IJournalWatchService journalWatchService) : base(journalLoader, stateStore, memoryCache)
 	{
 		NavigationStore = navigationStore;
 
+		_journalWatchService = journalWatchService;
 		_dialogService = dialogService;
 		_settingsStorage = settingsStorage;
 		_pathFinder = pathFinder;
@@ -92,6 +95,8 @@ public partial class MainWindowViewModel : LoadableViewModel
 			? DefaultState.LastEvent
 			: $"event: '${state.LastEvent!.Event}'";
 	}
+
+	partial void OnIsAutoWatchEnabledChanged(bool value) => _ = UpdateWatchStatus(value);
 
 	[RelayCommand]
 	private async Task NavigateToDashboardView(CancellationToken cancellationToken = default)
@@ -160,7 +165,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 		if (result)
 		{
 			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
-			await UpdateWatchStatus(settings.IsAutoWatchEnable, cancellationToken);
+			IsAutoWatchEnabled = settings.IsAutoWatchEnable;
 		}
 	}
 
@@ -179,8 +184,10 @@ public partial class MainWindowViewModel : LoadableViewModel
 		try
 		{
 			await _navigationService.NavigateToAsync<DashboardViewModel>();
+			await _journalLoader.LoadLastLogsAsync(cancellationToken);
+
 			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
-			await UpdateWatchStatus(settings.IsAutoWatchEnable, cancellationToken);
+			IsAutoWatchEnabled = settings.IsAutoWatchEnable;
 		}
 		catch (Exception)
 		{
@@ -193,18 +200,18 @@ public partial class MainWindowViewModel : LoadableViewModel
 			LoadCommand.NotifyCanExecuteChanged();
 	}
 
-	private async Task UpdateWatchStatus(bool isAutoWatchEnabled, CancellationToken cancellationToken)
+	private async Task UpdateWatchStatus(bool isAutoWatchEnabled, CancellationToken cancellationToken = default)
 	{
-		IsAutoWatchEnabled = isAutoWatchEnabled;
-		WatchStatus = IsAutoWatchEnabled ? "Auto watch enabled" : DefaultState.WatchStatus;
-
+		WatchStatus = isAutoWatchEnabled ? "Auto watch enabled" : DefaultState.WatchStatus;
+		
 		if (isAutoWatchEnabled)
 		{
-
+			var logFolder = _pathFinder.GetPathToLogs();
+			await _journalWatchService.StartAsync(logFolder, cancellationToken);
 		}
 		else
 		{
-
+			_journalWatchService.Stop();
 		}
 	}
 }

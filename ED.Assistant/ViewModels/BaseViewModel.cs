@@ -28,7 +28,8 @@ public abstract class BaseViewModel : ObservableObject, IDisposable
 
 public abstract partial class LoadableViewModel : BaseViewModel, INavigationAware
 {
-	private readonly IJournalLoaderService _journalLoader;
+	protected readonly IJournalLoaderService _journalLoader;
+
 	private readonly IJournalStateStore _stateStore;
 	private readonly IMemoryCache _memoryCache;
 
