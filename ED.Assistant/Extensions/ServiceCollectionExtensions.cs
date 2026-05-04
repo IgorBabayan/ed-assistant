@@ -61,6 +61,7 @@ static class ServiceCollectionExtensions
 			.AddSingleton<IJournalLoaderService, JournalLoaderService>()
 			.AddSingleton<INavigationStore, NavigationStore>()
 			.AddSingleton<INavigationService, NavigationService>()
+			.AddSingleton<IJournalStateApplier, JournalStateApplier>()
 			.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
 		return services;
 	}

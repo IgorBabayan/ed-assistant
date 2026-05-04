@@ -42,6 +42,9 @@ public partial class MainWindowViewModel : LoadableViewModel
 	[ObservableProperty]
 	private string _watchStatus = DefaultState.WatchStatus;
 
+	[ObservableProperty]
+	private bool _isAutoWatchEnabled;
+
 	public INavigationStore NavigationStore { get; }
 
 	public bool IsDashboardActive => NavigationStore.CurrentViewModel is DashboardViewModel;
@@ -192,7 +195,9 @@ public partial class MainWindowViewModel : LoadableViewModel
 
 	private async Task UpdateWatchStatus(bool isAutoWatchEnabled, CancellationToken cancellationToken)
 	{
-		WatchStatus = isAutoWatchEnabled ? "Auto watch enabled" : DefaultState.WatchStatus;
+		IsAutoWatchEnabled = isAutoWatchEnabled;
+		WatchStatus = IsAutoWatchEnabled ? "Auto watch enabled" : DefaultState.WatchStatus;
+
 		if (isAutoWatchEnabled)
 		{
 

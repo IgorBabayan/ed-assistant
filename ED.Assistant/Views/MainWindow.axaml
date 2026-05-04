@@ -157,8 +157,8 @@
 								Spacing="{StaticResource Spacing5}">
 						<Ellipse Width="10"
 								 Height="10"
-								 Fill="Green"/>
-								 
+								 Fill="{Binding IsAutoWatchEnabled, Converter={StaticResource AutoWatchForegroundConverter}}"/>
+
 						<TextBlock Text="{Binding WatchStatus}"/>
 					</StackPanel>
 
