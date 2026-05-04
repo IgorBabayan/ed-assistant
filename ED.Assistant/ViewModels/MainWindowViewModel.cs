@@ -1,4 +1,6 @@
-﻿using ED.Assistant.Services.DialogService;
+﻿using ED.Assistant.Data.Services.Path;
+using ED.Assistant.Data.Services.Settings;
+using ED.Assistant.Services.DialogService;
 using ED.Assistant.Services.Navigation;
 using System.ComponentModel;
 
@@ -8,6 +10,8 @@ public partial class MainWindowViewModel : LoadableViewModel
 {
 	private readonly IDialogService _dialogService;
 	private readonly INavigationService _navigationService;
+	private readonly ISettingsStorage _settingsStorage;
+	private readonly IPathFinder _pathFinder;
 	private readonly SettingsViewModel _settingsViewModel;
 
 	private class DefaultState
@@ -17,6 +21,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 		public const string Status = "Ready";
 		public const string LogFile = "File not loaded";
 		public const string LastEvent = "Event not found";
+		public const string WatchStatus = "Auto watch disabled";
 	}
 
 	[ObservableProperty]
@@ -34,6 +39,9 @@ public partial class MainWindowViewModel : LoadableViewModel
 	[ObservableProperty]
 	private string _lastEvent = DefaultState.LastEvent;
 
+	[ObservableProperty]
+	private string _watchStatus = DefaultState.WatchStatus;
+
 	public INavigationStore NavigationStore { get; }
 
 	public bool IsDashboardActive => NavigationStore.CurrentViewModel is DashboardViewModel;
@@ -45,12 +53,14 @@ public partial class MainWindowViewModel : LoadableViewModel
 
 	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
 		INavigationStore navigationStore, IJournalStateStore stateStore, IMemoryCache memoryCache,
-		INavigationService navigationService, IJournalLoaderService journalLoader)
-		: base(journalLoader, stateStore, memoryCache)
+		INavigationService navigationService, IJournalLoaderService journalLoader,
+		ISettingsStorage settingsStorage, IPathFinder pathFinder) : base(journalLoader, stateStore, memoryCache)
 	{
 		NavigationStore = navigationStore;
 
 		_dialogService = dialogService;
+		_settingsStorage = settingsStorage;
+		_pathFinder = pathFinder;
 		_settingsViewModel = settingsViewModel;
 		_navigationService = navigationService;
 
@@ -141,8 +151,15 @@ public partial class MainWindowViewModel : LoadableViewModel
 	}
 
 	[RelayCommand]
-	private async Task Settings() 
-		=> await _dialogService.ShowDialogAsync<SettingsViewModel, bool>(_settingsViewModel);
+	private async Task Settings(CancellationToken cancellationToken = default)
+	{
+		var result = await _dialogService.ShowDialogAsync<SettingsViewModel, bool>(_settingsViewModel);
+		if (result)
+		{
+			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
+			await UpdateWatchStatus(settings.IsAutoWatchEnable, cancellationToken);
+		}
+	}
 
 	private void RaiseActiveProperty()
 	{
@@ -154,11 +171,13 @@ public partial class MainWindowViewModel : LoadableViewModel
 		OnPropertyChanged(nameof(IsShipLockerActive));
 	}
 
-	private async Task InitializeAsync()
+	private async Task InitializeAsync(CancellationToken cancellationToken = default)
 	{
 		try
 		{
 			await _navigationService.NavigateToAsync<DashboardViewModel>();
+			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
+			await UpdateWatchStatus(settings.IsAutoWatchEnable, cancellationToken);
 		}
 		catch (Exception)
 		{
@@ -169,5 +188,18 @@ public partial class MainWindowViewModel : LoadableViewModel
 	{
 		if (args.PropertyName == nameof(NavigationStore.CurrentViewModel))
 			LoadCommand.NotifyCanExecuteChanged();
+	}
+
+	private async Task UpdateWatchStatus(bool isAutoWatchEnabled, CancellationToken cancellationToken)
+	{
+		WatchStatus = isAutoWatchEnabled ? "Auto watch enabled" : DefaultState.WatchStatus;
+		if (isAutoWatchEnabled)
+		{
+
+		}
+		else
+		{
+
+		}
 	}
 }

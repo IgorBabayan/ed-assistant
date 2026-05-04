@@ -13,6 +13,9 @@ public partial class SettingsViewModel : BaseViewModel
 	[ObservableProperty]
 	private string? _logFolder = string.Empty;
 
+	[ObservableProperty]
+	private bool _enableAutoWatch;
+
 	public event Action<bool?>? CloseRequested;
 
 	public SettingsViewModel(IPathFinder pathFinder, IFolderPickerService folderPickerService,
@@ -22,14 +25,18 @@ public partial class SettingsViewModel : BaseViewModel
 		_folderPickerService = folderPickerService;
 		_settingsStorage = settingsStorage;
 
-		LogFolder = _pathFinder.GetPathToLogs() ?? string.Empty;
+		_ = InitializeAsync();
 	}
 
 	[RelayCommand]
 	private async Task Save(CancellationToken cancellationToken = default)
 	{
 		var path = _pathFinder.GetConfigPath();
-		await _settingsStorage.SaveAsync(path, new() { LogFolder = LogFolder }, cancellationToken);
+		await _settingsStorage.SaveAsync(path, new()
+		{ 
+			LogFolder = LogFolder,
+			IsAutoWatchEnable = EnableAutoWatch
+		}, cancellationToken);
 
 		CloseRequested?.Invoke(true);
 	}
@@ -41,10 +48,22 @@ public partial class SettingsViewModel : BaseViewModel
 	private async Task OpenFolder()
 	{
 		var folder = await _folderPickerService.PickFolderAsync("Select Elite Dangerous log folder");
-
 		if (folder is not null)
 		{
 			LogFolder = folder;
+		}
+	}
+
+	private async Task InitializeAsync(CancellationToken cancellationToken = default)
+	{
+		try
+		{
+			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
+			LogFolder = settings.LogFolder ?? _pathFinder.GetPathToLogs();
+			EnableAutoWatch = settings.IsAutoWatchEnable;
+		}
+		catch (Exception)
+		{
 		}
 	}
 }

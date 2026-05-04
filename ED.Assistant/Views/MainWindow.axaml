@@ -149,11 +149,18 @@
 						<ColumnDefinition Width="Auto" />
 					</Grid.ColumnDefinitions>
 
-					<TextBlock Grid.Column="0"
-							   Text="Ready"
-							   VerticalAlignment="Center"
-							   HorizontalAlignment="Left"
-							   Margin="{StaticResource MarginLeft15}" />
+					<StackPanel Grid.Column="0"
+								Orientation="Horizontal"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Left"
+								Margin="{StaticResource MarginLeft15}"
+								Spacing="{StaticResource Spacing5}">
+						<Ellipse Width="10"
+								 Height="10"
+								 Fill="Green"/>
+								 
+						<TextBlock Text="{Binding WatchStatus}"/>
+					</StackPanel>
 
 					<TextBlock Grid.Column="1"
 							   HorizontalAlignment="Center"

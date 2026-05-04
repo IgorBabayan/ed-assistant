@@ -33,11 +33,14 @@ class SettingsStorage : ISettingsStorage
 
 	public async Task<AppSettings> LoadAsync(string filePath, CancellationToken cancellationToken = default)
 	{
-		if (!File.Exists("config.json"))
-			throw new FileNotFoundException("Settings file not found.", filePath);
+		if (string.IsNullOrWhiteSpace(filePath))
+			throw new ArgumentNullException(nameof(filePath));
+
+		if (!File.Exists(filePath))
+			return new();
 
 		using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 		return await JsonSerializer.DeserializeAsync<AppSettings>(stream, _serializerOptions, cancellationToken)
-			?? new AppSettings();
+			?? new();
 	}
 }

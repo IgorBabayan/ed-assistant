@@ -1,9 +1,9 @@
 <Window xmlns="https://github.com/avaloniaui"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:materialIcons="using:Material.Icons.Avalonia"
+		xmlns:materialIcons="using:Material.Icons.Avalonia"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="using:ED.Assistant.ViewModels"
+		xmlns:vm="using:ED.Assistant.ViewModels"
 		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 		x:Class="ED.Assistant.SettingsWindow"
 		x:DataType="vm:SettingsViewModel"
@@ -19,64 +19,75 @@
 		<Border Background="{DynamicResource TransparentBackgroundBrush}" />
 
 		<!-- Dialog content -->
-		<Border Background="{DynamicResource CardBackgroundBrush}"
-				CornerRadius="12"
-				Padding="20"
-				Width="600"
-				Height="400"
-				HorizontalAlignment="Center"
-				VerticalAlignment="Center">
+		<Grid Background="Transparent">
+			<Border Background="{DynamicResource TransparentBackgroundBrush}" />
 
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="36"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="*"/>
-					<RowDefinition Height="36"/>
-				</Grid.RowDefinitions>
+			<Border Background="{DynamicResource CardBackgroundBrush}"
+					CornerRadius="12"
+					Padding="20"
+					Width="600"
+					Height="400"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center">
 
-				<TextBlock Grid.Row="0"
-						   Classes="primary"
-						   Text="Settings"
-						   FontSize="20"
-						   FontWeight="Bold" />
+				<Grid RowSpacing="{DynamicResource Spacing5}">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
 
-				<Grid Grid.Row="1"
-					  ColumnSpacing="{DynamicResource Spacing5}"
-					  VerticalAlignment="Top">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition Width="*"/>
-						<ColumnDefinition Width="Auto"/>
-					</Grid.ColumnDefinitions>
+					<TextBlock Grid.Row="0"
+							   Classes="primary"
+							   Text="Settings"
+							   FontSize="20"
+							   FontWeight="Bold" />
 
-					<TextBlock Grid.Column="0"
-							   Text="Log folder:"
-							   VerticalAlignment="Center"/>
-					<TextBox Grid.Column="1"
-							 Text="{Binding LogFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-					<Button Grid.Column="2"
-							Command="{Binding OpenFolderCommand}"
-							Classes="app-button">
-						<materialIcons:MaterialIcon Kind="FolderOpen"/>
-					</Button>
+					<StackPanel Grid.Row="1"
+								Spacing="{DynamicResource Spacing5}">
+
+						<Grid ColumnSpacing="{DynamicResource Spacing5}">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+
+							<TextBlock Grid.Column="0"
+									   Text="Log folder:"
+									   VerticalAlignment="Center"/>
+
+							<TextBox Grid.Column="1"
+									 Text="{Binding LogFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+							<Button Grid.Column="2"
+									Command="{Binding OpenFolderCommand}"
+									Classes="app-button">
+								<materialIcons:MaterialIcon Kind="FolderOpen"/>
+							</Button>
+						</Grid>
+
+						<CheckBox Content="Enable auto watch log files?"
+								  Foreground="Orange"
+								  IsChecked="{Binding EnableAutoWatch, Mode=TwoWay}"
+								  VerticalAlignment="Center"/>
+					</StackPanel>
+
+					<StackPanel Grid.Row="2"
+								Spacing="{DynamicResource Spacing5}"
+								Orientation="Horizontal"
+								HorizontalAlignment="Right">
+						<Button Content="Save"
+								Command="{Binding SaveCommand}"
+								Classes="app-button"/>
+
+						<Button Content="Cancel"
+								Classes="app-button-default"
+								Command="{Binding CancelCommand}"/>
+					</StackPanel>
+
 				</Grid>
-
-				<StackPanel Grid.Row="3"
-							Spacing="{DynamicResource Spacing5}"
-							Orientation="Horizontal"
-							HorizontalAlignment="Right">
-					<Button Content="Save"
-							Command="{Binding SaveCommand}"
-							Classes="app-button"/>
-
-					<Button Content="Cancel"
-							Classes="app-button-default"
-							Command="{Binding CancelCommand}"/>
-				</StackPanel>
-				
-			</Grid>
-
-		</Border>
+			</Border>
+		</Grid>
 	</Grid>
 </Window>
