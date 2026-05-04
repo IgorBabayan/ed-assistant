@@ -50,7 +50,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 
 	public bool IsDashboardActive => NavigationStore.CurrentViewModel is DashboardViewModel;
 	public bool IsSystemActive => NavigationStore.CurrentViewModel is SystemViewModel;
-	public bool IsExobilogicalActive => NavigationStore.CurrentViewModel is SignalsViewModel;
+	public bool IsExobilogicalActive => NavigationStore.CurrentViewModel is ExobiologyViewModel;
 	public bool IsJournalActive => NavigationStore.CurrentViewModel is JournalViewModel;
 	public bool IsMaterialActive => NavigationStore.CurrentViewModel is MaterialViewModel;
 	public bool IsShipLockerActive => NavigationStore.CurrentViewModel is ShipLockerViewModel;
@@ -121,9 +121,9 @@ public partial class MainWindowViewModel : LoadableViewModel
 	[RelayCommand]
 	private async Task NavigateToExobilogicalView(CancellationToken cancellationToken = default)
 	{
-		if (NavigationStore.CurrentViewModel is not SignalsViewModel)
+		if (NavigationStore.CurrentViewModel is not ExobiologyViewModel)
 		{
-			await _navigationService.NavigateToAsync<SignalsViewModel>(cancellationToken);
+			await _navigationService.NavigateToAsync<ExobiologyViewModel>(cancellationToken);
 			RaiseActiveProperty();
 		}
 	}

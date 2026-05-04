@@ -7,11 +7,20 @@ public class ScanOrganicEvent : BaseJournalEvent
 	[JsonPropertyName("ScanType")]
 	public string ScanType { get; set; } = string.Empty;
 
+	[JsonPropertyName("Genus")]
+	public string GenusId { get; set; } = string.Empty;
+
 	[JsonPropertyName("Genus_Localised")]
 	public string Genus { get; set; } = string.Empty;
 
+	[JsonPropertyName("Species")]
+	public string SpeciesId { get; set; } = string.Empty;
+
 	[JsonPropertyName("Species_Localised")]
 	public string Species { get; set; } = string.Empty;
+
+	[JsonPropertyName("Variant")]
+	public string VariantId { get; set; } = string.Empty;
 
 	[JsonPropertyName("Variant_Localised")]
 	public string Variant { get; set; } = string.Empty;

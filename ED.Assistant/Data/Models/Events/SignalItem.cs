@@ -3,7 +3,7 @@
 public class SignalItem
 {
 	[JsonPropertyName("Type")]
-	public string Type { get; set; } = string.Empty;
+	public string TypeId { get; set; } = string.Empty;
 
 	[JsonPropertyName("Type_Localised")]
 	public string Name { get; set; } = string.Empty;

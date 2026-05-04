@@ -67,9 +67,9 @@ public sealed class SignalItemViewModel
 
 	public SignalItemViewModel(SignalItem signal)
 	{
-		Type = signal.Type;
+		Type = signal.TypeId;
 		Name = string.IsNullOrWhiteSpace(signal.Name)
-			? signal.Type
+			? signal.TypeId
 			: signal.Name;
 		Count = signal.Count;
 	}

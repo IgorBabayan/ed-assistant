@@ -16,6 +16,7 @@
 
 			<converters:ScanTypeForegroundConverter x:Key="ScanTypeForegroundConverter"/>
 			<converters:AutoWatchForegroundConverter x:Key="AutoWatchForegroundConverter"/>
+			<converters:OrganicSampleBrushConverter x:Key="OrganicSampleBrushConverter"/>
 		</ResourceDictionary>
 	</Application.Resources>
 
@@ -38,8 +39,8 @@
 			<views:SystemView />
 		</DataTemplate>
 
-		<DataTemplate DataType="{x:Type vm:SignalsViewModel}">
-			<views:SignalsView />
+		<DataTemplate DataType="{x:Type vm:ExobiologyViewModel}">
+			<views:ExobiologyView />
 		</DataTemplate>
 
 		<DataTemplate DataType="{x:Type vm:JournalViewModel}">

@@ -22,11 +22,10 @@ public partial class DashboardViewModel : LoadableViewModel
 	public DashboardViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
 		IMemoryCache memoryCache) : base(journalLoader, stateStore, memoryCache) { }
 
-	protected override async Task UpdateFromStateAsync(JournalState state,
-		CancellationToken cancellationToken = default)
+	protected override void UpdateFromState(JournalState state)
 	{
 		Commander = state?.Commander;
-		await Task.Run(() => ParseCommanderRanks(state?.Ranks), cancellationToken);
+		ParseCommanderRanks(state?.Ranks);
 
 		LoadGame = state?.LoadGame;
 		CurrentSystem = state?.FSDJump;

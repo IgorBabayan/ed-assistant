@@ -2,7 +2,6 @@
 using ED.Assistant.Data.Services.Path;
 using ED.Assistant.Data.Services.Settings;
 using ED.Assistant.Services.DialogService;
-using ED.Assistant.Services.Journal;
 using ED.Assistant.Services.Navigation;
 using ED.Assistant.Services.SystemBuilder;
 using ED.Assistant.ViewModels;
@@ -42,7 +41,7 @@ static class ServiceCollectionExtensions
 			.AddSingleton<SettingsViewModel>()
 			.AddSingleton<DashboardViewModel>()
 			.AddSingleton<SystemViewModel>()
-			.AddSingleton<SignalsViewModel>()
+			.AddSingleton<ExobiologyViewModel>()
 			.AddSingleton<JournalViewModel>()
 			.AddSingleton<MaterialItemViewModel>()
 			.AddSingleton<MaterialViewModel>()

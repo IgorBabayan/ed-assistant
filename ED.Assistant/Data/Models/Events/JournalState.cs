@@ -12,9 +12,13 @@ public sealed class JournalState
 	public FSDJumpEvent? FSDJump { get; set; }
 	public ShipLockerEvent? ShipLocker { get; set; }
 
+	public List<ScanOrganicEvent> Organics { get; } = [];
+
 	public Dictionary<int, ScanEvent> Scans { get; } = new();
-	public Dictionary<int, ScanOrganicEvent> Organics { get; } = new();
 	public Dictionary<int, SAASignalsFoundEvent> SAASignals { get; } = new();
 	public Dictionary<int, BaryCentreEvent> BaryCentres { get; } = new();
 	public Dictionary<int, FSSBodySignalsEvent> FSSSignals { get; } = new();
+
+	public static string OrganicKey(long systemAddress, int bodyId, string genus, string species, string variant)
+		=> $"{systemAddress}:{bodyId}:{genus}:{species}:{variant}";
 }

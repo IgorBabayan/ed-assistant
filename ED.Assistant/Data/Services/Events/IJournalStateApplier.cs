@@ -25,6 +25,7 @@ class JournalStateApplier : IJournalStateApplier
 		var aggregator = new JournalStateAggregator(dispatcher);
 
 		dispatcher.OnAny(e => state.LastEvent = e);
+		dispatcher.On<ScanOrganicEvent>(ScanOrganicEvent.EventName, e => state.Organics.Add(e));
 
 		aggregator.RegisterLast<CommanderEvent>(
 			CommanderEvent.EventName,
@@ -55,6 +56,7 @@ class JournalStateApplier : IJournalStateApplier
 				state.FSSSignals.Clear();
 				state.BaryCentres.Clear();
 				state.Organics.Clear();
+				state.SAASignals.Clear();
 			});
 
 		aggregator.RegisterByKey<ScanEvent, int>(
@@ -71,11 +73,6 @@ class JournalStateApplier : IJournalStateApplier
 			BaryCentreEvent.EventName,
 			e => e.BodyId,
 			state.BaryCentres);
-
-		aggregator.RegisterByKey<ScanOrganicEvent, int>(
-			ScanOrganicEvent.EventName,
-			e => e.BodyId,
-			state.Organics);
 
 		aggregator.RegisterByKey<SAASignalsFoundEvent, int>(
 			SAASignalsFoundEvent.EventName,

@@ -16,12 +16,15 @@ public class SAASignalsFoundEvent : BaseJournalEvent
 	[JsonPropertyName("Genuses")]
 	public IEnumerable<GenusItem>? Genuses { get; set; } = default;
 
-	[JsonPropertyName("Genuses")]
+	[JsonPropertyName("Signals")]
 	public IEnumerable<SignalItem>? Signals { get; set; } = default;
 }
 
 public class GenusItem
 {
+	[JsonPropertyName("Genus")]
+	public string GenusId { get; set; } = string.Empty;
+
 	[JsonPropertyName("Genus_Localised")]
 	public string Genus { get; set; } = string.Empty;
 }

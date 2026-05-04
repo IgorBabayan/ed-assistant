@@ -2,9 +2,9 @@
 
 public sealed class SignalType : IEquatable<SignalType>, IEquatable<string>
 {
-	public static readonly SignalType Biological = new("$SAA_SignalType_Biological");
-	public static readonly SignalType Geological = new("$SAA_SignalType_Geological");
-	public static readonly SignalType Human = new("$SAA_SignalType_Human");
+	public static readonly SignalType Biological = new("$SAA_SignalType_Biological;");
+	public static readonly SignalType Geological = new("$SAA_SignalType_Geological;");
+	public static readonly SignalType Human = new("$SAA_SignalType_Human;");
 	public static readonly SignalType Xeno = new("Xeno");
 
 	private readonly string? _value;
