@@ -265,8 +265,13 @@
 								<ItemsControl.ItemTemplate>
 									<DataTemplate>
 										<Border Classes="signal-row">
-											<Grid ColumnDefinitions="Auto,*,Auto"
-												  ColumnSpacing="10">
+											<Grid ColumnSpacing="10">
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition Width="Auto"/>
+													<ColumnDefinition Width="*"/>
+													<ColumnDefinition Width="Auto"/>
+												</Grid.ColumnDefinitions>
+
 												<Border Classes="signal-dot"
 														Tag="{Binding Type}"/>
 

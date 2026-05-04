@@ -128,9 +128,9 @@
 								Command="{Binding NavigateToSystemViewCommand}"
 								Content="System"/>
 						<Button Classes="sidebar-button"
-								Classes.active="{Binding IsSignalsActive}"
-								Command="{Binding NavigateToSignalsViewCommand}"
-								Content="Signals"/>
+								Classes.active="{Binding IsExobilogicalActive}"
+								Command="{Binding NavigateToExobilogicalViewCommand}"
+								Content="Exobilogical"/>
 						<Border Classes="separator"/>
 						<Button Classes="sidebar-button"
 								Classes.active="{Binding IsJournalActive}"
@@ -142,7 +142,7 @@
 
 			<!-- Status bar -->
 			<Border Grid.Row="2">
-				<Grid ColumnSpacing="{DynamicResource Spacing5}">
+				<Grid ColumnSpacing="{DynamicResource Spacing15}">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="*" />
 						<ColumnDefinition Width="Auto" />
@@ -158,12 +158,12 @@
 					<TextBlock Grid.Column="1"
 							   HorizontalAlignment="Center"
 							   VerticalAlignment="Center"
-							   Text="...log file..." />
+							   Text="{Binding LogFile}" />
 
 					<TextBlock Grid.Column="2"
 							   HorizontalAlignment="Center"
 							   VerticalAlignment="Center"
-							   Text="...last event..."
+							   Text="{Binding LastEvent}"
 							   Margin="{StaticResource MarginRight15}" />
 				</Grid>
 			</Border>

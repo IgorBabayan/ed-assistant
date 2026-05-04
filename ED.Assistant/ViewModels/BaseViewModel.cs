@@ -10,18 +10,28 @@ public interface ILoadableViewModel
 	IAsyncRelayCommand LoadCommand { get; }
 }
 
-public abstract class BaseViewModel : ObservableObject
+public abstract class BaseViewModel : ObservableObject, IDisposable
 {
-	
+	private bool _disposed;
+
+	protected virtual void OnDispose() { }
+
+	public void Dispose()
+	{
+		if (_disposed)
+			return;
+
+		OnDispose();
+		_disposed = true;
+	}
 }
 
-public abstract partial class LoadableViewModel : BaseViewModel, INavigationAware, IDisposable
+public abstract partial class LoadableViewModel : BaseViewModel, INavigationAware
 {
 	private readonly IJournalLoaderService _journalLoader;
 	private readonly IJournalStateStore _stateStore;
 	private readonly IMemoryCache _memoryCache;
 
-	private bool _disposed;
 	private bool _isActivated;
 
 	[ObservableProperty]
@@ -63,6 +73,8 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 			IsActivating = false;
 		}
 	}
+
+	protected override void OnDispose() => _stateStore.StateChanged -= OnStateChanged;
 
 	protected TViewModel GetOrCreateCachedViewModel<TModel, TViewModel>(string cacheKey, TModel model,
 		Func<TModel, TViewModel> create, Action<TViewModel, TModel>? update = null)
@@ -106,15 +118,6 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 
 		_isActivated = true;
 		await ActivateAsync(state, cancellationToken);
-	}
-
-	public void Dispose()
-	{
-		if (_disposed)
-			return;
-
-		_stateStore.StateChanged -= OnStateChanged;
-		_disposed = true;
 	}
 
 	private async void OnStateChanged(object? sender, JournalState state)

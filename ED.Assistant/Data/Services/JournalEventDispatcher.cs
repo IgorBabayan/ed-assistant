@@ -6,6 +6,7 @@ namespace ED.Assistant.Data.Services;
 
 public interface IJournalEventDispatcher
 {
+	void OnAny(Action<IJournalEvent> handler);
 	void On<TEvent>(string eventName, Action<TEvent> handler) where TEvent : IJournalEvent;
 	Task DispatchAsync(IAsyncEnumerable<string> lines, CancellationToken cancellationToken = default);
 }
@@ -14,11 +15,12 @@ sealed class JournalEventDispatcher : IJournalEventDispatcher
 {
 	private readonly JsonSerializerOptions _jsonOptions;
 	private readonly List<IEventSubscription> _subscriptions = [];
+	private readonly List<Action<IJournalEvent>> _anySubscriptions = [];
 
 	private interface IEventSubscription
 	{
 		bool CanHandle(string line);
-		void Handle(string line);
+		IJournalEvent? Handle(string line);
 	}
 
 	public sealed class EventSubscription<TEvent> : IEventSubscription
@@ -39,21 +41,23 @@ sealed class JournalEventDispatcher : IJournalEventDispatcher
 
 		public bool CanHandle(string line) => line.Contains(_pattern, StringComparison.OrdinalIgnoreCase);
 
-		public void Handle(string line)
+		public IJournalEvent? Handle(string line)
 		{
 			try
 			{
 				var journalEvent = JsonSerializer.Deserialize<TEvent>(line, _jsonOptions);
 				if (journalEvent is null)
-					return;
+					return null;
 
 				if (!string.Equals(journalEvent.Event, _eventName, StringComparison.OrdinalIgnoreCase))
-					return;
+					return null;
 
 				_handler(journalEvent);
+				return journalEvent;
 			}
 			catch (JsonException)
 			{
+				return null;
 			}
 		}
 	}
@@ -67,6 +71,8 @@ sealed class JournalEventDispatcher : IJournalEventDispatcher
 		_jsonOptions.Converters.Add(new ParentConverter());
 	}
 
+	public void OnAny(Action<IJournalEvent> handler) => _anySubscriptions.Add(handler);
+
 	public void On<TEvent>(string eventName, Action<TEvent> handler)
 	   where TEvent : IJournalEvent => _subscriptions.Add(new EventSubscription<TEvent>(eventName, handler, _jsonOptions));
 
@@ -79,7 +85,12 @@ sealed class JournalEventDispatcher : IJournalEventDispatcher
 				if (!subscription.CanHandle(line))
 					continue;
 
-				subscription.Handle(line);
+				var journalEvent = subscription.Handle(line);
+				if (journalEvent is null)
+					continue;
+
+				foreach (var anyHandler in _anySubscriptions)
+					anyHandler(journalEvent);
 			}
 		}
 	}

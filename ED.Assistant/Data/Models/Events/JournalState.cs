@@ -2,6 +2,9 @@
 
 public sealed class JournalState
 {
+	public string? FileName { get; init; }
+	public IJournalEvent? LastEvent { get; set; }
+
 	public CommanderEvent? Commander { get; set; }
 	public LoadGameEvent? LoadGame { get; set; }
 	public MaterialsEvent? Materials { get; set; }

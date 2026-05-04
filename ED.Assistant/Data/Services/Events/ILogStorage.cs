@@ -1,5 +1,4 @@
-﻿using ED.Assistant.Data.Models.Events;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using IOPath = System.IO.Path;
@@ -21,7 +20,13 @@ class LogStorage : ILogStorage
 		if (latestDayLogs?.Any() == false)
 			throw new Exception("Log files not found");
 
-		return await ParseDataAsync(latestDayLogs!, cancellationToken);
+		var state = new JournalState
+		{
+			FileName = latestDayLogs!.Count == 1
+				? IOPath.GetFileName(latestDayLogs!.First())
+				: $"{IOPath.GetFileName(latestDayLogs!.First())} (+{latestDayLogs!.Count - 1})"
+		};
+		return await ParseDataAsync(state, latestDayLogs!, cancellationToken);
 	}
 
 	private static void EnsureLogFolderExists(string logFolder)
@@ -82,11 +87,13 @@ class LogStorage : ILogStorage
 			.Select(x => x!.Path)
 			.ToList() ?? [];
 
-	private static async Task<JournalState> ParseDataAsync(IEnumerable<string> latestDayLogs, CancellationToken cancellationToken = default)
+	private static async Task<JournalState> ParseDataAsync(JournalState state, IEnumerable<string> latestDayLogs,
+		CancellationToken cancellationToken = default)
 	{
-		var state = new JournalState();
 		var dispatcher = new JournalEventDispatcher();
 		var aggregator = new JournalStateAggregator(dispatcher);
+
+		dispatcher.OnAny(e => state.LastEvent = e);
 
 		aggregator.RegisterLast<CommanderEvent>(CommanderEvent.EventName, e => state.Commander = e);
 		aggregator.RegisterLast<LoadGameEvent>(LoadGameEvent.EventName, e => state.LoadGame = e);

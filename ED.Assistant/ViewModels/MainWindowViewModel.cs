@@ -15,22 +15,30 @@ public partial class MainWindowViewModel : LoadableViewModel
 		public const string CMDR = "o7, Commander";
 		public const string Ship = "Ship not found";
 		public const string Status = "Ready";
+		public const string LogFile = "File not loaded";
+		public const string LastEvent = "Event not found";
 	}
 
 	[ObservableProperty]
-	private string? _cMDR = DefaultState.CMDR;
+	private string _cMDR = DefaultState.CMDR;
 
 	[ObservableProperty]
-	private string? _ship = DefaultState.Ship;
+	private string _ship = DefaultState.Ship;
 
 	[ObservableProperty]
-	private string? _status = DefaultState.Status;
+	private string _status = DefaultState.Status;
+
+	[ObservableProperty]
+	private string _logFile = DefaultState.LogFile;
+
+	[ObservableProperty]
+	private string _lastEvent = DefaultState.LastEvent;
 
 	public INavigationStore NavigationStore { get; }
 
 	public bool IsDashboardActive => NavigationStore.CurrentViewModel is DashboardViewModel;
 	public bool IsSystemActive => NavigationStore.CurrentViewModel is SystemViewModel;
-	public bool IsSignalsActive => NavigationStore.CurrentViewModel is SignalsViewModel;
+	public bool IsExobilogicalActive => NavigationStore.CurrentViewModel is SignalsViewModel;
 	public bool IsJournalActive => NavigationStore.CurrentViewModel is JournalViewModel;
 	public bool IsMaterialActive => NavigationStore.CurrentViewModel is MaterialViewModel;
 	public bool IsShipLockerActive => NavigationStore.CurrentViewModel is ShipLockerViewModel;
@@ -50,11 +58,15 @@ public partial class MainWindowViewModel : LoadableViewModel
 
 		if (NavigationStore is INotifyPropertyChanged notify)
 		{
-			notify.PropertyChanged += (_, e) =>
-			{
-				if (e.PropertyName == nameof(NavigationStore.CurrentViewModel))
-					LoadCommand.NotifyCanExecuteChanged();
-			};
+			notify.PropertyChanged += OnPropertyChanged;
+		}
+	}
+
+	protected override void OnDispose()
+	{
+		if (NavigationStore is INotifyPropertyChanged notify)
+		{
+			notify.PropertyChanged -= OnPropertyChanged;
 		}
 	}
 
@@ -62,6 +74,10 @@ public partial class MainWindowViewModel : LoadableViewModel
 	{
 		CMDR = $"o7, {state.Commander?.Name ?? "Commander"}";
 		Ship = state.LoadGame?.ShipFullTitle ?? DefaultState.Ship;
+		LogFile = state.FileName ?? DefaultState.LogFile;
+		LastEvent = string.IsNullOrWhiteSpace(state.LastEvent?.Event)
+			? DefaultState.LastEvent
+			: $"event: '${state.LastEvent!.Event}'";
 	}
 
 	[RelayCommand]
@@ -85,7 +101,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	}
 
 	[RelayCommand]
-	private async Task NavigateToSignalsView(CancellationToken cancellationToken = default)
+	private async Task NavigateToExobilogicalView(CancellationToken cancellationToken = default)
 	{
 		if (NavigationStore.CurrentViewModel is not SignalsViewModel)
 		{
@@ -132,7 +148,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	{
 		OnPropertyChanged(nameof(IsDashboardActive));
 		OnPropertyChanged(nameof(IsSystemActive));
-		OnPropertyChanged(nameof(IsSignalsActive));
+		OnPropertyChanged(nameof(IsExobilogicalActive));
 		OnPropertyChanged(nameof(IsJournalActive));
 		OnPropertyChanged(nameof(IsMaterialActive));
 		OnPropertyChanged(nameof(IsShipLockerActive));
@@ -147,5 +163,11 @@ public partial class MainWindowViewModel : LoadableViewModel
 		catch (Exception)
 		{
 		}
+	}
+
+	private void OnPropertyChanged(object? sender, PropertyChangedEventArgs args)
+	{
+		if (args.PropertyName == nameof(NavigationStore.CurrentViewModel))
+			LoadCommand.NotifyCanExecuteChanged();
 	}
 }
