@@ -20,7 +20,7 @@ class LogStorage : ILogStorage
 		EnsureLogFolderExists(logFolder);
 
 		var latestDayLogs = GetLatestDayLogs(logFolder);
-		if (latestDayLogs == null || latestDayLogs.Count == 0)
+		if (latestDayLogs is not { Count: > 0 })
 			throw new Exception("Log files not found");
 
 		var state = new JournalState

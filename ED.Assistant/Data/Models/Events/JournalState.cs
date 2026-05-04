@@ -13,6 +13,8 @@ public sealed class JournalState
 	public ShipLockerEvent? ShipLocker { get; set; }
 
 	public Dictionary<int, ScanEvent> Scans { get; } = new();
+	public Dictionary<int, ScanOrganicEvent> Organics { get; } = new();
+	public Dictionary<int, SAASignalsFoundEvent> SAASignals { get; } = new();
 	public Dictionary<int, BaryCentreEvent> BaryCentres { get; } = new();
 	public Dictionary<int, FSSBodySignalsEvent> FSSSignals { get; } = new();
 }

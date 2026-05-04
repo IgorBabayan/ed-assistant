@@ -54,6 +54,7 @@ class JournalStateApplier : IJournalStateApplier
 				state.Scans.Clear();
 				state.FSSSignals.Clear();
 				state.BaryCentres.Clear();
+				state.Organics.Clear();
 			});
 
 		aggregator.RegisterByKey<ScanEvent, int>(
@@ -70,6 +71,16 @@ class JournalStateApplier : IJournalStateApplier
 			BaryCentreEvent.EventName,
 			e => e.BodyId,
 			state.BaryCentres);
+
+		aggregator.RegisterByKey<ScanOrganicEvent, int>(
+			ScanOrganicEvent.EventName,
+			e => e.BodyId,
+			state.Organics);
+
+		aggregator.RegisterByKey<SAASignalsFoundEvent, int>(
+			SAASignalsFoundEvent.EventName,
+			e => e.BodyId,
+			state.SAASignals);
 
 		await dispatcher.DispatchAsync(lines, cancellationToken);
 	}

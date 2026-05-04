@@ -4,6 +4,7 @@ public sealed class ScanType : IEquatable<ScanType>, IEquatable<string>
 {
 	public static readonly ScanType AutoScan = new("AutoScan");
 	public static readonly ScanType Detailed = new("Detailed");
+	public static readonly ScanType Log = new("Log");
 
 	private readonly string? _value;
 
