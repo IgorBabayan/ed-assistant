@@ -1,4 +1,4 @@
-﻿namespace ED.Assistant.ViewModels;
+﻿namespace ED.Assistant.Application.Navigation;
 
 partial class NavigationStore : BaseViewModel, INavigationStore
 {

@@ -1,4 +1,4 @@
-﻿namespace ED.Assistant.ViewModels;
+﻿namespace ED.Assistant.Presentation.ViewModels.System;
 
 public sealed class OrganicSignalViewModel
 {

@@ -2,7 +2,7 @@
 using ED.Assistant.Application.Path;
 using ED.Assistant.Application.Settings;
 
-namespace ED.Assistant.ViewModels;
+namespace ED.Assistant.Presentation.ViewModels.Settings;
 
 public partial class SettingsViewModel : BaseViewModel
 {

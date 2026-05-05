@@ -1,9 +1,8 @@
-using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ED.Assistant.Extensions;
+using ED.Assistant.Presentation.ViewModels.Shell;
 using ED.Assistant.Presentation.Views.Shell;
-using ED.Assistant.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.Assistant.App.App;

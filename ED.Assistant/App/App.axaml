@@ -12,7 +12,7 @@
              xmlns:shiplockerVM="using:ED.Assistant.Presentation.ViewModels.ShipLocker"
              xmlns:shiplocker="using:ED.Assistant.Presentation.Views.ShipLocker"
              xmlns:system="using:ED.Assistant.Presentation.Views.System"
-             xmlns:systemVM="using:ED.Assistant.ViewModels"
+             xmlns:systemVM="using:ED.Assistant.Presentation.ViewModels.System"
              xmlns:material="using:ED.Assistant.Presentation.Views.Material"
              xmlns:dashboardVM="using:ED.Assistant.Presentation.ViewModels.Dashboard"
 			 RequestedThemeVariant="Default">

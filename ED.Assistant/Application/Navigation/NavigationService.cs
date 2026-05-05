@@ -1,5 +1,4 @@
-﻿using ED.Assistant.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.Assistant.Application.Navigation;
 

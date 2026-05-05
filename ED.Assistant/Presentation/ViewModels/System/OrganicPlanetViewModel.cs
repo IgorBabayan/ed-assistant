@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace ED.Assistant.ViewModels;
+namespace ED.Assistant.Presentation.ViewModels.System;
 
 public sealed class OrganicPlanetViewModel
 {

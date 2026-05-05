@@ -2,7 +2,7 @@
 using ED.Assistant.Domain.System;
 using System.Collections.ObjectModel;
 
-namespace ED.Assistant.ViewModels;
+namespace ED.Assistant.Presentation.ViewModels.System;
 
 public partial class SystemBodyNodeViewModel : BaseViewModel
 {

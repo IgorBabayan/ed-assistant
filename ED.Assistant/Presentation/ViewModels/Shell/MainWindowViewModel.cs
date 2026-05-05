@@ -9,10 +9,12 @@ using ED.Assistant.Presentation.ViewModels.Dashboard;
 using ED.Assistant.Presentation.ViewModels.Exobiology;
 using ED.Assistant.Presentation.ViewModels.Journal;
 using ED.Assistant.Presentation.ViewModels.Material;
+using ED.Assistant.Presentation.ViewModels.Settings;
 using ED.Assistant.Presentation.ViewModels.ShipLocker;
+using ED.Assistant.Presentation.ViewModels.System;
 using System.ComponentModel;
 
-namespace ED.Assistant.ViewModels;
+namespace ED.Assistant.Presentation.ViewModels.Shell;
 
 public partial class MainWindowViewModel : LoadableViewModel
 {

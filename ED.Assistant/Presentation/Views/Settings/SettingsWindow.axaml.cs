@@ -1,5 +1,4 @@
-using Avalonia.Controls;
-using ED.Assistant.ViewModels;
+using ED.Assistant.Presentation.ViewModels.Settings;
 
 namespace ED.Assistant.Presentation.Views.Settings;
 

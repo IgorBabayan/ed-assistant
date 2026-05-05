@@ -1,4 +1,4 @@
-﻿using ED.Assistant.ViewModels;
+﻿using ED.Assistant.Presentation.ViewModels.Material;
 
 namespace ED.Assistant.Tests;
 

@@ -11,10 +11,12 @@ using ED.Assistant.Presentation.ViewModels.Dashboard;
 using ED.Assistant.Presentation.ViewModels.Exobiology;
 using ED.Assistant.Presentation.ViewModels.Journal;
 using ED.Assistant.Presentation.ViewModels.Material;
+using ED.Assistant.Presentation.ViewModels.Settings;
+using ED.Assistant.Presentation.ViewModels.Shell;
 using ED.Assistant.Presentation.ViewModels.ShipLocker;
+using ED.Assistant.Presentation.ViewModels.System;
 using ED.Assistant.Presentation.Views.ConfirmDialog;
 using ED.Assistant.Presentation.Views.Settings;
-using ED.Assistant.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.Assistant.Extensions;

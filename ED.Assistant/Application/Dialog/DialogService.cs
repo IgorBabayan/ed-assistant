@@ -1,9 +1,8 @@
-﻿using Avalonia.Controls;
-using ED.Assistant.Extensions;
+﻿using ED.Assistant.Extensions;
 using ED.Assistant.Presentation.ViewModels.ConfirmDialog;
+using ED.Assistant.Presentation.ViewModels.Settings;
 using ED.Assistant.Presentation.Views.ConfirmDialog;
 using ED.Assistant.Presentation.Views.Settings;
-using ED.Assistant.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.Assistant.Application.Dialog;
