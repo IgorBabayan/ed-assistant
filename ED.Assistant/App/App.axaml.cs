@@ -2,8 +2,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ED.Assistant.Data;
 using ED.Assistant.Data.Seed;
+using ED.Assistant.Data.Seed.Path;
 using ED.Assistant.Extensions;
-using ED.Assistant.Helpers;
 using ED.Assistant.Presentation.ViewModels.Shell;
 using ED.Assistant.Presentation.Views.Shell;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,10 +23,10 @@ public partial class App : Avalonia.Application
 			.RegisterViewModels()
             .RegisterWindows()
             .AddMemoryCache()
-            .AddDbContext<AppDbContext>(options =>
+            .AddDbContext<AppDbContext>((provider, options) =>
 			{
-				var dbPath = DbPathProvider.GetDatabasePath();
-				options.UseSqlite($"Data Source={dbPath}");
+				var dbPathProvider = provider.GetRequiredService<IDbPathProvider>();
+				options.UseSqlite($"Data Source={dbPathProvider.GetBioSamplesDbPath()}");
 			});
 
 		// Build provider and keep a reference to it for later use.

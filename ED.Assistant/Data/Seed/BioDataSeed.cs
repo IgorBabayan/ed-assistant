@@ -3,34 +3,40 @@ using System.Text.Json;
 
 namespace ED.Assistant.Data.Seed;
 
-sealed class BioDataSeed
+sealed class BioDataSeed : IBioDataSeed
 {
 	private static readonly JsonSerializerOptions _options = new()
 	{
 		PropertyNameCaseInsensitive = true
 	};
 
-	public async Task<List<BioGenus>> LoadGeneraAsync(string basePath)
-		=> await LoadAsync<BioGenus>(Path.Combine(basePath, "genus.json"));
+	public Task<IReadOnlyList<BioGenus>> LoadGeneraAsync(string basePath)
+		=> LoadAsync<BioGenus>(basePath, "genus.json");
 
-	public async Task<List<BioSpecies>> LoadSpeciesAsync(string basePath)
-		=> await LoadAsync<BioSpecies>(Path.Combine(basePath, "species.json"));
+	public Task<IReadOnlyList<BioSpecies>> LoadSpeciesAsync(string basePath)
+		=> LoadAsync<BioSpecies>(basePath, "species.json");
 
-	public async Task<List<BioVariant>> LoadVariantsAsync(string basePath)
-		=> await LoadAsync<BioVariant>(Path.Combine(basePath, "variants.json"));
+	public Task<IReadOnlyList<BioVariant>> LoadVariantsAsync(string basePath)
+		=> LoadAsync<BioVariant>(basePath, "variants.json");
 
-	public async Task<List<BioVariantRule>> LoadVariantRulesAsync(string basePath)
-		=> await LoadAsync<BioVariantRule>(Path.Combine(basePath, "variant_rules.json"));
+	public Task<IReadOnlyList<BioVariantRule>> LoadVariantRulesAsync(string basePath)
+		=> LoadAsync<BioVariantRule>(basePath, "variant-rules.json");
 
-	public async Task<List<BioSource>> LoadSourcesAsync(string basePath)
-		=> await LoadAsync<BioSource>(Path.Combine(basePath, "sources.json"));
+	public Task<IReadOnlyList<BioSource>> LoadSourcesAsync(string basePath)
+		=> LoadAsync<BioSource>(basePath, "sources.json");
 
-	private static async Task<List<T>> LoadAsync<T>(string path)
+	public Task<IReadOnlyList<BioSpawnCondition>> LoadBioSpawnConditionAsync(string basePath)
+		=> LoadAsync<BioSpawnCondition>(basePath, "spawn_condition.json");
+
+	private static async Task<IReadOnlyList<T>> LoadAsync<T>(string basePath, string fileName)
 	{
+		var path = IOPath.Combine(basePath, fileName);
+
 		if (!File.Exists(path))
 			throw new FileNotFoundException($"Seed file not found: {path}");
 
 		await using var stream = File.OpenRead(path);
+
 		var data = await JsonSerializer.DeserializeAsync<List<T>>(stream, _options);
 		return data ?? [];
 	}

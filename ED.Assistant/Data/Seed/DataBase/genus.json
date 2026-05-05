@@ -2,11 +2,91 @@
 	{
 		"id": 1,
 		"name": "Aleoida",
-		"displayName": "Aleoida"
+		"displayName": "Aleoida",
+		"description": "Extremely hardy photosynthetic organisms that thrive in arid environments. Thick, waxy leaf structures protect them from extreme surroundings, when gaseous exchange becomes unfavourable. The leaves can completely shut off the organism from the atmosphere causing a state of hibernation. The pointed leaves create precipitation slopes, which draw liquids to the heart of the organism. Here they are absorbed through a series of specialised cells and stored in the root structure until needed."
 	},
 	{
 		"id": 2,
+		"name": "Bacterium",
+		"displayName": "Bacterium",
+		"description": "True unicellular extremophiles capable of living in the full spectrum of temperatures, chemical soups and atmospheres. They form a kaleidoscopic range of patterns and colours based on their method of metabolism. They derive energy from photosynthetic chemosynthetic or thermosynthetic processes. These are believed to be the precursors for many life forms, and are often found in conjunction with other species. Links between the biochemistry of bacterial colonies and neighbouring organisms are likely but as yet unproven."
+	},
+	{
+		"id": 3,
+		"name": "Cactoida",
+		"displayName": "Cactoida",
+		"description": "Photosynthetic organisms that have adapted to extreme conditions by reducing their surface area to volume ratio, thereby protecting more sensitive tissues from exposure. The outer layer is formed from specialised light-transmitting cells. These are filled with an insulating hydrophobic layer, which helps to maintain core temperature and liquid retention. Deep, extensive root structures hold the organisms in place, and facilitate the extraction of trace minerals. Some cactoida species feature explosive seed distribution as a method of reproduction."
+	},
+	{
+		"id": 4,
+		"name": "Clypeus",
+		"displayName": "Clypeus",
+		"description": "Extremophile organisms that have evolved to create hard shield structures, primarily to protect against stellar radiation. They also collect and condense traces of liquid material in the atmosphere, allowing the organisms to flourish in extremely arid environments. The shields are typically synthesised from surrounding inorganic material, which will frequently define their shape and colouration."
+	},
+	{
+		"id": 5,
+		"name": "Concha",
+		"displayName": "Concha",
+		"description": "Highly specialised complex extremophiles that have developed protective and sturdy motile shell structures. These open and close based on the suitability of the current environmental conditions. The shells are an organic structure with an excreted inorganic insulated and sometimes reflective casing that help the organism maintain homeostasis. The internal organisms are only exposed for metabolic and reproductive purposes."
+	},
+	{
+		"id": 6,
+		"name": "Electricae",
+		"displayName": "Electricae",
+		"description": "Organisms found exclusively on extremely cold ice worlds in the vicinity of frozen lakes. The visible tips can be observed protruding from the ice, often near fissures where it is thinnest. The bulk of the organisms extend down through the ice into subsurface melt potentially for several kilometres. Electricae are superconductive in nature, utilising the thermal circulation of the surrounding fluid to drive an electrochemical process. The surface structure exists to provide a connection to the atmosphere, creating a point of electrical potential difference and resulting in bioluminescent displays."
+	},
+	{
+		"id": 7,
+		"name": "Fonticulua",
+		"displayName": "Fonticulua",
+		"description": "Photosynthetic colony organisms found exclusively on ice worlds, where they use frozen material as protection. As they develop, they melt surrounding ice, absorb the liquid and refreeze it to form translucent exoskeletons. Frond structures maximize light exposure. Reproduction appears to occur through colony division when fragments break off and form new colonies."
+	},
+	{
+		"id": 8,
+		"name": "Frutexa",
+		"displayName": "Frutexa",
+		"description": "Robust woody plants with deep root systems used to gather liquids and anchor themselves in unstable terrain. They are photosynthetic and adapted to low-light conditions. Their small leaf structures protect them from extreme temperatures and liquid loss, making them highly adaptable and widespread."
+	},
+	{
+		"id": 9,
+		"name": "Fumerola",
+		"displayName": "Fumerola",
+		"description": "Extremophile organisms located near active fumaroles. Their metabolism is driven through chemosynthetic and thermosynthetic processes tied to volcanic activity. They survive in otherwise inhospitable cold environments due to volcanic heat and often incorporate minerals, giving them an inorganic appearance and vivid colours."
+	},
+	{
+		"id": 10,
+		"name": "Fungoida",
+		"displayName": "Fungoida",
+		"description": "Organisms living deep within planetary substrates. Similar in structure to fungi but not saprophytic, they rely on chemosynthetic and thermosynthetic processes. The substrate protects them from environmental extremes. Exposed parts are mainly for reproduction, often via spores. Some species exhibit bioluminescence to process toxins."
+	},
+	{
+		"id": 11,
+		"name": "Osseus",
+		"displayName": "Osseus",
+		"description": "Slow-growing organisms found on rocky surfaces, formed by a symbiotic relationship between two unicellular life forms. One produces energy, while the other creates a rigid rock-like endoskeleton from local minerals. This structure supports the organism and increases surface area for metabolic processes."
+	},
+	{
+		"id": 12,
+		"name": "Recepta",
+		"displayName": "Recepta",
+		"description": "Extremophiles found on planets with sulphur dioxide atmospheres. They build protective bubbles from inorganic and hydrocarbon materials, creating controlled internal environments. Growth is slow and complex, involving shell restructuring. Reproduction occurs via budding, with offspring rolling to new locations before anchoring."
+	},
+	{
+		"id": 13,
 		"name": "Stratum",
-		"displayName": "Stratum"
+		"displayName": "Stratum",
+		"description": "Low-lying photosynthetic organisms that bond tightly to rock surfaces. Their main body may be embedded below the surface, leaving only tough proto-leaves exposed. They are common on rocky worlds, with coloration influenced by both mineral composition and stellar radiation."
+	},
+	{
+		"id": 14,
+		"name": "Tubus",
+		"displayName": "Tubus",
+		"description": "Highly specialised organisms capable of growing to great heights in low-gravity environments. They form tall, thin structures from layered leaf-like material, creating an internal chimney used to regulate artificial atmospheric conditions. Waste is released from the top, and some species feature growth rings indicating age."
+	},
+	{
+		"id": 15,
+		"name": "Tussock",
+		"displayName": "Tussock",
+		"description": "Robust photosynthetic plants resembling clump grasses. They have shallow but complex root systems requiring solid ground. They spread via tillering or seeds. Some species contain high sugar concentrations in cells to protect against freezing damage."
 	}
 ]
