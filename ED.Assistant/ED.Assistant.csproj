@@ -10,26 +10,22 @@
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
-    <AvaloniaXaml Remove="Views\Windows\**" />
-    <Compile Remove="Views\Windows\**" />
-    <EmbeddedResource Remove="Views\Windows\**" />
-    <None Remove="Views\Windows\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <AvaloniaXaml Remove="Styles\Border.axaml" />
-    <AvaloniaXaml Remove="Styles\ComboBox.axaml" />
-    <AvaloniaXaml Remove="Styles\TextBlock.axaml" />
-    <AvaloniaXaml Remove="Styles\Theme.axaml" />
-    <AvaloniaXaml Remove="Styles\TreeView.axaml" />
+    <AvaloniaXaml Remove="Presentation\Styles\Border.axaml" />
+    <AvaloniaXaml Remove="Presentation\Styles\ComboBox.axaml" />
+    <AvaloniaXaml Remove="Presentation\Styles\TextBlock.axaml" />
+    <AvaloniaXaml Remove="Presentation\Styles\Theme.axaml" />
+    <AvaloniaXaml Remove="Presentation\Styles\TreeView.axaml" />
   </ItemGroup>
 
   <ItemGroup>
-    <AvaloniaResource Include="Styles\Border.axaml" />
-    <AvaloniaResource Include="Styles\ComboBox.axaml" />
-    <AvaloniaResource Include="Styles\TextBlock.axaml" />
-    <AvaloniaResource Include="Styles\Theme.axaml" />
-    <AvaloniaResource Include="Styles\TreeView.axaml" />
+    <AvaloniaResource Include="Presentation\Styles\Border.axaml" />
+    <AvaloniaResource Include="Presentation\Styles\ComboBox.axaml" />
+    <AvaloniaResource Include="Presentation\Styles\TextBlock.axaml" />
+    <AvaloniaResource Include="Presentation\Styles\Theme.axaml" />
+    <AvaloniaResource Include="Presentation\Styles\TreeView.axaml" />
   </ItemGroup>
 
   <ItemGroup>

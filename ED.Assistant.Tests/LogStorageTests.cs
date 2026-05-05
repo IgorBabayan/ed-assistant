@@ -1,5 +1,6 @@
-﻿using ED.Assistant.Data.Models.Events;
+﻿using ED.Assistant.Application.State;
 using ED.Assistant.Data.Services.Events;
+using ED.Assistant.Domain.Events;
 using Moq;
 
 namespace ED.Assistant.Tests;

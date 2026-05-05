@@ -1,0 +1,68 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:converters="using:ED.Assistant.Presentation.Converters"
+             xmlns:dashboard="using:ED.Assistant.Presentation.Views.Dashboard"
+             xmlns:exobiologyVM="using:ED.Assistant.Presentation.ViewModels.Exobiology"
+             xmlns:exobiology="using:ED.Assistant.Presentation.Views.Exobiology"
+             xmlns:journalVM="using:ED.Assistant.Presentation.ViewModels.Journal"
+             xmlns:journal="using:ED.Assistant.Presentation.Views.Journal"
+             xmlns:materialVM="using:ED.Assistant.Presentation.ViewModels.Material"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 x:Class="ED.Assistant.App.App.App"
+			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:shiplockerVM="using:ED.Assistant.Presentation.ViewModels.ShipLocker"
+             xmlns:shiplocker="using:ED.Assistant.Presentation.Views.ShipLocker"
+             xmlns:system="using:ED.Assistant.Presentation.Views.System"
+             xmlns:systemVM="using:ED.Assistant.ViewModels"
+             xmlns:material="using:ED.Assistant.Presentation.Views.Material"
+             xmlns:dashboardVM="using:ED.Assistant.Presentation.ViewModels.Dashboard"
+			 RequestedThemeVariant="Default">
+	<!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+	<Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceInclude Source="avares://ED.Assistant/Presentation/Styles/Theme.axaml" />
+			</ResourceDictionary.MergedDictionaries>
+
+			<converters:ScanTypeForegroundConverter x:Key="ScanTypeForegroundConverter"/>
+			<converters:AutoWatchForegroundConverter x:Key="AutoWatchForegroundConverter"/>
+			<converters:OrganicSampleBrushConverter x:Key="OrganicSampleBrushConverter"/>
+		</ResourceDictionary>
+	</Application.Resources>
+
+	<Application.Styles>
+		<FluentTheme />
+		<materialIcons:MaterialIconStyles />
+		<StyleInclude Source="avares://ED.Assistant/Presentation/Styles/TextBlock.axaml" />
+		<StyleInclude Source="avares://ED.Assistant/Presentation/Styles/Button.axaml" />
+		<StyleInclude Source="avares://ED.Assistant/Presentation/Styles/Border.axaml" />
+		<StyleInclude Source="avares://ED.Assistant/Presentation/Styles/TreeView.axaml" />
+		<StyleInclude Source="avares://ED.Assistant/Presentation/Styles/ComboBox.axaml" />
+	</Application.Styles>
+
+	<Application.DataTemplates>
+		<DataTemplate DataType="{x:Type dashboardVM:DashboardViewModel}">
+			<dashboard:DashboardView />
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type systemVM:SystemViewModel}">
+			<system:SystemView />
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type exobiologyVM:ExobiologyViewModel}">
+			<exobiology:ExobiologyView />
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type journalVM:JournalViewModel}">
+			<journal:JournalView />
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type materialVM:MaterialViewModel}">
+			<material:MaterialView />
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type shiplockerVM:ShipLockerViewModel}">
+			<shiplocker:ShipLockerView />
+		</DataTemplate>
+	</Application.DataTemplates>
+</Application>

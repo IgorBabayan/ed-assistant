@@ -8,7 +8,7 @@ public static class Utils
 {
 	public static Window GetMainWindow()
 	{
-		if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+		if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
 			&& desktop.MainWindow is not null)
 		{
 			return desktop.MainWindow;

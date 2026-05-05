@@ -1,0 +1,113 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:material="using:ED.Assistant.Presentation.ViewModels.Material"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:Class="ED.Assistant.Presentation.Views.Material.MaterialView"
+			 x:DataType="material:MaterialViewModel">
+	<Grid RowSpacing="16">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<ItemsControl Grid.Row="0"
+					  ItemsSource="{Binding MaterialSummaries}">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<UniformGrid Columns="4"
+								 ColumnSpacing="8"/>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Border Classes="dashboard-card">
+						<StackPanel Spacing="4">
+							<TextBlock Text="{Binding Title}"
+									   Classes="dashboard-label"/>
+
+							<TextBlock Text="{Binding Value}"
+									   Classes="dashboard-value"/>
+						</StackPanel>
+					</Border>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+
+		<Border Grid.Row="1"
+				Classes="dashboard-card">
+			<Grid ColumnSpacing="12">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="180"/>
+					<ColumnDefinition Width="160"/>
+				</Grid.ColumnDefinitions>
+
+				<TextBox PlaceholderText="Search material..."
+						 Text="{Binding SearchText}"/>
+
+				<ComboBox Grid.Column="1"
+						  ItemsSource="{Binding Categories}"
+						  SelectedItem="{Binding SelectedCategory}"/>
+
+				<ComboBox Grid.Column="2"
+						  ItemsSource="{Binding SortOptions}"
+						  SelectedItem="{Binding SelectedSort}"/>
+			</Grid>
+		</Border>
+
+		<ScrollViewer Grid.Row="2">
+			<ItemsControl ItemsSource="{Binding FilteredMaterials}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<WrapPanel ItemWidth="260"/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Border Classes="material-card">
+							<Grid RowSpacing="8">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+
+								<Grid>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="*"/>
+										<ColumnDefinition Width="Auto"/>
+									</Grid.ColumnDefinitions>
+
+									<TextBlock Text="{Binding Name}"
+											   Classes="dashboard-value"
+											   TextTrimming="CharacterEllipsis"
+											   TextWrapping="NoWrap"
+											   ClipToBounds="True"/>
+
+									<Border Grid.Column="1"
+											Classes="material-category-pill">
+										<TextBlock Text="{Binding Category}"/>
+									</Border>
+								</Grid>
+
+								<TextBlock Grid.Row="1"
+										   Text="{Binding StockText}"
+										   Classes="dashboard-label"/>
+
+								<ProgressBar Grid.Row="2"
+											 Minimum="0"
+											 Maximum="{Binding MaxCapacity}"
+											 Value="{Binding Count}"/>
+							</Grid>
+						</Border>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ScrollViewer>
+	</Grid>
+</UserControl>

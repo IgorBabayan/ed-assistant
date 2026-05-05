@@ -1,0 +1,238 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:ED.Assistant.Presentation.ViewModels.Dashboard"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:Class="ED.Assistant.Presentation.Views.Dashboard.DashboardView"
+			 x:DataType="vm:DashboardViewModel">
+	<Grid Margin="20"
+		  RowSpacing="16"
+		  ColumnSpacing="16">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="2*"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+
+		<!-- Current System -->
+		<Border Grid.Row="0"
+				Grid.Column="0"
+				Classes="dashboard-card">
+			<Grid RowSpacing="14">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<DockPanel>
+					<TextBlock Text="CURRENT SYSTEM"
+							   Classes="dashboard-card-header"
+							   DockPanel.Dock="Left"/>
+
+					<TextBlock Text="{Binding CurrentSystem.Security}"
+							   Classes="dashboard-rank"
+							   HorizontalAlignment="Right"/>
+				</DockPanel>
+
+				<StackPanel Grid.Row="1"
+							Spacing="4">
+					<TextBlock Text="{Binding CurrentSystem.StarSystem}"
+							   Classes="dashboard-system-name"/>
+
+					<TextBlock Text="{Binding CurrentSystem.Body}"
+							   Classes="dashboard-label"/>
+				</StackPanel>
+
+				<UniformGrid Grid.Row="2"
+							 Columns="3"
+							 Rows="2"
+							 Margin="0,8,0,0">
+					<StackPanel>
+						<TextBlock Text="Economy"
+								   Classes="dashboard-label"/>
+						<TextBlock Text="{Binding CurrentSystem.Economy}"
+								   Classes="dashboard-value"/>
+					</StackPanel>
+
+					<StackPanel>
+						<TextBlock Text="Allegiance"
+								   Classes="dashboard-label"/>
+						<TextBlock Text="{Binding CurrentSystem.Allegiance}"
+								   Classes="dashboard-value"/>
+					</StackPanel>
+
+					<StackPanel>
+						<TextBlock Text="Population"
+								   Classes="dashboard-label"/>
+						<TextBlock Text="{Binding CurrentSystem.Population}"
+								   Classes="dashboard-value"/>
+					</StackPanel>
+
+					<StackPanel>
+						<TextBlock Text="Jump Dist"
+								   Classes="dashboard-label"/>
+						<TextBlock Text="{Binding CurrentSystem.JumpDist, StringFormat='{}{0:0.00} ly'}"
+								   Classes="dashboard-value"/>
+					</StackPanel>
+
+					<StackPanel>
+						<TextBlock Text="Fuel Used"
+								   Classes="dashboard-label"/>
+						<TextBlock Text="{Binding CurrentSystem.FuelUsed, StringFormat='{}{0:0.00} t'}"
+								   Classes="dashboard-value"/>
+					</StackPanel>
+
+					<StackPanel>
+						<TextBlock Text="Fuel Level"
+								   Classes="dashboard-label"/>
+						<TextBlock Text="{Binding CurrentSystem.FuelLevel, StringFormat='{}{0:0.00} t'}"
+								   Classes="dashboard-value"/>
+					</StackPanel>
+
+				</UniformGrid>
+			</Grid>
+		</Border>
+
+		<!-- CMDR Profile -->
+		<Border Grid.Row="0"
+				Grid.Column="1"
+				Classes="dashboard-card">
+			<StackPanel Spacing="12">
+				<TextBlock Text="CMDR PROFILE"
+						   Classes="dashboard-card-header"/>
+
+				<TextBlock Text="{Binding Commander.Name}"
+						   Classes="dashboard-commander-name"/>
+
+				<TextBlock Text="{Binding LoadGame.ShipFullTitle}"
+						   Classes="dashboard-value"/>
+
+				<Separator/>
+
+				<ItemsControl ItemsSource="{Binding Ranks}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Grid Margin="0,4"
+								  ColumnSpacing="{DynamicResource Spacing5}">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="90"/>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="80"/>
+								</Grid.ColumnDefinitions>
+								<TextBlock Grid.Column="0"
+										   Text="{Binding Name}"
+										   Classes="dashboard-label"/>
+
+								<ProgressBar Grid.Column="1"
+											 Minimum="0"
+											 Maximum="{Binding Maximum}"
+											 Value="{Binding Value}"
+											 Foreground="{DynamicResource SecondaryAccentBrush}"
+											 Height="6"/>
+
+								<TextBlock Grid.Column="2"
+										   Text="{Binding Level}"
+										   Classes="dashboard-rank"/>
+							</Grid>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</StackPanel>
+		</Border>
+
+		<!-- Signals -->
+		<!--<Border Grid.Row="1"
+		Grid.Column="0"
+		Grid.ColumnSpan="2"
+		Classes="dashboard-card">
+		<Grid RowDefinitions="Auto,*"
+		RowSpacing="12">
+
+		<DockPanel>
+		<TextBlock Text="SIGNALS"
+		Classes="dashboard-card-header"
+		DockPanel.Dock="Left"/>
+
+		<TextBlock Text="{Binding Signals.Count, StringFormat='{}{0} detected'}"
+		Classes="dashboard-label"
+		HorizontalAlignment="Right"/>
+		</DockPanel>
+
+		<ScrollViewer Grid.Row="1">
+		<ItemsControl ItemsSource="{Binding Signals}">
+		<ItemsControl.ItemTemplate>
+		<DataTemplate>
+		<Border Classes="signal-row">
+		<Grid ColumnDefinitions="120,*,120,100"
+		ColumnSpacing="12">
+
+		<Border Grid.Column="0"
+		Classes="signal-badge">
+		<TextBlock Text="{Binding Type}"
+		HorizontalAlignment="Center"/>
+		</Border>
+
+		<StackPanel Grid.Column="1">
+		<TextBlock Text="{Binding Name}"
+		Classes="signal-title"/>
+		<TextBlock Text="{Binding BodyName}"
+		Classes="dashboard-label"/>
+		</StackPanel>
+
+		<TextBlock Grid.Column="2"
+		Text="{Binding Distance}"
+		Classes="dashboard-value"
+		VerticalAlignment="Center"/>
+
+		<TextBlock Grid.Column="3"
+		Text="{Binding ThreatLevel, StringFormat='Threat {0}'}"
+		Classes="dashboard-rank"
+		VerticalAlignment="Center"/>
+		</Grid>
+		</Border>
+		</DataTemplate>
+		</ItemsControl.ItemTemplate>
+		</ItemsControl>
+		</ScrollViewer>
+		</Grid>
+		</Border>-->
+
+		<!-- Recent Events -->
+		<!--<Border Grid.Row="2"
+		Grid.Column="0"
+		Grid.ColumnSpan="2"
+		Classes="dashboard-card">
+		<Grid RowDefinitions="Auto,*"
+		RowSpacing="8">
+
+		<TextBlock Text="RECENT EVENTS"
+		Classes="dashboard-card-header"/>
+
+		<ItemsControl Grid.Row="1"
+		ItemsSource="{Binding RecentEvents}">
+		<ItemsControl.ItemTemplate>
+		<DataTemplate>
+		<Grid ColumnDefinitions="80,*"
+		Margin="0,3">
+		<TextBlock Grid.Column="0"
+		Text="{Binding Time}"
+		Classes="dashboard-label"/>
+		<TextBlock Grid.Column="1"
+		Text="{Binding Message}"
+		Classes="dashboard-value"/>
+		</Grid>
+		</DataTemplate>
+		</ItemsControl.ItemTemplate>
+		</ItemsControl>
+		</Grid>
+		</Border>-->
+
+	</Grid>
+</UserControl>

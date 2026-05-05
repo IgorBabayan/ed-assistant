@@ -1,9 +1,19 @@
-﻿using ED.Assistant.Data.Services.Events;
-using ED.Assistant.Data.Services.Path;
-using ED.Assistant.Data.Services.Settings;
-using ED.Assistant.Services.DialogService;
-using ED.Assistant.Services.Navigation;
-using ED.Assistant.Services.SystemBuilder;
+﻿using ED.Assistant.Application.Dialog;
+using ED.Assistant.Application.JournalLoading;
+using ED.Assistant.Application.Navigation;
+using ED.Assistant.Application.Path;
+using ED.Assistant.Application.Settings;
+using ED.Assistant.Application.State;
+using ED.Assistant.Application.Storage;
+using ED.Assistant.Domain.System;
+using ED.Assistant.Presentation.ViewModels.ConfirmDialog;
+using ED.Assistant.Presentation.ViewModels.Dashboard;
+using ED.Assistant.Presentation.ViewModels.Exobiology;
+using ED.Assistant.Presentation.ViewModels.Journal;
+using ED.Assistant.Presentation.ViewModels.Material;
+using ED.Assistant.Presentation.ViewModels.ShipLocker;
+using ED.Assistant.Presentation.Views.ConfirmDialog;
+using ED.Assistant.Presentation.Views.Settings;
 using ED.Assistant.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
