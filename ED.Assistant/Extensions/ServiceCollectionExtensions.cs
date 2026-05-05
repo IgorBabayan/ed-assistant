@@ -3,6 +3,7 @@ using ED.Assistant.Application.Navigation;
 using ED.Assistant.Application.Path;
 using ED.Assistant.Application.Settings;
 using ED.Assistant.Application.Storage;
+using ED.Assistant.Data.Seed;
 using ED.Assistant.Domain.System;
 using ED.Assistant.Presentation.ViewModels.ConfirmDialog;
 using ED.Assistant.Presentation.ViewModels.Dashboard;
@@ -72,6 +73,8 @@ static class ServiceCollectionExtensions
 			.AddSingleton<INavigationService, NavigationService>()
 			.AddSingleton<IJournalStateApplier, JournalStateApplier>()
 			.AddSingleton<IJournalWatchService, JournalWatchService>()
+			.AddSingleton<BioDataSeed>()
+			.AddSingleton<IBioDataSeeder, BioDataSeeder>()
 			.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
 		return services;
 	}

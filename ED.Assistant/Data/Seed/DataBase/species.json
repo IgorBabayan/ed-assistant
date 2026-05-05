@@ -1,0 +1,18 @@
+[
+	{
+		"id": 1,
+		"genusId": 1,
+		"name": "Aleoida Arcus",
+		"displayName": "Aleoida Arcus",
+		"baseValue": 7252500,
+		"minScanDistanceM": 150
+	},
+	{
+		"id": 2,
+		"genusId": 2,
+		"name": "Stratum Tectonicas",
+		"displayName": "Stratum Tectonicas",
+		"baseValue": 19010800,
+		"minScanDistanceM": 500
+	}
+]

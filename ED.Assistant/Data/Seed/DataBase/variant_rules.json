@@ -1,0 +1,22 @@
+[
+	{
+		"id": 1,
+		"variantId": 1,
+		"starClass": "K"
+	},
+	{
+		"id": 2,
+		"variantId": 1,
+		"starClass": "M"
+	},
+	{
+		"id": 3,
+		"variantId": 2,
+		"starClass": "F"
+	},
+	{
+		"id": 4,
+		"variantId": 2,
+		"starClass": "G"
+	}
+]

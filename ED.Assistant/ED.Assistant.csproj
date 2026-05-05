@@ -11,6 +11,10 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="Seed\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
   <ItemGroup>
     <AvaloniaXaml Remove="Presentation\Styles\Border.axaml" />
@@ -21,11 +25,37 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Data\Seed\DataBase\genus.json" />
+    <None Remove="Data\Seed\DataBase\sources.json" />
+    <None Remove="Data\Seed\DataBase\species.json" />
+    <None Remove="Data\Seed\DataBase\variants.json" />
+    <None Remove="Data\Seed\DataBase\variant_rules.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <AvaloniaResource Include="Presentation\Styles\Border.axaml" />
     <AvaloniaResource Include="Presentation\Styles\ComboBox.axaml" />
     <AvaloniaResource Include="Presentation\Styles\TextBlock.axaml" />
     <AvaloniaResource Include="Presentation\Styles\Theme.axaml" />
     <AvaloniaResource Include="Presentation\Styles\TreeView.axaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\Seed\DataBase\genus.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Seed\DataBase\sources.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Seed\DataBase\species.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Seed\DataBase\variants.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Seed\DataBase\variant_rules.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
