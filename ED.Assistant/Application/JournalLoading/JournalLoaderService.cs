@@ -1,5 +1,4 @@
 ﻿using ED.Assistant.Application.Path;
-using ED.Assistant.Application.State;
 using ED.Assistant.Application.Storage;
 
 namespace ED.Assistant.Application.JournalLoading;

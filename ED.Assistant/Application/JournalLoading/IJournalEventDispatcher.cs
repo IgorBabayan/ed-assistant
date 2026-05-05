@@ -1,6 +1,4 @@
-﻿using ED.Assistant.Domain.Events;
-
-namespace ED.Assistant.Application.JournalLoading;
+﻿namespace ED.Assistant.Application.JournalLoading;
 
 public interface IJournalEventDispatcher
 {

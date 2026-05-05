@@ -1,5 +1,4 @@
-﻿using ED.Assistant.Domain.Events;
-using ED.Assistant.Presentation.Converters;
+﻿using ED.Assistant.Presentation.Converters;
 using System.Text.Json;
 
 namespace ED.Assistant.Application.JournalLoading;

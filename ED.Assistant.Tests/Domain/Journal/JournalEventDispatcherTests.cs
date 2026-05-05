@@ -1,4 +1,4 @@
-﻿using ED.Assistant.Data.Services;
+﻿using ED.Assistant.Application.JournalLoading;
 using ED.Assistant.Domain.Events;
 
 namespace ED.Assistant.Tests.Domain.Journal;

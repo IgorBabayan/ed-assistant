@@ -1,6 +1,4 @@
-﻿using ED.Assistant.Domain.Events;
-
-namespace ED.Assistant.Domain.System;
+﻿namespace ED.Assistant.Domain.System;
 
 public sealed class SystemBodyNode
 {

@@ -1,6 +1,4 @@
-﻿using ED.Assistant.Application.JournalLoading;
-using ED.Assistant.Domain.Events;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace ED.Assistant.Application.State;

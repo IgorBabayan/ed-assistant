@@ -1,5 +1,4 @@
-﻿using ED.Assistant.Data.Models.Events;
-using ED.Assistant.Data.Types;
+﻿using ED.Assistant.Domain.Events;
 using ED.Assistant.Domain.System;
 
 namespace ED.Assistant.Tests.Domain.System;

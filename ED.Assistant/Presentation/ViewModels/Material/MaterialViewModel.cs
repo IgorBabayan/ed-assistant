@@ -1,9 +1,4 @@
-﻿using ED.Assistant.Application.JournalLoading;
-using ED.Assistant.Application.State;
-using ED.Assistant.Domain.Events;
-using System.Collections.ObjectModel;
-
-namespace ED.Assistant.Presentation.ViewModels.Material;
+﻿namespace ED.Assistant.Presentation.ViewModels.Material;
 
 public partial class MaterialViewModel : LoadableViewModel
 {

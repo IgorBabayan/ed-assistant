@@ -1,8 +1,4 @@
-﻿using ED.Assistant.Application.JournalLoading;
-using ED.Assistant.Application.State;
-using ED.Assistant.Domain.Events;
-using ED.Assistant.Domain.System;
-using System.Collections.ObjectModel;
+﻿using ED.Assistant.Domain.System;
 
 namespace ED.Assistant.Presentation.ViewModels.System;
 

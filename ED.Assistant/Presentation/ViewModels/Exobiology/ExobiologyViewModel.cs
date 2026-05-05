@@ -1,10 +1,6 @@
-﻿using ED.Assistant.Application.JournalLoading;
-using ED.Assistant.Application.State;
-using ED.Assistant.Domain.Events;
-using ED.Assistant.Domain.Types;
+﻿using ED.Assistant.Domain.Types;
 using ED.Assistant.Helpers;
 using ED.Assistant.Presentation.ViewModels.System;
-using System.Collections.ObjectModel;
 
 namespace ED.Assistant.Presentation.ViewModels.Exobiology;
 

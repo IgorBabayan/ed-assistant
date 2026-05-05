@@ -1,9 +1,7 @@
 ﻿using ED.Assistant.Application.Dialog;
-using ED.Assistant.Application.JournalLoading;
 using ED.Assistant.Application.Navigation;
 using ED.Assistant.Application.Path;
 using ED.Assistant.Application.Settings;
-using ED.Assistant.Application.State;
 using ED.Assistant.Application.Storage;
 using ED.Assistant.Domain.System;
 using ED.Assistant.Presentation.ViewModels.ConfirmDialog;

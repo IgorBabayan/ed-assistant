@@ -1,8 +1,4 @@
-﻿using ED.Assistant.Application.JournalLoading;
-using ED.Assistant.Application.State;
-using ED.Assistant.Domain.Events;
-
-namespace ED.Assistant.Presentation.ViewModels;
+﻿namespace ED.Assistant.Presentation.ViewModels;
 
 public interface INavigationAware
 {

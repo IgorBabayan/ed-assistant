@@ -1,5 +1,5 @@
-﻿using ED.Assistant.Data.Models.Config;
-using ED.Assistant.Data.Services.Settings;
+﻿using ED.Assistant.Application.Settings;
+using ED.Assistant.Domain.Config;
 
 namespace ED.Assistant.Tests.Domain.Journal;
 

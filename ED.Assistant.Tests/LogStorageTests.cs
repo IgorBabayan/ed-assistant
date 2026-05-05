@@ -1,5 +1,5 @@
 ﻿using ED.Assistant.Application.State;
-using ED.Assistant.Data.Services.Events;
+using ED.Assistant.Application.Storage;
 using ED.Assistant.Domain.Events;
 using Moq;
 

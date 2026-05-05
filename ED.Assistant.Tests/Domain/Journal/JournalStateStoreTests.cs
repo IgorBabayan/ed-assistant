@@ -1,5 +1,5 @@
-﻿using ED.Assistant.Domain.Events;
-using ED.Assistant.Services.Journal;
+﻿using ED.Assistant.Application.State;
+using ED.Assistant.Domain.Events;
 
 namespace ED.Assistant.Tests.Domain.Journal;
 

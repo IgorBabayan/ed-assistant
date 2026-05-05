@@ -1,10 +1,6 @@
-﻿using ED.Assistant.Application.JournalLoading;
-using ED.Assistant.Application.State;
-using ED.Assistant.Domain.DTO;
+﻿using ED.Assistant.Domain.DTO;
 using ED.Assistant.Domain.Enums;
-using ED.Assistant.Domain.Events;
 using ED.Assistant.Extensions;
-using System.Collections.ObjectModel;
 
 namespace ED.Assistant.Presentation.ViewModels.Dashboard;
 

@@ -1,5 +1,4 @@
-﻿using ED.Assistant.Domain.Events;
-using ED.Assistant.Domain.Types;
+﻿using ED.Assistant.Domain.Types;
 
 namespace ED.Assistant.Domain.System;
 

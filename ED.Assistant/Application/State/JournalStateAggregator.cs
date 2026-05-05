@@ -1,7 +1,4 @@
-﻿using ED.Assistant.Application.JournalLoading;
-using ED.Assistant.Domain.Events;
-
-namespace ED.Assistant.Application.State;
+﻿namespace ED.Assistant.Application.State;
 
 class JournalStateAggregator : IJournalStateAggregator
 {

@@ -1,6 +1,4 @@
-﻿using ED.Assistant.Domain.Events;
-
-namespace ED.Assistant.Application.Storage;
+﻿namespace ED.Assistant.Application.Storage;
 
 public interface ILogStorage
 {

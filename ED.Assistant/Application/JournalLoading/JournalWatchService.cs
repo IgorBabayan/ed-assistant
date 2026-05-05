@@ -1,5 +1,4 @@
-﻿using ED.Assistant.Application.State;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace ED.Assistant.Application.JournalLoading;

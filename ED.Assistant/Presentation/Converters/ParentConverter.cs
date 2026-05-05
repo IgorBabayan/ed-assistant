@@ -1,5 +1,4 @@
-﻿using ED.Assistant.Domain.Events;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace ED.Assistant.Presentation.Converters;
 

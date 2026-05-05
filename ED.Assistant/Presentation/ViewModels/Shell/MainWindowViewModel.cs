@@ -1,10 +1,7 @@
 ﻿using ED.Assistant.Application.Dialog;
-using ED.Assistant.Application.JournalLoading;
 using ED.Assistant.Application.Navigation;
 using ED.Assistant.Application.Path;
 using ED.Assistant.Application.Settings;
-using ED.Assistant.Application.State;
-using ED.Assistant.Domain.Events;
 using ED.Assistant.Presentation.ViewModels.Dashboard;
 using ED.Assistant.Presentation.ViewModels.Exobiology;
 using ED.Assistant.Presentation.ViewModels.Journal;

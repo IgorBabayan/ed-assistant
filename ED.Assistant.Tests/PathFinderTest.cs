@@ -1,4 +1,4 @@
-﻿using ED.Assistant.Data.Services.Path;
+﻿using ED.Assistant.Application.Path;
 
 namespace ED.Assistant.Tests;
 

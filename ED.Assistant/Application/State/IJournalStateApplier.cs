@@ -1,6 +1,4 @@
-﻿using ED.Assistant.Domain.Events;
-
-namespace ED.Assistant.Application.State;
+﻿namespace ED.Assistant.Application.State;
 
 public interface IJournalStateApplier
 {

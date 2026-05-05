@@ -1,8 +1,4 @@
-﻿using ED.Assistant.Application.JournalLoading;
-using ED.Assistant.Application.State;
-using ED.Assistant.Domain.Events;
-using ED.Assistant.Presentation.ViewModels.Material;
-using System.Collections.ObjectModel;
+﻿using ED.Assistant.Presentation.ViewModels.Material;
 
 namespace ED.Assistant.Presentation.ViewModels.ShipLocker;
 
