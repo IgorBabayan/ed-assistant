@@ -2,7 +2,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ED.Assistant.Data;
 using ED.Assistant.Data.Seed;
-using ED.Assistant.Data.Seed.Path;
+using ED.Assistant.Data.Storage;
 using ED.Assistant.Extensions;
 using ED.Assistant.Presentation.ViewModels.Shell;
 using ED.Assistant.Presentation.Views.Shell;
@@ -26,7 +26,7 @@ public partial class App : Avalonia.Application
             .AddDbContext<AppDbContext>((provider, options) =>
 			{
 				var dbPathProvider = provider.GetRequiredService<IDbPathProvider>();
-				options.UseSqlite($"Data Source={dbPathProvider.GetBioSamplesDbPath()}");
+				options.UseSqlite($"Data Source={dbPathProvider.GetDatabasePath()}");
 			});
 
 		// Build provider and keep a reference to it for later use.

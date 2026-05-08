@@ -2,6 +2,7 @@
 using ED.Assistant.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ED.Assistant.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260507192336_Change_Database_Structure")]
+    partial class Change_Database_Structure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.7");
@@ -66,6 +69,10 @@ namespace ED.Assistant.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("BodyTypesRaw")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("SpeciesId")
                         .HasColumnType("INTEGER");
 
@@ -79,24 +86,6 @@ namespace ED.Assistant.Migrations
                         .IsUnique();
 
                     b.ToTable("BioSpawnRules", (string)null);
-                });
-
-            modelBuilder.Entity("ED.Assistant.Data.Biology.BioSpawnRuleBodyType", b =>
-                {
-                    b.Property<int>("SpawnRuleId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("BodyTypeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Mode")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("SpawnRuleId", "BodyTypeId", "Mode");
-
-                    b.HasIndex("BodyTypeId");
-
-                    b.ToTable("BioSpawnRuleBodyTypes", (string)null);
                 });
 
             modelBuilder.Entity("ED.Assistant.Data.Biology.BioSpecies", b =>
@@ -122,14 +111,13 @@ namespace ED.Assistant.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("VariantDeterminantId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("VariantDeterminant")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GenusId");
-
-                    b.HasIndex("VariantDeterminantId");
 
                     b.HasIndex("GenusId", "Name")
                         .IsUnique();
@@ -173,22 +161,22 @@ namespace ED.Assistant.Migrations
                     b.ToTable("SpeciesAtmosphereConditions", (string)null);
                 });
 
-            modelBuilder.Entity("ED.Assistant.Data.Biology.VariantDeterminant", b =>
+            modelBuilder.Entity("ED.Assistant.Data.Biology.SpeciesBodyTypeCondition", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("SpeciesId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<int>("BodyTypeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Mode")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("SpeciesId", "BodyTypeId", "Mode");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasIndex("BodyTypeId");
 
-                    b.ToTable("VariantDeterminants", (string)null);
+                    b.ToTable("SpeciesBodyTypeConditions", (string)null);
                 });
 
             modelBuilder.Entity("ED.Assistant.Data.Biology.BioSpawnRule", b =>
@@ -202,25 +190,6 @@ namespace ED.Assistant.Migrations
                     b.Navigation("Species");
                 });
 
-            modelBuilder.Entity("ED.Assistant.Data.Biology.BioSpawnRuleBodyType", b =>
-                {
-                    b.HasOne("ED.Assistant.Data.Biology.BodyType", "BodyType")
-                        .WithMany("SpawnRules")
-                        .HasForeignKey("BodyTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ED.Assistant.Data.Biology.BioSpawnRule", "SpawnRule")
-                        .WithMany("BodyTypes")
-                        .HasForeignKey("SpawnRuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BodyType");
-
-                    b.Navigation("SpawnRule");
-                });
-
             modelBuilder.Entity("ED.Assistant.Data.Biology.BioSpecies", b =>
                 {
                     b.HasOne("ED.Assistant.Data.Biology.BioGenus", "Genus")
@@ -229,15 +198,7 @@ namespace ED.Assistant.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ED.Assistant.Data.Biology.VariantDeterminant", "VariantDeterminant")
-                        .WithMany("Species")
-                        .HasForeignKey("VariantDeterminantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Genus");
-
-                    b.Navigation("VariantDeterminant");
                 });
 
             modelBuilder.Entity("ED.Assistant.Data.Biology.SpeciesAtmosphereCondition", b =>
@@ -259,6 +220,25 @@ namespace ED.Assistant.Migrations
                     b.Navigation("Species");
                 });
 
+            modelBuilder.Entity("ED.Assistant.Data.Biology.SpeciesBodyTypeCondition", b =>
+                {
+                    b.HasOne("ED.Assistant.Data.Biology.BodyType", "BodyType")
+                        .WithMany("SpeciesConditions")
+                        .HasForeignKey("BodyTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ED.Assistant.Data.Biology.BioSpecies", "Species")
+                        .WithMany("BodyTypeConditions")
+                        .HasForeignKey("SpeciesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BodyType");
+
+                    b.Navigation("Species");
+                });
+
             modelBuilder.Entity("ED.Assistant.Data.Biology.Atmosphere", b =>
                 {
                     b.Navigation("SpeciesConditions");
@@ -269,26 +249,18 @@ namespace ED.Assistant.Migrations
                     b.Navigation("Species");
                 });
 
-            modelBuilder.Entity("ED.Assistant.Data.Biology.BioSpawnRule", b =>
-                {
-                    b.Navigation("BodyTypes");
-                });
-
             modelBuilder.Entity("ED.Assistant.Data.Biology.BioSpecies", b =>
                 {
                     b.Navigation("AtmosphereConditions");
+
+                    b.Navigation("BodyTypeConditions");
 
                     b.Navigation("SpawnRule");
                 });
 
             modelBuilder.Entity("ED.Assistant.Data.Biology.BodyType", b =>
                 {
-                    b.Navigation("SpawnRules");
-                });
-
-            modelBuilder.Entity("ED.Assistant.Data.Biology.VariantDeterminant", b =>
-                {
-                    b.Navigation("Species");
+                    b.Navigation("SpeciesConditions");
                 });
 #pragma warning restore 612, 618
         }

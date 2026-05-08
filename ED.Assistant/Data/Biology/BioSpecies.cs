@@ -5,17 +5,18 @@ public sealed class BioSpecies
 	public int Id { get; set; }
 
 	public int GenusId { get; set; }
+	public BioGenus Genus { get; set; } = null!;
 
 	public string Name { get; set; } = string.Empty;
 	public string DisplayName { get; set; } = string.Empty;
-	public string? Description { get; set; }
 
-	public int? BaseValue { get; set; }
-	public int? MinScanDistanceM { get; set; }
+	public int BaseValue { get; set; }
+	public int MinScanDistanceM { get; set; }
 
-	public BioGenus? Genus { get; set; }
+	public int VariantDeterminantId { get; set; }
+	public VariantDeterminant VariantDeterminant { get; set; } = null!;
 
-	public List<BioVariant> Variants { get; set; } = [];
-	public List<BioSpawnCondition> SpawnConditions { get; set; } = [];
-	public List<BioReference> References { get; set; } = [];
+	public BioSpawnRule? SpawnRule { get; set; }
+
+	public ICollection<SpeciesAtmosphereCondition> AtmosphereConditions { get; set; } = [];
 }
