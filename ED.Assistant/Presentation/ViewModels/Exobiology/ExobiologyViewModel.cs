@@ -1,23 +1,45 @@
-﻿using ED.Assistant.Domain.Types;
+﻿using ED.Assistant.Data;
+using ED.Assistant.Domain.Types;
 using ED.Assistant.Helpers;
 using ED.Assistant.Presentation.ViewModels.System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.Assistant.Presentation.ViewModels.Exobiology;
 
 public sealed class ExobiologyViewModel : LoadableViewModel
 {
+	private readonly IServiceScopeFactory _scopeFactory;
+	private List<BioSpecies>? _species;
+
 	public ObservableCollection<OrganicPlanetViewModel> Planets { get; } = [];
 
 	protected override bool ActivateOnNavigation => true;
 
 	public ExobiologyViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
-		IMemoryCache memoryCache) : base(journalLoader, stateStore, memoryCache) { }
+		IMemoryCache memoryCache, IServiceScopeFactory scopeFactory)
+		: base(journalLoader, stateStore, memoryCache)
+	{
+		_scopeFactory = scopeFactory;
+	}
 
-	protected override void UpdateFromState(JournalState state)
+	protected override async Task UpdateFromStateAsync(JournalState state,
+		CancellationToken cancellationToken = default)
 	{
 		var systemAddress = state.FSDJump?.SystemAddress;
 		if (systemAddress is null)
 			return;
+
+		if (_species is null)
+		{
+			using var scope = _scopeFactory.CreateScope();
+			var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+			_species = await db.BioSpecies
+				.AsNoTracking()
+				.Include(x => x.Genus)
+				.ToListAsync(cancellationToken);
+		}
+
+		var species = _species;
 
 		var planets = state.FSSSignals.Values
 			.Where(x =>
@@ -53,14 +75,22 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 						? 3
 						: Math.Min(events.Count(o => o.ScanType == ScanType.Sample), 2);
 
+					// The database stores names, not journal localisation tokens such as SpeciesId.
+					var matchedSpecies = species.FirstOrDefault(x =>
+						MatchesName(latest.Species, x.Name, x.DisplayName));
+
 					planet.Signals.Add(new OrganicSignalViewModel
 					{
 						Type = latest.Genus,
 						Name = latest.Species,
 						Variant = latest.Variant,
 						CollectedCount = collectedCount,
-						BaseValue = Constants.EmptyValue,
-						Distance = Constants.EmptyValue
+						BaseValue = matchedSpecies is null
+							? Constants.EmptyValue
+							: $"{matchedSpecies.BaseValue:N0}",
+						Distance = matchedSpecies is null
+							? GetGenusDistance(species, latest.Genus)
+							: $"{matchedSpecies.MinScanDistanceM:N0} m"
 					});
 				}
 
@@ -77,7 +107,7 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 						Variant = Constants.EmptyValue,
 						CollectedCount = 0,
 						BaseValue = Constants.EmptyValue,
-						Distance = Constants.EmptyValue
+						Distance = GetGenusDistance(species, genus.Genus)
 					});
 				}
 
@@ -101,5 +131,23 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 
 		foreach (var planet in planets)
 			Planets.Add(planet);
+	}
+
+	private static bool MatchesName(string name, string databaseName, string displayName) =>
+		!string.IsNullOrWhiteSpace(name) &&
+		(string.Equals(name.Trim(), databaseName, StringComparison.OrdinalIgnoreCase) ||
+		 string.Equals(name.Trim(), displayName, StringComparison.OrdinalIgnoreCase));
+
+	private static string GetGenusDistance(IEnumerable<BioSpecies> species, string genus)
+	{
+		var distances = species
+			.Where(x => MatchesName(genus, x.Genus.Name, x.Genus.DisplayName))
+			.Select(x => x.MinScanDistanceM)
+			.Distinct()
+			.Take(2)
+			.ToList();
+
+		// A genus alone is enough only when all of its species share a distance.
+		return distances.Count == 1 ? $"{distances[0]:N0} m" : Constants.EmptyValue;
 	}
 }
