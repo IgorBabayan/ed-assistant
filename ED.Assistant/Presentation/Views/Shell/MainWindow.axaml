@@ -73,12 +73,14 @@
 						</Button>
 
 						<Button Classes="window-button"
-								Click="OnMinimizeClick">
+								Click="OnMinimizeClick"
+								IsVisible="{Binding IsNotHyprland}">
 							<materialIcons:MaterialIcon Kind="WindowMinimize"/>
 						</Button>
 
 						<Button Classes="window-button"
-								Click="OnMaximizeClick">
+								Click="OnMaximizeClick"
+								IsVisible="{Binding IsNotHyprland}">
 							<materialIcons:MaterialIcon Kind="WindowMaximize"/>
 						</Button>
 

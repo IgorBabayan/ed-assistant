@@ -62,6 +62,8 @@ public partial class MainWindowViewModel : LoadableViewModel
 	public bool IsMaterialActive => NavigationStore.CurrentViewModel is MaterialViewModel;
 	public bool IsShipLockerActive => NavigationStore.CurrentViewModel is ShipLockerViewModel;
 
+	public bool IsNotHyprland => !DesktopEnvironmentHelper.IsHyprland();
+
 	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
 		INavigationStore navigationStore, IJournalStateStore stateStore, IMemoryCache memoryCache,
 		INavigationService navigationService, IJournalLoaderService journalLoader,
