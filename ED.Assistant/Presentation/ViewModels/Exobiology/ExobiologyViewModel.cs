@@ -1,26 +1,24 @@
 ﻿using ED.Assistant.Data;
+using ED.Assistant.Data.Repository;
 using ED.Assistant.Domain.Types;
+using ED.Assistant.Extensions;
 using ED.Assistant.Helpers;
 using ED.Assistant.Presentation.ViewModels.System;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.Assistant.Presentation.ViewModels.Exobiology;
 
 public sealed class ExobiologyViewModel : LoadableViewModel
 {
-	private readonly IServiceScopeFactory _scopeFactory;
-	private List<BioSpecies>? _species;
+	private readonly IRepository<BioSpecies> _speciesRepository;
 
 	public ObservableCollection<OrganicPlanetViewModel> Planets { get; } = [];
 
 	protected override bool ActivateOnNavigation => true;
 
 	public ExobiologyViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
-		IMemoryCache memoryCache, IServiceScopeFactory scopeFactory)
-		: base(journalLoader, stateStore, memoryCache)
-	{
-		_scopeFactory = scopeFactory;
-	}
+		IMemoryCache memoryCache, IRepository<BioSpecies> speciesRepository)
+		: base(journalLoader, stateStore, memoryCache) =>
+		_speciesRepository = speciesRepository;
 
 	protected override async Task UpdateFromStateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
@@ -29,17 +27,10 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 		if (systemAddress is null)
 			return;
 
-		if (_species is null)
-		{
-			using var scope = _scopeFactory.CreateScope();
-			var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-			_species = await db.BioSpecies
-				.AsNoTracking()
-				.Include(x => x.Genus)
-				.ToListAsync(cancellationToken);
-		}
-
-		var species = _species;
+		var species = await _speciesRepository
+			.AsNoTracking()
+			.Include(x => x.Genus)
+			.ToListAsync(cancellationToken);
 
 		var planets = state.FSSSignals.Values
 			.Where(x =>
@@ -75,10 +66,8 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 						? 3
 						: Math.Min(events.Count(o => o.ScanType == ScanType.Sample), 2);
 
-					// The database stores names, not journal localisation tokens such as SpeciesId.
-					var matchedSpecies = species.FirstOrDefault(x =>
-						MatchesName(latest.Species, x.Name, x.DisplayName));
-
+					var matchedSpecies = species.FirstOrDefault(x => MatchesName(latest.Species, x.Name,
+						x.DisplayName));
 					planet.Signals.Add(new OrganicSignalViewModel
 					{
 						Type = latest.Genus,
@@ -87,14 +76,15 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 						CollectedCount = collectedCount,
 						BaseValue = matchedSpecies is null
 							? Constants.EmptyValue
-							: $"{matchedSpecies.BaseValue:N0}",
+							: matchedSpecies.BaseValue.ToMillions(),
 						Distance = matchedSpecies is null
 							? GetGenusDistance(species, latest.Genus)
 							: $"{matchedSpecies.MinScanDistanceM:N0} m"
 					});
 				}
 
-				var sampledGenusIds = sampledGroups.Select(g => g.Key.GenusId).ToHashSet();
+				var sampledGenusIds = sampledGroups.Select(g =>
+					g.Key.GenusId).ToHashSet();
 				foreach (var genus in saaSignal?.Genuses ?? [])
 				{
 					if (sampledGenusIds.Contains(genus.GenusId))
@@ -147,7 +137,6 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 			.Take(2)
 			.ToList();
 
-		// A genus alone is enough only when all of its species share a distance.
 		return distances.Count == 1 ? $"{distances[0]:N0} m" : Constants.EmptyValue;
 	}
 }

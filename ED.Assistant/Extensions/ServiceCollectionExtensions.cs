@@ -3,6 +3,7 @@ using ED.Assistant.Application.Navigation;
 using ED.Assistant.Application.Path;
 using ED.Assistant.Application.Settings;
 using ED.Assistant.Application.Storage;
+using ED.Assistant.Data.Repository;
 using ED.Assistant.Data.Seed;
 using ED.Assistant.Data.Storage;
 using ED.Assistant.Domain.System;
@@ -84,6 +85,14 @@ static class ServiceCollectionExtensions
 	{
 		services.AddTransient<ConfirmDialogWindow>()
 			.AddTransient<SettingsWindow>();
+		return services;
+	}
+
+	public static IServiceCollection RegisterDbServices(this IServiceCollection services)
+	{
+		services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+		services.AddScoped<IUnitOfWork, UnitOfWork>();
+		
 		return services;
 	}
 }

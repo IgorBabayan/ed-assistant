@@ -27,7 +27,8 @@ public partial class App : Avalonia.Application
 			{
 				var dbPathProvider = provider.GetRequiredService<IDbPathProvider>();
 				options.UseSqlite($"Data Source={dbPathProvider.GetDatabasePath()}");
-			});
+			})
+			.RegisterDbServices();
 
 		// Build provider and keep a reference to it for later use.
 		var provider = services.BuildServiceProvider();
