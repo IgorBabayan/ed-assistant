@@ -22,9 +22,35 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 		: base(journalLoader, stateStore, memoryCache) {}
 		/*=> _speciesRepository = speciesRepository;*/
 
-	protected override async Task UpdateFromStateAsync(JournalState state,
+	protected override Task UpdateFromStateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
 	{
+		cancellationToken.ThrowIfCancellationRequested();
+
+		Planets.Clear();
+
+		var systemAddress = state.FSDJump?.SystemAddress;
+		if (systemAddress is null)
+			return Task.CompletedTask;
+
+		var scans = state.Scans.Values
+			.Where(scan =>
+				scan.SystemAddress == systemAddress &&
+				!string.IsNullOrWhiteSpace(scan.PlanetClass))
+			.OrderBy(scan => scan.BodyName)
+			.ToList();
+
+		foreach (var scan in scans)
+		{
+			Planets.Add(new OrganicPlanetViewModel
+			{
+				BodyId = scan.BodyId,
+				BodyName = scan.BodyName,
+			});
+		}
+
+		return Task.CompletedTask;
+		
 		/*var systemAddress = state.FSDJump?.SystemAddress;
 		if (systemAddress is null)
 			return;
