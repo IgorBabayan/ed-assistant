@@ -30,8 +30,15 @@ sealed class BioDataSeeder : IBioDataSeeder
 		await _db.Database.MigrateAsync(cancellationToken);
 		await using var transaction = await _db.Database.BeginTransactionAsync(cancellationToken);
 		var version = await _db.BioCatalogVersions.FindAsync([CatalogId], cancellationToken);
+		var expectedRuleCount = catalog.Species.Sum(x => x.Rules.Count);
 		if (version?.ContentHash == hash)
-			return;
+		{
+			var importedRuleCount = await _db.BioSpawnRules
+				.CountAsync(x => x.SourceFile != null, cancellationToken);
+
+			if (importedRuleCount == expectedRuleCount)
+				return;
+		}
 
 		// Catalog IDs are references within the JSON. Resolve to existing database rows,
 		// preserving installed IDs, including databases with different insertion orders.
