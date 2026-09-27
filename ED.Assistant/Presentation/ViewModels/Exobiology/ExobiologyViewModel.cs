@@ -252,14 +252,14 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 
 		var required = items.Where(x => x.Mode == ConditionMode.Required).ToList();
 		if (required.Count > 0 &&
-			!required.Any(x => SameValue(bodyType, x.BodyType.Name)))
+			!required.Any(x => SameBodyType(bodyType, x.BodyType.Name)))
 		{
 			return false;
 		}
 
 		if (items.Any(x =>
 				x.Mode == ConditionMode.Excluded &&
-				SameValue(bodyType, x.BodyType.Name)))
+				SameBodyType(bodyType, x.BodyType.Name)))
 		{
 			return false;
 		}
@@ -280,14 +280,14 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 
 		var required = items.Where(x => x.Mode == ConditionMode.Required).ToList();
 		if (required.Count > 0 &&
-			!required.Any(x => SameValue(atmosphere, x.Atmosphere.Name)))
+			!required.Any(x => SameAtmosphere(atmosphere, x.Atmosphere.Name)))
 		{
 			return false;
 		}
 
 		if (items.Any(x =>
 				x.Mode == ConditionMode.Excluded &&
-				SameValue(atmosphere, x.Atmosphere.Name)))
+				SameAtmosphere(atmosphere, x.Atmosphere.Name)))
 		{
 			return false;
 		}
@@ -312,7 +312,7 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 		return items.All(requirement =>
 		{
 			var component = components.FirstOrDefault(x =>
-				SameValue(x.Name, requirement.Atmosphere.Name));
+				SameAtmosphere(x.Name, requirement.Atmosphere.Name));
 			return component is not null && component.Percent >= requirement.MinPercent;
 		});
 	}
@@ -409,7 +409,7 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 			return true;
 
 		return items.Any(requirement =>
-			knownBodyTypes.Any(bodyType => SameValue(bodyType, requirement.BodyType.Name)));
+			knownBodyTypes.Any(bodyType => SameBodyType(bodyType, requirement.BodyType.Name)));
 	}
 
 	private static bool MatchesStars(IEnumerable<BioSpawnRuleStar> requirements, ScanEvent body,
@@ -494,6 +494,34 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 
 	private static bool SameValue(string left, string right) =>
 		string.Equals(left.Trim(), right.Trim(), StringComparison.OrdinalIgnoreCase);
+
+	private static bool SameBodyType(string left, string right) =>
+		NormalizeBodyType(left) == NormalizeBodyType(right);
+
+	private static bool SameAtmosphere(string left, string right) =>
+		NormalizeAtmosphere(left) == NormalizeAtmosphere(right);
+
+	private static string NormalizeBodyType(string value) => NormalizeLookup(value) switch
+	{
+		"rocky" => "rockybody",
+		"icy" => "icybody",
+		"rockyice" => "rockyicebody",
+		"hcs" => "highmetalcontentbody",
+		"highmetalcontent" => "highmetalcontentbody",
+		var normalized => normalized
+	};
+
+	private static string NormalizeAtmosphere(string value) => NormalizeLookup(value) switch
+	{
+		"sulfurdioxide" => "sulphurdioxide",
+		"sulfurdioxiderich" => "sulphurdioxiderich",
+		var normalized => normalized
+	};
+
+	private static string NormalizeLookup(string value) =>
+		new(value.Where(char.IsLetterOrDigit)
+			.Select(char.ToLowerInvariant)
+			.ToArray());
 
 	private static void AddPrediction(OrganicPlanetViewModel planet, BioSpecies species) =>
 		planet.Signals.Add(new OrganicSignalViewModel
