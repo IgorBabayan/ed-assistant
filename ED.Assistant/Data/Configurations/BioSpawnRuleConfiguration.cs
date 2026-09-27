@@ -1,4 +1,4 @@
-﻿namespace ED.Assistant.Data.Configurations;
+namespace ED.Assistant.Data.Configurations;
 
 sealed class BioSpawnRuleConfiguration : IEntityTypeConfiguration<BioSpawnRule>
 {
@@ -12,11 +12,11 @@ sealed class BioSpawnRuleConfiguration : IEntityTypeConfiguration<BioSpawnRule>
 		builder.Property(x => x.VolcanismRaw).IsRequired();
 
 		builder.HasOne(x => x.Species)
-			.WithOne(x => x.SpawnRule)
-			.HasForeignKey<BioSpawnRule>(x => x.SpeciesId)
+			.WithMany(x => x.SpawnRules)
+			.HasForeignKey(x => x.SpeciesId)
 			.OnDelete(DeleteBehavior.Cascade);
 
-		builder.HasIndex(x => x.SpeciesId)
-			.IsUnique();
+		builder.HasIndex(x => x.SpeciesId);
+		builder.Property(x => x.VolcanismMode).HasConversion<string>();
 	}
 }
