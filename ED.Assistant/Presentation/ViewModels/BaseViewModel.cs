@@ -33,6 +33,8 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 	private readonly IJournalStateStore _stateStore;
 	private readonly IMemoryCache _memoryCache;
 
+	private readonly object _activationLock = new();
+	private JournalState? _pendingState;
 	private bool _isActivated;
 
 	[ObservableProperty]
@@ -61,17 +63,47 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 	protected async Task ActivateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
 	{
-		if (IsActivating)
-			return;
+		lock (_activationLock)
+		{
+			if (IsActivating)
+			{
+				_pendingState = state;
+				return;
+			}
+
+			IsActivating = true;
+		}
+
+		var currentState = state;
 
 		try
 		{
-			IsActivating = true;
-			await UpdateFromStateAsync(state, cancellationToken);
+			while (true)
+			{
+				await UpdateFromStateAsync(currentState, cancellationToken);
+
+				lock (_activationLock)
+				{
+					if (_pendingState is null)
+					{
+						IsActivating = false;
+						return;
+					}
+
+					currentState = _pendingState;
+					_pendingState = null;
+				}
+			}
 		}
-		finally
+		catch
 		{
-			IsActivating = false;
+			lock (_activationLock)
+			{
+				_pendingState = null;
+				IsActivating = false;
+			}
+
+			throw;
 		}
 	}
 
