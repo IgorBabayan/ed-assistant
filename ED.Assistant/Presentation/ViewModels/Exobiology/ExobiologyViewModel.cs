@@ -9,6 +9,9 @@ namespace ED.Assistant.Presentation.ViewModels.Exobiology;
 
 public sealed class ExobiologyViewModel : LoadableViewModel
 {
+	private const double GravityDivisor = 9.797759;
+	private const double PressureDivisor = 101231.656250;
+
 	private readonly IRepository<BioSpecies> _speciesRepository;
 
 	public ObservableCollection<OrganicPlanetViewModel> Planets { get; } = [];
@@ -29,8 +32,29 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 
 		var species = await _speciesRepository
 			.AsNoTracking()
+			.AsSplitQuery()
 			.Include(x => x.Genus)
+			.Include(x => x.SpawnRules)
+				.ThenInclude(x => x.BodyTypes)
+				.ThenInclude(x => x.BodyType)
+			.Include(x => x.SpawnRules)
+				.ThenInclude(x => x.SystemBodyTypes)
+				.ThenInclude(x => x.BodyType)
+			.Include(x => x.SpawnRules)
+				.ThenInclude(x => x.Atmospheres)
+				.ThenInclude(x => x.Atmosphere)
+			.Include(x => x.SpawnRules)
+				.ThenInclude(x => x.AtmosphereComponents)
+				.ThenInclude(x => x.Atmosphere)
+			.Include(x => x.SpawnRules)
+				.ThenInclude(x => x.VolcanismPatterns)
+			.Include(x => x.SpawnRules)
+				.ThenInclude(x => x.Stars)
 			.ToListAsync(cancellationToken);
+
+		var systemScans = state.Scans.Values
+			.Where(x => x.SystemAddress == systemAddress)
+			.ToList();
 
 		var planets = state.FSSSignals.Values
 			.Where(x =>
@@ -46,6 +70,9 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 				};
 
 				var saaSignal = state.SAASignals.GetValueOrDefault(fssSignal.BodyId);
+				var saaGenuses = saaSignal?.Genuses?.ToList() ?? [];
+				var bodyScan = state.Scans.GetValueOrDefault(fssSignal.BodyId);
+
 				var sampledGroups = state.Organics
 					.Where(o =>
 						o.SystemAddress == fssSignal.SystemAddress &&
@@ -66,8 +93,7 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 						? 3
 						: Math.Min(events.Count(o => o.ScanType == ScanType.Sample), 2);
 
-					var matchedSpecies = species.FirstOrDefault(x => MatchesName(latest.Species, x.Name,
-						x.DisplayName));
+					var matchedSpecies = species.FirstOrDefault(x => MatchesSpecies(latest, x));
 					planet.Signals.Add(new OrganicSignalViewModel
 					{
 						Type = latest.Genus,
@@ -83,36 +109,52 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 					});
 				}
 
-				var sampledGenusIds = sampledGroups.Select(g =>
-					g.Key.GenusId).ToHashSet();
-				foreach (var genus in saaSignal?.Genuses ?? [])
-				{
-					if (sampledGenusIds.Contains(genus.GenusId))
-						continue;
+				var sampledGenusIds = sampledGroups
+					.Select(x => x.Key.GenusId)
+					.Where(x => !string.IsNullOrWhiteSpace(x))
+					.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-					planet.Signals.Add(new OrganicSignalViewModel
+				var predictions = bodyScan is null
+					? []
+					: species
+						.Where(x => x.SpawnRules.Any(rule => MatchesRule(rule, bodyScan, systemScans)))
+						.OrderBy(x => GetGenusName(x.Genus))
+						.ThenBy(GetSpeciesName)
+						.ToList();
+
+				if (saaGenuses.Count > 0)
+				{
+					foreach (var genus in saaGenuses)
 					{
-						Type = genus.Genus,
-						Name = Constants.EmptyValue,
-						Variant = Constants.EmptyValue,
-						CollectedCount = 0,
-						BaseValue = Constants.EmptyValue,
-						Distance = GetGenusDistance(species, genus.Genus)
-					});
+						if (sampledGenusIds.Contains(genus.GenusId))
+							continue;
+
+						var genusPredictions = predictions
+							.Where(x => MatchesGenus(genus, x.Genus))
+							.ToList();
+
+						if (genusPredictions.Count == 0)
+						{
+							AddPlaceholder(planet, genus.Genus, GetGenusDistance(species, genus.Genus));
+							continue;
+						}
+
+						foreach (var prediction in genusPredictions)
+							AddPrediction(planet, prediction);
+					}
+				}
+				else
+				{
+					foreach (var prediction in predictions.Where(x =>
+							string.IsNullOrWhiteSpace(x.Genus.JournalName) ||
+							!sampledGenusIds.Contains(x.Genus.JournalName)))
+					{
+						AddPrediction(planet, prediction);
+					}
 				}
 
 				if (planet.Signals.Count == 0)
-				{
-					planet.Signals.Add(new OrganicSignalViewModel
-					{
-						Type = "Biological",
-						Name = Constants.EmptyValue,
-						Variant = Constants.EmptyValue,
-						CollectedCount = 0,
-						BaseValue = Constants.EmptyValue,
-						Distance = Constants.EmptyValue
-					});
-				}
+					AddPlaceholder(planet, "Biological", Constants.EmptyValue);
 
 				return planet;
 			}).ToList();
@@ -122,6 +164,314 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 		foreach (var planet in planets)
 			Planets.Add(planet);
 	}
+
+	private static bool MatchesRule(BioSpawnRule rule, ScanEvent body, IReadOnlyList<ScanEvent> systemScans)
+	{
+		if (!MatchesBodyTypes(rule.BodyTypes, body.PlanetClass))
+			return false;
+
+		if (!MatchesAtmospheres(rule.Atmospheres, body))
+			return false;
+
+		if (!MatchesAtmosphereComponents(rule.AtmosphereComponents, body))
+			return false;
+
+		if (!MatchesNumericConditions(rule, body))
+			return false;
+
+		if (!MatchesVolcanism(rule, body.Volcanism))
+			return false;
+
+		if (!MatchesSystemBodyTypes(rule.SystemBodyTypes, systemScans))
+			return false;
+
+		if (!MatchesStars(rule.Stars, body, systemScans))
+			return false;
+
+		// Nebula rules are intentionally left as unknown here. The journal state has
+		// system coordinates, but the app does not currently carry the nebula catalog
+		// needed to evaluate those rules without producing false negatives.
+		return true;
+	}
+
+	private static bool MatchesBodyTypes(IEnumerable<BioSpawnRuleBodyType> conditions, string bodyType)
+	{
+		var items = conditions.ToList();
+		if (items.Count == 0 || string.IsNullOrWhiteSpace(bodyType))
+			return true;
+
+		var required = items.Where(x => x.Mode == ConditionMode.Required).ToList();
+		if (required.Count > 0 &&
+			!required.Any(x => SameValue(bodyType, x.BodyType.Name)))
+		{
+			return false;
+		}
+
+		if (items.Any(x =>
+				x.Mode == ConditionMode.Excluded &&
+				SameValue(bodyType, x.BodyType.Name)))
+		{
+			return false;
+		}
+
+		return !items.Any(x => x.Mode == ConditionMode.Any) ||
+			!string.IsNullOrWhiteSpace(bodyType);
+	}
+
+	private static bool MatchesAtmospheres(IEnumerable<BioSpawnRuleAtmosphere> conditions, ScanEvent body)
+	{
+		var items = conditions.ToList();
+		if (items.Count == 0)
+			return true;
+
+		var atmosphere = string.IsNullOrWhiteSpace(body.AtmosphereType)
+			? "None"
+			: body.AtmosphereType.Trim();
+
+		var required = items.Where(x => x.Mode == ConditionMode.Required).ToList();
+		if (required.Count > 0 &&
+			!required.Any(x => SameValue(atmosphere, x.Atmosphere.Name)))
+		{
+			return false;
+		}
+
+		if (items.Any(x =>
+				x.Mode == ConditionMode.Excluded &&
+				SameValue(atmosphere, x.Atmosphere.Name)))
+		{
+			return false;
+		}
+
+		if (items.Any(x => x.Mode == ConditionMode.Any) &&
+			SameValue(atmosphere, "None"))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	private static bool MatchesAtmosphereComponents(
+		IEnumerable<BioSpawnRuleAtmosphereComponent> requirements, ScanEvent body)
+	{
+		var items = requirements.ToList();
+		if (items.Count == 0 || body.AtmosphereCompositions is null)
+			return true;
+
+		var components = body.AtmosphereCompositions.ToList();
+		return items.All(requirement =>
+		{
+			var component = components.FirstOrDefault(x =>
+				SameValue(x.Name, requirement.Atmosphere.Name));
+			return component is not null && component.Percent >= requirement.MinPercent;
+		});
+	}
+
+	private static bool MatchesNumericConditions(BioSpawnRule rule, ScanEvent body)
+	{
+		if (body.SurfaceTemperature > 0)
+		{
+			if (rule.MinTemperatureK is { } minTemperature &&
+				body.SurfaceTemperature < minTemperature)
+				return false;
+
+			if (rule.MaxTemperatureK is { } maxTemperature &&
+				body.SurfaceTemperature > maxTemperature)
+				return false;
+		}
+
+		if (body.SurfaceGravity > 0)
+		{
+			var gravity = body.SurfaceGravity / GravityDivisor;
+			if (rule.MinGravityG is { } minGravity && gravity < minGravity)
+				return false;
+
+			if (rule.MaxGravityG is { } maxGravity && gravity > maxGravity)
+				return false;
+		}
+
+		if (body.SurfacePressure > 0)
+		{
+			var pressure = body.SurfacePressure / PressureDivisor;
+			if (rule.MinPressureAtmospheres is { } minPressure && pressure < minPressure)
+				return false;
+
+			if (rule.MaxPressureAtmospheres is { } maxPressure &&
+				(rule.MaxPressureExclusive ? pressure >= maxPressure : pressure > maxPressure))
+			{
+				return false;
+			}
+		}
+
+		if (body.OrbitalPeriod > 0 &&
+			rule.MaxOrbitalPeriodSeconds is { } maxOrbitalPeriod &&
+			(rule.MaxOrbitalPeriodExclusive
+				? body.OrbitalPeriod >= maxOrbitalPeriod
+				: body.OrbitalPeriod > maxOrbitalPeriod))
+		{
+			return false;
+		}
+
+		if (body.DistanceFromArrivalLS > 0 &&
+			rule.MinArrivalDistanceLs is { } minArrivalDistance &&
+			body.DistanceFromArrivalLS < minArrivalDistance)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	private static bool MatchesVolcanism(BioSpawnRule rule, string volcanism)
+	{
+		volcanism ??= string.Empty;
+
+		return rule.VolcanismMode switch
+		{
+			VolcanismMode.Unrestricted => true,
+			VolcanismMode.None => string.IsNullOrWhiteSpace(volcanism),
+			VolcanismMode.Any => !string.IsNullOrWhiteSpace(volcanism),
+			VolcanismMode.Patterns => rule.VolcanismPatterns.Any(pattern =>
+				pattern.Match switch
+				{
+					VolcanismMatch.Exact => SameValue(volcanism, pattern.Pattern),
+					VolcanismMatch.Contains => volcanism.Contains(
+						pattern.Pattern, StringComparison.OrdinalIgnoreCase),
+					_ => false
+				}),
+			_ => true
+		};
+	}
+
+	private static bool MatchesSystemBodyTypes(IEnumerable<BioSpawnRuleSystemBodyType> requirements,
+		IReadOnlyList<ScanEvent> systemScans)
+	{
+		var items = requirements.ToList();
+		if (items.Count == 0)
+			return true;
+
+		var knownBodyTypes = systemScans
+			.Select(x => x.PlanetClass)
+			.Where(x => !string.IsNullOrWhiteSpace(x))
+			.ToList();
+
+		if (knownBodyTypes.Count == 0)
+			return true;
+
+		return items.Any(requirement =>
+			knownBodyTypes.Any(bodyType => SameValue(bodyType, requirement.BodyType.Name)));
+	}
+
+	private static bool MatchesStars(IEnumerable<BioSpawnRuleStar> requirements, ScanEvent body,
+		IReadOnlyList<ScanEvent> systemScans)
+	{
+		var items = requirements.ToList();
+		if (items.Count == 0)
+			return true;
+
+		var systemStars = systemScans
+			.Where(x => !string.IsNullOrWhiteSpace(x.StarType))
+			.ToList();
+
+		var systemRequirements = items.Where(x => x.Scope == StarScope.System).ToList();
+		if (systemRequirements.Count > 0 &&
+			systemStars.Count > 0 &&
+			!systemStars.Any(star => systemRequirements.Any(requirement =>
+				MatchesStar(requirement, star))))
+		{
+			return false;
+		}
+
+		var parentRequirements = items.Where(x => x.Scope == StarScope.Parent).ToList();
+		if (parentRequirements.Count == 0)
+			return true;
+
+		var parentIds = body.Parents?
+			.Where(x => string.Equals(x.Type, "Star", StringComparison.OrdinalIgnoreCase))
+			.Select(x => x.BodyId)
+			.ToHashSet() ?? [];
+
+		var mainStar = systemStars.OrderBy(x => x.BodyId).FirstOrDefault();
+		var parentStars = systemStars
+			.Where(x => parentIds.Contains(x.BodyId) ||
+				(mainStar is not null && x.BodyId == mainStar.BodyId))
+			.ToList();
+
+		return parentStars.Count == 0 ||
+			parentStars.Any(star => parentRequirements.Any(requirement =>
+				MatchesStar(requirement, star)));
+	}
+
+	private static bool MatchesStar(BioSpawnRuleStar requirement, ScanEvent star)
+	{
+		if (!MatchesStarType(requirement.StarType, star.StarType))
+			return false;
+
+		if (string.IsNullOrWhiteSpace(requirement.Luminosity) ||
+			string.IsNullOrWhiteSpace(star.Luminosity))
+		{
+			return true;
+		}
+
+		var suffixes = new[] { string.Empty, "a", "b", "ab", "z" };
+		return suffixes.Any(suffix =>
+			string.Equals(requirement.Luminosity + suffix, star.Luminosity,
+				StringComparison.OrdinalIgnoreCase));
+	}
+
+	private static bool MatchesStarType(string query, string starType) =>
+		query switch
+		{
+			"A" => starType is "A" or "A_BlueWhiteSuperGiant",
+			"B" => starType is "B" or "B_BlueWhiteSuperGiant",
+			"F" => starType is "F" or "F_WhiteSuperGiant",
+			"G" => starType is "G" or "G_WhiteSuperGiant",
+			"K" => starType is "K" or "K_OrangeGiant",
+			"M" => starType is "M" or "M_RedGiant" or "M_RedSuperGiant",
+			"D" or "C" or "W" => starType.StartsWith(query, StringComparison.OrdinalIgnoreCase),
+			_ => string.Equals(query, starType, StringComparison.OrdinalIgnoreCase)
+		};
+
+	private static bool MatchesSpecies(ScanOrganicEvent organic, BioSpecies species) =>
+		(!string.IsNullOrWhiteSpace(organic.SpeciesId) &&
+		 string.Equals(organic.SpeciesId, species.JournalName, StringComparison.OrdinalIgnoreCase)) ||
+		MatchesName(organic.Species, species.Name, species.DisplayName);
+
+	private static bool MatchesGenus(GenusItem genus, BioGenus databaseGenus) =>
+		(!string.IsNullOrWhiteSpace(genus.GenusId) &&
+		 string.Equals(genus.GenusId, databaseGenus.JournalName, StringComparison.OrdinalIgnoreCase)) ||
+		MatchesName(genus.Genus, databaseGenus.Name, databaseGenus.DisplayName);
+
+	private static bool SameValue(string left, string right) =>
+		string.Equals(left.Trim(), right.Trim(), StringComparison.OrdinalIgnoreCase);
+
+	private static void AddPrediction(OrganicPlanetViewModel planet, BioSpecies species) =>
+		planet.Signals.Add(new OrganicSignalViewModel
+		{
+			Type = GetGenusName(species.Genus),
+			Name = GetSpeciesName(species),
+			Variant = Constants.EmptyValue,
+			CollectedCount = 0,
+			BaseValue = species.BaseValue.ToMillions(),
+			Distance = FormatDistance(species.MinScanDistanceM)
+		});
+
+	private static void AddPlaceholder(OrganicPlanetViewModel planet, string type, string distance) =>
+		planet.Signals.Add(new OrganicSignalViewModel
+		{
+			Type = type,
+			Name = Constants.EmptyValue,
+			Variant = Constants.EmptyValue,
+			CollectedCount = 0,
+			BaseValue = Constants.EmptyValue,
+			Distance = distance
+		});
+
+	private static string GetGenusName(BioGenus genus) =>
+		string.IsNullOrWhiteSpace(genus.DisplayName) ? genus.Name : genus.DisplayName;
+
+	private static string GetSpeciesName(BioSpecies species) =>
+		string.IsNullOrWhiteSpace(species.DisplayName) ? species.Name : species.DisplayName;
 
 	private static string FormatDistance(int? distance) =>
 		distance is > 0 ? $"{distance:N0} m" : Constants.EmptyValue;
