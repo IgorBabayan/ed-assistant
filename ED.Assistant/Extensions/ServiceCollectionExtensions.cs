@@ -75,7 +75,6 @@ static class ServiceCollectionExtensions
 			.AddSingleton<INavigationService, NavigationService>()
 			.AddSingleton<IJournalStateApplier, JournalStateApplier>()
 			.AddSingleton<IJournalWatchService, JournalWatchService>()
-			.AddSingleton<IBioDataSeeder, BioDataSeeder>()
 			.AddSingleton<IDbPathProvider, DbPathProvider>()
 			.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
 		return services;

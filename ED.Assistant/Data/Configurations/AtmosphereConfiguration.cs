@@ -1,17 +1,15 @@
-﻿namespace ED.Assistant.Data.Configurations;
+namespace ED.Assistant.Data.Configurations;
 
-sealed class AtmosphereConfiguration : IEntityTypeConfiguration<Atmosphere>
+class AtmosphereConfiguration : IEntityTypeConfiguration<Atmosphere>
 {
-	public void Configure(EntityTypeBuilder<Atmosphere> builder)
-	{
-		builder.ToTable("Atmospheres");
+    public void Configure(EntityTypeBuilder<Atmosphere> builder)
+    {
+        builder.ToTable(nameof(Atmosphere));
+        
+        builder.HasKey(x => x.Id);
 
-		builder.HasKey(x => x.Id);
-
-		builder.Property(x => x.Name)
-			.IsRequired();
-
-		builder.HasIndex(x => x.Name)
-			.IsUnique();
-	}
+        builder.Property(x => x.Id)
+            .ValueGeneratedNever();
+        builder.Property(a => a.Name).IsRequired();
+    }
 }

@@ -61,6 +61,7 @@
 									 Text="{Binding LogFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
 							<Button Grid.Column="2"
+							        IsVisible="{Binding CanUseFolderPicker}"
 									Command="{Binding OpenFolderCommand}"
 									Classes="app-button">
 								<materialIcons:MaterialIcon Kind="FolderOpen"/>

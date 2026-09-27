@@ -8,24 +8,24 @@ namespace ED.Assistant.Presentation.ViewModels.Exobiology;
 
 public sealed class ExobiologyViewModel : LoadableViewModel
 {
-	private const double GravityDivisor = 9.797759;
+	/*private const double GravityDivisor = 9.797759;
 	private const double PressureDivisor = 101231.656250;
 
-	private readonly IRepository<BioSpecies> _speciesRepository;
+	private readonly IRepository<BioSpecies> _speciesRepository;*/
 
 	public ObservableCollection<OrganicPlanetViewModel> Planets { get; } = [];
 
 	protected override bool ActivateOnNavigation => true;
 
 	public ExobiologyViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
-		IMemoryCache memoryCache, IRepository<BioSpecies> speciesRepository)
-		: base(journalLoader, stateStore, memoryCache) =>
-		_speciesRepository = speciesRepository;
+		IMemoryCache memoryCache/*, IRepository<BioSpecies> speciesRepository*/)
+		: base(journalLoader, stateStore, memoryCache) {}
+		/*=> _speciesRepository = speciesRepository;*/
 
 	protected override async Task UpdateFromStateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
 	{
-		var systemAddress = state.FSDJump?.SystemAddress;
+		/*var systemAddress = state.FSDJump?.SystemAddress;
 		if (systemAddress is null)
 			return;
 
@@ -175,10 +175,10 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 		Planets.Clear();
 
 		foreach (var planet in planets)
-			Planets.Add(planet);
+			Planets.Add(planet);*/
 	}
 
-	private static bool MatchesRuleWithPartialData(BioSpawnRule rule,
+	/*private static bool MatchesRuleWithPartialData(BioSpawnRule rule,
 		IReadOnlyList<ScanEvent> systemScans)
 	{
 		// FSSBodySignals may arrive before we have a Scan event for the body.
@@ -569,5 +569,5 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 			.ToList();
 
 		return distances.Count == 1 ? FormatDistance(distances[0]) : Constants.EmptyValue;
-	}
+	}*/
 }

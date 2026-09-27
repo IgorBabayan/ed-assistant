@@ -5,6 +5,7 @@ namespace ED.Assistant.Data.Seed;
 
 internal sealed class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
+	
 	public AppDbContext CreateDbContext(string[] args)
 	{
 		var dbPathProvider = new DbPathProvider();

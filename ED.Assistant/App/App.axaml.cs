@@ -1,7 +1,6 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ED.Assistant.Data;
-using ED.Assistant.Data.Seed;
 using ED.Assistant.Data.Storage;
 using ED.Assistant.Extensions;
 using ED.Assistant.Presentation.ViewModels.Shell;
@@ -33,14 +32,14 @@ public partial class App : Avalonia.Application
 		// Build provider and keep a reference to it for later use.
 		var provider = services.BuildServiceProvider();
 
-		using (var scope = provider.CreateScope())
-		{
-			var seeder = scope.ServiceProvider.GetRequiredService<IBioDataSeeder>();
-			await seeder.SeedAsync();
-		}
-
 		if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+	        using (var scope = provider.CreateScope())
+	        {
+		        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+		        await dbContext.Database.MigrateAsync();
+	        }
+
 			// Resolve the MainWindowViewModel from DI and assign as DataContext
 			desktop.MainWindow = new MainWindow
             {

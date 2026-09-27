@@ -16,6 +16,8 @@ public partial class SettingsViewModel : BaseViewModel
 	[ObservableProperty]
 	public partial bool EnableAutoWatch { get; set; }
 
+	public bool CanUseFolderPicker => !DesktopEnvironmentHelper.IsHyprland();
+
 	public event Action<bool?>? CloseRequested;
 
 	public SettingsViewModel(IPathFinder pathFinder, IFolderPickerService folderPickerService,

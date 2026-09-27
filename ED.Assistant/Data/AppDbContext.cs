@@ -1,17 +1,27 @@
+using ED.Assistant.Data.Seed;
+using ED.Assistant.Data.Seed.ExoBiology;
+
 namespace ED.Assistant.Data;
 
 public sealed class AppDbContext : DbContext
 {
-	public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+	public AppDbContext(DbContextOptions<AppDbContext> options)
+		: base(options) { }
 
-	public DbSet<BioGenus> BioGenera => Set<BioGenus>();
-	public DbSet<BioSpecies> BioSpecies => Set<BioSpecies>();
-	public DbSet<BioSpawnRule> BioSpawnRules => Set<BioSpawnRule>();
+	public DbSet<BodyClass> BodyClasses => Set<BodyClass>();
+	public DbSet<Genus> Genuses => Set<Genus>();
+	public DbSet<Rule> Rules => Set<Rule>();
+	public DbSet<Volcanism> Volcanisms => Set<Volcanism>();
 	public DbSet<Atmosphere> Atmospheres => Set<Atmosphere>();
-	public DbSet<BodyType> BodyTypes => Set<BodyType>();
-	public DbSet<BioCatalogVersion> BioCatalogVersions => Set<BioCatalogVersion>();
-	public DbSet<VariantDeterminant> VariantDeterminants => Set<VariantDeterminant>();
-	public DbSet<BioSpawnRuleBodyType> BioSpawnRuleBodyTypes => Set<BioSpawnRuleBodyType>();
+	public DbSet<AtmosphereComponentRule> AtmosphereComponentRules => Set<AtmosphereComponentRule>();
+	public DbSet<RuleStar> RuleStars => Set<RuleStar>();
+	public DbSet<StarClass> StarClasses => Set<StarClass>();
+	public DbSet<ParentBodyClass> ParentBodyClasses => Set<ParentBodyClass>();
 
-	protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
+		ExoBilogyDataSeed.Seed(modelBuilder);
+	}
 }
