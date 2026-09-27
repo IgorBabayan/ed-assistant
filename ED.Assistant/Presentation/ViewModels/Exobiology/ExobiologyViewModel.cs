@@ -114,13 +114,14 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 					.Where(x => !string.IsNullOrWhiteSpace(x))
 					.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-				var predictions = bodyScan is null
-					? []
-					: species
-						.Where(x => x.SpawnRules.Any(rule => MatchesRule(rule, bodyScan, systemScans)))
-						.OrderBy(x => GetGenusName(x.Genus))
-						.ThenBy(GetSpeciesName)
-						.ToList();
+				var predictions = species
+					.Where(x => x.SpawnRules.Any(rule =>
+						bodyScan is null
+							? MatchesRuleWithPartialData(rule, systemScans)
+							: MatchesRule(rule, bodyScan, systemScans)))
+					.OrderBy(x => GetGenusName(x.Genus))
+					.ThenBy(GetSpeciesName)
+					.ToList();
 
 				if (saaGenuses.Count > 0)
 				{
@@ -163,6 +164,43 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 
 		foreach (var planet in planets)
 			Planets.Add(planet);
+	}
+
+	private static bool MatchesRuleWithPartialData(BioSpawnRule rule,
+		IReadOnlyList<ScanEvent> systemScans)
+	{
+		// FSSBodySignals may arrive before we have a Scan event for the body.
+		// In that case planet-specific conditions are unknown, so they must not
+		// eliminate a species. We only apply constraints that can be checked from
+		// the system data already present in the journal state.
+		if (!MatchesKnownSystemStars(rule.Stars, systemScans))
+			return false;
+
+		// System-body requirements are also treated as unknown when the required
+		// body type has not been seen yet. The journal state may only contain a
+		// partial set of system bodies at this point.
+		return true;
+	}
+
+	private static bool MatchesKnownSystemStars(IEnumerable<BioSpawnRuleStar> requirements,
+		IReadOnlyList<ScanEvent> systemScans)
+	{
+		var items = requirements
+			.Where(x => x.Scope == StarScope.System)
+			.ToList();
+
+		if (items.Count == 0)
+			return true;
+
+		var knownStars = systemScans
+			.Where(x => !string.IsNullOrWhiteSpace(x.StarType))
+			.ToList();
+
+		if (knownStars.Count == 0)
+			return true;
+
+		return knownStars.Any(star => items.Any(requirement =>
+			MatchesStar(requirement, star)));
 	}
 
 	private static bool MatchesRule(BioSpawnRule rule, ScanEvent body, IReadOnlyList<ScanEvent> systemScans)
