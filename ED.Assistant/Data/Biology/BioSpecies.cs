@@ -1,4 +1,4 @@
-﻿namespace ED.Assistant.Data.Biology;
+namespace ED.Assistant.Data.Biology;
 
 public sealed class BioSpecies
 {
@@ -11,12 +11,13 @@ public sealed class BioSpecies
 	public string DisplayName { get; set; } = string.Empty;
 
 	public int BaseValue { get; set; }
-	public int MinScanDistanceM { get; set; }
+	public int? MinScanDistanceM { get; set; }
 
 	public int VariantDeterminantId { get; set; }
 	public VariantDeterminant VariantDeterminant { get; set; } = null!;
 
-	public BioSpawnRule? SpawnRule { get; set; }
+	public string? JournalName { get; set; }
 
-	public ICollection<SpeciesAtmosphereCondition> AtmosphereConditions { get; set; } = [];
+	public ICollection<BioSpawnRule> SpawnRules { get; set; } = [];
+
 }

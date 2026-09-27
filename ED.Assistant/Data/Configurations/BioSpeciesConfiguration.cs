@@ -1,4 +1,4 @@
-﻿namespace ED.Assistant.Data.Configurations;
+namespace ED.Assistant.Data.Configurations;
 
 sealed class BioSpeciesConfiguration : IEntityTypeConfiguration<BioSpecies>
 {
@@ -11,7 +11,7 @@ sealed class BioSpeciesConfiguration : IEntityTypeConfiguration<BioSpecies>
 		builder.Property(x => x.Name).IsRequired();
 		builder.Property(x => x.DisplayName).IsRequired();
 		builder.Property(x => x.BaseValue).IsRequired();
-		builder.Property(x => x.MinScanDistanceM).IsRequired();
+		builder.HasIndex(x => x.JournalName).IsUnique();
 		builder.Property(x => x.VariantDeterminantId).IsRequired();
 
 		builder.HasIndex(x => x.VariantDeterminantId);

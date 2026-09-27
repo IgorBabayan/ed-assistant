@@ -1,4 +1,4 @@
-﻿using ED.Assistant.Data;
+using ED.Assistant.Data;
 using ED.Assistant.Data.Repository;
 using ED.Assistant.Domain.Types;
 using ED.Assistant.Extensions;
@@ -79,7 +79,7 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 							: matchedSpecies.BaseValue.ToMillions(),
 						Distance = matchedSpecies is null
 							? GetGenusDistance(species, latest.Genus)
-							: $"{matchedSpecies.MinScanDistanceM:N0} m"
+							: FormatDistance(matchedSpecies.MinScanDistanceM)
 					});
 				}
 
@@ -123,6 +123,9 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 			Planets.Add(planet);
 	}
 
+	private static string FormatDistance(int? distance) =>
+		distance is > 0 ? $"{distance:N0} m" : Constants.EmptyValue;
+
 	private static bool MatchesName(string name, string databaseName, string displayName) =>
 		!string.IsNullOrWhiteSpace(name) &&
 		(string.Equals(name.Trim(), databaseName, StringComparison.OrdinalIgnoreCase) ||
@@ -137,6 +140,6 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 			.Take(2)
 			.ToList();
 
-		return distances.Count == 1 ? $"{distances[0]:N0} m" : Constants.EmptyValue;
+		return distances.Count == 1 ? FormatDistance(distances[0]) : Constants.EmptyValue;
 	}
 }

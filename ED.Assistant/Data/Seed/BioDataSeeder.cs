@@ -1,253 +1,167 @@
-﻿namespace ED.Assistant.Data.Seed;
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+
+namespace ED.Assistant.Data.Seed;
 
 sealed class BioDataSeeder : IBioDataSeeder
 {
+	private const string CatalogId = "EDMC-BioScan-without-regions-v1";
 	private readonly AppDbContext _db;
 
 	public BioDataSeeder(AppDbContext db) => _db = db;
 
 	public async Task SeedAsync(CancellationToken cancellationToken = default)
 	{
-		await _db.Database.MigrateAsync(cancellationToken);
+		using var stream = typeof(BioDataSeeder).Assembly.GetManifestResourceStream(
+			"ED.Assistant.Data.Seed.Catalog.bioscan.json")
+			?? throw new InvalidOperationException("Embedded biology catalog is missing.");
+		using var reader = new StreamReader(stream);
+		var json = await reader.ReadToEndAsync(cancellationToken);
+		var hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(json)));
+		var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+		options.Converters.Add(new JsonStringEnumConverter());
+		var catalog = JsonSerializer.Deserialize<BioCatalog>(json, options)
+			?? throw new InvalidOperationException("Invalid biology catalog.");
+		if (catalog.SchemaVersion != 1 || catalog.Species.Count == 0)
+			throw new InvalidOperationException("Unsupported or empty biology catalog.");
 
-		if (await _db.BioSpecies.AnyAsync(cancellationToken))
+		await _db.Database.MigrateAsync(cancellationToken);
+		await using var transaction = await _db.Database.BeginTransactionAsync(cancellationToken);
+		var version = await _db.BioCatalogVersions.FindAsync([CatalogId], cancellationToken);
+		if (version?.ContentHash == hash)
 			return;
 
-		var atmosphereCache = new Dictionary<string, Atmosphere>(StringComparer.OrdinalIgnoreCase);
-		var bodyTypeCache = new Dictionary<string, BodyType>(StringComparer.OrdinalIgnoreCase);
-		var determinantCache = new Dictionary<string, VariantDeterminant>(StringComparer.OrdinalIgnoreCase);
-		var genera = SeedData
-			.GroupBy(x => x.Genus)
-			.Select(group =>
-			{
-				var genus = new BioGenus
-				{
-					Name = group.Key,
-					DisplayName = group.Key
-				};
+		// Catalog IDs are references within the JSON. Resolve to existing database rows,
+		// preserving installed IDs, including databases with different insertion orders.
+		var bodyTypes = await LoadBodyTypesAsync(catalog.BodyTypes, cancellationToken);
+		var atmospheres = await LoadAtmospheresAsync(catalog.Atmospheres, cancellationToken);
+		var genera = await _db.BioGenera.ToListAsync(cancellationToken);
+		var determinants = await _db.VariantDeterminants.ToListAsync(cancellationToken);
+		var species = await _db.BioSpecies.Include(x => x.SpawnRules).ToListAsync(cancellationToken);
 
-				foreach (var item in group)
+		foreach (var item in catalog.Species)
+		{
+			var genus = genera.FirstOrDefault(x => x.JournalName == item.GenusJournalName)
+				?? genera.FirstOrDefault(x => x.Name.Equals(item.GenusName, StringComparison.OrdinalIgnoreCase));
+			if (genus is null)
+			{
+				genus = new() { Name = item.GenusName, DisplayName = item.GenusName };
+				genera.Add(genus);
+				_db.BioGenera.Add(genus);
+			}
+			genus.JournalName = item.GenusJournalName;
+
+			var entity = species.FirstOrDefault(x => x.JournalName == item.JournalName)
+				?? species.FirstOrDefault(x => x.Genus == genus &&
+					x.Name.Equals(item.Name, StringComparison.OrdinalIgnoreCase));
+			if (entity is null)
+			{
+				var determinant = determinants.FirstOrDefault(x => x.Name == item.VariantDeterminant);
+				if (determinant is null)
 				{
-					var species = CreateSpecies(item, atmosphereCache, bodyTypeCache, determinantCache);
-					genus.Species.Add(species);
+					determinant = new() { Name = item.VariantDeterminant };
+					determinants.Add(determinant);
+					_db.VariantDeterminants.Add(determinant);
 				}
+				entity = new()
+				{
+					Name = item.Name, DisplayName = item.Name, Genus = genus,
+					MinScanDistanceM = item.MinScanDistanceM, VariantDeterminant = determinant
+				};
+				species.Add(entity);
+				_db.BioSpecies.Add(entity);
+			}
 
-				return genus;
-			}).ToList();
+			entity.JournalName = item.JournalName;
+			entity.BaseValue = item.BaseValue;
+			// Replace the reference rules for this species only. Other species and all
+			// existing sampling distances, display names and determinant IDs survive.
+			_db.BioSpawnRules.RemoveRange(entity.SpawnRules);
+			entity.SpawnRules.Clear();
+			foreach (var rule in item.Rules)
+				entity.SpawnRules.Add(CreateRule(rule, item.SourceFile, bodyTypes, atmospheres));
+		}
 
-		await _db.BioGenera.AddRangeAsync(genera, cancellationToken);
+		if (version is null)
+		{
+			version = new() { Id = CatalogId };
+			_db.BioCatalogVersions.Add(version);
+		}
+		version.ContentHash = hash;
+		version.SourceCommit = catalog.SourceCommit;
 		await _db.SaveChangesAsync(cancellationToken);
+		await transaction.CommitAsync(cancellationToken);
 	}
 
-	private static BioSpecies CreateSpecies(BioSeedItem item, Dictionary<string, Atmosphere> atmosphereCache,
-		Dictionary<string, BodyType> bodyTypeCache, Dictionary<string, VariantDeterminant> determinantCache)
+	private async Task<Dictionary<int, BodyType>> LoadBodyTypesAsync(
+		IEnumerable<CatalogLookup> items, CancellationToken cancellationToken)
 	{
-		var species = new BioSpecies
+		var existing = await _db.BodyTypes.ToListAsync(cancellationToken);
+		var result = new Dictionary<int, BodyType>();
+		foreach (var item in items)
 		{
-			Name = item.Name,
-			DisplayName = item.Name,
-			BaseValue = item.BaseValue,
-			MinScanDistanceM = item.ColonyDistanceM,
-			SpawnRule = new BioSpawnRule
+			var entity = existing.FirstOrDefault(x => NormalizeBodyType(x.Name) == NormalizeBodyType(item.Name));
+			if (entity is null)
 			{
-				AtmosphereRaw = item.AtmosphereRaw,
-				VolcanismRaw = item.VolcanismRaw
+				entity = new() { Name = item.Name };
+				existing.Add(entity);
+				_db.BodyTypes.Add(entity);
 			}
-		};
-
-		foreach (var atmosphereName in Split(item.AtmosphereRaw))
-		{
-			if (!atmosphereCache.TryGetValue(atmosphereName, out var atmosphere))
-			{
-				atmosphere = new()
-				{
-					Name = atmosphereName
-				};
-
-				atmosphereCache[atmosphereName] = atmosphere;
-			}
-
-			species.AtmosphereConditions.Add(new()
-			{
-				Species = species,
-				Atmosphere = atmosphere,
-				Mode = GetConditionMode(item.AtmosphereRaw)
-			});
+			result.Add(item.Id, entity);
 		}
-
-		foreach (var bodyTypeName in Split(item.BodyTypesRaw))
-		{
-			if (!bodyTypeCache.TryGetValue(bodyTypeName, out var bodyType))
-			{
-				bodyType = new()
-				{
-					Name = bodyTypeName
-				};
-
-				bodyTypeCache[bodyTypeName] = bodyType;
-			}
-
-			species.SpawnRule!.BodyTypes.Add(new()
-			{
-				SpawnRule = species.SpawnRule,
-				BodyType = bodyType,
-				Mode = ConditionMode.Required
-			});
-		}
-
-		if (!determinantCache.TryGetValue(item.VariantDeterminantName, out var determinant))
-		{
-			determinant = new()
-			{
-				Name = item.VariantDeterminantName
-			};
-
-			determinantCache[item.VariantDeterminantName] = determinant;
-		}
-
-		species.VariantDeterminant = determinant;
-		return species;
+		return result;
 	}
 
-	private static ConditionMode GetConditionMode(string value)
+	private async Task<Dictionary<int, Atmosphere>> LoadAtmospheresAsync(
+		IEnumerable<CatalogLookup> items, CancellationToken cancellationToken)
 	{
-		if (value.StartsWith("Not:", StringComparison.OrdinalIgnoreCase))
-			return ConditionMode.Excluded;
-
-		if (value.StartsWith("Any", StringComparison.OrdinalIgnoreCase))
-			return ConditionMode.Any;
-
-		return ConditionMode.Required;
-	}
-
-	private static IEnumerable<string> Split(string value)
-	{
-		value = value
-			.Replace("Not:", "", StringComparison.OrdinalIgnoreCase)
-			.Replace("Any except", "", StringComparison.OrdinalIgnoreCase)
-			.Replace("(bugged!)", "", StringComparison.OrdinalIgnoreCase)
-			.Trim();
-
-		if (value.Equals("Any", StringComparison.OrdinalIgnoreCase))
-			yield break;
-
-		foreach (var item in value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+		var existing = await _db.Atmospheres.ToListAsync(cancellationToken);
+		var result = new Dictionary<int, Atmosphere>();
+		foreach (var item in items)
 		{
-			if (string.IsNullOrWhiteSpace(item) || item == "-")
-				continue;
-
-			yield return item;
+			var entity = existing.FirstOrDefault(x => Normalize(x.Name) == Normalize(item.Name));
+			if (entity is null)
+			{
+				entity = new() { Name = item.Name };
+				existing.Add(entity);
+				_db.Atmospheres.Add(entity);
+			}
+			result.Add(item.Id, entity);
 		}
+		return result;
 	}
 
-	private sealed record BioSeedItem(string Genus, string Name, int BaseValue, string AtmosphereRaw,
-		string BodyTypesRaw, string VariantDeterminantName, string VolcanismRaw, int ColonyDistanceM);
+	private static string Normalize(string value) =>
+		new(value.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());
 
-	private static readonly BioSeedItem[] SeedData =
-	[
-		new("Aleoida", "Aleoida Arcus", 7252500, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 150),
-		new("Aleoida", "Aleoida Coronamus", 6284600, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 150),
-		new("Aleoida", "Aleoida Gravis", 12934900, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 150),
-		new("Aleoida", "Aleoida Laminiae", 3385200, "Ammonia", "HIGH METAL CONTENT BODY, Rocky", "Stars", "-", 150),
-		new("Aleoida", "Aleoida Spica", 3385200, "Ammonia", "HIGH METAL CONTENT BODY, Rocky", "Stars", "-", 150),
+	private static string NormalizeBodyType(string value) => Normalize(value) switch
+	{
+		"rocky" => "rockybody", "icy" => "icybody", "rockyice" => "rockyicebody",
+		var normalized => normalized
+	};
 
-		new("Bacterium", "Bacterium Acies", 1000000, "Neon", "Icy body, Rocky Ice body", "Materials", "-", 500),
-		new("Bacterium", "Bacterium Alcyoneum", 1658500, "Ammonia", "HIGH METAL CONTENT BODY, Rocky body, Rocky Ice body", "Stars", "-", 500),
-		new("Bacterium", "Bacterium Aurasus", 1000000, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "-", 500),
-		new("Bacterium", "Bacterium Bullaris", 1152500, "Methane, Methane-Rich", "HIGH METAL CONTENT BODY, Icy body, Rocky", "Materials", "-", 500),
-		new("Bacterium", "Bacterium Cerbrus", 1689800, "Sulphur Dioxide, Water, Water-Rich", "HIGH METAL CONTENT BODY, Rocky body, Rocky Ice body", "Stars", "None, Minor Water Magma", 500),
-		new("Bacterium", "Bacterium Informem", 8418000, "Nitrogen", "Any", "Materials", "-", 500),
-		new("Bacterium", "Bacterium Nebulus", 5289900, "Helium", "Icy body", "Materials", "-", 500),
-		new("Bacterium", "Bacterium Omentum", 4638900, "Not: Carbon Dioxide, Oxygen, Sulphur Dioxide", "Icy body", "Materials", "-", 500),
-		new("Bacterium", "Bacterium Scopulum", 4934500, "Not: Carbon Dioxide, Oxygen, Sulphur Dioxide", "Icy body", "Materials", "Carbon Dioxide, Methane", 500),
-		new("Bacterium", "Bacterium Tela", 1949000, "Not: Methane-rich, Sulphur Dioxide-rich", "Any", "Materials", "- / Yes / Water", 500),
-		new("Bacterium", "Bacterium Verrata", 3897000, "Not: Sulphur Dioxide", "Icy body, Rocky body, Rocky Ice body", "Materials", "Water", 500),
-		new("Bacterium", "Bacterium Vesicula", 1000000, "Argon", "Icy body, Rocky body, Rocky Ice body", "Materials", "-", 500),
-		new("Bacterium", "Bacterium Volu", 7774700, "Oxygen", "HIGH METAL CONTENT BODY, Icy body, Rocky Ice body", "Materials", "-", 500),
-
-		new("Cactoida", "Cactoida Cortexum", 3667600, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 300),
-		new("Cactoida", "Cactoida Lapis", 2483600, "Ammonia", "HIGH METAL CONTENT BODY, Rocky", "Stars", "-", 300),
-		new("Cactoida", "Cactoida Peperatis", 2483600, "Ammonia", "HIGH METAL CONTENT BODY, Rocky", "Stars", "-", 300),
-		new("Cactoida", "Cactoida Pullulanta", 3667600, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 300),
-		new("Cactoida", "Cactoida Vermis", 16202800, "Water", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None, Minor Water Magma", 300),
-
-		new("Clypeus", "Clypeus Lacrimam", 8418000, "Carbon Dioxide, Water", "Rocky", "Stars", "None", 150),
-		new("Clypeus", "Clypeus Margaritus", 11873200, "Carbon Dioxide, Water", "HIGH METAL CONTENT BODY", "Stars", "None", 150),
-		new("Clypeus", "Clypeus Speculumi", 16202800, "Carbon Dioxide, Water", "Rocky", "Stars", "None", 150),
-
-		new("Concha", "Concha Aureolas", 7774700, "Ammonia (bugged!)", "HIGH METAL CONTENT BODY, Rocky", "Stars", "-", 150),
-		new("Concha", "Concha Biconcavis", 19010800, "Nitrogen", "HIGH METAL CONTENT BODY, Rocky", "Materials", "None", 150),
-		new("Concha", "Concha Labiata", 2352400, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 150),
-		new("Concha", "Concha Renibus", 4572400, "Ammonia, Carbon Dioxide, Methane, Water", "HIGH METAL CONTENT BODY, Rocky", "Materials", "None", 150),
-
-		new("Electricae", "Electricae Pluma", 6284600, "Argon, Argon-rich, Neon, Neon-rich", "Icy body", "Materials", "-", 1000),
-		new("Electricae", "Electricae Radialem", 6284600, "Argon, Argon-rich, Neon, Neon-rich", "Icy body", "Materials", "-", 1000),
-
-		new("Fonticulua", "Fonticulua Campestris", 1000000, "Argon", "Icy body, Rocky Ice body", "Stars", "-", 500),
-		new("Fonticulua", "Fonticulua Digitos", 1804100, "Methane", "Icy body, Rocky Ice body", "Stars", "None, Minor Methane Magma", 500),
-		new("Fonticulua", "Fonticulua Fluctus", 20000000, "Oxygen", "Icy body", "Stars", "-", 500),
-		new("Fonticulua", "Fonticulua Lapida", 3111000, "Nitrogen", "Icy body", "Stars", "-", 500),
-		new("Fonticulua", "Fonticulua Segmentatus", 19010800, "Neon, Neon-rich", "Icy body", "Stars", "-", 500),
-		new("Fonticulua", "Fonticulua Upupam", 5727600, "Argon-rich", "Icy body", "Stars", "-", 500),
-
-		new("Frutexa", "Frutexa Acus", 7774700, "Carbon Dioxide", "Rocky", "Stars", "None", 150),
-		new("Frutexa", "Frutexa Collum", 1639800, "Sulphur Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "-", 150),
-		new("Frutexa", "Frutexa Fera", 1632500, "Carbon Dioxide", "Rocky", "Stars", "None", 150),
-		new("Frutexa", "Frutexa Flabellum", 1808900, "Ammonia", "Rocky", "Stars", "-", 150),
-		new("Frutexa", "Frutexa Flammasis", 10326000, "Ammonia", "Rocky", "Stars", "-", 150),
-		new("Frutexa", "Frutexa Metallicum", 1632500, "Ammonia, Carbon Dioxide, Water", "HIGH METAL CONTENT BODY", "Stars", "None", 150),
-		new("Frutexa", "Frutexa Sponsae", 5988000, "Water", "Rocky", "Stars", "None, Minor Water Magma", 150),
-
-		new("Fumerola", "Fumerola Aquatis", 6284600, "Any except Helium", "Icy body, Rocky Ice body, Rocky", "Materials", "Water", 100),
-		new("Fumerola", "Fumerola Carbosis", 6284600, "Any except Helium", "Icy body, Rocky", "Materials", "CO2 Geysers, Min. Meth. Magma", 100),
-		new("Fumerola", "Fumerola Extremus", 16202800, "Any except Helium", "HIGH METAL CONTENT BODY, Rocky body, Rocky Ice body", "Materials", "Min. Amm. Magma, Min. Nitr. Magma", 100),
-		new("Fumerola", "Fumerola Nitris", 7500900, "Any except Helium", "Icy body", "Materials", "Min. Amm. Magma, Min. Nitr. Magma", 100),
-
-		new("Fungoida", "Fungoida Bullarum", 3703200, "Argon, Nitrogen", "HIGH METAL CONTENT BODY, Rocky body, Rocky Ice body", "Materials", "None", 300),
-		new("Fungoida", "Fungoida Gelata", 3330300, "Ammonia, Carbon Dioxide, Methane, Water", "HIGH METAL CONTENT BODY, Rocky body, Rocky Ice body", "Materials", "None, Maj. Sil. Vapour Geysers", 300),
-		new("Fungoida", "Fungoida Setisis", 1670100, "Ammonia, Methane", "HIGH METAL CONTENT BODY, Rocky body, Rocky Ice body", "Materials", "-", 300),
-		new("Fungoida", "Fungoida Stabitis", 2680300, "Carbon Dioxide, Water", "HIGH METAL CONTENT BODY, Rocky", "Materials", "None, Maj. Sil. Vapour Geysers", 300),
-
-		new("Osseus", "Osseus Cornibus", 1483000, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 800),
-		new("Osseus", "Osseus Discus", 12934900, "Ammonia, Argon, Methane, Water", "HIGH METAL CONTENT BODY, Rocky body, Rocky Ice body", "Materials", "Yes", 800),
-		new("Osseus", "Osseus Fractus", 4027800, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 800),
-		new("Osseus", "Osseus Pellebantus", 9739000, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 800),
-		new("Osseus", "Osseus Pumice", 3156300, "Argon, Argon-rich, Methane, Nitrogen", "HIGH METAL CONTENT BODY, Rocky body, Rocky Ice body", "Materials", "None", 800),
-		new("Osseus", "Osseus Spiralis", 2404700, "Ammonia", "HIGH METAL CONTENT BODY, Rocky body, Rocky Ice body", "Stars", "-", 800),
-
-		new("Recepta", "Recepta Conditivus", 14313700, "Carbon Dioxide, Oxygen, Sulphur Dioxide", "Rocky body, Icy body", "Materials", "None", 150),
-		new("Recepta", "Recepta Deltahedronix", 16202800, "Carbon Dioxide (bugged!), Sulphur Dioxide", "HIGH METAL CONTENT BODY, Rocky body, Icy body", "Materials", "None", 150),
-		new("Recepta", "Recepta Umbrux", 12934900, "Carbon Dioxide, Sulphur Dioxide", "Icy body, Rocky body, Rocky Ice body", "Stars", "-", 150),
-
-		new("Stratum", "Stratum Araneamus", 2448900, "Sulphur Dioxide", "Rocky", "Stars", "-", 500),
-		new("Stratum", "Stratum Cucumisis", 16202800, "Carbon Dioxide, Oxygen, Sulphur Dioxide", "Rocky", "Stars", "-", 500),
-		new("Stratum", "Stratum Excutitus", 2448900, "Argon-rich, Carbon Dioxide, Sulphur Dioxide", "Rocky", "Stars", "-", 500),
-		new("Stratum", "Stratum Frigus", 2637500, "Carbon Dioxide, Sulphur Dioxide", "Rocky", "Stars", "None", 500),
-		new("Stratum", "Stratum Laminamus", 2788300, "Ammonia", "Rocky", "Stars", "-", 500),
-		new("Stratum", "Stratum Limaxus", 1362000, "Carbon Dioxide, Oxygen, Sulphur Dioxide", "Rocky", "Stars", "-", 500),
-		new("Stratum", "Stratum Paleas", 1362000, "Ammonia, Carbon Dioxide, Oxygen, Water", "Rocky", "Stars", "-", 500),
-		new("Stratum", "Stratum Tectonicas", 19010800, "Any except Helium, Methane, Neon", "HIGH METAL CONTENT BODY", "Stars", "-, for Water only: None", 500),
-
-		new("Tubus", "Tubus Cavas", 11873200, "Carbon Dioxide", "Rocky", "Stars", "None", 800),
-		new("Tubus", "Tubus Compagibus", 7774700, "Carbon Dioxide", "Rocky", "Stars", "None", 800),
-		new("Tubus", "Tubus Conifer", 2415500, "Carbon Dioxide", "Rocky", "Stars", "None", 800),
-		new("Tubus", "Tubus Rosarium", 2637500, "Ammonia", "Rocky", "Stars", "-", 800),
-		new("Tubus", "Tubus Sororibus", 5727600, "Ammonia, Carbon Dioxide", "HIGH METAL CONTENT BODY", "Stars", "None", 800),
-
-		new("Tussock", "Tussock Albata", 3252500, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 200),
-		new("Tussock", "Tussock Capillum", 7025800, "Argon, Methane", "Rocky body, Rocky Ice body", "Stars", "None", 200),
-		new("Tussock", "Tussock Caputus", 3472400, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 200),
-		new("Tussock", "Tussock Catena", 1766600, "Ammonia", "HIGH METAL CONTENT BODY, Rocky", "Stars", "-", 200),
-		new("Tussock", "Tussock Cultro", 1766600, "Ammonia", "HIGH METAL CONTENT BODY, Rocky", "Stars", "-", 200),
-		new("Tussock", "Tussock Divisa", 1766600, "Ammonia", "HIGH METAL CONTENT BODY, Rocky", "Stars", "-", 200),
-		new("Tussock", "Tussock Ignis", 1849000, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 200),
-		new("Tussock", "Tussock Pennata", 5853800, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 200),
-		new("Tussock", "Tussock Pennatis", 1000000, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 200),
-		new("Tussock", "Tussock Propagito", 1000000, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 200),
-		new("Tussock", "Tussock Serrati", 4447100, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 200),
-		new("Tussock", "Tussock Stigmasis", 19010800, "Sulphur Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "-", 200),
-		new("Tussock", "Tussock Triticum", 7774700, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 200),
-		new("Tussock", "Tussock Ventusa", 3227700, "Carbon Dioxide", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None", 200),
-		new("Tussock", "Tussock Virgam", 14313700, "Water", "HIGH METAL CONTENT BODY, Rocky", "Stars", "None, Minor Water Magma", 200)
-	];
+	private static BioSpawnRule CreateRule(CatalogRule item, string sourceFile,
+		IReadOnlyDictionary<int, BodyType> bodyTypes, IReadOnlyDictionary<int, Atmosphere> atmospheres) => new()
+	{
+		SourceFile = sourceFile, SourceIndex = item.SourceIndex,
+		MinTemperatureK = item.MinTemperatureK, MaxTemperatureK = item.MaxTemperatureK,
+		MinGravityG = item.MinGravityG, MaxGravityG = item.MaxGravityG,
+		MinPressureAtmospheres = item.MinPressureAtmospheres, MaxPressureAtmospheres = item.MaxPressureAtmospheres,
+		MaxOrbitalPeriodSeconds = item.MaxOrbitalPeriodSeconds, MinArrivalDistanceLs = item.MinArrivalDistanceLs,
+		Nebula = item.Nebula, VolcanismMode = item.VolcanismMode,
+		BodyTypes = item.BodyTypeIds.Select(id => new BioSpawnRuleBodyType
+			{ BodyType = bodyTypes[id], Mode = ConditionMode.Required }).ToList(),
+		SystemBodyTypes = item.SystemBodyTypeIds.Select(id => new BioSpawnRuleSystemBodyType
+			{ BodyType = bodyTypes[id] }).ToList(),
+		Atmospheres = item.AtmosphereIds.Select(id => new BioSpawnRuleAtmosphere
+			{ Atmosphere = atmospheres[id], Mode = ConditionMode.Required }).ToList(),
+		AtmosphereComponents = item.AtmosphereComponents.Select(x => new BioSpawnRuleAtmosphereComponent
+			{ Atmosphere = atmospheres[x.AtmosphereId], MinPercent = x.MinPercent }).ToList(),
+		VolcanismPatterns = item.VolcanismPatterns.Select(x => new BioSpawnRuleVolcanism
+			{ Pattern = x.Pattern, Match = x.Match }).ToList(),
+		Stars = item.Stars.Select(x => new BioSpawnRuleStar
+			{ StarType = x.StarType, Luminosity = x.Luminosity, Scope = x.Scope }).ToList()
+	};
 }

@@ -1,4 +1,4 @@
-﻿namespace ED.Assistant.Data.Configurations;
+namespace ED.Assistant.Data.Configurations;
 
 sealed class BioGenusConfiguration : IEntityTypeConfiguration<BioGenus>
 {
@@ -7,6 +7,8 @@ sealed class BioGenusConfiguration : IEntityTypeConfiguration<BioGenus>
 		builder.ToTable("BioGenera");
 
 		builder.HasKey(x => x.Id);
+
+		builder.HasIndex(x => x.JournalName).IsUnique();
 
 		builder.Property(x => x.Name)
 			.IsRequired();

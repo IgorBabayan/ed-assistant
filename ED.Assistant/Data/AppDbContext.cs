@@ -1,4 +1,4 @@
-﻿namespace ED.Assistant.Data;
+namespace ED.Assistant.Data;
 
 public sealed class AppDbContext : DbContext
 {
@@ -9,7 +9,7 @@ public sealed class AppDbContext : DbContext
 	public DbSet<BioSpawnRule> BioSpawnRules => Set<BioSpawnRule>();
 	public DbSet<Atmosphere> Atmospheres => Set<Atmosphere>();
 	public DbSet<BodyType> BodyTypes => Set<BodyType>();
-	public DbSet<SpeciesAtmosphereCondition> SpeciesAtmosphereConditions => Set<SpeciesAtmosphereCondition>();
+	public DbSet<BioCatalogVersion> BioCatalogVersions => Set<BioCatalogVersion>();
 	public DbSet<VariantDeterminant> VariantDeterminants => Set<VariantDeterminant>();
 	public DbSet<BioSpawnRuleBodyType> BioSpawnRuleBodyTypes => Set<BioSpawnRuleBodyType>();
 
