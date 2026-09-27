@@ -87,6 +87,31 @@ public sealed class BioCatalogTests
 		Assert.AreEqual(1, await second.BioCatalogVersions.CountAsync());
 	}
 
+
+	[TestMethod]
+	public async Task MatchingCatalogHashRepairsMissingImportedRules()
+	{
+		await using var connection = new SqliteConnection("Data Source=:memory:");
+		await connection.OpenAsync();
+
+		await using (var first = CreateContext(connection))
+		{
+			await new BioDataSeeder(first).SeedAsync();
+			await first.Database.ExecuteSqlRawAsync(
+				"DELETE FROM BioSpawnRules WHERE SourceFile IS NOT NULL;");
+			Assert.AreEqual(0,
+				await first.BioSpawnRules.CountAsync(x => x.SourceFile != null));
+			Assert.AreEqual(1, await first.BioCatalogVersions.CountAsync());
+		}
+
+		await using var repaired = CreateContext(connection);
+		await new BioDataSeeder(repaired).SeedAsync();
+
+		Assert.AreEqual(254,
+			await repaired.BioSpawnRules.CountAsync(x => x.SourceFile != null));
+		Assert.AreEqual(1, await repaired.BioCatalogVersions.CountAsync());
+	}
+
 	[TestMethod]
 	public async Task UpgradePreservesInstalledIdsAndUnrelatedSpecies()
 	{
