@@ -95,9 +95,15 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 					var matchedSpecies = species.FirstOrDefault(x => MatchesSpecies(latest, x));
 					planet.Signals.Add(new OrganicSignalViewModel
 					{
-						Type = latest.Genus,
-						Name = latest.Species,
-						Variant = latest.Variant,
+						Type = matchedSpecies is null
+							? latest.Genus
+							: GetGenusName(matchedSpecies.Genus),
+						Name = matchedSpecies is null
+							? latest.Species
+							: GetSpeciesName(matchedSpecies),
+						Variant = string.IsNullOrWhiteSpace(latest.Variant)
+							? Constants.EmptyValue
+							: latest.Variant,
 						CollectedCount = collectedCount,
 						BaseValue = matchedSpecies is null
 							? Constants.EmptyValue
@@ -107,11 +113,6 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 							: FormatDistance(matchedSpecies.MinScanDistanceM)
 					});
 				}
-
-				var sampledGenusIds = sampledGroups
-					.Select(x => x.Key.GenusId)
-					.Where(x => !string.IsNullOrWhiteSpace(x))
-					.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
 				var predictions = species
 					.Where(x => x.SpawnRules.Any(rule =>
@@ -126,30 +127,42 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 				{
 					foreach (var genus in saaGenuses)
 					{
-						if (sampledGenusIds.Contains(genus.GenusId))
-							continue;
-
 						var genusPredictions = predictions
 							.Where(x => MatchesGenus(genus, x.Genus))
 							.ToList();
 
+						var hasConfirmedGenus = sampledGroups.Any(group =>
+							group.Any(organic =>
+								string.Equals(organic.GenusId, genus.GenusId,
+									StringComparison.OrdinalIgnoreCase)));
+
 						if (genusPredictions.Count == 0)
 						{
-							AddPlaceholder(planet, genus.Genus, GetGenusDistance(species, genus.Genus));
+							if (!hasConfirmedGenus)
+								AddPlaceholder(planet, genus.Genus, GetGenusDistance(species, genus.Genus));
+
 							continue;
 						}
 
 						foreach (var prediction in genusPredictions)
-							AddPrediction(planet, prediction);
+						{
+							var alreadyConfirmed = sampledGroups.Any(group =>
+								group.Any(organic => MatchesSpecies(organic, prediction)));
+
+							if (!alreadyConfirmed)
+								AddPrediction(planet, prediction);
+						}
 					}
 				}
 				else
 				{
-					foreach (var prediction in predictions.Where(x =>
-							string.IsNullOrWhiteSpace(x.Genus.JournalName) ||
-							!sampledGenusIds.Contains(x.Genus.JournalName)))
+					foreach (var prediction in predictions)
 					{
-						AddPrediction(planet, prediction);
+						var alreadyConfirmed = sampledGroups.Any(group =>
+							group.Any(organic => MatchesSpecies(organic, prediction)));
+
+						if (!alreadyConfirmed)
+							AddPrediction(planet, prediction);
 					}
 				}
 
