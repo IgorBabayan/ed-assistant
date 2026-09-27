@@ -1,4 +1,3 @@
-using ED.Assistant.Data;
 using ED.Assistant.Data.Repository;
 using ED.Assistant.Domain.Types;
 using ED.Assistant.Extensions;
