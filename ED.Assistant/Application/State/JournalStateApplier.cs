@@ -113,7 +113,20 @@ class JournalStateApplier : IJournalStateApplier
 			"CarrierJump",
 			ApplyLocation);
 
-		await dispatcher.DispatchAsync(lines, cancellationToken);
+		await dispatcher.DispatchAsync(CaptureAsync(state.Log, lines, cancellationToken), cancellationToken);
+	}
+	
+	private static async IAsyncEnumerable<string> CaptureAsync(JournalLog log, IAsyncEnumerable<string> lines,
+		[EnumeratorCancellation] CancellationToken cancellationToken = default)
+	{
+		await foreach (var line in lines.WithCancellation(cancellationToken))
+		{
+			if (string.IsNullOrWhiteSpace(line))
+				continue;
+
+			log.Append(line);
+			yield return line;
+		}
 	}
 
 	private static void ClearSystemData(JournalState state)

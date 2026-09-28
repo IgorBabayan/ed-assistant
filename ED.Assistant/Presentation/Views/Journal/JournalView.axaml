@@ -2,7 +2,178 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:vm="using:ED.Assistant.Presentation.ViewModels.Journal"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="ED.Assistant.Presentation.Views.Journal.JournalView">
-  <TextBlock Foreground="Orange" FontSize="48">Journal</TextBlock>
+             x:Class="ED.Assistant.Presentation.Views.Journal.JournalView"
+             x:DataType="vm:JournalViewModel">
+
+	<UserControl.Resources>
+		<FontFamily x:Key="JournalMonoFont">Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace</FontFamily>
+	</UserControl.Resources>
+
+	<UserControl.Styles>
+		<!-- Row header: flat, full width, subtle hover -->
+		<Style Selector="Button.journal-row-header">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Padding" Value="8,5"/>
+			<Setter Property="CornerRadius" Value="4"/>
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+			<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+			<Setter Property="Cursor" Value="Hand"/>
+		</Style>
+		<Style Selector="Button.journal-row-header:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#16222D"/>
+		</Style>
+		<Style Selector="Button.journal-row-header:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#1D2A3D"/>
+		</Style>
+
+		<Style Selector="Border.journal-row.expanded Button.journal-row-header /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#16222D"/>
+		</Style>
+
+		<!-- Chevron rotates when the row opens -->
+		<Style Selector="materialIcons|MaterialIcon.journal-chevron">
+			<Setter Property="RenderTransform" Value="rotate(0deg)"/>
+			<Setter Property="Transitions">
+				<Transitions>
+					<TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.12"/>
+				</Transitions>
+			</Setter>
+		</Style>
+		<Style Selector="Border.journal-row.expanded materialIcons|MaterialIcon.journal-chevron">
+			<Setter Property="RenderTransform" Value="rotate(90deg)"/>
+		</Style>
+
+		<Style Selector="TextBlock.journal-raw">
+			<Setter Property="FontFamily" Value="{StaticResource JournalMonoFont}"/>
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="Foreground" Value="#9FB0C4"/>
+			<Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+
+		<Style Selector="Border.journal-event">
+			<Setter Property="Background" Value="#1D2A3D"/>
+			<Setter Property="CornerRadius" Value="4"/>
+			<Setter Property="Padding" Value="6,1"/>
+			<Setter Property="Margin" Value="6,0,10,0"/>
+			<Setter Property="MinWidth" Value="140"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+
+		<Style Selector="Border.journal-json">
+			<Setter Property="Background" Value="{StaticResource BackgroundBrush}"/>
+			<Setter Property="BorderBrush" Value="#233044"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="CornerRadius" Value="6"/>
+			<Setter Property="Padding" Value="12,10"/>
+			<Setter Property="Margin" Value="30,2,8,8"/>
+		</Style>
+	</UserControl.Styles>
+
+	<Grid RowDefinitions="Auto,*" Margin="{StaticResource Margin15}">
+
+		<!-- Toolbar -->
+		<Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,10">
+			<TextBox Grid.Column="0"
+					 Text="{Binding SearchText}"
+					 Watermark="Search the journal — e.g. FSDJump, or Scan Earthlike"
+					 VerticalContentAlignment="Center">
+				<TextBox.InnerLeftContent>
+					<materialIcons:MaterialIcon Kind="Magnify"
+												Width="18" Height="18"
+												Margin="8,0,0,0"
+												Foreground="#7D8DA6"/>
+				</TextBox.InnerLeftContent>
+				<TextBox.InnerRightContent>
+					<Button Command="{Binding ClearSearchCommand}"
+							IsVisible="{Binding HasSearchText}"
+							Background="Transparent"
+							Padding="6"
+							ToolTip.Tip="Clear search">
+						<materialIcons:MaterialIcon Kind="Close" Width="14" Height="14"/>
+					</Button>
+				</TextBox.InnerRightContent>
+			</TextBox>
+
+			<TextBlock Grid.Column="1"
+					   Classes="dashboard-label"
+					   Text="{Binding Summary}"
+					   Margin="12,0"/>
+
+			<ToggleButton Grid.Column="2"
+						  IsChecked="{Binding IsFollowing}"
+						  ToolTip.Tip="Follow new lines">
+				<materialIcons:MaterialIcon Kind="ArrowCollapseDown" Width="18" Height="18"/>
+			</ToggleButton>
+		</Grid>
+
+		<!-- Log -->
+		<Border Grid.Row="1" Classes="dashboard-card" Padding="4">
+			<Grid>
+				<ScrollViewer x:Name="LogScroll"
+							  HorizontalScrollBarVisibility="Disabled"
+							  IsVisible="{Binding HasEntries}">
+					<ItemsControl x:Name="LogItems" ItemsSource="{Binding Entries}">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<VirtualizingStackPanel/>
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+
+						<ItemsControl.ItemTemplate>
+							<DataTemplate x:DataType="vm:JournalEntryViewModel">
+								<Border Classes="journal-row"
+										Classes.expanded="{Binding IsExpanded}">
+									<StackPanel>
+										<Button Classes="journal-row-header"
+												Command="{Binding ToggleCommand}">
+											<Grid ColumnDefinitions="Auto,Auto,*">
+												<materialIcons:MaterialIcon Grid.Column="0"
+																			Classes="journal-chevron"
+																			Kind="ChevronRight"
+																			Width="16" Height="16"
+																			Foreground="#7D8DA6"/>
+
+												<Border Grid.Column="1" Classes="journal-event">
+													<TextBlock Text="{Binding EventName}"
+															   FontSize="12"
+															   FontWeight="SemiBold"
+															   Foreground="{StaticResource PrimaryAccentBrush}"/>
+												</Border>
+
+												<TextBlock Grid.Column="2"
+														   Classes="journal-raw"
+														   Text="{Binding RawLine}"/>
+											</Grid>
+										</Button>
+
+										<Border Classes="journal-json" IsVisible="{Binding IsExpanded}">
+											<SelectableTextBlock Text="{Binding FormattedJson}"
+																 FontFamily="{StaticResource JournalMonoFont}"
+																 FontSize="12"
+																 TextWrapping="Wrap"
+																 Foreground="{StaticResource PrimaryTextBrush}"/>
+										</Border>
+									</StackPanel>
+								</Border>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ScrollViewer>
+
+				<TextBlock Classes="dashboard-label"
+						   Text="{Binding EmptyMessage}"
+						   IsVisible="{Binding !HasEntries}"
+						   HorizontalAlignment="Center"
+						   VerticalAlignment="Center"
+						   TextWrapping="Wrap"
+						   TextAlignment="Center"
+						   Margin="20"/>
+			</Grid>
+		</Border>
+	</Grid>
 </UserControl>
