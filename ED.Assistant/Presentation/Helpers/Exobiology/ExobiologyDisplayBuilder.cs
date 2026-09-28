@@ -3,7 +3,7 @@ using ED.Assistant.Domain.Types;
 using ED.Assistant.Extensions;
 using ED.Assistant.Presentation.ViewModels.System;
 
-namespace ED.Assistant.Presentation.Hiplers.Exobiology;
+namespace ED.Assistant.Presentation.Helpers.Exobiology;
 
 static class ExobiologyDisplayBuilder
 {
@@ -12,7 +12,7 @@ static class ExobiologyDisplayBuilder
         IReadOnlyList<Genus> catalog,
         IReadOnlyList<OrganicPlanetViewModel>? previousPlanets = null)
     {
-        if (state.FSDJump?.SystemAddress is not { } address)
+        if (state.CurrentSystemAddress is not { } address)
             return [];
 
         var scans = state.Scans.Values
@@ -223,7 +223,7 @@ static class ExobiologyDisplayBuilder
 
             if (matching.Count == 0)
                 continue;
-
+            
             candidates[entry.CodexName] = new OrganicSignalViewModel
             {
                 IsPrediction = true,
@@ -257,7 +257,6 @@ static class ExobiologyDisplayBuilder
 
         foreach (var row in candidates.Values.OrderBy(s => s.Name))
         {
-            // The confirmed row already represents this species.
             if (confirmedSpecies.Contains(row.SpeciesId))
                 continue;
 
@@ -272,6 +271,9 @@ static class ExobiologyDisplayBuilder
                 ? row.Type
                 : "Predicted";
 
+            var detectedGenus = mapped?.Genuses?
+                .FirstOrDefault(g => Same(g.GenusId, row.GenusId));
+
             planet.Signals.Add(new OrganicSignalViewModel
             {
                 IsPrediction = true,
@@ -282,7 +284,9 @@ static class ExobiologyDisplayBuilder
 
                 Type = excluded
                     ? "Excluded by DSS"
-                    : predictionType,
+                    : detectedGenus is not null
+                        ? Text(detectedGenus.Genus, detectedGenus.GenusId)
+                        : predictionType,
 
                 Name = row.Name,
                 BaseValue = row.BaseValue,

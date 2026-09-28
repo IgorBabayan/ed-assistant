@@ -9,7 +9,7 @@
 	<UserControl.Styles>
 		<Style Selector="Grid.excluded TextBlock">
 			<Setter Property="Foreground"
-			        Value="LightGray" />
+			        Value="Gray" />
 
 			<Setter Property="TextDecorations"
 			        Value="Strikethrough" />

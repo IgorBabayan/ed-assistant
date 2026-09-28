@@ -1,4 +1,4 @@
-namespace ED.Assistant.Presentation.Hiplers.Exobiology;
+namespace ED.Assistant.Presentation.Helpers.Exobiology;
 
 static class BiologyRuleMatcher
 {

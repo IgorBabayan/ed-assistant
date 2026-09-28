@@ -12,6 +12,17 @@ class JournalStateApplier : IJournalStateApplier
 	public async Task ApplyFromLinesAsync(JournalState state, IAsyncEnumerable<string> lines,
 		CancellationToken cancellationToken = default)
 	{
+		void ApplyLocation(LocationEvent e)
+		{
+			if (state.CurrentSystemAddress != e.SystemAddress)
+			{
+				ClearSystemData(state);
+				state.FSDJump = null;
+			}
+
+			state.Location = e;
+		}
+		
 		var dispatcher = new JournalEventDispatcher();
 		var aggregator = new JournalStateAggregator(dispatcher);
 
@@ -42,12 +53,10 @@ class JournalStateApplier : IJournalStateApplier
 			FSDJumpEvent.EventName,
 			e =>
 			{
+				ClearSystemData(state);
+
+				state.Location = null;
 				state.FSDJump = e;
-				state.Scans.Clear();
-				state.FSSSignals.Clear();
-				state.BaryCentres.Clear();
-				state.Organics.Clear();
-				state.SAASignals.Clear();
 			});
 
 		aggregator.RegisterByKey<ScanEvent, int>(
@@ -69,8 +78,25 @@ class JournalStateApplier : IJournalStateApplier
 			SAASignalsFoundEvent.EventName,
 			e => e.BodyId,
 			state.SAASignals);
+		
+		aggregator.RegisterLast<LocationEvent>(
+			LocationEvent.EventName,
+			ApplyLocation);
+		
+		aggregator.RegisterLast<LocationEvent>(
+			"CarrierJump",
+			ApplyLocation);
 
 		await dispatcher.DispatchAsync(lines, cancellationToken);
+	}
+	
+	private static void ClearSystemData(JournalState state)
+	{
+		state.Scans.Clear();
+		state.FSSSignals.Clear();
+		state.BaryCentres.Clear();
+		state.Organics.Clear();
+		state.SAASignals.Clear();
 	}
 
 	private static async IAsyncEnumerable<string> ReadLinesFromFilesAsync(IEnumerable<string> filePaths,

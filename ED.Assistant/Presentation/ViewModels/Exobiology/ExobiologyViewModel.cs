@@ -1,6 +1,6 @@
 using Avalonia.Threading;
 using ED.Assistant.Data.Repository;
-using ED.Assistant.Presentation.Hiplers.Exobiology;
+using ED.Assistant.Presentation.Helpers.Exobiology;
 using ED.Assistant.Presentation.ViewModels.System;
 
 namespace ED.Assistant.Presentation.ViewModels.Exobiology;
@@ -27,7 +27,8 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 	{
 		var snapshot = new JournalState
 		{
-			FSDJump = state.FSDJump
+			FSDJump = state.FSDJump,
+			Location = state.Location
 		};
 
 		foreach (var pair in state.Scans)
@@ -43,7 +44,7 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 
 		IReadOnlyList<OrganicPlanetViewModel> planets = [];
 		
-		if (snapshot.FSDJump is not null)
+		if (snapshot.CurrentSystemAddress is { } address)
 		{
 			var catalog = await _genusRepository
 				.AsNoTracking()
@@ -56,7 +57,6 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 				.Include(c => c.Rules).ThenInclude(r => r.Stars)
 				.ToListAsync(cancellationToken);
 
-			var address = snapshot.FSDJump.SystemAddress;
 			planets = ExobiologyDisplayBuilder.Build(
 				snapshot,
 				catalog,
@@ -68,7 +68,7 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 		cancellationToken.ThrowIfCancellationRequested();
 		
 		_previousPlanets = planets;
-		_previousSystemAddress = snapshot.FSDJump?.SystemAddress;
+		_previousSystemAddress = snapshot.CurrentSystemAddress;
 		
 		await Dispatcher.UIThread.InvokeAsync(() =>
 		{
