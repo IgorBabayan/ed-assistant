@@ -10,6 +10,7 @@ using ED.Assistant.Presentation.ViewModels.Settings;
 using ED.Assistant.Presentation.ViewModels.ShipLocker;
 using ED.Assistant.Presentation.ViewModels.System;
 using System.ComponentModel;
+using ED.Assistant.Application.Linux;
 
 namespace ED.Assistant.Presentation.ViewModels.Shell;
 
@@ -20,6 +21,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	private readonly ISettingsStorage _settingsStorage;
 	private readonly IPathFinder _pathFinder;
 	private readonly IJournalWatchService _journalWatchService;
+	private readonly IDesktopService _desktopService;
 	private readonly SettingsViewModel _settingsViewModel;
 
 	private class DefaultState
@@ -63,16 +65,20 @@ public partial class MainWindowViewModel : LoadableViewModel
 	public bool IsShipLockerActive => NavigationStore.CurrentViewModel is ShipLockerViewModel;
 
 	public bool IsNotHyprland => !DesktopEnvironmentHelper.IsHyprland();
+	
+	public bool IsLinux => OperatingSystem.IsLinux();
 
 	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
 		INavigationStore navigationStore, IJournalStateStore stateStore, IMemoryCache memoryCache,
 		INavigationService navigationService, IJournalLoaderService journalLoader,
 		ISettingsStorage settingsStorage, IPathFinder pathFinder,
-		IJournalWatchService journalWatchService) : base(journalLoader, stateStore, memoryCache)
+		IJournalWatchService journalWatchService, IDesktopService desktopService) 
+			: base(journalLoader, stateStore, memoryCache)
 	{
 		NavigationStore = navigationStore;
 
 		_journalWatchService = journalWatchService;
+		_desktopService = desktopService;
 		_dialogService = dialogService;
 		_settingsStorage = settingsStorage;
 		_pathFinder = pathFinder;
@@ -176,6 +182,13 @@ public partial class MainWindowViewModel : LoadableViewModel
 			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
 			IsAutoWatchEnabled = settings.IsAutoWatchEnable;
 		}
+	}
+
+	[RelayCommand(CanExecute = nameof(IsLinux))]
+	private async Task CreateDesktop(CancellationToken cancellationToken = default)
+	{
+		_desktopService.BuildDesktopFile();
+		await _desktopService.SaveDesktopFileAsync(cancellationToken);
 	}
 
 	private void RaiseActiveProperty()

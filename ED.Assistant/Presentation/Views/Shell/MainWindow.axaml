@@ -62,29 +62,41 @@
 								Orientation="Horizontal"
 								VerticalAlignment="Top">
 						<Button Classes="window-button"
-								Command="{Binding LoadCommand}">
+						        ToolTip.Tip="Create desktop file"
+						        IsVisible="{Binding IsLinux}"
+						        Command="{Binding CreateDesktopCommand}">
+							<materialIcons:MaterialIcon Kind="Computer"/>
+						</Button>
+						
+						<Button Classes="window-button"
+						        ToolTip.Tip="Load data"
+						        Command="{Binding LoadCommand}">
 							<materialIcons:MaterialIcon Kind="Reload"/>
 						</Button>
 
 						<Button Classes="window-button"
+						        ToolTip.Tip="Settings"
 								Command="{Binding SettingsCommand}"
 								Margin="{StaticResource MarginRight15}">
 							<materialIcons:MaterialIcon Kind="Settings"/>
 						</Button>
 
 						<Button Classes="window-button"
+						        ToolTip.Tip="Minimize window"
 								Click="OnMinimizeClick"
 								IsVisible="{Binding IsNotHyprland}">
 							<materialIcons:MaterialIcon Kind="WindowMinimize"/>
 						</Button>
 
 						<Button Classes="window-button"
+						        ToolTip.Tip="Maximize window"
 								Click="OnMaximizeClick"
 								IsVisible="{Binding IsNotHyprland}">
 							<materialIcons:MaterialIcon Kind="WindowMaximize"/>
 						</Button>
 
 						<Button Classes="window-button close"
+						        ToolTip.Tip="Close window"
 								Click="OnCloseClick">
 							<materialIcons:MaterialIcon Kind="WindowClose"/>
 						</Button>
