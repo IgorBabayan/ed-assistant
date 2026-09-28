@@ -105,6 +105,12 @@ static class ExobiologyDisplayBuilder
             var confirmedSpecies = confirmed
                 .Select(g => g.Key.SpeciesId)
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            
+            var confirmedGenera = confirmed
+                .SelectMany(group => group)
+                .Select(o => o.GenusId)
+                .Where(id => !string.IsNullOrWhiteSpace(id))
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
             AddPredictions(
                 planet,
@@ -114,7 +120,8 @@ static class ExobiologyDisplayBuilder
                 mapped,
                 signalCount,
                 previous,
-                confirmedSpecies);
+                confirmedSpecies,
+                confirmedGenera);
 
             if (mapped is not null)
             {
@@ -196,7 +203,8 @@ static class ExobiologyDisplayBuilder
         SAASignalsFoundEvent? mapped,
         int signalCount,
         OrganicPlanetViewModel? previous,
-        HashSet<string> confirmedSpecies)
+        HashSet<string> confirmedSpecies,
+        HashSet<string> confirmedGenera)
     {
         var candidates =
             new Dictionary<string, OrganicSignalViewModel>(
@@ -257,13 +265,24 @@ static class ExobiologyDisplayBuilder
 
         foreach (var row in candidates.Values.OrderBy(s => s.Name))
         {
+            // The confirmed species already has its own row with sample progress.
             if (confirmedSpecies.Contains(row.SpeciesId))
                 continue;
 
-            var excluded =
+            var hasGenus = !string.IsNullOrWhiteSpace(row.GenusId);
+
+            var excludedByDss =
                 canExclude &&
-                !string.IsNullOrWhiteSpace(row.GenusId) &&
+                hasGenus &&
                 !detected.Contains(row.GenusId);
+
+            // This species is unconfirmed, but another species of its genus
+            // has already been identified by an organic sample.
+            var excludedBySample =
+                hasGenus &&
+                confirmedGenera.Contains(row.GenusId);
+
+            var excluded = excludedByDss || excludedBySample;
 
             var predictionType = row.Type.StartsWith(
                 "Predicted",
@@ -282,11 +301,13 @@ static class ExobiologyDisplayBuilder
                 SpeciesId = row.SpeciesId,
                 GenusId = row.GenusId,
 
-                Type = excluded
-                    ? "Excluded by DSS"
-                    : detectedGenus is not null
-                        ? Text(detectedGenus.Genus, detectedGenus.GenusId)
-                        : predictionType,
+                Type = excludedBySample
+                    ? "Excluded by sample"
+                    : excludedByDss
+                        ? "Excluded by DSS"
+                        : detectedGenus is not null
+                            ? Text(detectedGenus.Genus, detectedGenus.GenusId)
+                            : predictionType,
 
                 Name = row.Name,
                 BaseValue = row.BaseValue,
