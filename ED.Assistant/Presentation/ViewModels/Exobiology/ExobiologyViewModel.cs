@@ -14,6 +14,8 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 	private IReadOnlyList<OrganicPlanetViewModel> _previousPlanets = [];
 
 	public ObservableCollection<OrganicPlanetViewModel> Planets { get; } = [];
+	
+	public bool HasBiologicalSignals => Planets.Count > 0;
 
 	protected override bool ActivateOnNavigation => true;
 
@@ -78,6 +80,8 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 
 			foreach (var planet in planets)
 				Planets.Add(planet);
+			
+			OnPropertyChanged(nameof(HasBiologicalSignals));
 		});
 	}
 }

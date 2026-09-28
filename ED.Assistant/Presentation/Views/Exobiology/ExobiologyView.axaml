@@ -29,69 +29,80 @@
                     Value="Strikethrough" />
         </Style>
     </UserControl.Styles>
-    <ScrollViewer>
-        <ItemsControl ItemsSource="{Binding Planets}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Border Classes="dashboard-card"
-                            Margin="0,0,0,12">
-                        <StackPanel Spacing="8">
-                            <TextBlock Text="{Binding BodyName}"
-                                       Classes="dashboard-system-name" />
-                            <ItemsControl ItemsSource="{Binding Signals}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border BorderBrush="#22FFFFFF"
-                                                BorderThickness="0,0,0,1"
-                                                Padding="0,2">
-                                            <Grid ColumnSpacing="12"
-                                                  Classes.medium-value="{Binding IsMediumValue}"
-                                                  Classes.high-value="{Binding IsHighValue}"
-                                                  Classes.excluded="{Binding IsExcluded}">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="180" />
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="100" />
-                                                    <ColumnDefinition Width="100" />
-                                                    <ColumnDefinition Width="120" />
-                                                </Grid.ColumnDefinitions>
+    <Grid>
+        <!-- Empty state -->
+        <TextBlock
+            Text="No biological signals found"
+            IsVisible="{Binding !HasBiologicalSignals}"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="18"
+            Foreground="{DynamicResource SecondaryTextBrush}" />
 
-                                                <TextBlock Text="{Binding Type}" />
-                                                <TextBlock Grid.Column="1"
-                                                           Text="{Binding Name}" />
-                                                <StackPanel Grid.Column="2"
-                                                            Orientation="Horizontal"
-                                                            Spacing="4">
-                                                    <Ellipse Width="10"
-                                                             Height="10"
-                                                             Fill="{Binding CollectedCount,
+        <ScrollViewer>
+            <ItemsControl ItemsSource="{Binding Planets}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Classes="dashboard-card"
+                                Margin="0,0,0,12">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="{Binding BodyName}"
+                                           Classes="dashboard-commander-name" />
+                                <ItemsControl ItemsSource="{Binding Signals}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="#22FFFFFF"
+                                                    BorderThickness="0,0,0,1"
+                                                    Padding="0,2">
+                                                <Grid ColumnSpacing="12"
+                                                      Classes.medium-value="{Binding IsMediumValue}"
+                                                      Classes.high-value="{Binding IsHighValue}"
+                                                      Classes.excluded="{Binding IsExcluded}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="180" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="100" />
+                                                        <ColumnDefinition Width="100" />
+                                                        <ColumnDefinition Width="120" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBlock Text="{Binding Type}" />
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding Name}" />
+                                                    <StackPanel Grid.Column="2"
+                                                                Orientation="Horizontal"
+                                                                Spacing="4">
+                                                        <Ellipse Width="10"
+                                                                 Height="10"
+                                                                 Fill="{Binding CollectedCount,
                                      Converter={StaticResource OrganicSampleBrushConverter},
                                      ConverterParameter=1}" />
-                                                    <Ellipse Width="10"
-                                                             Height="10"
-                                                             Fill="{Binding CollectedCount,
+                                                        <Ellipse Width="10"
+                                                                 Height="10"
+                                                                 Fill="{Binding CollectedCount,
                                      Converter={StaticResource OrganicSampleBrushConverter},
                                      ConverterParameter=2}" />
-                                                    <Ellipse Width="10"
-                                                             Height="10"
-                                                             Fill="{Binding CollectedCount,
+                                                        <Ellipse Width="10"
+                                                                 Height="10"
+                                                                 Fill="{Binding CollectedCount,
                                      Converter={StaticResource OrganicSampleBrushConverter},
                                      ConverterParameter=3}" />
-                                                </StackPanel>
+                                                    </StackPanel>
 
-                                                <TextBlock Grid.Column="3"
-                                                           Text="{Binding BaseValue}" />
-                                                <TextBlock Grid.Column="4"
-                                                           Text="{Binding Distance}" />
-                                            </Grid>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </ScrollViewer>
+                                                    <TextBlock Grid.Column="3"
+                                                               Text="{Binding BaseValue}" />
+                                                    <TextBlock Grid.Column="4"
+                                                               Text="{Binding Distance}" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
 </UserControl>
