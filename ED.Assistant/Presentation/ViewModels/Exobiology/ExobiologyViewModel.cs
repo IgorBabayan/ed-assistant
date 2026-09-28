@@ -1,13 +1,18 @@
 using Avalonia.Threading;
+using ED.Assistant.Application.Path;
+using ED.Assistant.Application.Settings;
 using ED.Assistant.Data.Repository;
+using ED.Assistant.Domain.Config;
 using ED.Assistant.Presentation.Helpers.Exobiology;
 using ED.Assistant.Presentation.ViewModels.System;
 
 namespace ED.Assistant.Presentation.ViewModels.Exobiology;
 
-public sealed class ExobiologyViewModel : LoadableViewModel
+public sealed partial class ExobiologyViewModel : LoadableViewModel
 {
+	private readonly ISettingsStorage _settingsStorage;
 	private readonly IRepository<Genus> _genusRepository;
+	private readonly IPathFinder _pathFinder;
 
 	private long? _previousSystemAddress;
 	
@@ -16,13 +21,29 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 	public ObservableCollection<OrganicPlanetViewModel> Planets { get; } = [];
 	
 	public bool HasBiologicalSignals => Planets.Count > 0;
+	
+	[ObservableProperty]
+	public partial bool HideExcludedSignals { get; set; }
 
 	protected override bool ActivateOnNavigation => true;
 
 	public ExobiologyViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
-		IMemoryCache memoryCache, IRepository<Genus>  genusRepository)
+		IMemoryCache memoryCache, IRepository<Genus>  genusRepository, ISettingsStorage settingsStorage, IPathFinder pathFinder)
 		: base(journalLoader, stateStore, memoryCache)
-		=> _genusRepository = genusRepository;
+	{
+		_genusRepository = genusRepository;
+		_settingsStorage = settingsStorage;
+		_pathFinder = pathFinder;
+
+		_settingsStorage.SettingsSaved += OnSettingsSaved;
+		_ = LoadSettingsAsync();
+	}
+	
+	protected override void OnDispose()
+	{
+		_settingsStorage.SettingsSaved -= OnSettingsSaved;
+		base.OnDispose();
+	}
 
 	protected override async Task UpdateFromStateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
@@ -85,5 +106,20 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 			
 			OnPropertyChanged(nameof(HasBiologicalSignals));
 		});
+	}
+
+	private void OnSettingsSaved(AppSettings settings)
+		=> Dispatcher.UIThread.Post(() => HideExcludedSignals = settings.HideExcludedSignals);
+	
+	private async Task LoadSettingsAsync(CancellationToken cancellationToken = default)
+	{
+		try
+		{
+			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
+			HideExcludedSignals = settings.HideExcludedSignals;
+		}
+		catch (Exception)
+		{
+		}
 	}
 }

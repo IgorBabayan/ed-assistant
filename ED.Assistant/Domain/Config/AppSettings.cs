@@ -2,9 +2,12 @@
 
 public class AppSettings
 {
-	[JsonPropertyName("Logfolder")]
+	[JsonPropertyName(nameof(LogFolder))]
 	public string? LogFolder { get; set; }
 
-	[JsonPropertyName("IsAutoWatchEnable")]
+	[JsonPropertyName(nameof(IsAutoWatchEnable))]
 	public bool IsAutoWatchEnable { get; set; }
+
+	[JsonPropertyName(nameof(HideExcludedSignals))]
+	public bool HideExcludedSignals { get; set; }
 }

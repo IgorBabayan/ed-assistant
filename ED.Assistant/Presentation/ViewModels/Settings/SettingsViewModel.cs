@@ -15,6 +15,9 @@ public partial class SettingsViewModel : BaseViewModel
 
 	[ObservableProperty]
 	public partial bool EnableAutoWatch { get; set; }
+	
+	[ObservableProperty]
+	public partial bool HideExcludedSignals { get; set; }
 
 	public bool CanUseFolderPicker => !DesktopEnvironmentHelper.IsHyprland();
 
@@ -37,7 +40,8 @@ public partial class SettingsViewModel : BaseViewModel
 		await _settingsStorage.SaveAsync(path, new()
 		{ 
 			LogFolder = LogFolder,
-			IsAutoWatchEnable = EnableAutoWatch
+			IsAutoWatchEnable = EnableAutoWatch,
+			HideExcludedSignals = HideExcludedSignals
 		}, cancellationToken);
 
 		CloseRequested?.Invoke(true);
@@ -63,6 +67,7 @@ public partial class SettingsViewModel : BaseViewModel
 			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
 			LogFolder = settings.LogFolder ?? _pathFinder.GetPathToLogs();
 			EnableAutoWatch = settings.IsAutoWatchEnable;
+			HideExcludedSignals = settings.HideExcludedSignals;
 		}
 		catch (Exception)
 		{

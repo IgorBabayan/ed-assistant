@@ -57,6 +57,13 @@
                                         <DataTemplate x:DataType="systemVm:OrganicSignalViewModel">
                                             <Border BorderBrush="#22FFFFFF"
                                                     Margin="0,0,0,8">
+                                                <Border.IsVisible>
+                                                    <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                                        <Binding Path="!IsExcluded" />
+                                                        <Binding Path="!$parent[UserControl].((vm:ExobiologyViewModel)DataContext).HideExcludedSignals" />
+                                                    </MultiBinding>
+                                                </Border.IsVisible>
+                                                
                                                 <Expander
                                                     HorizontalAlignment="Stretch"
                                                     HorizontalContentAlignment="Stretch">

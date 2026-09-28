@@ -68,10 +68,16 @@
 							</Button>
 						</Grid>
 
-						<CheckBox Content="Enable auto watch log files?"
-								  Foreground="Orange"
-								  IsChecked="{Binding EnableAutoWatch, Mode=TwoWay}"
-								  VerticalAlignment="Center"/>
+						<StackPanel VerticalAlignment="Stretch"
+						            Spacing="8">
+							<CheckBox Content="Enable auto watch log files?"
+							          Foreground="Orange"
+							          IsChecked="{Binding EnableAutoWatch, Mode=TwoWay}"/>	
+							<CheckBox Content="Hide excluded signals?"
+							          Foreground="Orange"
+							          IsChecked="{Binding HideExcludedSignals, Mode=TwoWay}"/>	
+						</StackPanel>
+						
 					</StackPanel>
 
 					<StackPanel Grid.Row="2"
