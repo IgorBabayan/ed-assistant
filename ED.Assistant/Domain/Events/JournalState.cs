@@ -28,6 +28,8 @@ public sealed class JournalState
 
     /// <summary>Latest journal events, oldest first. Survives system changes.</summary>
     public IReadOnlyList<IJournalEvent> RecentEvents => _recentEvents;
+    
+    public JournalLog Log { get; } = new();
 
     public LocationEvent? Location { get; set; }
 
