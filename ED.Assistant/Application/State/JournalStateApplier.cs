@@ -5,6 +5,20 @@ namespace ED.Assistant.Application.State;
 
 class JournalStateApplier : IJournalStateApplier
 {
+	/// <summary>
+	/// Snapshot-style or high-volume events that would only push
+	/// meaningful entries out of the recent events feed.
+	/// </summary>
+	private static readonly HashSet<string> NotRecentEvents = new(StringComparer.OrdinalIgnoreCase)
+	{
+		CommanderEvent.EventName,
+		MaterialsEvent.EventName,
+		RankEvent.EventName,
+		ShipLockerEvent.EventName,
+		BaryCentreEvent.EventName,
+		FSSSignalDiscoveredEvent.EventName
+	};
+
 	public Task ApplyFromFilesAsync(JournalState state, IEnumerable<string> filePaths,
 		CancellationToken cancellationToken = default) => ApplyFromLinesAsync(state,
 			ReadLinesFromFilesAsync(filePaths, cancellationToken), cancellationToken);
@@ -22,11 +36,18 @@ class JournalStateApplier : IJournalStateApplier
 
 			state.Location = e;
 		}
-		
+
 		var dispatcher = new JournalEventDispatcher();
 		var aggregator = new JournalStateAggregator(dispatcher);
 
-		dispatcher.OnAny(e => state.LastEvent = e);
+		dispatcher.OnAny(e =>
+		{
+			state.LastEvent = e;
+
+			if (!NotRecentEvents.Contains(e.Event))
+				state.AddRecentEvent(e);
+		});
+
 		dispatcher.On<ScanOrganicEvent>(ScanOrganicEvent.EventName, e => state.Organics.Add(e));
 
 		aggregator.RegisterLast<CommanderEvent>(
@@ -78,18 +99,23 @@ class JournalStateApplier : IJournalStateApplier
 			SAASignalsFoundEvent.EventName,
 			e => e.BodyId,
 			state.SAASignals);
-		
+
+		aggregator.RegisterByKey<FSSSignalDiscoveredEvent, string>(
+			FSSSignalDiscoveredEvent.EventName,
+			e => e.Key,
+			state.SystemSignals);
+
 		aggregator.RegisterLast<LocationEvent>(
 			LocationEvent.EventName,
 			ApplyLocation);
-		
+
 		aggregator.RegisterLast<LocationEvent>(
 			"CarrierJump",
 			ApplyLocation);
 
 		await dispatcher.DispatchAsync(lines, cancellationToken);
 	}
-	
+
 	private static void ClearSystemData(JournalState state)
 	{
 		state.Scans.Clear();
@@ -97,6 +123,7 @@ class JournalStateApplier : IJournalStateApplier
 		state.BaryCentres.Clear();
 		state.Organics.Clear();
 		state.SAASignals.Clear();
+		state.SystemSignals.Clear();
 	}
 
 	private static async IAsyncEnumerable<string> ReadLinesFromFilesAsync(IEnumerable<string> filePaths,

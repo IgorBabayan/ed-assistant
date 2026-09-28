@@ -36,6 +36,97 @@
 		<Setter Property="Padding" Value="8,4"/>
 	</Style>
 
+	<Style Selector="Border.signal-badge > TextBlock">
+		<Setter Property="Foreground" Value="#C9D4E3"/>
+		<Setter Property="FontSize" Value="12"/>
+		<Setter Property="FontWeight" Value="SemiBold"/>
+	</Style>
+
+	<!-- Body signals: same hues as Border.signal-dot in the System view -->
+	<Style Selector="Border.signal-badge[Tag=Biological]">
+		<Setter Property="Background" Value="#2645D483"/>
+	</Style>
+	<Style Selector="Border.signal-badge[Tag=Biological] > TextBlock">
+		<Setter Property="Foreground" Value="#45D483"/>
+	</Style>
+
+	<Style Selector="Border.signal-badge[Tag=Geological]">
+		<Setter Property="Background" Value="#26D89A4A"/>
+	</Style>
+	<Style Selector="Border.signal-badge[Tag=Geological] > TextBlock">
+		<Setter Property="Foreground" Value="#D89A4A"/>
+	</Style>
+
+	<Style Selector="Border.signal-badge[Tag=Human]">
+		<Setter Property="Background" Value="#264FA3FF"/>
+	</Style>
+	<Style Selector="Border.signal-badge[Tag=Human] > TextBlock">
+		<Setter Property="Foreground" Value="#4FA3FF"/>
+	</Style>
+
+	<Style Selector="Border.signal-badge[Tag=Thargoid]">
+		<Setter Property="Background" Value="#26B86CFF"/>
+	</Style>
+	<Style Selector="Border.signal-badge[Tag=Thargoid] > TextBlock">
+		<Setter Property="Foreground" Value="#B86CFF"/>
+	</Style>
+
+	<Style Selector="Border.signal-badge[Tag=Guardian]">
+		<Setter Property="Background" Value="#264FD1C5"/>
+	</Style>
+	<Style Selector="Border.signal-badge[Tag=Guardian] > TextBlock">
+		<Setter Property="Foreground" Value="#4FD1C5"/>
+	</Style>
+
+	<Style Selector="Border.signal-badge[Tag=Hotspot]">
+		<Setter Property="Background" Value="#26FF6FB5"/>
+	</Style>
+	<Style Selector="Border.signal-badge[Tag=Hotspot] > TextBlock">
+		<Setter Property="Foreground" Value="#FF6FB5"/>
+	</Style>
+
+	<!-- System signals -->
+	<Style Selector="Border.signal-badge[Tag=USS]">
+		<Setter Property="Background" Value="#26FFB86B"/>
+	</Style>
+	<Style Selector="Border.signal-badge[Tag=USS] > TextBlock">
+		<Setter Property="Foreground" Value="#FFB86B"/>
+	</Style>
+
+	<Style Selector="Border.signal-badge[Tag=Combat]">
+		<Setter Property="Background" Value="#26FF5C5C"/>
+	</Style>
+	<Style Selector="Border.signal-badge[Tag=Combat] > TextBlock">
+		<Setter Property="Foreground" Value="#FF5C5C"/>
+	</Style>
+
+	<Style Selector="Border.signal-badge[Tag=Resource]">
+		<Setter Property="Background" Value="#26E8C547"/>
+	</Style>
+	<Style Selector="Border.signal-badge[Tag=Resource] > TextBlock">
+		<Setter Property="Foreground" Value="#E8C547"/>
+	</Style>
+
+	<Style Selector="Border.signal-badge[Tag=Station] > TextBlock">
+		<Setter Property="Foreground" Value="#7EA7FF"/>
+	</Style>
+	<Style Selector="Border.signal-badge[Tag=Carrier] > TextBlock">
+		<Setter Property="Foreground" Value="#7EA7FF"/>
+	</Style>
+	<Style Selector="Border.signal-badge[Tag=Megaship] > TextBlock">
+		<Setter Property="Foreground" Value="#7EA7FF"/>
+	</Style>
+	<Style Selector="Border.signal-badge[Tag=Installation] > TextBlock">
+		<Setter Property="Foreground" Value="#7EA7FF"/>
+	</Style>
+
+	<Style Selector="Border.signal-badge[Tag=Titan]">
+		<Setter Property="Background" Value="#26B86CFF"/>
+	</Style>
+	<Style Selector="Border.signal-badge[Tag=Titan] > TextBlock">
+		<Setter Property="Foreground" Value="#B86CFF"/>
+	</Style>
+
 	<Style Selector="Border.separator">
 		<Setter Property="BorderThickness" Value="1"/>
 		<Setter Property="Background" Value="Gray"/>

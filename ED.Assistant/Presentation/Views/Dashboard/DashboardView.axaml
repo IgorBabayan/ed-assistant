@@ -149,91 +149,119 @@
 		</Border>
 
 		<!-- Signals -->
-		<!--<Border Grid.Row="1"
-		Grid.Column="0"
-		Grid.ColumnSpan="2"
-		Classes="dashboard-card">
-		<Grid RowDefinitions="Auto,*"
-		RowSpacing="12">
+		<Border Grid.Row="1"
+				Grid.Column="0"
+				Grid.ColumnSpan="2"
+				Classes="dashboard-card">
+			<Grid RowDefinitions="Auto,*"
+				  RowSpacing="12">
 
-		<DockPanel>
-		<TextBlock Text="SIGNALS"
-		Classes="dashboard-card-header"
-		DockPanel.Dock="Left"/>
+				<DockPanel>
+					<TextBlock Text="SIGNALS"
+							   Classes="dashboard-card-header"
+							   DockPanel.Dock="Left"/>
 
-		<TextBlock Text="{Binding Signals.Count, StringFormat='{}{0} detected'}"
-		Classes="dashboard-label"
-		HorizontalAlignment="Right"/>
-		</DockPanel>
+					<TextBlock Text="{Binding Signals.Count, StringFormat='{}{0} detected'}"
+							   Classes="dashboard-label"
+							   HorizontalAlignment="Right"/>
+				</DockPanel>
 
-		<ScrollViewer Grid.Row="1">
-		<ItemsControl ItemsSource="{Binding Signals}">
-		<ItemsControl.ItemTemplate>
-		<DataTemplate>
-		<Border Classes="signal-row">
-		<Grid ColumnDefinitions="120,*,120,100"
-		ColumnSpacing="12">
+				<TextBlock Grid.Row="1"
+						   Text="No signals in this system yet. Use the Discovery Scanner or FSS to detect them."
+						   Classes="dashboard-label"
+						   TextWrapping="Wrap"
+						   HorizontalAlignment="Center"
+						   VerticalAlignment="Center"
+						   IsVisible="{Binding !HasSignals}"/>
 
-		<Border Grid.Column="0"
-		Classes="signal-badge">
-		<TextBlock Text="{Binding Type}"
-		HorizontalAlignment="Center"/>
+				<ScrollViewer Grid.Row="1"
+							  IsVisible="{Binding HasSignals}">
+					<ItemsControl ItemsSource="{Binding Signals}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate x:DataType="vm:DashboardSignalViewModel">
+								<Border Classes="signal-row">
+									<Grid ColumnDefinitions="120,*,120,100"
+										  ColumnSpacing="12">
+
+										<Border Grid.Column="0"
+												Classes="signal-badge"
+												Tag="{Binding Tag}"
+												VerticalAlignment="Center">
+											<TextBlock Text="{Binding Type}"
+													   HorizontalAlignment="Center"
+													   TextTrimming="CharacterEllipsis"/>
+										</Border>
+
+										<StackPanel Grid.Column="1"
+													VerticalAlignment="Center">
+											<TextBlock Text="{Binding Name}"
+													   Classes="signal-title"
+													   TextTrimming="CharacterEllipsis"/>
+											<TextBlock Text="{Binding Detail}"
+													   Classes="dashboard-label"
+													   TextTrimming="CharacterEllipsis"
+													   IsVisible="{Binding HasDetail}"/>
+										</StackPanel>
+
+										<TextBlock Grid.Column="2"
+												   Text="{Binding Distance}"
+												   Classes="dashboard-value"
+												   HorizontalAlignment="Right"
+												   VerticalAlignment="Center"/>
+
+										<TextBlock Grid.Column="3"
+												   Text="{Binding ThreatLevel, StringFormat='Threat {0}'}"
+												   Classes="dashboard-rank"
+												   Classes.danger="{Binding IsHighThreat}"
+												   IsVisible="{Binding HasThreat}"
+												   HorizontalAlignment="Right"
+												   VerticalAlignment="Center"/>
+									</Grid>
+								</Border>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ScrollViewer>
+			</Grid>
 		</Border>
-
-		<StackPanel Grid.Column="1">
-		<TextBlock Text="{Binding Name}"
-		Classes="signal-title"/>
-		<TextBlock Text="{Binding BodyName}"
-		Classes="dashboard-label"/>
-		</StackPanel>
-
-		<TextBlock Grid.Column="2"
-		Text="{Binding Distance}"
-		Classes="dashboard-value"
-		VerticalAlignment="Center"/>
-
-		<TextBlock Grid.Column="3"
-		Text="{Binding ThreatLevel, StringFormat='Threat {0}'}"
-		Classes="dashboard-rank"
-		VerticalAlignment="Center"/>
-		</Grid>
-		</Border>
-		</DataTemplate>
-		</ItemsControl.ItemTemplate>
-		</ItemsControl>
-		</ScrollViewer>
-		</Grid>
-		</Border>-->
 
 		<!-- Recent Events -->
-		<!--<Border Grid.Row="2"
-		Grid.Column="0"
-		Grid.ColumnSpan="2"
-		Classes="dashboard-card">
-		<Grid RowDefinitions="Auto,*"
-		RowSpacing="8">
+		<Border Grid.Row="2"
+				Grid.Column="0"
+				Grid.ColumnSpan="2"
+				Classes="dashboard-card">
+			<Grid RowDefinitions="Auto,*"
+				  RowSpacing="8">
 
-		<TextBlock Text="RECENT EVENTS"
-		Classes="dashboard-card-header"/>
+				<TextBlock Text="RECENT EVENTS"
+						   Classes="dashboard-card-header"/>
 
-		<ItemsControl Grid.Row="1"
-		ItemsSource="{Binding RecentEvents}">
-		<ItemsControl.ItemTemplate>
-		<DataTemplate>
-		<Grid ColumnDefinitions="80,*"
-		Margin="0,3">
-		<TextBlock Grid.Column="0"
-		Text="{Binding Time}"
-		Classes="dashboard-label"/>
-		<TextBlock Grid.Column="1"
-		Text="{Binding Message}"
-		Classes="dashboard-value"/>
-		</Grid>
-		</DataTemplate>
-		</ItemsControl.ItemTemplate>
-		</ItemsControl>
-		</Grid>
-		</Border>-->
+				<TextBlock Grid.Row="1"
+						   Text="No events yet. Load a journal or enable auto watch."
+						   Classes="dashboard-label"
+						   IsVisible="{Binding !HasRecentEvents}"/>
+
+				<ItemsControl Grid.Row="1"
+							  ItemsSource="{Binding RecentEvents}"
+							  IsVisible="{Binding HasRecentEvents}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate x:DataType="vm:RecentEventViewModel">
+							<Grid ColumnDefinitions="80,*"
+								  Margin="0,3"
+								  ToolTip.Tip="{Binding FullTime}">
+								<TextBlock Grid.Column="0"
+										   Text="{Binding Time}"
+										   Classes="dashboard-label"/>
+								<TextBlock Grid.Column="1"
+										   Text="{Binding Message}"
+										   Classes="dashboard-value"
+										   TextTrimming="CharacterEllipsis"/>
+							</Grid>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</Grid>
+		</Border>
 
 	</Grid>
 </UserControl>
