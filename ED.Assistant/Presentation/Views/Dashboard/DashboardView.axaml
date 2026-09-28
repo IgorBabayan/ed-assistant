@@ -6,8 +6,7 @@
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:Class="ED.Assistant.Presentation.Views.Dashboard.DashboardView"
 			 x:DataType="vm:DashboardViewModel">
-	<Grid Margin="20"
-		  RowSpacing="16"
+	<Grid RowSpacing="16"
 		  ColumnSpacing="16">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
@@ -104,7 +103,7 @@
 		<Border Grid.Row="0"
 				Grid.Column="1"
 				Classes="dashboard-card">
-			<StackPanel Spacing="12">
+			<StackPanel Spacing="9">
 				<TextBlock Text="CMDR PROFILE"
 						   Classes="dashboard-card-header"/>
 
@@ -114,32 +113,34 @@
 				<TextBlock Text="{Binding LoadGame.ShipFullTitle}"
 						   Classes="dashboard-value"/>
 
-				<Separator/>
+				<Separator Margin="0,2"/>
 
 				<ItemsControl ItemsSource="{Binding Ranks}">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
-							<Grid Margin="0,4"
-								  ColumnSpacing="{DynamicResource Spacing5}">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="90"/>
-									<ColumnDefinition Width="*"/>
-									<ColumnDefinition Width="80"/>
-								</Grid.ColumnDefinitions>
-								<TextBlock Grid.Column="0"
-										   Text="{Binding Name}"
-										   Classes="dashboard-label"/>
+							<Grid Margin="0,3"
+							      RowDefinitions="Auto,Auto"
+							      RowSpacing="4">
 
-								<ProgressBar Grid.Column="1"
-											 Minimum="0"
-											 Maximum="{Binding Maximum}"
-											 Value="{Binding Value}"
-											 Foreground="{DynamicResource SecondaryAccentBrush}"
-											 Height="6"/>
+								<!-- Rank name + current level -->
+								<Grid ColumnDefinitions="*,Auto">
+									<TextBlock Grid.Column="0"
+									           Text="{Binding Name}"
+									           Classes="dashboard-label"/>
 
-								<TextBlock Grid.Column="2"
-										   Text="{Binding Level}"
-										   Classes="dashboard-rank"/>
+									<TextBlock Grid.Column="1"
+									           Text="{Binding Level}"
+									           Classes="dashboard-rank"
+									           HorizontalAlignment="Right"/>
+								</Grid>
+
+								<!-- Full-width progress -->
+								<ProgressBar Grid.Row="1"
+								             Minimum="0"
+								             Maximum="{Binding Maximum}"
+								             Value="{Binding Value}"
+								             Foreground="{DynamicResource SecondaryAccentBrush}"
+								             Height="5"/>
 							</Grid>
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
