@@ -1,10 +1,10 @@
 ﻿using ED.Assistant.Application.Dialog;
+using ED.Assistant.Application.Linux;
 using ED.Assistant.Application.Navigation;
 using ED.Assistant.Application.Path;
 using ED.Assistant.Application.Settings;
 using ED.Assistant.Application.Storage;
 using ED.Assistant.Data.Repository;
-using ED.Assistant.Data.Seed;
 using ED.Assistant.Data.Storage;
 using ED.Assistant.Domain.System;
 using ED.Assistant.Presentation.ViewModels.ConfirmDialog;
@@ -77,6 +77,15 @@ static class ServiceCollectionExtensions
 			.AddSingleton<IJournalWatchService, JournalWatchService>()
 			.AddSingleton<IDbPathProvider, DbPathProvider>()
 			.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
+
+		if (OperatingSystem.IsLinux())
+		{
+			services.AddSingleton<IDesktopService, DesktopService>();
+		}
+		else
+		{
+			services.AddSingleton<IDesktopService, NullDesktopService>();
+		}
 		return services;
 	}
 
