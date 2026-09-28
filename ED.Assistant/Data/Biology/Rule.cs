@@ -364,5 +364,5 @@ public class Rule
     public ICollection<Volcanism> Volcanisms { get; set; } = [];
     public ICollection<RuleStar> Stars { get; set; } = [];
     public ICollection<AtmosphereComponentRule> AtmosphereComponents { get; set; } = [];
-    public ICollection<BodyClass> SystemBodyClasses { get; set; }
+    public ICollection<BodyClass> SystemBodyClasses { get; set; } = [];
 }

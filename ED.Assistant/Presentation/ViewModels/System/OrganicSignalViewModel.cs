@@ -10,4 +10,9 @@ public sealed class OrganicSignalViewModel
 
 	public string BaseValue { get; init; } = "—";
 	public string Distance { get; init; } = "—";
+	
+	public bool IsPrediction { get; init; }
+	public bool IsExcluded { get; init; }
+	public string SpeciesId { get; init; } = string.Empty;
+	public string GenusId { get; init; } = string.Empty;
 }

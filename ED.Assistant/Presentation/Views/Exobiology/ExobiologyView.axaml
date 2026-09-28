@@ -6,6 +6,15 @@
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:Class="ED.Assistant.Presentation.Views.Exobiology.ExobiologyView"
 			 x:DataType="vm:ExobiologyViewModel">
+	<UserControl.Styles>
+		<Style Selector="Grid.excluded TextBlock">
+			<Setter Property="Foreground"
+			        Value="LightGray" />
+
+			<Setter Property="TextDecorations"
+			        Value="Strikethrough" />
+		</Style>
+	</UserControl.Styles>
 	<ScrollViewer>
 		<ItemsControl ItemsSource="{Binding Planets}">
 			<ItemsControl.ItemTemplate>
@@ -20,7 +29,8 @@
 							<ItemsControl ItemsSource="{Binding Signals}">
 								<ItemsControl.ItemTemplate>
 									<DataTemplate>
-										<Grid ColumnSpacing="12">
+										<Grid ColumnSpacing="12"
+										      Classes.excluded="{Binding IsExcluded}">
 											<Grid.ColumnDefinitions>
 												<ColumnDefinition Width="180"/>
 												<ColumnDefinition Width="*"/>
