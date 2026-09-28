@@ -86,7 +86,21 @@ static class ExobiologyDisplayBuilder
                         ? "—"
                         : DistanceFor(entry.Rules, scan, scans),
                     
-                    Value = entry?.Value ?? 0
+                    Value = entry?.Value ?? 0,
+                    
+                    BiologyId = entry?.Id,
+                    
+                    BiologyType = entry is null
+                        ? string.Empty
+                        : BiologyType(entry),
+
+                    SpawnRules = entry is null
+                        ? []
+                        : BiologyRuleDisplayBuilder.Build(
+                            entry,
+                            scan,
+                            scans,
+                            isConfirmed: true),
                 });
             }
 
@@ -250,7 +264,16 @@ static class ExobiologyDisplayBuilder
                 Value =  entry.Value,
 
                 Distance = FormatDistance(
-                    matching.Select(r => r.Rule.Genus.Distance))
+                    matching.Select(r => r.Rule.Genus.Distance)),
+                
+                BiologyId = entry.Id,
+                BiologyType = BiologyType(entry),
+
+                SpawnRules =
+                    BiologyRuleDisplayBuilder.Build(
+                        entry,
+                        scan,
+                        scans),
             };
         }
 
@@ -315,7 +338,10 @@ static class ExobiologyDisplayBuilder
                 Name = row.Name,
                 BaseValue = row.BaseValue,
                 Distance = row.Distance,
-                Value = row.Value
+                Value = row.Value,
+                BiologyId = row.BiologyId,
+                SpawnRules = row.SpawnRules,
+                BiologyType = row.BiologyType,
             });
         }
     }
@@ -339,6 +365,8 @@ static class ExobiologyDisplayBuilder
 
         return FormatDistance(selected.Select(r => r.Genus.Distance));
     }
+    
+    private static string BiologyType(Genus genus) => genus.Name.Split(' ', 2)[0];
 
     private static string FormatDistance(IEnumerable<double> distances)
     {

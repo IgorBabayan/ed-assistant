@@ -56,7 +56,9 @@ public sealed class ExobiologyViewModel : LoadableViewModel
 				.Include(c => c.Rules).ThenInclude(r => r.Volcanisms)
 				.Include(c => c.Rules).ThenInclude(r => r.SystemBodyClasses)
 				.Include(c => c.Rules).ThenInclude(r => r.AtmosphereComponents)
+					.ThenInclude(r => r.Atmosphere)
 				.Include(c => c.Rules).ThenInclude(r => r.Stars)
+					.ThenInclude(r => r.StarClass)
 				.ToListAsync(cancellationToken);
 
 			planets = ExobiologyDisplayBuilder.Build(

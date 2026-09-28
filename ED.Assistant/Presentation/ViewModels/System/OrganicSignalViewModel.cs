@@ -10,13 +10,35 @@ public sealed class OrganicSignalViewModel
 
 	public string BaseValue { get; init; } = "—";
 	public string Distance { get; init; } = "—";
-	
+
 	public bool IsPrediction { get; init; }
 	public bool IsExcluded { get; init; }
+
 	public string SpeciesId { get; init; } = string.Empty;
 	public string GenusId { get; init; } = string.Empty;
-	
+
+	public int? BiologyId { get; init; }
+
+	public IReadOnlyList<OrganicSpawnRuleViewModel> SpawnRules { get; init; } = [];
+
+	public bool HasDetails => BiologyId is not null;
+
 	public decimal Value { get; init; }
-	public bool IsMediumValue => !IsExcluded && Value is >= 5_000_000 and <= 10_000_000;
-	public bool IsHighValue => !IsExcluded && Value > 10_000_000;
+
+	public bool IsMediumValue =>
+		!IsExcluded &&
+		Value is >= 5_000_000 and <= 10_000_000;
+
+	public bool IsHighValue =>
+		!IsExcluded &&
+		Value > 10_000_000;
+	
+	public string BiologyType { get; init; } = string.Empty;
+}
+
+public sealed class OrganicSpawnRuleViewModel
+{
+	public string Title { get; init; } = string.Empty;
+
+	public string Description { get; init; } = string.Empty;
 }

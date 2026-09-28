@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:ED.Assistant.Presentation.ViewModels.Exobiology"
+             xmlns:systemVm="using:ED.Assistant.Presentation.ViewModels.System"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="450"
@@ -39,61 +40,227 @@
             FontSize="18"
             Foreground="{DynamicResource SecondaryTextBrush}" />
 
-        <ScrollViewer>
+        <ScrollViewer IsVisible="{Binding HasBiologicalSignals}">
             <ItemsControl ItemsSource="{Binding Planets}">
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="systemVm:OrganicPlanetViewModel">
                         <Border Classes="dashboard-card"
                                 Margin="0,0,0,12">
                             <StackPanel Spacing="8">
+                                <!-- Planet -->
                                 <TextBlock Text="{Binding BodyName}"
                                            Classes="dashboard-commander-name" />
+
+                                <!-- Signals -->
                                 <ItemsControl ItemsSource="{Binding Signals}">
                                     <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
+                                        <DataTemplate x:DataType="systemVm:OrganicSignalViewModel">
                                             <Border BorderBrush="#22FFFFFF"
-                                                    BorderThickness="0,0,0,1"
-                                                    Padding="0,2">
-                                                <Grid ColumnSpacing="12"
-                                                      Classes.medium-value="{Binding IsMediumValue}"
-                                                      Classes.high-value="{Binding IsHighValue}"
-                                                      Classes.excluded="{Binding IsExcluded}">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="180" />
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="100" />
-                                                        <ColumnDefinition Width="100" />
-                                                        <ColumnDefinition Width="120" />
-                                                    </Grid.ColumnDefinitions>
+                                                    Margin="0,0,0,8">
+                                                <Expander
+                                                    HorizontalAlignment="Stretch"
+                                                    HorizontalContentAlignment="Stretch">
 
-                                                    <TextBlock Text="{Binding Type}" />
-                                                    <TextBlock Grid.Column="1"
-                                                               Text="{Binding Name}" />
-                                                    <StackPanel Grid.Column="2"
-                                                                Orientation="Horizontal"
-                                                                Spacing="4">
-                                                        <Ellipse Width="10"
-                                                                 Height="10"
-                                                                 Fill="{Binding CollectedCount,
-                                     Converter={StaticResource OrganicSampleBrushConverter},
-                                     ConverterParameter=1}" />
-                                                        <Ellipse Width="10"
-                                                                 Height="10"
-                                                                 Fill="{Binding CollectedCount,
-                                     Converter={StaticResource OrganicSampleBrushConverter},
-                                     ConverterParameter=2}" />
-                                                        <Ellipse Width="10"
-                                                                 Height="10"
-                                                                 Fill="{Binding CollectedCount,
-                                     Converter={StaticResource OrganicSampleBrushConverter},
-                                     ConverterParameter=3}" />
-                                                    </StackPanel>
+                                                    <!-- ============================= -->
+                                                    <!-- Signal row                   -->
+                                                    <!-- ============================= -->
+                                                    <Expander.Header>
+                                                        <Border Padding="0,6">
+                                                            <Grid
+                                                                ColumnSpacing="12"
+                                                                Cursor="Hand"
+                                                                Classes.medium-value="{Binding IsMediumValue}"
+                                                                Classes.high-value="{Binding IsHighValue}"
+                                                                Classes.excluded="{Binding IsExcluded}">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="180" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="100" />
+                                                                    <ColumnDefinition Width="100" />
+                                                                    <ColumnDefinition Width="120" />
+                                                                </Grid.ColumnDefinitions>
 
-                                                    <TextBlock Grid.Column="3"
-                                                               Text="{Binding BaseValue}" />
-                                                    <TextBlock Grid.Column="4"
-                                                               Text="{Binding Distance}" />
-                                                </Grid>
+                                                                <TextBlock
+                                                                    Grid.Column="0"
+                                                                    Text="{Binding Type}"
+                                                                    VerticalAlignment="Center" />
+                                                                <TextBlock
+                                                                    Grid.Column="1"
+                                                                    Text="{Binding Name}"
+                                                                    VerticalAlignment="Center" />
+                                                                <StackPanel
+                                                                    Grid.Column="2"
+                                                                    Orientation="Horizontal"
+                                                                    VerticalAlignment="Center"
+                                                                    Spacing="4">
+                                                                    <Ellipse
+                                                                        Width="10"
+                                                                        Height="10"
+                                                                        Fill="{Binding CollectedCount,
+                        Converter={StaticResource OrganicSampleBrushConverter},
+                        ConverterParameter=1}" />
+                                                                    <Ellipse
+                                                                        Width="10"
+                                                                        Height="10"
+                                                                        Fill="{Binding CollectedCount,
+                        Converter={StaticResource OrganicSampleBrushConverter},
+                        ConverterParameter=2}" />
+                                                                    <Ellipse
+                                                                        Width="10"
+                                                                        Height="10"
+                                                                        Fill="{Binding CollectedCount,
+                        Converter={StaticResource OrganicSampleBrushConverter},
+                        ConverterParameter=3}" />
+                                                                </StackPanel>
+
+                                                                <TextBlock
+                                                                    Grid.Column="3"
+                                                                    Text="{Binding BaseValue}"
+                                                                    VerticalAlignment="Center" />
+                                                                <TextBlock
+                                                                    Grid.Column="4"
+                                                                    Text="{Binding Distance}"
+                                                                    VerticalAlignment="Center" />
+                                                            </Grid>
+                                                        </Border>
+                                                    </Expander.Header>
+
+                                                    <!-- ============================= -->
+                                                    <!-- Expanded content              -->
+                                                    <!-- ============================= -->
+                                                    <Grid Margin="24,12,12,16">
+                                                        <!-- Exact species is known -->
+                                                        <Grid
+                                                            IsVisible="{Binding HasDetails}"
+                                                            ColumnDefinitions="240,*"
+                                                            ColumnSpacing="20">
+
+                                                            <!-- ===================== -->
+                                                            <!-- Image                 -->
+                                                            <!-- ===================== -->
+                                                            <Border
+                                                                Grid.Column="0"
+                                                                Width="240"
+                                                                Height="180"
+                                                                HorizontalAlignment="Left"
+                                                                VerticalAlignment="Top"
+                                                                CornerRadius="8"
+                                                                ClipToBounds="True"
+                                                                BorderBrush="#22FFFFFF"
+                                                                BorderThickness="1">
+                                                                <Grid>
+                                                                    <!-- Fallback -->
+                                                                    <StackPanel
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Spacing="6">
+                                                                        <TextBlock
+                                                                            Text="No image available"
+                                                                            HorizontalAlignment="Center"
+                                                                            Foreground="{DynamicResource SecondaryTextBrush}" />
+                                                                    </StackPanel>
+
+                                                                    <!-- Bio image -->
+                                                                    <Image
+                                                                        Source="{Binding BiologyId,
+                                                                            Converter={StaticResource BiologyImageConverter}}"
+                                                                        Stretch="UniformToFill" />
+                                                                </Grid>
+                                                            </Border>
+
+                                                            <!-- ===================== -->
+                                                            <!-- Spawn rules           -->
+                                                            <!-- ===================== -->
+                                                            <StackPanel
+                                                                Grid.Column="1"
+                                                                Spacing="10">
+                                                                <TextBlock
+                                                                    Text="{Binding Name}"
+                                                                    FontSize="18"
+                                                                    FontWeight="SemiBold" />
+                                                                <StackPanel
+                                                                    Orientation="Horizontal"
+                                                                    Spacing="20">
+                                                                    <StackPanel
+                                                                        Orientation="Horizontal"
+                                                                        Spacing="5">
+                                                                        <TextBlock
+                                                                            Text="Value:"
+                                                                            Foreground="{DynamicResource SecondaryTextBrush}" />
+                                                                        <TextBlock
+                                                                            Text="{Binding BaseValue}"
+                                                                            FontWeight="SemiBold" />
+                                                                    </StackPanel>
+
+                                                                    <StackPanel
+                                                                        Orientation="Horizontal"
+                                                                        Spacing="5">
+                                                                        <TextBlock
+                                                                            Text="Sample distance:"
+                                                                            Foreground="{DynamicResource SecondaryTextBrush}" />
+                                                                        <TextBlock
+                                                                            Text="{Binding Distance}"
+                                                                            FontWeight="SemiBold" />
+                                                                    </StackPanel>
+                                                                </StackPanel>
+
+                                                                <TextBlock
+                                                                    Text="Spawn rules"
+                                                                    Margin="0,6,0,0"
+                                                                    FontSize="16"
+                                                                    FontWeight="SemiBold" />
+
+                                                                <ItemsControl ItemsSource="{Binding SpawnRules}">
+                                                                    <ItemsControl.ItemTemplate>
+                                                                        <DataTemplate
+                                                                            x:DataType="systemVm:OrganicSpawnRuleViewModel">
+                                                                            <Border
+                                                                                Background="#0DFFFFFF"
+                                                                                BorderBrush="#18FFFFFF"
+                                                                                BorderThickness="1"
+                                                                                CornerRadius="6"
+                                                                                Padding="10"
+                                                                                Margin="0,0,0,6">
+                                                                                <StackPanel Spacing="6">
+                                                                                    <TextBlock
+                                                                                        Text="{Binding Title}"
+                                                                                        FontWeight="SemiBold" />
+                                                                                    <TextBlock
+                                                                                        Text="{Binding Description}"
+                                                                                        TextWrapping="Wrap"
+                                                                                        LineHeight="20"
+                                                                                        Foreground="{DynamicResource SecondaryTextBrush}" />
+                                                                                </StackPanel>
+                                                                            </Border>
+                                                                        </DataTemplate>
+                                                                    </ItemsControl.ItemTemplate>
+                                                                </ItemsControl>
+                                                            </StackPanel>
+                                                        </Grid>
+
+                                                        <!-- ============================= -->
+                                                        <!-- Genus detected, species unknown -->
+                                                        <!-- ============================= -->
+                                                        <Border
+                                                            IsVisible="{Binding !HasDetails}"
+                                                            Background="#0DFFFFFF"
+                                                            BorderBrush="#18FFFFFF"
+                                                            BorderThickness="1"
+                                                            CornerRadius="6"
+                                                            Padding="12">
+                                                            <StackPanel Spacing="4">
+                                                                <TextBlock
+                                                                    Text="{Binding Type}"
+                                                                    FontWeight="SemiBold" />
+
+                                                                <TextBlock
+                                                                    Text="The biological genus has been detected, but the exact species has not been identified yet."
+                                                                    TextWrapping="Wrap"
+                                                                    Foreground="{DynamicResource SecondaryTextBrush}" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </Grid>
+                                                </Expander>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>

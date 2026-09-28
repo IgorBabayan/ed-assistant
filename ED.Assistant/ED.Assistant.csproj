@@ -52,4 +52,24 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.7" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\Biology\Bacterium\" />
+    <Folder Include="Assets\Biology\BrainTree\" />
+    <Folder Include="Assets\Biology\Cactoida\" />
+    <Folder Include="Assets\Biology\Clypeus\" />
+    <Folder Include="Assets\Biology\Concha\" />
+    <Folder Include="Assets\Biology\Electricae\" />
+    <Folder Include="Assets\Biology\Fonticulua\" />
+    <Folder Include="Assets\Biology\Frutexa\" />
+    <Folder Include="Assets\Biology\Fumerola\" />
+    <Folder Include="Assets\Biology\Fungoida\" />
+    <Folder Include="Assets\Biology\Osseus\" />
+    <Folder Include="Assets\Biology\Recepta\" />
+    <Folder Include="Assets\Biology\Crystalline Shard\" />
+    <Folder Include="Assets\Biology\Stratum\" />
+    <Folder Include="Assets\Biology\Tuber\" />
+    <Folder Include="Assets\Biology\Tubus\" />
+    <Folder Include="Assets\Biology\Tussock\" />
+  </ItemGroup>
 </Project>
