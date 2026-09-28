@@ -150,7 +150,7 @@
                                                                 Width="240"
                                                                 Height="180"
                                                                 HorizontalAlignment="Left"
-                                                                VerticalAlignment="Top"
+                                                                VerticalAlignment="Center"
                                                                 CornerRadius="8"
                                                                 ClipToBounds="True"
                                                                 BorderBrush="#22FFFFFF"
@@ -168,7 +168,7 @@
                                                                     </StackPanel>
 
                                                                     <!-- Bio image -->
-                                                                    <Image
+                                                                    <Image VerticalAlignment="Center"
                                                                         Source="{Binding BiologyId,
                                                                             Converter={StaticResource BiologyImageConverter}}"
                                                                         Stretch="UniformToFill" />
