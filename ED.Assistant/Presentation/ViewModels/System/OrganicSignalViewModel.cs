@@ -15,4 +15,8 @@ public sealed class OrganicSignalViewModel
 	public bool IsExcluded { get; init; }
 	public string SpeciesId { get; init; } = string.Empty;
 	public string GenusId { get; init; } = string.Empty;
+	
+	public decimal Value { get; init; }
+	public bool IsMediumValue => !IsExcluded && Value is >= 5_000_000 and <= 10_000_000;
+	public bool IsHighValue => !IsExcluded && Value > 10_000_000;
 }

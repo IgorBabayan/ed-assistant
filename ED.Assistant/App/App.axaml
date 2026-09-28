@@ -27,6 +27,7 @@
 			<converters:ScanTypeForegroundConverter x:Key="ScanTypeForegroundConverter"/>
 			<converters:AutoWatchForegroundConverter x:Key="AutoWatchForegroundConverter"/>
 			<converters:OrganicSampleBrushConverter x:Key="OrganicSampleBrushConverter"/>
+			<converters:BioCostToBrushConverter x:Key="BioCostToBrushConverter" />
 		</ResourceDictionary>
 	</Application.Resources>
 

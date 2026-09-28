@@ -84,7 +84,9 @@ static class ExobiologyDisplayBuilder
 
                     Distance = entry is null
                         ? "—"
-                        : DistanceFor(entry.Rules, scan, scans)
+                        : DistanceFor(entry.Rules, scan, scans),
+                    
+                    Value = entry?.Value ?? 0
                 });
             }
 
@@ -245,6 +247,7 @@ static class ExobiologyDisplayBuilder
 
                 Name = entry.Name,
                 BaseValue = FormatValue(entry.Value),
+                Value =  entry.Value,
 
                 Distance = FormatDistance(
                     matching.Select(r => r.Rule.Genus.Distance))
@@ -311,7 +314,8 @@ static class ExobiologyDisplayBuilder
 
                 Name = row.Name,
                 BaseValue = row.BaseValue,
-                Distance = row.Distance
+                Distance = row.Distance,
+                Value = row.Value
             });
         }
     }
