@@ -49,6 +49,10 @@ jobs:
           cp -r publish/linux-x64/. $APPDIR/usr/bin/
           cp "$ICON_PNG" $APPDIR/ed-assistant.png
 
+          cp "$ICON_PNG" $APPDIR/.DirIcon
+          mkdir -p $APPDIR/usr/share/icons/hicolor/256x256/apps
+          cp "$ICON_PNG" $APPDIR/usr/share/icons/hicolor/256x256/apps/ed-assistant.png
+
           cat > $APPDIR/AppRun << 'EOF'
           #!/bin/sh
           HERE="$(dirname "$(readlink -f "$0")")"
