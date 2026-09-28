@@ -17,7 +17,8 @@ static class ElectricaeDataSeed
                 CodexType = "$Codex_Ent_Electricae_Genus_Name;",
                 CodexName = "$Codex_Ent_Electricae_02_Name;",
                 Name = "Electricae Radialem",
-                Value = 6_284_600
+                Value = 6_284_600,
+                Distance = 1000
             });
 
         modelBuilder.Entity<Rule>().HasData(
@@ -68,7 +69,8 @@ static class ElectricaeDataSeed
                 CodexType = "$Codex_Ent_Electricae_Genus_Name;",
                 CodexName = "$Codex_Ent_Electricae_01_Name;",
                 Name = "Electricae Pluma",
-                Value = 6_284_600
+                Value = 6_284_600,
+                Distance = 1000
             });
 
         modelBuilder.Entity<Rule>().HasData(

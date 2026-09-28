@@ -20,7 +20,6 @@ class RuleConfiguration : IEntityTypeConfiguration<Rule>
         builder.Property(x => x.MaxPressure);
 
         builder.Property(x => x.MaxOrbitalPeriod);
-        builder.Property(x => x.Distance);
         builder.Property(x => x.Guardian);
 
         builder

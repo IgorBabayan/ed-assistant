@@ -178,7 +178,8 @@ static class ConchaDataSeed
                 CodexType = "$Codex_Ent_Conchas_Genus_Name;",
                 CodexName = codexName,
                 Name = name,
-                Value = value
+                Value = value,
+                Distance = 150
             });
     }
 

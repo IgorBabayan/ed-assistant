@@ -17,7 +17,7 @@ static class StratumDataSeed
 
     private static void SeedFrigus(ModelBuilder modelBuilder)
     {
-                SeedGenus(
+        SeedGenus(
             modelBuilder,
             StratumGenus.Frigus,
             "$Codex_Ent_Stratum_08_Name;",
@@ -485,7 +485,8 @@ static class StratumDataSeed
                 CodexType = "$Codex_Ent_Stratum_Genus_Name;",
                 CodexName = codexName,
                 Name = name,
-                Value = value
+                Value = value,
+                Distance = 500
             });
     }
 

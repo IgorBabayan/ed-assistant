@@ -12,7 +12,7 @@ static class FumerolaDataSeed
 
     private static void SeedAquatis(ModelBuilder modelBuilder)
     {
-                SeedGenus(
+        SeedGenus(
             modelBuilder,
             FumerolaGenus.Aquatis,
             "$Codex_Ent_Fumerolas_04_Name;",
@@ -486,7 +486,8 @@ static class FumerolaDataSeed
                 CodexType = "$Codex_Ent_Fumerolas_Genus_Name;",
                 CodexName = codexName,
                 Name = name,
-                Value = value
+                Value = value,
+                Distance = 100
             });
     }
 

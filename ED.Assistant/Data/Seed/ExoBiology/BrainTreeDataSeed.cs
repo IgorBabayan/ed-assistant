@@ -291,7 +291,8 @@ static class BrainTreeDataSeed
                 CodexType = "$Codex_Ent_Brancae_Name;",
                 CodexName = codexName,
                 Name = name,
-                Value = 1_593_700
+                Value = 1_593_700,
+                Distance = 100
             });
     }
 

@@ -224,7 +224,8 @@ static class TubusDataSeed
                 CodexType = "$Codex_Ent_Tubus_Genus_Name;",
                 CodexName = codexName,
                 Name = name,
-                Value = value
+                Value = value,
+                Distance = 800
             });
     }
 

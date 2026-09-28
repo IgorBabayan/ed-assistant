@@ -347,7 +347,8 @@ static class TubersDataSeed
                 CodexType = "$Codex_Ent_Tube_Name;",
                 CodexName = codexName,
                 Name = name,
-                Value = value
+                Value = value,
+                Distance = 100
             });
     }
 

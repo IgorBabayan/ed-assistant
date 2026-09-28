@@ -11,7 +11,7 @@ static class ClypeusDataSeed
 
     private static void SeedSpeculumi(ModelBuilder modelBuilder)
     {
-                SeedGenus(
+        SeedGenus(
             modelBuilder,
             ClypeusGenus.Speculumi,
             "$Codex_Ent_Clypeus_03_Name;",
@@ -28,7 +28,6 @@ static class ClypeusDataSeed
                 MinTemperature = 190.0,
                 MaxTemperature = 197.0,
                 MinPressure = 0.055,
-                Distance = 2000.0
             },
             new Rule
             {
@@ -36,7 +35,6 @@ static class ClypeusDataSeed
                 GenusId = (int)ClypeusGenus.Speculumi,
                 MinGravity = 0.04,
                 MaxGravity = 0.276,
-                Distance = 2000.0
             },
             new Rule
             {
@@ -44,7 +42,6 @@ static class ClypeusDataSeed
                 GenusId = (int)ClypeusGenus.Speculumi,
                 MinGravity = 0.04,
                 MaxGravity = 0.276,
-                Distance = 2000.0
             });
 
         SeedAtmospheres(modelBuilder, ClypeusRule.SpeculumiCarbonDioxide, AtmosphereEnum.CarbonDioxide);
@@ -159,7 +156,8 @@ static class ClypeusDataSeed
                 CodexType = "$Codex_Ent_Clypeus_Genus_Name;",
                 CodexName = codexName,
                 Name = name,
-                Value = value
+                Value = value,
+                Distance = 150
             });
     }
 

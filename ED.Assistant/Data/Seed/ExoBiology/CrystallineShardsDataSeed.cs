@@ -20,7 +20,8 @@ static class CrystallineShardsDataSeed
                 CodexType = "$Codex_Ent_Ground_Struct_Ice_Name;",
                 CodexName = "$Codex_Ent_Ground_Struct_Ice_Name;",
                 Name = "Crystalline Shards",
-                Value = 1_628_800
+                Value = 1_628_800,
+                Distance = 100
             });
     }
 
@@ -33,7 +34,6 @@ static class CrystallineShardsDataSeed
                 GenusId = (int)ShardGenus.CrystallineShards,
                 MaxGravity = 2.0,
                 MaxTemperature = 273.0,
-                Distance = 12_000.0
             });
     }
 

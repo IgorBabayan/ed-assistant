@@ -199,6 +199,7 @@ public sealed class Genus
     public decimal Value { get; set; }
     public string CodexType { get; set; }
     public string CodexName { get; set; }
+    public double Distance { get; set; }
     
     public ICollection<Rule> Rules { get; set; } = [];
 }

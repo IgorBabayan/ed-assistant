@@ -20,7 +20,8 @@ static class AleoidaDataSeed
                 CodexType = "$Codex_Ent_Aleoids_Genus_Name;",
                 CodexName = "$Codex_Ent_Aleoids_01_Name;",
                 Name = "Aleoida Arcus",
-                Value = 7_252_500
+                Value = 7_252_500,
+                Distance = 150
             });
 
         modelBuilder.Entity<Rule>().HasData(
@@ -49,7 +50,8 @@ static class AleoidaDataSeed
                 CodexType = "$Codex_Ent_Aleoids_Genus_Name;",
                 CodexName = "$Codex_Ent_Aleoids_02_Name;",
                 Name = "Aleoida Coronamus",
-                Value = 6_284_600
+                Value = 6_284_600,
+                Distance = 150
             });
 
         modelBuilder.Entity<Rule>().HasData(
@@ -78,7 +80,8 @@ static class AleoidaDataSeed
                 CodexType = "$Codex_Ent_Aleoids_Genus_Name;",
                 CodexName = "$Codex_Ent_Aleoids_03_Name;",
                 Name = "Aleoida Spica",
-                Value = 3_385_200
+                Value = 3_385_200,
+                Distance = 150
             });
 
         modelBuilder.Entity<Rule>().HasData(
@@ -106,7 +109,8 @@ static class AleoidaDataSeed
                 CodexType = "$Codex_Ent_Aleoids_Genus_Name;",
                 CodexName = "$Codex_Ent_Aleoids_04_Name;",
                 Name = "Aleoida Laminiae",
-                Value = 3_385_200
+                Value = 3_385_200,
+                Distance = 150
             });
 
         modelBuilder.Entity<Rule>().HasData(
@@ -134,7 +138,8 @@ static class AleoidaDataSeed
                 CodexType = "$Codex_Ent_Aleoids_Genus_Name;",
                 CodexName = "$Codex_Ent_Aleoids_05_Name;",
                 Name = "Aleoida Gravis",
-                Value = 12_934_900
+                Value = 12_934_900,
+                Distance = 150
             });
 
         modelBuilder.Entity<Rule>().HasData(

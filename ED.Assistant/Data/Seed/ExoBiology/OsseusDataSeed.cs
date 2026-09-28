@@ -320,7 +320,8 @@ static class OsseusDataSeed
                 CodexType = "$Codex_Ent_Osseus_Genus_Name;",
                 CodexName = codexName,
                 Name = name,
-                Value = value
+                Value = value,
+                Distance = 800
             });
     }
 

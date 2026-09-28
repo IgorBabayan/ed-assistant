@@ -350,7 +350,6 @@ public class Rule
     public double? MaxPressure { get; set; }
 
     public double? MaxOrbitalPeriod { get; set; }
-    public double? Distance { get; set; }
 
     public int GenusId { get; set; }
     public Genus Genus { get; set; } = null!;

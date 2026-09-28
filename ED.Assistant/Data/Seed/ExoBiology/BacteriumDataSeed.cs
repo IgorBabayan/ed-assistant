@@ -431,7 +431,8 @@ static class BacteriumDataSeed
             CodexType = "$Codex_Ent_Bacterial_Genus_Name;",
             CodexName = codexName,
             Name = name,
-            Value = value
+            Value = value,
+            Distance = 500
         });
     }
 

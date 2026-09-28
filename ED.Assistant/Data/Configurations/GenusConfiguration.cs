@@ -13,6 +13,7 @@ class GenusConfiguration : IEntityTypeConfiguration<Genus>
         builder.Property(b => b.Value).IsRequired();
         builder.Property(b => b.CodexType).IsRequired();
         builder.Property(b => b.CodexName).IsRequired();
+        builder.Property(x => x.Distance).IsRequired();
         
         builder
             .HasMany(x => x.Rules)

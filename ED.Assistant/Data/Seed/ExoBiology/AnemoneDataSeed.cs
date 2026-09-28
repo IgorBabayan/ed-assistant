@@ -23,7 +23,8 @@ static class AnemoneDataSeed
                 CodexType = "$Codex_Ent_Sphere_Name;",
                 CodexName = "$Codex_Ent_SphereEFGH_Name;",
                 Name = "Blatteum Bioluminescent Anemone",
-                Value = 1_499_900
+                Value = 1_499_900,
+                Distance = 100
             });
 
         modelBuilder.Entity<Rule>().HasData(
@@ -61,7 +62,8 @@ static class AnemoneDataSeed
                 CodexType = "$Codex_Ent_Sphere_Name;",
                 CodexName = "$Codex_Ent_SphereEFGH_03_Name;",
                 Name = "Roseum Bioluminescent Anemone",
-                Value = 1_499_900
+                Value = 1_499_900,
+                Distance = 100
             });
 
         modelBuilder.Entity<Rule>().HasData(
@@ -102,7 +104,8 @@ static class AnemoneDataSeed
                 CodexType = "$Codex_Ent_Sphere_Name;",
                 CodexName = "$Codex_Ent_SphereEFGH_02_Name;",
                 Name = "Prasinum Bioluminescent Anemone",
-                Value = 1_499_900
+                Value = 1_499_900,
+                Distance = 100
             });
 
         modelBuilder.Entity<Rule>().HasData(
@@ -137,7 +140,8 @@ static class AnemoneDataSeed
                 CodexType = "$Codex_Ent_Sphere_Name;",
                 CodexName = "$Codex_Ent_SphereEFGH_01_Name;",
                 Name = "Rubeum Bioluminescent Anemone",
-                Value = 1_499_900
+                Value = 1_499_900,
+                Distance = 100
             });
 
         modelBuilder.Entity<Rule>().HasData(
@@ -168,7 +172,8 @@ static class AnemoneDataSeed
                 CodexType = "$Codex_Ent_Sphere_Name;",
                 CodexName = "$Codex_Ent_SphereABCD_03_Name;",
                 Name = "Roseum Anemone",
-                Value = 1_499_900
+                Value = 1_499_900,
+                Distance = 100
             });
 
         modelBuilder.Entity<Rule>().HasData(
@@ -199,7 +204,8 @@ static class AnemoneDataSeed
                 CodexType = "$Codex_Ent_Sphere_Name;",
                 CodexName = "$Codex_Ent_SphereABCD_02_Name;",
                 Name = "Puniceum Anemone",
-                Value = 1_499_900
+                Value = 1_499_900,
+                Distance = 100
             });
 
         modelBuilder.Entity<Rule>().HasData(
@@ -242,7 +248,8 @@ static class AnemoneDataSeed
                 CodexType = "$Codex_Ent_Sphere_Name;",
                 CodexName = "$Codex_Ent_SphereABCD_01_Name;",
                 Name = "Croceum Anemone",
-                Value = 1_499_900
+                Value = 1_499_900,
+                Distance = 100
             });
 
         modelBuilder.Entity<Rule>().HasData(
@@ -272,7 +279,8 @@ static class AnemoneDataSeed
                 CodexType = "$Codex_Ent_Sphere_Name;",
                 CodexName = "$Codex_Ent_Sphere_Name;",
                 Name = "Luteolum Anemone",
-                Value = 1_499_900
+                Value = 1_499_900,
+                Distance = 100
             }
         );
         

@@ -226,7 +226,8 @@ static class FonticuluaDataSeed
                 CodexType = "$Codex_Ent_Fonticulus_Genus_Name;",
                 CodexName = codexName,
                 Name = name,
-                Value = value
+                Value = value,
+                Distance = 500
             });
     }
 

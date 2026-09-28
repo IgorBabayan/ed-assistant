@@ -247,7 +247,7 @@ static class ExobiologyDisplayBuilder
                 BaseValue = FormatValue(entry.Value),
 
                 Distance = FormatDistance(
-                    matching.Select(r => r.Rule.Distance))
+                    matching.Select(r => r.Rule.Genus.Distance))
             };
         }
 
@@ -333,10 +333,10 @@ static class ExobiologyDisplayBuilder
             ? possible
             : available;
 
-        return FormatDistance(selected.Select(r => r.Distance));
+        return FormatDistance(selected.Select(r => r.Genus.Distance));
     }
 
-    private static string FormatDistance(IEnumerable<double?> distances)
+    private static string FormatDistance(IEnumerable<double> distances)
     {
         var values = distances
             .Distinct()

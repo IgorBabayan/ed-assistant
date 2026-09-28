@@ -282,6 +282,9 @@ namespace ED.Assistant.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("Distance")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -299,6 +302,7 @@ namespace ED.Assistant.Migrations
                             Id = 1001,
                             CodexName = "$Codex_Ent_Aleoids_01_Name;",
                             CodexType = "$Codex_Ent_Aleoids_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Aleoida Arcus",
                             Value = 7252500m
                         },
@@ -307,6 +311,7 @@ namespace ED.Assistant.Migrations
                             Id = 1002,
                             CodexName = "$Codex_Ent_Aleoids_02_Name;",
                             CodexType = "$Codex_Ent_Aleoids_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Aleoida Coronamus",
                             Value = 6284600m
                         },
@@ -315,6 +320,7 @@ namespace ED.Assistant.Migrations
                             Id = 1003,
                             CodexName = "$Codex_Ent_Aleoids_03_Name;",
                             CodexType = "$Codex_Ent_Aleoids_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Aleoida Spica",
                             Value = 3385200m
                         },
@@ -323,6 +329,7 @@ namespace ED.Assistant.Migrations
                             Id = 1004,
                             CodexName = "$Codex_Ent_Aleoids_04_Name;",
                             CodexType = "$Codex_Ent_Aleoids_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Aleoida Laminiae",
                             Value = 3385200m
                         },
@@ -331,6 +338,7 @@ namespace ED.Assistant.Migrations
                             Id = 1005,
                             CodexName = "$Codex_Ent_Aleoids_05_Name;",
                             CodexType = "$Codex_Ent_Aleoids_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Aleoida Gravis",
                             Value = 12934900m
                         },
@@ -339,6 +347,7 @@ namespace ED.Assistant.Migrations
                             Id = 1101,
                             CodexName = "$Codex_Ent_Sphere_Name;",
                             CodexType = "$Codex_Ent_Sphere_Name;",
+                            Distance = 100.0,
                             Name = "Luteolum Anemone",
                             Value = 1499900m
                         },
@@ -347,6 +356,7 @@ namespace ED.Assistant.Migrations
                             Id = 1102,
                             CodexName = "$Codex_Ent_SphereABCD_01_Name;",
                             CodexType = "$Codex_Ent_Sphere_Name;",
+                            Distance = 100.0,
                             Name = "Croceum Anemone",
                             Value = 1499900m
                         },
@@ -355,6 +365,7 @@ namespace ED.Assistant.Migrations
                             Id = 1103,
                             CodexName = "$Codex_Ent_SphereABCD_02_Name;",
                             CodexType = "$Codex_Ent_Sphere_Name;",
+                            Distance = 100.0,
                             Name = "Puniceum Anemone",
                             Value = 1499900m
                         },
@@ -363,6 +374,7 @@ namespace ED.Assistant.Migrations
                             Id = 1104,
                             CodexName = "$Codex_Ent_SphereABCD_03_Name;",
                             CodexType = "$Codex_Ent_Sphere_Name;",
+                            Distance = 100.0,
                             Name = "Roseum Anemone",
                             Value = 1499900m
                         },
@@ -371,6 +383,7 @@ namespace ED.Assistant.Migrations
                             Id = 1105,
                             CodexName = "$Codex_Ent_SphereEFGH_01_Name;",
                             CodexType = "$Codex_Ent_Sphere_Name;",
+                            Distance = 100.0,
                             Name = "Rubeum Bioluminescent Anemone",
                             Value = 1499900m
                         },
@@ -379,6 +392,7 @@ namespace ED.Assistant.Migrations
                             Id = 1106,
                             CodexName = "$Codex_Ent_SphereEFGH_02_Name;",
                             CodexType = "$Codex_Ent_Sphere_Name;",
+                            Distance = 100.0,
                             Name = "Prasinum Bioluminescent Anemone",
                             Value = 1499900m
                         },
@@ -387,6 +401,7 @@ namespace ED.Assistant.Migrations
                             Id = 1107,
                             CodexName = "$Codex_Ent_SphereEFGH_03_Name;",
                             CodexType = "$Codex_Ent_Sphere_Name;",
+                            Distance = 100.0,
                             Name = "Roseum Bioluminescent Anemone",
                             Value = 1499900m
                         },
@@ -395,6 +410,7 @@ namespace ED.Assistant.Migrations
                             Id = 1108,
                             CodexName = "$Codex_Ent_SphereEFGH_Name;",
                             CodexType = "$Codex_Ent_Sphere_Name;",
+                            Distance = 100.0,
                             Name = "Blatteum Bioluminescent Anemone",
                             Value = 1499900m
                         },
@@ -403,6 +419,7 @@ namespace ED.Assistant.Migrations
                             Id = 1201,
                             CodexName = "$Codex_Ent_Bacterial_01_Name;",
                             CodexType = "$Codex_Ent_Bacterial_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Bacterium Aurasus",
                             Value = 1000000m
                         },
@@ -411,6 +428,7 @@ namespace ED.Assistant.Migrations
                             Id = 1202,
                             CodexName = "$Codex_Ent_Bacterial_02_Name;",
                             CodexType = "$Codex_Ent_Bacterial_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Bacterium Nebulus",
                             Value = 5289900m
                         },
@@ -419,6 +437,7 @@ namespace ED.Assistant.Migrations
                             Id = 1203,
                             CodexName = "$Codex_Ent_Bacterial_03_Name;",
                             CodexType = "$Codex_Ent_Bacterial_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Bacterium Scopulum",
                             Value = 4934500m
                         },
@@ -427,6 +446,7 @@ namespace ED.Assistant.Migrations
                             Id = 1204,
                             CodexName = "$Codex_Ent_Bacterial_04_Name;",
                             CodexType = "$Codex_Ent_Bacterial_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Bacterium Acies",
                             Value = 1000000m
                         },
@@ -435,6 +455,7 @@ namespace ED.Assistant.Migrations
                             Id = 1205,
                             CodexName = "$Codex_Ent_Bacterial_05_Name;",
                             CodexType = "$Codex_Ent_Bacterial_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Bacterium Vesicula",
                             Value = 1000000m
                         },
@@ -443,6 +464,7 @@ namespace ED.Assistant.Migrations
                             Id = 1206,
                             CodexName = "$Codex_Ent_Bacterial_06_Name;",
                             CodexType = "$Codex_Ent_Bacterial_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Bacterium Alcyoneum",
                             Value = 1658500m
                         },
@@ -451,6 +473,7 @@ namespace ED.Assistant.Migrations
                             Id = 1207,
                             CodexName = "$Codex_Ent_Bacterial_07_Name;",
                             CodexType = "$Codex_Ent_Bacterial_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Bacterium Tela",
                             Value = 1949000m
                         },
@@ -459,6 +482,7 @@ namespace ED.Assistant.Migrations
                             Id = 1208,
                             CodexName = "$Codex_Ent_Bacterial_08_Name;",
                             CodexType = "$Codex_Ent_Bacterial_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Bacterium Informem",
                             Value = 8418000m
                         },
@@ -467,6 +491,7 @@ namespace ED.Assistant.Migrations
                             Id = 1209,
                             CodexName = "$Codex_Ent_Bacterial_09_Name;",
                             CodexType = "$Codex_Ent_Bacterial_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Bacterium Volu",
                             Value = 7774700m
                         },
@@ -475,6 +500,7 @@ namespace ED.Assistant.Migrations
                             Id = 1210,
                             CodexName = "$Codex_Ent_Bacterial_10_Name;",
                             CodexType = "$Codex_Ent_Bacterial_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Bacterium Bullaris",
                             Value = 1152500m
                         },
@@ -483,6 +509,7 @@ namespace ED.Assistant.Migrations
                             Id = 1211,
                             CodexName = "$Codex_Ent_Bacterial_11_Name;",
                             CodexType = "$Codex_Ent_Bacterial_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Bacterium Omentum",
                             Value = 4638900m
                         },
@@ -491,6 +518,7 @@ namespace ED.Assistant.Migrations
                             Id = 1212,
                             CodexName = "$Codex_Ent_Bacterial_12_Name;",
                             CodexType = "$Codex_Ent_Bacterial_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Bacterium Cerbrus",
                             Value = 1689800m
                         },
@@ -499,6 +527,7 @@ namespace ED.Assistant.Migrations
                             Id = 1213,
                             CodexName = "$Codex_Ent_Bacterial_13_Name;",
                             CodexType = "$Codex_Ent_Bacterial_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Bacterium Verrata",
                             Value = 3897000m
                         },
@@ -507,6 +536,7 @@ namespace ED.Assistant.Migrations
                             Id = 1301,
                             CodexName = "$Codex_Ent_Seed_Name;",
                             CodexType = "$Codex_Ent_Brancae_Name;",
+                            Distance = 100.0,
                             Name = "Roseum Brain Tree",
                             Value = 1593700m
                         },
@@ -515,6 +545,7 @@ namespace ED.Assistant.Migrations
                             Id = 1302,
                             CodexName = "$Codex_Ent_SeedABCD_01_Name;",
                             CodexType = "$Codex_Ent_Brancae_Name;",
+                            Distance = 100.0,
                             Name = "Gypseeum Brain Tree",
                             Value = 1593700m
                         },
@@ -523,6 +554,7 @@ namespace ED.Assistant.Migrations
                             Id = 1303,
                             CodexName = "$Codex_Ent_SeedABCD_02_Name;",
                             CodexType = "$Codex_Ent_Brancae_Name;",
+                            Distance = 100.0,
                             Name = "Ostrinum Brain Tree",
                             Value = 1593700m
                         },
@@ -531,6 +563,7 @@ namespace ED.Assistant.Migrations
                             Id = 1304,
                             CodexName = "$Codex_Ent_SeedABCD_03_Name;",
                             CodexType = "$Codex_Ent_Brancae_Name;",
+                            Distance = 100.0,
                             Name = "Viride Brain Tree",
                             Value = 1593700m
                         },
@@ -539,6 +572,7 @@ namespace ED.Assistant.Migrations
                             Id = 1305,
                             CodexName = "$Codex_Ent_SeedEFGH_01_Name;",
                             CodexType = "$Codex_Ent_Brancae_Name;",
+                            Distance = 100.0,
                             Name = "Aureum Brain Tree",
                             Value = 1593700m
                         },
@@ -547,6 +581,7 @@ namespace ED.Assistant.Migrations
                             Id = 1306,
                             CodexName = "$Codex_Ent_SeedEFGH_02_Name;",
                             CodexType = "$Codex_Ent_Brancae_Name;",
+                            Distance = 100.0,
                             Name = "Puniceum Brain Tree",
                             Value = 1593700m
                         },
@@ -555,6 +590,7 @@ namespace ED.Assistant.Migrations
                             Id = 1307,
                             CodexName = "$Codex_Ent_SeedEFGH_03_Name;",
                             CodexType = "$Codex_Ent_Brancae_Name;",
+                            Distance = 100.0,
                             Name = "Lindigoticum Brain Tree",
                             Value = 1593700m
                         },
@@ -563,6 +599,7 @@ namespace ED.Assistant.Migrations
                             Id = 1308,
                             CodexName = "$Codex_Ent_SeedEFGH_Name;",
                             CodexType = "$Codex_Ent_Brancae_Name;",
+                            Distance = 100.0,
                             Name = "Lividum Brain Tree",
                             Value = 1593700m
                         },
@@ -571,6 +608,7 @@ namespace ED.Assistant.Migrations
                             Id = 1401,
                             CodexName = "$Codex_Ent_Cactoid_01_Name;",
                             CodexType = "$Codex_Ent_Cactoid_Genus_Name;",
+                            Distance = 300.0,
                             Name = "Cactoida Cortexum",
                             Value = 3667600m
                         },
@@ -579,6 +617,7 @@ namespace ED.Assistant.Migrations
                             Id = 1402,
                             CodexName = "$Codex_Ent_Cactoid_02_Name;",
                             CodexType = "$Codex_Ent_Cactoid_Genus_Name;",
+                            Distance = 300.0,
                             Name = "Cactoida Lapis",
                             Value = 2483600m
                         },
@@ -587,6 +626,7 @@ namespace ED.Assistant.Migrations
                             Id = 1403,
                             CodexName = "$Codex_Ent_Cactoid_03_Name;",
                             CodexType = "$Codex_Ent_Cactoid_Genus_Name;",
+                            Distance = 300.0,
                             Name = "Cactoida Vermis",
                             Value = 16202800m
                         },
@@ -595,6 +635,7 @@ namespace ED.Assistant.Migrations
                             Id = 1404,
                             CodexName = "$Codex_Ent_Cactoid_04_Name;",
                             CodexType = "$Codex_Ent_Cactoid_Genus_Name;",
+                            Distance = 300.0,
                             Name = "Cactoida Pullulanta",
                             Value = 3667600m
                         },
@@ -603,6 +644,7 @@ namespace ED.Assistant.Migrations
                             Id = 1405,
                             CodexName = "$Codex_Ent_Cactoid_05_Name;",
                             CodexType = "$Codex_Ent_Cactoid_Genus_Name;",
+                            Distance = 300.0,
                             Name = "Cactoida Peperatis",
                             Value = 2483600m
                         },
@@ -611,6 +653,7 @@ namespace ED.Assistant.Migrations
                             Id = 1501,
                             CodexName = "$Codex_Ent_Clypeus_01_Name;",
                             CodexType = "$Codex_Ent_Clypeus_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Clypeus Lacrimam",
                             Value = 8418000m
                         },
@@ -619,6 +662,7 @@ namespace ED.Assistant.Migrations
                             Id = 1502,
                             CodexName = "$Codex_Ent_Clypeus_02_Name;",
                             CodexType = "$Codex_Ent_Clypeus_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Clypeus Margaritus",
                             Value = 11873200m
                         },
@@ -627,6 +671,7 @@ namespace ED.Assistant.Migrations
                             Id = 1503,
                             CodexName = "$Codex_Ent_Clypeus_03_Name;",
                             CodexType = "$Codex_Ent_Clypeus_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Clypeus Speculumi",
                             Value = 16202800m
                         },
@@ -635,6 +680,7 @@ namespace ED.Assistant.Migrations
                             Id = 1601,
                             CodexName = "$Codex_Ent_Conchas_01_Name;",
                             CodexType = "$Codex_Ent_Conchas_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Concha Renibus",
                             Value = 4572400m
                         },
@@ -643,6 +689,7 @@ namespace ED.Assistant.Migrations
                             Id = 1602,
                             CodexName = "$Codex_Ent_Conchas_02_Name;",
                             CodexType = "$Codex_Ent_Conchas_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Concha Aureolas",
                             Value = 7774700m
                         },
@@ -651,6 +698,7 @@ namespace ED.Assistant.Migrations
                             Id = 1603,
                             CodexName = "$Codex_Ent_Conchas_03_Name;",
                             CodexType = "$Codex_Ent_Conchas_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Concha Labiata",
                             Value = 2352400m
                         },
@@ -659,6 +707,7 @@ namespace ED.Assistant.Migrations
                             Id = 1604,
                             CodexName = "$Codex_Ent_Conchas_04_Name;",
                             CodexType = "$Codex_Ent_Conchas_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Concha Biconcavis",
                             Value = 16777215m
                         },
@@ -667,6 +716,7 @@ namespace ED.Assistant.Migrations
                             Id = 1701,
                             CodexName = "$Codex_Ent_Electricae_01_Name;",
                             CodexType = "$Codex_Ent_Electricae_Genus_Name;",
+                            Distance = 1000.0,
                             Name = "Electricae Pluma",
                             Value = 6284600m
                         },
@@ -675,6 +725,7 @@ namespace ED.Assistant.Migrations
                             Id = 1702,
                             CodexName = "$Codex_Ent_Electricae_02_Name;",
                             CodexType = "$Codex_Ent_Electricae_Genus_Name;",
+                            Distance = 1000.0,
                             Name = "Electricae Radialem",
                             Value = 6284600m
                         },
@@ -683,6 +734,7 @@ namespace ED.Assistant.Migrations
                             Id = 1801,
                             CodexName = "$Codex_Ent_Fonticulus_01_Name;",
                             CodexType = "$Codex_Ent_Fonticulus_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Fonticulua Segmentatus",
                             Value = 19010800m
                         },
@@ -691,6 +743,7 @@ namespace ED.Assistant.Migrations
                             Id = 1802,
                             CodexName = "$Codex_Ent_Fonticulus_02_Name;",
                             CodexType = "$Codex_Ent_Fonticulus_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Fonticulua Campestris",
                             Value = 1000000m
                         },
@@ -699,6 +752,7 @@ namespace ED.Assistant.Migrations
                             Id = 1803,
                             CodexName = "$Codex_Ent_Fonticulus_03_Name;",
                             CodexType = "$Codex_Ent_Fonticulus_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Fonticulua Upupam",
                             Value = 5727600m
                         },
@@ -707,6 +761,7 @@ namespace ED.Assistant.Migrations
                             Id = 1804,
                             CodexName = "$Codex_Ent_Fonticulus_04_Name;",
                             CodexType = "$Codex_Ent_Fonticulus_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Fonticulua Lapida",
                             Value = 3111000m
                         },
@@ -715,6 +770,7 @@ namespace ED.Assistant.Migrations
                             Id = 1805,
                             CodexName = "$Codex_Ent_Fonticulus_05_Name;",
                             CodexType = "$Codex_Ent_Fonticulus_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Fonticulua Fluctus",
                             Value = 20000000m
                         },
@@ -723,6 +779,7 @@ namespace ED.Assistant.Migrations
                             Id = 1806,
                             CodexName = "$Codex_Ent_Fonticulus_06_Name;",
                             CodexType = "$Codex_Ent_Fonticulus_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Fonticulua Digitos",
                             Value = 1804100m
                         },
@@ -731,6 +788,7 @@ namespace ED.Assistant.Migrations
                             Id = 1901,
                             CodexName = "$Codex_Ent_Shrubs_01_Name;",
                             CodexType = "$Codex_Ent_Shrubs_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Frutexa Flabellum",
                             Value = 1808900m
                         },
@@ -739,6 +797,7 @@ namespace ED.Assistant.Migrations
                             Id = 1902,
                             CodexName = "$Codex_Ent_Shrubs_02_Name;",
                             CodexType = "$Codex_Ent_Shrubs_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Frutexa Acus",
                             Value = 7774700m
                         },
@@ -747,6 +806,7 @@ namespace ED.Assistant.Migrations
                             Id = 1903,
                             CodexName = "$Codex_Ent_Shrubs_03_Name;",
                             CodexType = "$Codex_Ent_Shrubs_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Frutexa Metallicum",
                             Value = 1632500m
                         },
@@ -755,6 +815,7 @@ namespace ED.Assistant.Migrations
                             Id = 1904,
                             CodexName = "$Codex_Ent_Shrubs_04_Name;",
                             CodexType = "$Codex_Ent_Shrubs_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Frutexa Flammasis",
                             Value = 10326000m
                         },
@@ -763,6 +824,7 @@ namespace ED.Assistant.Migrations
                             Id = 1905,
                             CodexName = "$Codex_Ent_Shrubs_05_Name;",
                             CodexType = "$Codex_Ent_Shrubs_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Frutexa Fera",
                             Value = 1632500m
                         },
@@ -771,6 +833,7 @@ namespace ED.Assistant.Migrations
                             Id = 1906,
                             CodexName = "$Codex_Ent_Shrubs_06_Name;",
                             CodexType = "$Codex_Ent_Shrubs_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Frutexa Sponsae",
                             Value = 5988000m
                         },
@@ -779,6 +842,7 @@ namespace ED.Assistant.Migrations
                             Id = 1907,
                             CodexName = "$Codex_Ent_Shrubs_07_Name;",
                             CodexType = "$Codex_Ent_Shrubs_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Frutexa Collum",
                             Value = 1639800m
                         },
@@ -787,6 +851,7 @@ namespace ED.Assistant.Migrations
                             Id = 2001,
                             CodexName = "$Codex_Ent_Fumerolas_01_Name;",
                             CodexType = "$Codex_Ent_Fumerolas_Genus_Name;",
+                            Distance = 100.0,
                             Name = "Fumerola Carbosis",
                             Value = 6284600m
                         },
@@ -795,6 +860,7 @@ namespace ED.Assistant.Migrations
                             Id = 2002,
                             CodexName = "$Codex_Ent_Fumerolas_02_Name;",
                             CodexType = "$Codex_Ent_Fumerolas_Genus_Name;",
+                            Distance = 100.0,
                             Name = "Fumerola Extremus",
                             Value = 16202800m
                         },
@@ -803,6 +869,7 @@ namespace ED.Assistant.Migrations
                             Id = 2003,
                             CodexName = "$Codex_Ent_Fumerolas_03_Name;",
                             CodexType = "$Codex_Ent_Fumerolas_Genus_Name;",
+                            Distance = 100.0,
                             Name = "Fumerola Nitris",
                             Value = 7500900m
                         },
@@ -811,6 +878,7 @@ namespace ED.Assistant.Migrations
                             Id = 2004,
                             CodexName = "$Codex_Ent_Fumerolas_04_Name;",
                             CodexType = "$Codex_Ent_Fumerolas_Genus_Name;",
+                            Distance = 100.0,
                             Name = "Fumerola Aquatis",
                             Value = 6284600m
                         },
@@ -819,6 +887,7 @@ namespace ED.Assistant.Migrations
                             Id = 2101,
                             CodexName = "$Codex_Ent_Fungoids_01_Name;",
                             CodexType = "$Codex_Ent_Fungoids_Genus_Name;",
+                            Distance = 300.0,
                             Name = "Fungoida Setisis",
                             Value = 1670100m
                         },
@@ -827,6 +896,7 @@ namespace ED.Assistant.Migrations
                             Id = 2102,
                             CodexName = "$Codex_Ent_Fungoids_02_Name;",
                             CodexType = "$Codex_Ent_Fungoids_Genus_Name;",
+                            Distance = 300.0,
                             Name = "Fungoida Stabitis",
                             Value = 2680300m
                         },
@@ -835,6 +905,7 @@ namespace ED.Assistant.Migrations
                             Id = 2103,
                             CodexName = "$Codex_Ent_Fungoids_03_Name;",
                             CodexType = "$Codex_Ent_Fungoids_Genus_Name;",
+                            Distance = 300.0,
                             Name = "Fungoida Bullarum",
                             Value = 3703200m
                         },
@@ -843,6 +914,7 @@ namespace ED.Assistant.Migrations
                             Id = 2104,
                             CodexName = "$Codex_Ent_Fungoids_04_Name;",
                             CodexType = "$Codex_Ent_Fungoids_Genus_Name;",
+                            Distance = 300.0,
                             Name = "Fungoida Gelata",
                             Value = 3330300m
                         },
@@ -851,6 +923,7 @@ namespace ED.Assistant.Migrations
                             Id = 2201,
                             CodexName = "$Codex_Ent_Osseus_01_Name;",
                             CodexType = "$Codex_Ent_Osseus_Genus_Name;",
+                            Distance = 800.0,
                             Name = "Osseus Fractus",
                             Value = 4027800m
                         },
@@ -859,6 +932,7 @@ namespace ED.Assistant.Migrations
                             Id = 2202,
                             CodexName = "$Codex_Ent_Osseus_02_Name;",
                             CodexType = "$Codex_Ent_Osseus_Genus_Name;",
+                            Distance = 800.0,
                             Name = "Osseus Discus",
                             Value = 12934900m
                         },
@@ -867,6 +941,7 @@ namespace ED.Assistant.Migrations
                             Id = 2203,
                             CodexName = "$Codex_Ent_Osseus_03_Name;",
                             CodexType = "$Codex_Ent_Osseus_Genus_Name;",
+                            Distance = 800.0,
                             Name = "Osseus Spiralis",
                             Value = 2404700m
                         },
@@ -875,6 +950,7 @@ namespace ED.Assistant.Migrations
                             Id = 2204,
                             CodexName = "$Codex_Ent_Osseus_04_Name;",
                             CodexType = "$Codex_Ent_Osseus_Genus_Name;",
+                            Distance = 800.0,
                             Name = "Osseus Pumice",
                             Value = 3156300m
                         },
@@ -883,6 +959,7 @@ namespace ED.Assistant.Migrations
                             Id = 2205,
                             CodexName = "$Codex_Ent_Osseus_05_Name;",
                             CodexType = "$Codex_Ent_Osseus_Genus_Name;",
+                            Distance = 800.0,
                             Name = "Osseus Cornibus",
                             Value = 1483000m
                         },
@@ -891,6 +968,7 @@ namespace ED.Assistant.Migrations
                             Id = 2206,
                             CodexName = "$Codex_Ent_Osseus_06_Name;",
                             CodexType = "$Codex_Ent_Osseus_Genus_Name;",
+                            Distance = 800.0,
                             Name = "Osseus Pellebantus",
                             Value = 9739000m
                         },
@@ -899,6 +977,7 @@ namespace ED.Assistant.Migrations
                             Id = 2301,
                             CodexName = "$Codex_Ent_Recepta_01_Name;",
                             CodexType = "$Codex_Ent_Recepta_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Recepta Umbrux",
                             Value = 12934900m
                         },
@@ -907,6 +986,7 @@ namespace ED.Assistant.Migrations
                             Id = 2302,
                             CodexName = "$Codex_Ent_Recepta_02_Name;",
                             CodexType = "$Codex_Ent_Recepta_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Recepta Deltahedronix",
                             Value = 16202800m
                         },
@@ -915,6 +995,7 @@ namespace ED.Assistant.Migrations
                             Id = 2303,
                             CodexName = "$Codex_Ent_Recepta_03_Name;",
                             CodexType = "$Codex_Ent_Recepta_Genus_Name;",
+                            Distance = 150.0,
                             Name = "Recepta Conditivus",
                             Value = 14313700m
                         },
@@ -923,6 +1004,7 @@ namespace ED.Assistant.Migrations
                             Id = 2401,
                             CodexName = "$Codex_Ent_Ground_Struct_Ice_Name;",
                             CodexType = "$Codex_Ent_Ground_Struct_Ice_Name;",
+                            Distance = 100.0,
                             Name = "Crystalline Shards",
                             Value = 1628800m
                         },
@@ -931,6 +1013,7 @@ namespace ED.Assistant.Migrations
                             Id = 2501,
                             CodexName = "$Codex_Ent_Stratum_04_Name;",
                             CodexType = "$Codex_Ent_Stratum_04_Name;",
+                            Distance = 0.0,
                             Name = "Stratum Aranaemus",
                             Value = 2448900m
                         },
@@ -939,6 +1022,7 @@ namespace ED.Assistant.Migrations
                             Id = 2502,
                             CodexName = "$Codex_Ent_Stratum_01_Name;",
                             CodexType = "$Codex_Ent_Stratum_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Stratum Excutitus",
                             Value = 2448900m
                         },
@@ -947,6 +1031,7 @@ namespace ED.Assistant.Migrations
                             Id = 2503,
                             CodexName = "$Codex_Ent_Stratum_02_Name;",
                             CodexType = "$Codex_Ent_Stratum_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Stratum Paleas",
                             Value = 1362000m
                         },
@@ -955,6 +1040,7 @@ namespace ED.Assistant.Migrations
                             Id = 2504,
                             CodexName = "$Codex_Ent_Stratum_03_Name;",
                             CodexType = "$Codex_Ent_Stratum_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Stratum Laminamus",
                             Value = 2788300m
                         },
@@ -963,6 +1049,7 @@ namespace ED.Assistant.Migrations
                             Id = 2505,
                             CodexName = "$Codex_Ent_Stratum_04_Name;",
                             CodexType = "$Codex_Ent_Stratum_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Stratum Araneamus",
                             Value = 2448900m
                         },
@@ -971,6 +1058,7 @@ namespace ED.Assistant.Migrations
                             Id = 2506,
                             CodexName = "$Codex_Ent_Stratum_05_Name;",
                             CodexType = "$Codex_Ent_Stratum_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Stratum Limaxus",
                             Value = 1362000m
                         },
@@ -979,6 +1067,7 @@ namespace ED.Assistant.Migrations
                             Id = 2507,
                             CodexName = "$Codex_Ent_Stratum_06_Name;",
                             CodexType = "$Codex_Ent_Stratum_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Stratum Cucumisis",
                             Value = 16202800m
                         },
@@ -987,6 +1076,7 @@ namespace ED.Assistant.Migrations
                             Id = 2508,
                             CodexName = "$Codex_Ent_Stratum_07_Name;",
                             CodexType = "$Codex_Ent_Stratum_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Stratum Tectonicas",
                             Value = 19010800m
                         },
@@ -995,6 +1085,7 @@ namespace ED.Assistant.Migrations
                             Id = 2509,
                             CodexName = "$Codex_Ent_Stratum_08_Name;",
                             CodexType = "$Codex_Ent_Stratum_Genus_Name;",
+                            Distance = 500.0,
                             Name = "Stratum Frigus",
                             Value = 2637500m
                         },
@@ -1003,6 +1094,7 @@ namespace ED.Assistant.Migrations
                             Id = 2601,
                             CodexName = "$Codex_Ent_Tube_Name;",
                             CodexType = "$Codex_Ent_Tube_Name;",
+                            Distance = 100.0,
                             Name = "Roseum Sinuous Tubers",
                             Value = 1514500m
                         },
@@ -1011,6 +1103,7 @@ namespace ED.Assistant.Migrations
                             Id = 2602,
                             CodexName = "$Codex_Ent_TubeABCD_01_Name;",
                             CodexType = "$Codex_Ent_Tube_Name;",
+                            Distance = 100.0,
                             Name = "Prasinum Sinuous Tubers",
                             Value = 1514500m
                         },
@@ -1019,6 +1112,7 @@ namespace ED.Assistant.Migrations
                             Id = 2603,
                             CodexName = "$Codex_Ent_TubeABCD_02_Name;",
                             CodexType = "$Codex_Ent_Tube_Name;",
+                            Distance = 100.0,
                             Name = "Albidum Sinuous Tubers",
                             Value = 1514500m
                         },
@@ -1027,6 +1121,7 @@ namespace ED.Assistant.Migrations
                             Id = 2604,
                             CodexName = "$Codex_Ent_TubeABCD_03_Name;",
                             CodexType = "$Codex_Ent_Tube_Name;",
+                            Distance = 100.0,
                             Name = "Caeruleum Sinuous Tubers",
                             Value = 1514500m
                         },
@@ -1035,6 +1130,7 @@ namespace ED.Assistant.Migrations
                             Id = 2605,
                             CodexName = "$Codex_Ent_TubeEFGH_01_Name;",
                             CodexType = "$Codex_Ent_Tube_Name;",
+                            Distance = 100.0,
                             Name = "Lindigoticum Sinuous Tubers",
                             Value = 1514500m
                         },
@@ -1043,6 +1139,7 @@ namespace ED.Assistant.Migrations
                             Id = 2606,
                             CodexName = "$Codex_Ent_TubeEFGH_02_Name;",
                             CodexType = "$Codex_Ent_Tube_Name;",
+                            Distance = 100.0,
                             Name = "Violaceum Sinuous Tubers",
                             Value = 1514500m
                         },
@@ -1051,6 +1148,7 @@ namespace ED.Assistant.Migrations
                             Id = 2607,
                             CodexName = "$Codex_Ent_TubeEFGH_03_Name;",
                             CodexType = "$Codex_Ent_Tube_Name;",
+                            Distance = 100.0,
                             Name = "Viride Sinuous Tubers",
                             Value = 1514500m
                         },
@@ -1059,6 +1157,7 @@ namespace ED.Assistant.Migrations
                             Id = 2608,
                             CodexName = "$Codex_Ent_TubeEFGH_Name;",
                             CodexType = "$Codex_Ent_Tube_Name;",
+                            Distance = 100.0,
                             Name = "Blatteum Sinuous Tubers",
                             Value = 1514500m
                         },
@@ -1067,6 +1166,7 @@ namespace ED.Assistant.Migrations
                             Id = 2701,
                             CodexName = "$Codex_Ent_Tubus_01_Name;",
                             CodexType = "$Codex_Ent_Tubus_Genus_Name;",
+                            Distance = 800.0,
                             Name = "Tubus Conifer",
                             Value = 2415500m
                         },
@@ -1075,6 +1175,7 @@ namespace ED.Assistant.Migrations
                             Id = 2702,
                             CodexName = "$Codex_Ent_Tubus_02_Name;",
                             CodexType = "$Codex_Ent_Tubus_Genus_Name;",
+                            Distance = 800.0,
                             Name = "Tubus Sororibus",
                             Value = 5727600m
                         },
@@ -1083,6 +1184,7 @@ namespace ED.Assistant.Migrations
                             Id = 2703,
                             CodexName = "$Codex_Ent_Tubus_03_Name;",
                             CodexType = "$Codex_Ent_Tubus_Genus_Name;",
+                            Distance = 800.0,
                             Name = "Tubus Cavas",
                             Value = 11873200m
                         },
@@ -1091,6 +1193,7 @@ namespace ED.Assistant.Migrations
                             Id = 2704,
                             CodexName = "$Codex_Ent_Tubus_04_Name;",
                             CodexType = "$Codex_Ent_Tubus_Genus_Name;",
+                            Distance = 800.0,
                             Name = "Tubus Rosarium",
                             Value = 2637500m
                         },
@@ -1099,6 +1202,7 @@ namespace ED.Assistant.Migrations
                             Id = 2705,
                             CodexName = "$Codex_Ent_Tubus_05_Name;",
                             CodexType = "$Codex_Ent_Tubus_Genus_Name;",
+                            Distance = 800.0,
                             Name = "Tubus Compagibus",
                             Value = 7774700m
                         },
@@ -1107,6 +1211,7 @@ namespace ED.Assistant.Migrations
                             Id = 2801,
                             CodexName = "$Codex_Ent_Tussocks_01_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Pennata",
                             Value = 5853800m
                         },
@@ -1115,6 +1220,7 @@ namespace ED.Assistant.Migrations
                             Id = 2802,
                             CodexName = "$Codex_Ent_Tussocks_02_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Ventusa",
                             Value = 3227700m
                         },
@@ -1123,6 +1229,7 @@ namespace ED.Assistant.Migrations
                             Id = 2803,
                             CodexName = "$Codex_Ent_Tussocks_03_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Ignis",
                             Value = 1849000m
                         },
@@ -1131,6 +1238,7 @@ namespace ED.Assistant.Migrations
                             Id = 2804,
                             CodexName = "$Codex_Ent_Tussocks_04_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Cultro",
                             Value = 1766600m
                         },
@@ -1139,6 +1247,7 @@ namespace ED.Assistant.Migrations
                             Id = 2805,
                             CodexName = "$Codex_Ent_Tussocks_05_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Catena",
                             Value = 1766600m
                         },
@@ -1147,6 +1256,7 @@ namespace ED.Assistant.Migrations
                             Id = 2806,
                             CodexName = "$Codex_Ent_Tussocks_06_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Pennatis",
                             Value = 1000000m
                         },
@@ -1155,6 +1265,7 @@ namespace ED.Assistant.Migrations
                             Id = 2807,
                             CodexName = "$Codex_Ent_Tussocks_07_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Serrati",
                             Value = 4447100m
                         },
@@ -1163,6 +1274,7 @@ namespace ED.Assistant.Migrations
                             Id = 2808,
                             CodexName = "$Codex_Ent_Tussocks_08_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Albata",
                             Value = 3252500m
                         },
@@ -1171,6 +1283,7 @@ namespace ED.Assistant.Migrations
                             Id = 2809,
                             CodexName = "$Codex_Ent_Tussocks_09_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Propagito",
                             Value = 1000000m
                         },
@@ -1179,6 +1292,7 @@ namespace ED.Assistant.Migrations
                             Id = 2810,
                             CodexName = "$Codex_Ent_Tussocks_10_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Divisa",
                             Value = 1766600m
                         },
@@ -1187,6 +1301,7 @@ namespace ED.Assistant.Migrations
                             Id = 2811,
                             CodexName = "$Codex_Ent_Tussocks_11_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Caputus",
                             Value = 3472400m
                         },
@@ -1195,6 +1310,7 @@ namespace ED.Assistant.Migrations
                             Id = 2812,
                             CodexName = "$Codex_Ent_Tussocks_12_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Triticum",
                             Value = 7774700m
                         },
@@ -1203,6 +1319,7 @@ namespace ED.Assistant.Migrations
                             Id = 2813,
                             CodexName = "$Codex_Ent_Tussocks_13_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Stigmasis",
                             Value = 19010800m
                         },
@@ -1211,6 +1328,7 @@ namespace ED.Assistant.Migrations
                             Id = 2814,
                             CodexName = "$Codex_Ent_Tussocks_14_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Virgam",
                             Value = 14313700m
                         },
@@ -1219,6 +1337,7 @@ namespace ED.Assistant.Migrations
                             Id = 2815,
                             CodexName = "$Codex_Ent_Tussocks_15_Name;",
                             CodexType = "$Codex_Ent_Tussocks_Genus_Name;",
+                            Distance = 200.0,
                             Name = "Tussock Capillum",
                             Value = 7025800m
                         });
@@ -1246,9 +1365,6 @@ namespace ED.Assistant.Migrations
                 {
                     b.Property<int>("Id")
                         .HasColumnType("INTEGER");
-
-                    b.Property<double?>("Distance")
-                        .HasColumnType("REAL");
 
                     b.Property<int>("GenusId")
                         .HasColumnType("INTEGER");
@@ -2117,7 +2233,6 @@ namespace ED.Assistant.Migrations
                         new
                         {
                             Id = 1505,
-                            Distance = 2000.0,
                             GenusId = 1503,
                             MaxGravity = 0.27600000000000002,
                             MaxTemperature = 197.0,
@@ -2128,7 +2243,6 @@ namespace ED.Assistant.Migrations
                         new
                         {
                             Id = 1506,
-                            Distance = 2000.0,
                             GenusId = 1503,
                             MaxGravity = 0.27600000000000002,
                             MinGravity = 0.040000000000000001
@@ -2136,7 +2250,6 @@ namespace ED.Assistant.Migrations
                         new
                         {
                             Id = 1507,
-                            Distance = 2000.0,
                             GenusId = 1503,
                             MaxGravity = 0.27600000000000002,
                             MinGravity = 0.040000000000000001
@@ -3055,7 +3168,6 @@ namespace ED.Assistant.Migrations
                         new
                         {
                             Id = 2400,
-                            Distance = 12000.0,
                             GenusId = 2401,
                             MaxGravity = 2.0,
                             MaxTemperature = 273.0

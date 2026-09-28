@@ -12,7 +12,7 @@ static class FungoidaDataSeed
 
     private static void SeedGelata(ModelBuilder modelBuilder)
     {
-                SeedGenus(
+        SeedGenus(
             modelBuilder,
             FungoidaGenus.Gelata,
             "$Codex_Ent_Fungoids_04_Name;",
@@ -369,7 +369,8 @@ static class FungoidaDataSeed
                 CodexType = "$Codex_Ent_Fungoids_Genus_Name;",
                 CodexName = codexName,
                 Name = name,
-                Value = value
+                Value = value,
+                Distance = 300
             });
     }
 

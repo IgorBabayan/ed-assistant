@@ -228,7 +228,8 @@ static class FrutexaDataSeed
             CodexType = "$Codex_Ent_Shrubs_Genus_Name;",
             CodexName = codexName,
             Name = name,
-            Value = value
+            Value = value,
+            Distance = 150
         });
     }
 
