@@ -17,6 +17,7 @@ public sealed class AppDbContext : DbContext
 	public DbSet<RuleStar> RuleStars => Set<RuleStar>();
 	public DbSet<StarClass> StarClasses => Set<StarClass>();
 	public DbSet<ParentBodyClass> ParentBodyClasses => Set<ParentBodyClass>();
+	public DbSet<Evaluator.Evaluator> Evaluators => Set<Evaluator.Evaluator>();
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{

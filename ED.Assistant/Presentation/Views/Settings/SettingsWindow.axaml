@@ -67,6 +67,26 @@
 								<materialIcons:MaterialIcon Kind="FolderOpen"/>
 							</Button>
 						</Grid>
+						
+						<Grid ColumnDefinitions="Auto,Auto,*"
+						      ColumnSpacing="{DynamicResource Spacing5}">
+							<TextBlock Grid.Column="0"
+							           Text="Read logs from the last days:"
+							           VerticalAlignment="Center"/>
+							<NumericUpDown Grid.Column="1"
+							               Width="140"
+							               Value="{Binding ReadLogsForDays, Mode=TwoWay}"
+							               Minimum="0"
+							               Maximum="3650"
+							               Increment="1"
+							               FormatString="0"
+							               ParsingNumberStyle="Integer"/>
+
+							<TextBlock Grid.Column="2"
+							           Text="0 = all logs"
+							           Opacity="0.6"
+							           VerticalAlignment="Center"/>
+						</Grid>
 
 						<StackPanel VerticalAlignment="Stretch"
 						            Spacing="8">

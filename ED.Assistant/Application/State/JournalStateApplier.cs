@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Runtime.CompilerServices;
+using ED.Assistant.Domain.Types;
 
 namespace ED.Assistant.Application.State;
 
@@ -48,7 +49,21 @@ class JournalStateApplier : IJournalStateApplier
 				state.AddRecentEvent(e);
 		});
 
-		dispatcher.On<ScanOrganicEvent>(ScanOrganicEvent.EventName, e => state.Organics.Add(e));
+		dispatcher.On<ScanOrganicEvent>(ScanOrganicEvent.EventName, e =>
+		{
+			if (IsFirstSample(state, e))
+			{
+				state.PendingEvaluatorChanges.Add(
+					new OrganicSampled(e.Timestamp, e.SpeciesId, HasFirstFootStep(state, e)));
+			}
+
+			state.Organics.Add(e);
+		});
+
+		dispatcher.On<SellOrganicDataEvent>(SellOrganicDataEvent.EventName, e =>
+			state.PendingEvaluatorChanges.Add(new OrganicDataSold(
+				e.Timestamp,
+				(e.BioData ?? []).Select(b => b.SpeciesId).ToArray())));
 
 		aggregator.RegisterLast<CommanderEvent>(
 			CommanderEvent.EventName,
@@ -138,6 +153,24 @@ class JournalStateApplier : IJournalStateApplier
 		state.SAASignals.Clear();
 		state.SystemSignals.Clear();
 	}
+	
+	private static bool IsFirstSample(JournalState state, ScanOrganicEvent e)
+	{
+		if (e.ScanType != ScanType.Sample)
+			return false;
+
+		var previous = state.Organics.LastOrDefault(o =>
+			o.SystemAddress == e.SystemAddress &&
+			o.BodyId == e.BodyId &&
+			string.Equals(o.SpeciesId, e.SpeciesId, StringComparison.OrdinalIgnoreCase));
+
+		return previous is null || previous.ScanType != ScanType.Sample;
+	}
+
+	private static bool HasFirstFootStep(JournalState state, ScanOrganicEvent e) =>
+		state.Scans.TryGetValue(e.BodyId, out var scan) &&
+		scan.SystemAddress == e.SystemAddress &&
+		!scan.WasFootfalled;
 
 	private static async IAsyncEnumerable<string> ReadLinesFromFilesAsync(IEnumerable<string> filePaths,
 		[EnumeratorCancellation] CancellationToken cancellationToken = default)

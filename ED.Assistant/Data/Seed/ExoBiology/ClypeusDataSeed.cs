@@ -44,17 +44,17 @@ static class ClypeusDataSeed
                 MaxGravity = 0.276,
             });
 
-        SeedAtmospheres(modelBuilder, ClypeusRule.SpeculumiCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, ClypeusRule.SpeculumiWaterNone, AtmosphereEnum.Water);
-        SeedAtmospheres(modelBuilder, ClypeusRule.SpeculumiWaterVolcanism, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, ClypeusRule.SpeculumiCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, ClypeusRule.SpeculumiWaterNone, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, ClypeusRule.SpeculumiWaterVolcanism, AtmosphereEnum.Water);
 
-        SeedBodyClasses(modelBuilder, ClypeusRule.SpeculumiCarbonDioxide, BodyClassEnum.RockyBody);
-        SeedBodyClasses(modelBuilder, ClypeusRule.SpeculumiWaterNone, BodyClassEnum.RockyBody);
-        SeedBodyClasses(modelBuilder, ClypeusRule.SpeculumiWaterVolcanism, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, ClypeusRule.SpeculumiCarbonDioxide, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, ClypeusRule.SpeculumiWaterNone, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, ClypeusRule.SpeculumiWaterVolcanism, BodyClassEnum.RockyBody);
 
-        SeedVolcanisms(modelBuilder, ClypeusRule.SpeculumiCarbonDioxide, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, ClypeusRule.SpeculumiWaterNone, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, ClypeusRule.SpeculumiWaterVolcanism, VolcanismEnum.Water);
+        SeedHelpers.Volcanisms(modelBuilder, ClypeusRule.SpeculumiCarbonDioxide, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, ClypeusRule.SpeculumiWaterNone, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, ClypeusRule.SpeculumiWaterVolcanism, VolcanismEnum.Water);
     }
 
     private static void SeedMargaritus(ModelBuilder modelBuilder)
@@ -85,14 +85,14 @@ static class ClypeusDataSeed
                 MaxGravity = 0.276
             });
 
-        SeedAtmospheres(modelBuilder, ClypeusRule.MargaritusCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, ClypeusRule.MargaritusWater, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, ClypeusRule.MargaritusCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, ClypeusRule.MargaritusWater, AtmosphereEnum.Water);
 
-        SeedBodyClasses(modelBuilder, ClypeusRule.MargaritusCarbonDioxide, BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, ClypeusRule.MargaritusWater, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, ClypeusRule.MargaritusCarbonDioxide, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, ClypeusRule.MargaritusWater, BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(modelBuilder, ClypeusRule.MargaritusCarbonDioxide, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, ClypeusRule.MargaritusWater, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, ClypeusRule.MargaritusCarbonDioxide, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, ClypeusRule.MargaritusWater, VolcanismEnum.None);
     }
 
     private static void SeedLacrimam(ModelBuilder modelBuilder)
@@ -129,17 +129,17 @@ static class ClypeusDataSeed
                 MaxGravity = 0.276
             });
 
-        SeedAtmospheres(modelBuilder, ClypeusRule.LacrimamCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, ClypeusRule.LacrimamWaterNone, AtmosphereEnum.Water);
-        SeedAtmospheres(modelBuilder, ClypeusRule.LacrimamWaterVolcanism, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, ClypeusRule.LacrimamCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, ClypeusRule.LacrimamWaterNone, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, ClypeusRule.LacrimamWaterVolcanism, AtmosphereEnum.Water);
 
-        SeedBodyClasses(modelBuilder, ClypeusRule.LacrimamCarbonDioxide, BodyClassEnum.RockyBody);
-        SeedBodyClasses(modelBuilder, ClypeusRule.LacrimamWaterNone, BodyClassEnum.RockyBody);
-        SeedBodyClasses(modelBuilder, ClypeusRule.LacrimamWaterVolcanism, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, ClypeusRule.LacrimamCarbonDioxide, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, ClypeusRule.LacrimamWaterNone, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, ClypeusRule.LacrimamWaterVolcanism, BodyClassEnum.RockyBody);
 
-        SeedVolcanisms(modelBuilder, ClypeusRule.LacrimamCarbonDioxide, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, ClypeusRule.LacrimamWaterNone, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, ClypeusRule.LacrimamWaterVolcanism, VolcanismEnum.Water);
+        SeedHelpers.Volcanisms(modelBuilder, ClypeusRule.LacrimamCarbonDioxide, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, ClypeusRule.LacrimamWaterNone, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, ClypeusRule.LacrimamWaterVolcanism, VolcanismEnum.Water);
     }
 
     private static void SeedGenus(
@@ -159,44 +159,5 @@ static class ClypeusDataSeed
                 Value = value,
                 Distance = 150
             });
-    }
-
-    private static void SeedAtmospheres(
-        ModelBuilder modelBuilder,
-        ClypeusRule rule,
-        params AtmosphereEnum[] atmospheres)
-    {
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            atmospheres.Select(x => new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)x
-            }));
-    }
-
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        ClypeusRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
-    }
-
-    private static void SeedVolcanisms(
-        ModelBuilder modelBuilder,
-        ClypeusRule rule,
-        params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(x => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)x
-            }));
     }
 }

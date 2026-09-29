@@ -1,4 +1,5 @@
 ﻿using ED.Assistant.Application.Dialog;
+using ED.Assistant.Application.Evaluation;
 using ED.Assistant.Application.Linux;
 using ED.Assistant.Application.Navigation;
 using ED.Assistant.Application.Path;
@@ -9,6 +10,7 @@ using ED.Assistant.Data.Storage;
 using ED.Assistant.Domain.System;
 using ED.Assistant.Presentation.ViewModels.ConfirmDialog;
 using ED.Assistant.Presentation.ViewModels.Dashboard;
+using ED.Assistant.Presentation.ViewModels.Evaluator;
 using ED.Assistant.Presentation.ViewModels.Exobiology;
 using ED.Assistant.Presentation.ViewModels.Journal;
 using ED.Assistant.Presentation.ViewModels.Material;
@@ -58,6 +60,7 @@ static class ServiceCollectionExtensions
 			.AddSingleton<JournalViewModel>()
 			.AddSingleton<MaterialItemViewModel>()
 			.AddSingleton<MaterialViewModel>()
+			.AddSingleton<EvaluatorViewModel>()
 			.AddSingleton<ShipLockerViewModel>();
 		return services;
 	}
@@ -76,6 +79,7 @@ static class ServiceCollectionExtensions
 			.AddSingleton<IJournalStateApplier, JournalStateApplier>()
 			.AddSingleton<IJournalWatchService, JournalWatchService>()
 			.AddSingleton<IDbPathProvider, DbPathProvider>()
+			.AddSingleton<IEvaluatorSyncService, EvaluatorSyncService>()
 			.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
 
 		if (OperatingSystem.IsLinux())

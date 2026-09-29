@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Runtime.CompilerServices;
+using ED.Assistant.Application.Evaluation;
 
 namespace ED.Assistant.Application.JournalLoading;
 
@@ -7,6 +8,7 @@ sealed class JournalWatchService : IJournalWatchService
 {
 	private readonly IJournalStateStore _stateStore;
 	private readonly IJournalStateApplier _journalStateApplier;
+	private readonly IEvaluatorSyncService _evaluatorSync;
 	private readonly SemaphoreSlim _gate;
 
 	private FileSystemWatcher? _watcher;
@@ -14,10 +16,12 @@ sealed class JournalWatchService : IJournalWatchService
 	private long _position;
 	private DateTime _lastRead;
 
-	public JournalWatchService(IJournalStateStore stateStore, IJournalStateApplier journalStateApplier)
+	public JournalWatchService(IJournalStateStore stateStore, IJournalStateApplier journalStateApplier,
+		IEvaluatorSyncService evaluatorSync)
 	{
 		_stateStore = stateStore;
 		_journalStateApplier = journalStateApplier;
+		_evaluatorSync = evaluatorSync;
 
 		_gate = new(1, 1);
 		_lastRead = DateTime.MinValue;
@@ -137,6 +141,7 @@ sealed class JournalWatchService : IJournalWatchService
 
 		var lines = ReadNewLinesFromCurrentFileAsync(path, cancellationToken);
 		await _journalStateApplier.ApplyFromLinesAsync(state, lines, cancellationToken);
+		await _evaluatorSync.SyncAsync(state, cancellationToken);
 
 		_stateStore.Update(state);
 	}

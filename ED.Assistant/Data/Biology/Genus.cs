@@ -141,7 +141,6 @@ enum ShardGenus
 
 enum StratumGenus
 {
-    Aranaemus = 2501,
     Excutitus = 2502,
     Paleas = 2503,
     Laminamus = 2504,
@@ -202,4 +201,5 @@ public sealed class Genus
     public double Distance { get; set; }
     
     public ICollection<Rule> Rules { get; set; } = [];
+    public ICollection<Evaluator.Evaluator> Evaluators { get; set; } = [];
 }

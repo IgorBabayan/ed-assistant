@@ -32,17 +32,17 @@ static class TubusDataSeed
                 MinPressure = 0.003
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             TubusRule.Compagibus,
             AtmosphereEnum.CarbonDioxide);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubusRule.Compagibus,
             BodyClassEnum.RockyBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             TubusRule.Compagibus,
             VolcanismEnum.None);
@@ -69,12 +69,12 @@ static class TubusDataSeed
                 MaxPressure = 0.0135
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             TubusRule.Rosarium,
             AtmosphereEnum.Ammonia);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubusRule.Rosarium,
             BodyClassEnum.RockyBody);
@@ -101,17 +101,17 @@ static class TubusDataSeed
                 MinPressure = 0.003
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             TubusRule.Cavas,
             AtmosphereEnum.CarbonDioxide);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubusRule.Cavas,
             BodyClassEnum.RockyBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             TubusRule.Cavas,
             VolcanismEnum.None);
@@ -147,27 +147,27 @@ static class TubusDataSeed
                 MaxTemperature = 195.0
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             TubusRule.SororibusAmmonia,
             AtmosphereEnum.Ammonia);
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             TubusRule.SororibusCarbonDioxide,
             AtmosphereEnum.CarbonDioxide);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubusRule.SororibusAmmonia,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubusRule.SororibusCarbonDioxide,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             TubusRule.SororibusCarbonDioxide,
             VolcanismEnum.None);
@@ -194,17 +194,17 @@ static class TubusDataSeed
                 MinPressure = 0.003
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             TubusRule.Conifer,
             AtmosphereEnum.CarbonDioxide);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubusRule.Conifer,
             BodyClassEnum.RockyBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             TubusRule.Conifer,
             VolcanismEnum.None);
@@ -227,44 +227,5 @@ static class TubusDataSeed
                 Value = value,
                 Distance = 800
             });
-    }
-
-    private static void SeedAtmospheres(
-        ModelBuilder modelBuilder,
-        TubusRule rule,
-        params AtmosphereEnum[] atmospheres)
-    {
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            atmospheres.Select(x => new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)x
-            }));
-    }
-
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        TubusRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
-    }
-
-    private static void SeedVolcanisms(
-        ModelBuilder modelBuilder,
-        TubusRule rule,
-        params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(x => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)x
-            }));
     }
 }

@@ -39,13 +39,13 @@ static class FrutexaDataSeed
                 MaxPressure = 0.004
             });
 
-        SeedAtmospheres(modelBuilder, FrutexaRule.CollumRocky, AtmosphereEnum.SulphurDioxide);
-        SeedAtmospheres(modelBuilder, FrutexaRule.CollumHighMetalContent, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, FrutexaRule.CollumRocky, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, FrutexaRule.CollumHighMetalContent, AtmosphereEnum.SulphurDioxide);
 
-        SeedBodyClasses(modelBuilder, FrutexaRule.CollumRocky, BodyClassEnum.RockyBody);
-        SeedBodyClasses(modelBuilder, FrutexaRule.CollumHighMetalContent, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, FrutexaRule.CollumRocky, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, FrutexaRule.CollumHighMetalContent, BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(modelBuilder, FrutexaRule.CollumHighMetalContent, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, FrutexaRule.CollumHighMetalContent, VolcanismEnum.None);
     }
 
     private static void SeedSponsae(ModelBuilder modelBuilder)
@@ -68,14 +68,14 @@ static class FrutexaDataSeed
                 MaxGravity = 0.056
             });
 
-        SeedAtmospheres(modelBuilder, FrutexaRule.SponsaeNoVolcanism, AtmosphereEnum.Water);
-        SeedAtmospheres(modelBuilder, FrutexaRule.SponsaeWaterVolcanism, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, FrutexaRule.SponsaeNoVolcanism, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, FrutexaRule.SponsaeWaterVolcanism, AtmosphereEnum.Water);
 
-        SeedBodyClasses(modelBuilder, FrutexaRule.SponsaeNoVolcanism, BodyClassEnum.RockyBody);
-        SeedBodyClasses(modelBuilder, FrutexaRule.SponsaeWaterVolcanism, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, FrutexaRule.SponsaeNoVolcanism, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, FrutexaRule.SponsaeWaterVolcanism, BodyClassEnum.RockyBody);
 
-        SeedVolcanisms(modelBuilder, FrutexaRule.SponsaeNoVolcanism, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, FrutexaRule.SponsaeWaterVolcanism, VolcanismEnum.Water);
+        SeedHelpers.Volcanisms(modelBuilder, FrutexaRule.SponsaeNoVolcanism, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, FrutexaRule.SponsaeWaterVolcanism, VolcanismEnum.Water);
     }
 
     private static void SeedFera(ModelBuilder modelBuilder)
@@ -93,9 +93,9 @@ static class FrutexaDataSeed
             MinPressure = 0.003
         });
 
-        SeedAtmospheres(modelBuilder, FrutexaRule.Fera, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(modelBuilder, FrutexaRule.Fera, BodyClassEnum.RockyBody);
-        SeedVolcanisms(modelBuilder, FrutexaRule.Fera, VolcanismEnum.None);
+        SeedHelpers.Atmospheres(modelBuilder, FrutexaRule.Fera, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, FrutexaRule.Fera, BodyClassEnum.RockyBody);
+        SeedHelpers.Volcanisms(modelBuilder, FrutexaRule.Fera, VolcanismEnum.None);
     }
 
     private static void SeedFlammasis(ModelBuilder modelBuilder)
@@ -113,8 +113,8 @@ static class FrutexaDataSeed
             MaxPressure = 0.0135
         });
 
-        SeedAtmospheres(modelBuilder, FrutexaRule.Flammasis, AtmosphereEnum.Ammonia);
-        SeedBodyClasses(modelBuilder, FrutexaRule.Flammasis, BodyClassEnum.RockyBody);
+        SeedHelpers.Atmospheres(modelBuilder, FrutexaRule.Flammasis, AtmosphereEnum.Ammonia);
+        SeedHelpers.BodyClasses(modelBuilder, FrutexaRule.Flammasis, BodyClassEnum.RockyBody);
     }
 
     private static void SeedMetallicum(ModelBuilder modelBuilder)
@@ -161,19 +161,19 @@ static class FrutexaDataSeed
                 MaxPressure = 0.07
             });
 
-        SeedAtmospheres(modelBuilder, FrutexaRule.MetallicumAmmonia, AtmosphereEnum.Ammonia);
-        SeedAtmospheres(modelBuilder, FrutexaRule.MetallicumCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, FrutexaRule.MetallicumMethane, AtmosphereEnum.Methane);
-        SeedAtmospheres(modelBuilder, FrutexaRule.MetallicumWater, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, FrutexaRule.MetallicumAmmonia, AtmosphereEnum.Ammonia);
+        SeedHelpers.Atmospheres(modelBuilder, FrutexaRule.MetallicumCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, FrutexaRule.MetallicumMethane, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, FrutexaRule.MetallicumWater, AtmosphereEnum.Water);
 
-        SeedBodyClasses(modelBuilder, FrutexaRule.MetallicumAmmonia, BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, FrutexaRule.MetallicumCarbonDioxide, BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, FrutexaRule.MetallicumMethane, BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, FrutexaRule.MetallicumWater, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, FrutexaRule.MetallicumAmmonia, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, FrutexaRule.MetallicumCarbonDioxide, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, FrutexaRule.MetallicumMethane, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, FrutexaRule.MetallicumWater, BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(modelBuilder, FrutexaRule.MetallicumAmmonia, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, FrutexaRule.MetallicumCarbonDioxide, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, FrutexaRule.MetallicumWater, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, FrutexaRule.MetallicumAmmonia, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, FrutexaRule.MetallicumCarbonDioxide, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, FrutexaRule.MetallicumWater, VolcanismEnum.None);
     }
 
     private static void SeedAcus(ModelBuilder modelBuilder)
@@ -191,9 +191,9 @@ static class FrutexaDataSeed
             MinPressure = 0.0029
         });
 
-        SeedAtmospheres(modelBuilder, FrutexaRule.Acus, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(modelBuilder, FrutexaRule.Acus, BodyClassEnum.RockyBody);
-        SeedVolcanisms(modelBuilder, FrutexaRule.Acus, VolcanismEnum.None);
+        SeedHelpers.Atmospheres(modelBuilder, FrutexaRule.Acus, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, FrutexaRule.Acus, BodyClassEnum.RockyBody);
+        SeedHelpers.Volcanisms(modelBuilder, FrutexaRule.Acus, VolcanismEnum.None);
     }
 
     private static void SeedFlabellum(ModelBuilder modelBuilder)
@@ -211,8 +211,8 @@ static class FrutexaDataSeed
             MaxPressure = 0.0135
         });
 
-        SeedAtmospheres(modelBuilder, FrutexaRule.Flabellum, AtmosphereEnum.Ammonia);
-        SeedBodyClasses(modelBuilder, FrutexaRule.Flabellum, BodyClassEnum.RockyBody);
+        SeedHelpers.Atmospheres(modelBuilder, FrutexaRule.Flabellum, AtmosphereEnum.Ammonia);
+        SeedHelpers.BodyClasses(modelBuilder, FrutexaRule.Flabellum, BodyClassEnum.RockyBody);
     }
 
     private static void SeedGenus(
@@ -231,44 +231,5 @@ static class FrutexaDataSeed
             Value = value,
             Distance = 150
         });
-    }
-
-    private static void SeedAtmospheres(
-        ModelBuilder modelBuilder,
-        FrutexaRule rule,
-        params AtmosphereEnum[] atmospheres)
-    {
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            atmospheres.Select(x => new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)x
-            }));
-    }
-
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        FrutexaRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
-    }
-
-    private static void SeedVolcanisms(
-        ModelBuilder modelBuilder,
-        FrutexaRule rule,
-        params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(x => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)x
-            }));
     }
 }

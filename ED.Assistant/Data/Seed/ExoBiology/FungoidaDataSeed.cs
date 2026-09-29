@@ -77,58 +77,58 @@ static class FungoidaDataSeed
                 MaxGravity = 0.063
             });
         
-                SeedAtmospheres(modelBuilder, FungoidaRule.GelataArgon, AtmosphereEnum.Argon);
-        SeedAtmospheres(modelBuilder, FungoidaRule.GelataAmmoniaRocky, AtmosphereEnum.Ammonia);
-        SeedAtmospheres(modelBuilder, FungoidaRule.GelataAmmoniaHighMetal, AtmosphereEnum.Ammonia);
-        SeedAtmospheres(modelBuilder, FungoidaRule.GelataCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, FungoidaRule.GelataMethane, AtmosphereEnum.Methane);
-        SeedAtmospheres(modelBuilder, FungoidaRule.GelataWater, AtmosphereEnum.Water);
+                SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.GelataArgon, AtmosphereEnum.Argon);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.GelataAmmoniaRocky, AtmosphereEnum.Ammonia);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.GelataAmmoniaHighMetal, AtmosphereEnum.Ammonia);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.GelataCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.GelataMethane, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.GelataWater, AtmosphereEnum.Water);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.GelataArgon,
             BodyClassEnum.RockyBody,
             BodyClassEnum.RockyIceBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.GelataAmmoniaRocky,
             BodyClassEnum.RockyBody,
             BodyClassEnum.RockyIceBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.GelataAmmoniaHighMetal,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.GelataCarbonDioxide,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.GelataMethane,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.GelataWater,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(modelBuilder, FungoidaRule.GelataArgon, VolcanismEnum.MajorSilicate);
-        SeedVolcanisms(modelBuilder, FungoidaRule.GelataAmmoniaRocky, VolcanismEnum.MajorSilicate);
-        SeedVolcanisms(modelBuilder, FungoidaRule.GelataAmmoniaHighMetal, VolcanismEnum.MajorRocky);
-        SeedVolcanisms(modelBuilder, FungoidaRule.GelataCarbonDioxide, VolcanismEnum.None);
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(modelBuilder, FungoidaRule.GelataArgon, VolcanismEnum.MajorSilicate);
+        SeedHelpers.Volcanisms(modelBuilder, FungoidaRule.GelataAmmoniaRocky, VolcanismEnum.MajorSilicate);
+        SeedHelpers.Volcanisms(modelBuilder, FungoidaRule.GelataAmmoniaHighMetal, VolcanismEnum.MajorRocky);
+        SeedHelpers.Volcanisms(modelBuilder, FungoidaRule.GelataCarbonDioxide, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(
             modelBuilder,
             FungoidaRule.GelataMethane,
             VolcanismEnum.MajorSilicate,
             VolcanismEnum.MajorMetallic);
-        SeedVolcanisms(modelBuilder, FungoidaRule.GelataWater, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, FungoidaRule.GelataWater, VolcanismEnum.None);
     }
 
     private static void SeedBullarum(ModelBuilder modelBuilder)
@@ -160,8 +160,8 @@ static class FungoidaDataSeed
                 MaxTemperature = 70.0
             });
 
-        SeedAtmospheres(modelBuilder, FungoidaRule.BullarumArgon, AtmosphereEnum.Argon);
-        SeedAtmospheres(modelBuilder, FungoidaRule.BullarumNitrogen, AtmosphereEnum.Nitrogen);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.BullarumArgon, AtmosphereEnum.Argon);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.BullarumNitrogen, AtmosphereEnum.Nitrogen);
 
         foreach (var rule in new[]
                  {
@@ -169,14 +169,14 @@ static class FungoidaDataSeed
                      FungoidaRule.BullarumNitrogen
                  })
         {
-            SeedBodyClasses(
+            SeedHelpers.BodyClasses(
                 modelBuilder,
                 rule,
                 BodyClassEnum.RockyBody,
                 BodyClassEnum.RockyIceBody,
                 BodyClassEnum.HighMetalContentBody);
 
-            SeedVolcanisms(modelBuilder, rule, VolcanismEnum.None);
+            SeedHelpers.Volcanisms(modelBuilder, rule, VolcanismEnum.None);
         }
     }
 
@@ -244,51 +244,51 @@ static class FungoidaDataSeed
                 MaxGravity = 0.064
             });
 
-        SeedAtmospheres(modelBuilder, FungoidaRule.StabitisAmmonia, AtmosphereEnum.Ammonia);
-        SeedAtmospheres(modelBuilder, FungoidaRule.StabitisArgon, AtmosphereEnum.Argon);
-        SeedAtmospheres(modelBuilder, FungoidaRule.StabitisArgonRich, AtmosphereEnum.ArgonRich);
-        SeedAtmospheres(modelBuilder, FungoidaRule.StabitisCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, FungoidaRule.StabitisMethane, AtmosphereEnum.Methane);
-        SeedAtmospheres(modelBuilder, FungoidaRule.StabitisWater, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.StabitisAmmonia, AtmosphereEnum.Ammonia);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.StabitisArgon, AtmosphereEnum.Argon);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.StabitisArgonRich, AtmosphereEnum.ArgonRich);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.StabitisCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.StabitisMethane, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.StabitisWater, AtmosphereEnum.Water);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.StabitisAmmonia,
             BodyClassEnum.RockyBody,
             BodyClassEnum.RockyIceBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.StabitisArgon,
             BodyClassEnum.RockyIceBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.StabitisArgonRich,
             BodyClassEnum.IcyBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.StabitisCarbonDioxide,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.StabitisMethane,
             BodyClassEnum.RockyBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.StabitisWater,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(modelBuilder, FungoidaRule.StabitisAmmonia, VolcanismEnum.Silicate);
-        SeedVolcanisms(modelBuilder, FungoidaRule.StabitisArgon, VolcanismEnum.Silicate, VolcanismEnum.Rocky);
-        SeedVolcanisms(modelBuilder, FungoidaRule.StabitisCarbonDioxide, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, FungoidaRule.StabitisMethane, VolcanismEnum.MajorSilicate);
-        SeedVolcanisms(modelBuilder, FungoidaRule.StabitisWater, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, FungoidaRule.StabitisAmmonia, VolcanismEnum.Silicate);
+        SeedHelpers.Volcanisms(modelBuilder, FungoidaRule.StabitisArgon, VolcanismEnum.Silicate, VolcanismEnum.Rocky);
+        SeedHelpers.Volcanisms(modelBuilder, FungoidaRule.StabitisCarbonDioxide, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, FungoidaRule.StabitisMethane, VolcanismEnum.MajorSilicate);
+        SeedHelpers.Volcanisms(modelBuilder, FungoidaRule.StabitisWater, VolcanismEnum.None);
     }
 
     private static void SeedSetisis(ModelBuilder modelBuilder)
@@ -330,29 +330,29 @@ static class FungoidaDataSeed
                 MaxTemperature = 109.0
             });
 
-        SeedAtmospheres(modelBuilder, FungoidaRule.SetisisAmmonia, AtmosphereEnum.Ammonia);
-        SeedAtmospheres(modelBuilder, FungoidaRule.SetisisMethaneRockyIce, AtmosphereEnum.Methane);
-        SeedAtmospheres(modelBuilder, FungoidaRule.SetisisMethaneRocky, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.SetisisAmmonia, AtmosphereEnum.Ammonia);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.SetisisMethaneRockyIce, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, FungoidaRule.SetisisMethaneRocky, AtmosphereEnum.Methane);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.SetisisAmmonia,
             BodyClassEnum.RockyBody,
             BodyClassEnum.RockyIceBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.SetisisMethaneRockyIce,
             BodyClassEnum.RockyIceBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FungoidaRule.SetisisMethaneRocky,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(modelBuilder, FungoidaRule.SetisisMethaneRockyIce, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, FungoidaRule.SetisisMethaneRockyIce, VolcanismEnum.None);
     }
 
     private static void SeedGenus(
@@ -372,44 +372,5 @@ static class FungoidaDataSeed
                 Value = value,
                 Distance = 300
             });
-    }
-
-    private static void SeedAtmospheres(
-        ModelBuilder modelBuilder,
-        FungoidaRule rule,
-        params AtmosphereEnum[] atmospheres)
-    {
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            atmospheres.Select(x => new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)x
-            }));
-    }
-
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        FungoidaRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
-    }
-
-    private static void SeedVolcanisms(
-        ModelBuilder modelBuilder,
-        FungoidaRule rule,
-        params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(x => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)x
-            }));
     }
 }

@@ -145,6 +145,10 @@
 								Classes.active="{Binding IsExobilogicalActive}"
 								Command="{Binding NavigateToExobilogicalViewCommand}"
 								Content="Exobilogical"/>
+						<Button Classes="sidebar-button"
+						        Classes.active="{Binding IsEvaluatorActive}"
+						        Command="{Binding NavigateToEvaluatorViewCommand}"
+						        Content="Evaluator"/>
 						<Border Classes="separator"/>
 						<Button Classes="sidebar-button"
 								Classes.active="{Binding IsJournalActive}"
