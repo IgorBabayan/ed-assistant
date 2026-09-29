@@ -5,33 +5,30 @@ namespace ED.Assistant.Application.JournalLoading;
 
 sealed class JournalEventDispatcher : IJournalEventDispatcher
 {
+	// One shared instance: System.Text.Json caches type metadata per options object,
+	// so creating options per batch rebuilt that cache on every watcher tick.
+	private static readonly JsonSerializerOptions DefaultOptions = CreateDefaultOptions();
+
 	private readonly JsonSerializerOptions _jsonOptions;
-	private readonly List<IEventSubscription> _subscriptions = [];
+	private readonly Dictionary<string, List<IEventSubscription>> _subscriptions = new(StringComparer.OrdinalIgnoreCase);
 	private readonly List<Action<IJournalEvent>> _anySubscriptions = [];
 
 	private interface IEventSubscription
 	{
-		bool CanHandle(string line);
 		IJournalEvent? Handle(string line);
 	}
 
-	public sealed class EventSubscription<TEvent> : IEventSubscription
+	private sealed class EventSubscription<TEvent> : IEventSubscription
 		where TEvent : IJournalEvent
 	{
-		private readonly string _eventName;
-		private readonly string _pattern;
 		private readonly Action<TEvent> _handler;
 		private readonly JsonSerializerOptions _jsonOptions;
 
-		public EventSubscription(string eventName, Action<TEvent> handler, JsonSerializerOptions jsonOptions)
+		public EventSubscription(Action<TEvent> handler, JsonSerializerOptions jsonOptions)
 		{
-			_eventName = eventName;
-			_pattern = $"\"event\":\"{eventName}\"";
 			_handler = handler;
 			_jsonOptions = jsonOptions;
 		}
-
-		public bool CanHandle(string line) => line.Contains(_pattern, StringComparison.OrdinalIgnoreCase);
 
 		public IJournalEvent? Handle(string line)
 		{
@@ -39,9 +36,6 @@ sealed class JournalEventDispatcher : IJournalEventDispatcher
 			{
 				var journalEvent = JsonSerializer.Deserialize<TEvent>(line, _jsonOptions);
 				if (journalEvent is null)
-					return null;
-
-				if (!string.Equals(journalEvent.Event, _eventName, StringComparison.OrdinalIgnoreCase))
 					return null;
 
 				_handler(journalEvent);
@@ -54,29 +48,36 @@ sealed class JournalEventDispatcher : IJournalEventDispatcher
 		}
 	}
 
+	/// <param name="jsonOptions">
+	/// Optional custom options. They are used as-is (not modified), so they must already
+	/// contain every converter the journal events need.
+	/// </param>
 	public JournalEventDispatcher(JsonSerializerOptions? jsonOptions = null)
-	{
-		_jsonOptions = jsonOptions ?? new JsonSerializerOptions
-		{
-			PropertyNameCaseInsensitive = true
-		};
-		_jsonOptions.Converters.Add(new ParentConverter());
-	}
+		=> _jsonOptions = jsonOptions ?? DefaultOptions;
 
 	public void OnAny(Action<IJournalEvent> handler) => _anySubscriptions.Add(handler);
 
 	public void On<TEvent>(string eventName, Action<TEvent> handler)
-	   where TEvent : IJournalEvent => _subscriptions.Add(new EventSubscription<TEvent>(eventName, handler, _jsonOptions));
+		where TEvent : IJournalEvent
+	{
+		if (!_subscriptions.TryGetValue(eventName, out var list))
+			_subscriptions[eventName] = list = [];
+
+		list.Add(new EventSubscription<TEvent>(handler, _jsonOptions));
+	}
 
 	public async Task DispatchAsync(IAsyncEnumerable<string> lines, CancellationToken cancellationToken = default)
 	{
 		await foreach (var line in lines.WithCancellation(cancellationToken))
 		{
-			foreach (var subscription in _subscriptions)
-			{
-				if (!subscription.CanHandle(line))
-					continue;
+			// Read the event name once and look it up, instead of scanning
+			// the whole line once per subscription.
+			var eventName = JournalLine.ReadEventName(line);
+			if (eventName is null || !_subscriptions.TryGetValue(eventName, out var subscriptions))
+				continue;
 
+			foreach (var subscription in subscriptions)
+			{
 				var journalEvent = subscription.Handle(line);
 				if (journalEvent is null)
 					continue;
@@ -85,5 +86,16 @@ sealed class JournalEventDispatcher : IJournalEventDispatcher
 					anyHandler(journalEvent);
 			}
 		}
+	}
+
+	private static JsonSerializerOptions CreateDefaultOptions()
+	{
+		var options = new JsonSerializerOptions
+		{
+			PropertyNameCaseInsensitive = true
+		};
+
+		options.Converters.Add(new ParentConverter());
+		return options;
 	}
 }

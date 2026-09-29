@@ -30,7 +30,7 @@ enum VolcanismEnum
 public sealed class Volcanism
 {
     public int Id { get; set; }
-    public string Name { get; set; }
+    public required string Name { get; set; }
     
     public ICollection<Rule> Rules { get; set; } = [];
 }

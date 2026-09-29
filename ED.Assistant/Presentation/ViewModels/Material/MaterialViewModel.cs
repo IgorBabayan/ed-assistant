@@ -1,10 +1,16 @@
-﻿namespace ED.Assistant.Presentation.ViewModels.Material;
+﻿using Avalonia.Threading;
+using ED.Assistant.Presentation.Collections;
+
+namespace ED.Assistant.Presentation.ViewModels.Material;
 
 public partial class MaterialViewModel : LoadableViewModel
 {
-	public ObservableCollection<MaterialItemViewModel> Materials { get; } = [];
-	public ObservableCollection<MaterialItemViewModel> FilteredMaterials { get; } = [];
-	public ObservableCollection<MaterialSummaryViewModel> MaterialSummaries { get; } = [];
+	// The Materials event is only written on login, so most updates can be skipped
+	private volatile MaterialsEvent? _lastMaterials;
+
+	public BulkObservableCollection<MaterialItemViewModel> Materials { get; } = new();
+	public BulkObservableCollection<MaterialItemViewModel> FilteredMaterials { get; } = new();
+	public BulkObservableCollection<MaterialSummaryViewModel> MaterialSummaries { get; } = new();
 
 	public IReadOnlyList<string> Categories { get; } =
 	[
@@ -48,35 +54,37 @@ public partial class MaterialViewModel : LoadableViewModel
 		}
 	}
 
-	protected override bool ActivateOnNavigation => true;
-
 	public MaterialViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
 		IMemoryCache memoryCache) : base(journalLoader, stateStore, memoryCache) { }
 
 	protected override async Task UpdateFromStateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
 	{
-		if (state.Materials is null)
+		var materialsEvent = state.Materials;
+		if (materialsEvent is null || ReferenceEquals(materialsEvent, _lastMaterials))
 			return;
 
 		var materials = await Task.Run(() =>
 		{
 			var result = new List<MaterialItemViewModel>();
 
-			AddMaterials(result, state.Materials.Raw, Options.Category.Raw);
-			AddMaterials(result, state.Materials.Manufactured, Options.Category.Manufactured);
-			AddMaterials(result, state.Materials.Encoded, Options.Category.Encoded);
+			AddMaterials(result, materialsEvent.Raw, Options.Category.Raw);
+			AddMaterials(result, materialsEvent.Manufactured, Options.Category.Manufactured);
+			AddMaterials(result, materialsEvent.Encoded, Options.Category.Encoded);
 
 			return result.OrderBy(x => x.Name).ToList();
 		}, cancellationToken);
 
-		Materials.Clear();
+		// Bound collections: change them on the UI thread only
+		await Dispatcher.UIThread.InvokeAsync(() =>
+		{
+			Materials.ReplaceAll(materials);
 
-		foreach (var material in materials)
-			Materials.Add(material);
+			BuildSummaries();
+			ApplyFilters();
 
-		BuildSummaries();
-		ApplyFilters();
+			_lastMaterials = materialsEvent;
+		});
 	}
 
 	partial void OnSearchTextChanged(string value) => ApplyFilters();
@@ -119,42 +127,39 @@ public partial class MaterialViewModel : LoadableViewModel
 		if (!string.IsNullOrWhiteSpace(SearchText))
 			query = query.Where(x => x.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
 
-		if (SelectedCategory != "All")
+		if (SelectedCategory != Options.Category.All)
 			query = query.Where(x => x.Category == SelectedCategory);
 
 		query = SelectedSort switch
 		{
-			"Category" => query.OrderBy(x => x.Category).ThenBy(x => x.Name),
-			"Count" => query.OrderByDescending(x => x.Count),
+			Options.Sort.Category => query.OrderBy(x => x.Category).ThenBy(x => x.Name),
+			Options.Sort.Count => query.OrderByDescending(x => x.Count),
 			_ => query.OrderBy(x => x.Name)
 		};
 
-		FilteredMaterials.Clear();
-		foreach (var material in query)
-			FilteredMaterials.Add(material);
+		FilteredMaterials.ReplaceAll(query.ToList());
 	}
 
 	private void BuildSummaries()
 	{
-		MaterialSummaries.Clear();
-
-		MaterialSummaries.Add(new()
-		{
-			Title = Options.Category.Raw,
-			Value = Materials.Where(x => x.Category == Options.Category.Raw).Sum(x => x.Count)
-		});
-
-		MaterialSummaries.Add(new()
-		{
-			Title = Options.Category.Manufactured,
-			Value = Materials.Where(x => x.Category == Options.Category.Manufactured).Sum(x => x.Count)
-		});
-
-		MaterialSummaries.Add(new()
-		{
-			Title = Options.Category.Encoded,
-			Value = Materials.Where(x => x.Category == Options.Category.Encoded).Sum(x => x.Count)
-		});
+		MaterialSummaries.ReplaceAll(
+		[
+			new()
+			{
+				Title = Options.Category.Raw,
+				Value = Materials.Where(x => x.Category == Options.Category.Raw).Sum(x => x.Count)
+			},
+			new()
+			{
+				Title = Options.Category.Manufactured,
+				Value = Materials.Where(x => x.Category == Options.Category.Manufactured).Sum(x => x.Count)
+			},
+			new()
+			{
+				Title = Options.Category.Encoded,
+				Value = Materials.Where(x => x.Category == Options.Category.Encoded).Sum(x => x.Count)
+			}
+		]);
 	}
 }
 

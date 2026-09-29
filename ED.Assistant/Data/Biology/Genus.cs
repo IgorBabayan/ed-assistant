@@ -194,10 +194,10 @@ enum TussockGenus
 public sealed class Genus
 {
     public int Id { get; set; }
-    public string Name { get; set; }
+    public required string Name { get; set; }
     public decimal Value { get; set; }
-    public string CodexType { get; set; }
-    public string CodexName { get; set; }
+    public required string CodexType { get; set; }
+    public required string CodexName { get; set; }
     public double Distance { get; set; }
     
     public ICollection<Rule> Rules { get; set; } = [];
