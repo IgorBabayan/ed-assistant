@@ -45,7 +45,6 @@
 
 					<StackPanel Grid.Row="1"
 								Spacing="{DynamicResource Spacing5}">
-
 						<Grid ColumnSpacing="{DynamicResource Spacing5}">
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="Auto"/>
@@ -66,6 +65,14 @@
 									Classes="app-button">
 								<materialIcons:MaterialIcon Kind="FolderOpen"/>
 							</Button>
+						</Grid>
+						
+						<Grid ColumnDefinitions="Auto,*" ColumnSpacing="{DynamicResource Spacing5}">
+							<TextBlock Text="Dock position:" VerticalAlignment="Center"/>
+							<ComboBox Grid.Column="1"
+							          MinWidth="160"
+							          ItemsSource="{Binding DockPositions}"
+							          SelectedItem="{Binding DockPosition, Mode=TwoWay}"/>
 						</Grid>
 						
 						<Grid ColumnDefinitions="Auto,Auto,*"
