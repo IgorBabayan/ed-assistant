@@ -1,8 +1,9 @@
 using Avalonia.Threading;
+using ED.Assistant.Application.Catalog;
 using ED.Assistant.Application.Path;
 using ED.Assistant.Application.Settings;
-using ED.Assistant.Data.Repository;
 using ED.Assistant.Domain.Config;
+using ED.Assistant.Presentation.Collections;
 using ED.Assistant.Presentation.Helpers.Exobiology;
 using ED.Assistant.Presentation.ViewModels.System;
 
@@ -11,27 +12,25 @@ namespace ED.Assistant.Presentation.ViewModels.Exobiology;
 public sealed partial class ExobiologyViewModel : LoadableViewModel
 {
 	private readonly ISettingsStorage _settingsStorage;
-	private readonly IRepository<Genus> _genusRepository;
+	private readonly IGenusCatalog _genusCatalog;
 	private readonly IPathFinder _pathFinder;
 
 	private long? _previousSystemAddress;
 	
 	private IReadOnlyList<OrganicPlanetViewModel> _previousPlanets = [];
 
-	public ObservableCollection<OrganicPlanetViewModel> Planets { get; } = [];
+	public BulkObservableCollection<OrganicPlanetViewModel> Planets { get; } = new();
 	
 	public bool HasBiologicalSignals => Planets.Count > 0;
 	
 	[ObservableProperty]
 	public partial bool HideExcludedSignals { get; set; }
 
-	protected override bool ActivateOnNavigation => true;
-
 	public ExobiologyViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
-		IMemoryCache memoryCache, IRepository<Genus>  genusRepository, ISettingsStorage settingsStorage, IPathFinder pathFinder)
+		IMemoryCache memoryCache, IGenusCatalog genusCatalog, ISettingsStorage settingsStorage, IPathFinder pathFinder)
 		: base(journalLoader, stateStore, memoryCache)
 	{
-		_genusRepository = genusRepository;
+		_genusCatalog = genusCatalog;
 		_settingsStorage = settingsStorage;
 		_pathFinder = pathFinder;
 
@@ -48,6 +47,7 @@ public sealed partial class ExobiologyViewModel : LoadableViewModel
 	protected override async Task UpdateFromStateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
 	{
+		// Copy before the first await: the watcher keeps mutating the shared state
 		var snapshot = new JournalState
 		{
 			FSDJump = state.FSDJump,
@@ -69,18 +69,8 @@ public sealed partial class ExobiologyViewModel : LoadableViewModel
 		
 		if (snapshot.CurrentSystemAddress is { } address)
 		{
-			var catalog = await _genusRepository
-				.AsNoTracking()
-				.AsSplitQuery()
-				.Include(c => c.Rules).ThenInclude(r => r.BodyClasses)
-				.Include(c => c.Rules).ThenInclude(r => r.Atmospheres)
-				.Include(c => c.Rules).ThenInclude(r => r.Volcanisms)
-				.Include(c => c.Rules).ThenInclude(r => r.SystemBodyClasses)
-				.Include(c => c.Rules).ThenInclude(r => r.AtmosphereComponents)
-					.ThenInclude(r => r.Atmosphere)
-				.Include(c => c.Rules).ThenInclude(r => r.Stars)
-					.ThenInclude(r => r.StarClass)
-				.ToListAsync(cancellationToken);
+			// Seed data: loaded from the database once, then served from memory
+			var catalog = await _genusCatalog.GetAllAsync(cancellationToken);
 
 			planets = ExobiologyDisplayBuilder.Build(
 				snapshot,
@@ -99,11 +89,7 @@ public sealed partial class ExobiologyViewModel : LoadableViewModel
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 
-			Planets.Clear();
-
-			foreach (var planet in planets)
-				Planets.Add(planet);
-			
+			Planets.ReplaceAll(planets);
 			OnPropertyChanged(nameof(HasBiologicalSignals));
 		});
 	}

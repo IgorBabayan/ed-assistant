@@ -1,4 +1,5 @@
-﻿using ED.Assistant.Application.Dialog;
+﻿using ED.Assistant.Application.Catalog;
+using ED.Assistant.Application.Dialog;
 using ED.Assistant.Application.Evaluation;
 using ED.Assistant.Application.Linux;
 using ED.Assistant.Application.Navigation;
@@ -79,6 +80,7 @@ static class ServiceCollectionExtensions
 			.AddSingleton<IJournalStateApplier, JournalStateApplier>()
 			.AddSingleton<IJournalWatchService, JournalWatchService>()
 			.AddSingleton<IDbPathProvider, DbPathProvider>()
+			.AddSingleton<IGenusCatalog, GenusCatalog>()
 			.AddSingleton<IEvaluatorSyncService, EvaluatorSyncService>()
 			.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
 

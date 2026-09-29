@@ -74,6 +74,9 @@ public partial class MainWindowViewModel : LoadableViewModel
 	
 	public bool IsLinux => OperatingSystem.IsLinux();
 
+	// The shell header is always on screen and is never a navigation target
+	protected override bool IsAlwaysVisible => true;
+
 	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
 		INavigationStore navigationStore, IJournalStateStore stateStore, IMemoryCache memoryCache,
 		INavigationService navigationService, IJournalLoaderService journalLoader,
@@ -107,16 +110,27 @@ public partial class MainWindowViewModel : LoadableViewModel
 		{
 			notify.PropertyChanged -= OnPropertyChanged;
 		}
+
+		base.OnDispose();
 	}
 
 	protected override void UpdateFromState(JournalState state)
 	{
-		CMDR = $"o7, {state.Commander?.Name ?? "Commander"}";
-		Ship = state.LoadGame?.ShipFullTitle ?? DefaultState.Ship;
-		LogFile = state.FileName ?? DefaultState.LogFile;
-		LastEvent = string.IsNullOrWhiteSpace(state.LastEvent?.Event)
+		// Read the state here (watcher thread, state is consistent now), apply on the UI thread
+		var cmdr = $"o7, {state.Commander?.Name ?? "Commander"}";
+		var ship = state.LoadGame?.ShipFullTitle ?? DefaultState.Ship;
+		var logFile = state.FileName ?? DefaultState.LogFile;
+		var lastEvent = string.IsNullOrWhiteSpace(state.LastEvent?.Event)
 			? DefaultState.LastEvent
 			: $"event: '{state.LastEvent!.Event}'";
+
+		RunOnUIThread(() =>
+		{
+			CMDR = cmdr;
+			Ship = ship;
+			LogFile = logFile;
+			LastEvent = lastEvent;
+		});
 	}
 	
 	private void BuildDockItems()

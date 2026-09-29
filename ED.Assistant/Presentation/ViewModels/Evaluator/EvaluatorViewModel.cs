@@ -1,7 +1,9 @@
 using System.Globalization;
 using Avalonia.Threading;
+using ED.Assistant.Application.Evaluation;
 using ED.Assistant.Data.Repository;
 using ED.Assistant.Extensions;
+using ED.Assistant.Presentation.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using EvaluatorEntity = ED.Assistant.Data.Evaluator.Evaluator;
 
@@ -10,8 +12,9 @@ namespace ED.Assistant.Presentation.ViewModels.Evaluator;
 public sealed partial class EvaluatorViewModel : LoadableViewModel
 {
 	private readonly IServiceScopeFactory _scopeFactory;
+	private readonly IEvaluatorSyncService _evaluatorSync;
 
-	public ObservableCollection<EvaluatorItemViewModel> Items { get; } = [];
+	public BulkObservableCollection<EvaluatorItemViewModel> Items { get; } = new();
 
 	[ObservableProperty]
 	public partial int UnsoldCount { get; set; }
@@ -24,11 +27,25 @@ public sealed partial class EvaluatorViewModel : LoadableViewModel
 
 	public bool HasItems => Items.Count > 0;
 
-	protected override bool ActivateOnNavigation => true;
+	// The data lives in the database and only changes when the sync service writes to it,
+	// so ordinary journal lines must not trigger a reload.
+	protected override bool ReactsToJournalChanges => false;
 
 	public EvaluatorViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
-		IMemoryCache memoryCache, IServiceScopeFactory scopeFactory)
-		: base(journalLoader, stateStore, memoryCache) => _scopeFactory = scopeFactory;
+		IMemoryCache memoryCache, IServiceScopeFactory scopeFactory, IEvaluatorSyncService evaluatorSync)
+		: base(journalLoader, stateStore, memoryCache)
+	{
+		_scopeFactory = scopeFactory;
+		_evaluatorSync = evaluatorSync;
+
+		_evaluatorSync.DataChanged += OnEvaluatorDataChanged;
+	}
+
+	protected override void OnDispose()
+	{
+		_evaluatorSync.DataChanged -= OnEvaluatorDataChanged;
+		base.OnDispose();
+	}
 
 	protected override async Task UpdateFromStateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
@@ -53,9 +70,7 @@ public sealed partial class EvaluatorViewModel : LoadableViewModel
 
 		await Dispatcher.UIThread.InvokeAsync(() =>
 		{
-			Items.Clear();
-			foreach (var item in items)
-				Items.Add(item);
+			Items.ReplaceAll(items);
 
 			UnsoldCount = items.Length;
 			UnsoldValue = total > 0 ? total.ToMillions() : "—";
@@ -64,6 +79,9 @@ public sealed partial class EvaluatorViewModel : LoadableViewModel
 			OnPropertyChanged(nameof(HasItems));
 		});
 	}
+
+	// Reload now if visible, otherwise on the next visit
+	private void OnEvaluatorDataChanged(object? sender, EventArgs e) => Invalidate();
 }
 
 public sealed class EvaluatorItemViewModel

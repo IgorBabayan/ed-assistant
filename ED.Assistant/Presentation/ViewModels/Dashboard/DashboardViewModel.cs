@@ -1,7 +1,7 @@
-﻿using Avalonia.Threading;
-using ED.Assistant.Domain.DTO;
+﻿using ED.Assistant.Domain.DTO;
 using ED.Assistant.Domain.Enums;
 using ED.Assistant.Extensions;
+using ED.Assistant.Presentation.Collections;
 using ED.Assistant.Presentation.Helpers.Dashboard;
 
 namespace ED.Assistant.Presentation.ViewModels.Dashboard;
@@ -9,6 +9,19 @@ namespace ED.Assistant.Presentation.ViewModels.Dashboard;
 public partial class DashboardViewModel : LoadableViewModel
 {
 	private const int RecentEventsDisplayLimit = 8;
+
+	// Enum ranges never change: compute once instead of on every update
+	private static readonly ushort MaxCombat = GetMaxRank<CombatRankEnum>();
+	private static readonly ushort MaxTrade = GetMaxRank<TradeRankEnum>();
+	private static readonly ushort MaxExplore = GetMaxRank<ExploreRankEnum>();
+	private static readonly ushort MaxSoldier = GetMaxRank<SoldierRankEnum>();
+	private static readonly ushort MaxExobiologist = GetMaxRank<ExobiologistRankEnum>();
+	private static readonly ushort MaxCQC = GetMaxRank<CQCRankEnum>();
+	private static readonly ushort MaxEmpire = GetMaxRank<EmpireRankEnum>();
+	private static readonly ushort MaxFederation = GetMaxRank<FederationRankEnum>();
+
+	// Last RankEvent turned into rows; the event object is replaced only when a new Rank line arrives
+	private RankEvent? _lastRanks;
 
 	[ObservableProperty]
 	public partial CommanderEvent? Commander { get; set; } = default;
@@ -22,9 +35,9 @@ public partial class DashboardViewModel : LoadableViewModel
 	[ObservableProperty]
 	public partial FSDJumpEvent? CurrentSystem { get; set; } = default;
 
-	public ObservableCollection<DashboardSignalViewModel> Signals { get; } = [];
+	public BulkObservableCollection<DashboardSignalViewModel> Signals { get; } = new();
 
-	public ObservableCollection<RecentEventViewModel> RecentEvents { get; } = [];
+	public BulkObservableCollection<RecentEventViewModel> RecentEvents { get; } = new();
 
 	public bool HasSignals => Signals.Count > 0;
 
@@ -40,111 +53,100 @@ public partial class DashboardViewModel : LoadableViewModel
 
 		// Build display rows here: the journal watcher calls this right after applying
 		// new lines, so the state is consistent now and may change later.
-		var signals = DashboardSignalsBuilder.Build(state, DateTime.UtcNow);
-		var recentEvents = RecentEventsBuilder.Build(state.RecentEvents, RecentEventsDisplayLimit, DateTime.Now);
+		var signals = DashboardSignalsBuilder.Build(state, DateTime.UtcNow).ToList();
+		var recentEvents = RecentEventsBuilder.Build(state.RecentEvents, RecentEventsDisplayLimit, DateTime.Now).ToList();
 
 		var commander = state.Commander;
-		var ranks = state.Ranks;
 		var loadGame = state.LoadGame;
 		var currentSystem = state.FSDJump;
+
+		var ranks = state.Ranks;
+		List<RankDTO>? rankRows = null;
+
+		if (ranks is not null && !ReferenceEquals(ranks, _lastRanks))
+		{
+			rankRows = BuildRanks(ranks);
+			_lastRanks = ranks;
+		}
 
 		// StateChanged is raised on the watcher thread; bound collections must change on the UI thread.
 		RunOnUIThread(() =>
 		{
 			Commander = commander;
-			ParseCommanderRanks(ranks);
-
 			LoadGame = loadGame;
 			CurrentSystem = currentSystem;
 
-			Replace(Signals, signals);
-			Replace(RecentEvents, recentEvents);
+			if (rankRows is not null)
+				Ranks = new ObservableCollection<RankDTO>(rankRows);
+
+			Signals.ReplaceAll(signals);
+			RecentEvents.ReplaceAll(recentEvents);
 
 			OnPropertyChanged(nameof(HasSignals));
 			OnPropertyChanged(nameof(HasRecentEvents));
 		});
 	}
 
-	private static void RunOnUIThread(Action action)
-	{
-		if (Dispatcher.UIThread.CheckAccess())
-			action();
-		else
-			Dispatcher.UIThread.Post(action);
-	}
-
-	private static void Replace<T>(ObservableCollection<T> target, IEnumerable<T> items)
-	{
-		target.Clear();
-
-		foreach (var item in items)
-			target.Add(item);
-	}
-
 	private static ushort GetMaxRank<TEnum>()
 		where TEnum : struct, Enum => Enum.GetValues<TEnum>().Select(x => Convert.ToUInt16(x)).Max();
 
-	private void ParseCommanderRanks(RankEvent? rank)
-	{
-		if (rank is null)
-			return;
-
-		Ranks!.Clear();
-		Ranks.Add(new()
+	private static List<RankDTO> BuildRanks(RankEvent rank) =>
+	[
+		new()
 		{
 			Name = "Combat",
 			Value = rank.Combat,
-			Maximum = GetMaxRank<CombatRankEnum>(),
+			Maximum = MaxCombat,
 			Level = ((CombatRankEnum)rank.Combat).GetDisplayName()
-		});
-		Ranks.Add(new()
+		},
+		new()
 		{
 			Name = "Trade",
 			Value = rank.Trade,
-			Maximum = GetMaxRank<TradeRankEnum>(),
+			Maximum = MaxTrade,
 			Level = ((TradeRankEnum)rank.Trade).GetDisplayName()
-		});
-		Ranks.Add(new()
+		},
+		new()
 		{
 			Name = "Explore",
 			Value = rank.Explore,
-			Maximum = GetMaxRank<ExploreRankEnum>(),
+			Maximum = MaxExplore,
 			Level = ((ExploreRankEnum)rank.Explore).GetDisplayName()
-		});
-		Ranks.Add(new()
+		},
+		new()
 		{
 			Name = "Soldier",
 			Value = rank.Soldier,
-			Maximum = GetMaxRank<SoldierRankEnum>(),
+			Maximum = MaxSoldier,
 			Level = ((SoldierRankEnum)rank.Soldier).GetDisplayName()
-		});
-		Ranks.Add(new()
+		},
+		new()
 		{
 			Name = "Exobiologist",
 			Value = rank.Exobiologist,
-			Maximum = GetMaxRank<ExobiologistRankEnum>(),
+			Maximum = MaxExobiologist,
 			Level = ((ExobiologistRankEnum)rank.Exobiologist).GetDisplayName()
-		});
-		Ranks.Add(new()
+		},
+		new()
 		{
 			Name = "CQC",
 			Value = rank.CQC,
-			Maximum = GetMaxRank<CQCRankEnum>(),
+			Maximum = MaxCQC,
 			Level = ((CQCRankEnum)rank.CQC).GetDisplayName()
-		});
-		Ranks.Add(new()
+		},
+		new()
 		{
 			Name = "Empire",
 			Value = rank.Empire,
-			Maximum = GetMaxRank<EmpireRankEnum>(),
+			Maximum = MaxEmpire,
 			Level = ((EmpireRankEnum)rank.Empire).GetDisplayName()
-		});
-		Ranks.Add(new()
+		},
+		new()
 		{
 			Name = "Federation",
 			Value = rank.Federation,
-			Maximum = GetMaxRank<FederationRankEnum>(),
+			Maximum = MaxFederation,
 			Level = ((FederationRankEnum)rank.Federation).GetDisplayName()
-		});
-	}
+		}
+	];
 }
