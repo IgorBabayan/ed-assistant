@@ -4,6 +4,7 @@
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:ED.Assistant.Presentation.ViewModels.Shell"
+		xmlns:conv="using:ED.Assistant.Presentation.Converters"
 		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 		x:Class="ED.Assistant.Presentation.Views.Shell.MainWindow"
 		x:DataType="vm:MainWindowViewModel"
@@ -104,59 +105,50 @@
 				</Grid>
 			</Border>
 
-			<!-- Conent -->
-			<Grid Grid.Row="1">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
+			<!-- Content -->
+			<DockPanel Grid.Row="1" LastChildFill="True">
 
-				<ContentControl Grid.Column="0"
-								Padding="{DynamicResource Margin15}"
-								Content="{Binding NavigationStore.CurrentViewModel}"/>
+				<!-- Dock (must come before the content so DockPanel reserves its space) -->
+				<!-- Dock -->
+				<Panel Classes="dock"
+				       Classes.bottom="{Binding IsDockBottom}"
+				       Classes.left="{Binding IsDockLeft}"
+				       Classes.right="{Binding IsDockRight}">
 
-				<!-- Sidebar -->
-				<Border Grid.Column="1"
-						Classes="sidebar"
-						Margin="{DynamicResource MarginTopBottom15}">
-					<StackPanel Margin="12"
-								Width="200"
-								Spacing="{DynamicResource Spacing5}"
-								HorizontalAlignment="Center">
+					<Border Classes="dock-background"/>
 
-						<Button Classes="sidebar-button"
-								Classes.active="{Binding IsDashboardActive}"
-								Command="{Binding NavigateToDashboardViewCommand}"
-								Content="Dashboard"/>
-						<Button Classes="sidebar-button"
-								Classes.active="{Binding IsMaterialActive}"
-								Command="{Binding NavigateToMaterialViewCommand}"
-								Content="Materials"/>
-						<Button Classes="sidebar-button"
-								Classes.active="{Binding IsShipLockerActive}"
-								Command="{Binding NavigateToShipLockerViewCommand}"
-								Content="Ship locker"/>
-						<Border Classes="separator"/>
-						<Button Classes="sidebar-button"
-								Classes.active="{Binding IsSystemActive}"
-								Command="{Binding NavigateToSystemViewCommand}"
-								Content="System"/>
-						<Button Classes="sidebar-button"
-								Classes.active="{Binding IsExobilogicalActive}"
-								Command="{Binding NavigateToExobilogicalViewCommand}"
-								Content="Exobilogical"/>
-						<Button Classes="sidebar-button"
-						        Classes.active="{Binding IsEvaluatorActive}"
-						        Command="{Binding NavigateToEvaluatorViewCommand}"
-						        Content="Evaluator"/>
-						<Border Classes="separator"/>
-						<Button Classes="sidebar-button"
-								Classes.active="{Binding IsJournalActive}"
-								Command="{Binding NavigateToJournalViewCommand}"
-								Content="Journal"/>
-					</StackPanel>
-				</Border>
-			</Grid>
+					<ItemsControl Classes="dock-items" ItemsSource="{Binding DockItems}">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<StackPanel x:DataType="vm:MainWindowViewModel"
+								            Spacing="6"
+								            Orientation="{Binding DockPosition, Converter={x:Static conv:DockPositionConverters.ToOrientation}}"/>
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+
+						<ItemsControl.DataTemplates>
+							<DataTemplate DataType="vm:DockItemViewModel">
+								<Panel>
+									<Button Classes="dock-button"
+									        Classes.active="{Binding IsActive}"
+									        Command="{Binding Command}"
+									        ToolTip.Tip="{Binding Title}">
+										<materialIcons:MaterialIcon Kind="{Binding Icon}"/>
+									</Button>
+									<Ellipse Classes="dock-indicator" IsVisible="{Binding IsActive}"/>
+								</Panel>
+							</DataTemplate>
+
+							<DataTemplate DataType="vm:DockSeparatorViewModel">
+								<Border Classes="dock-separator"/>
+							</DataTemplate>
+						</ItemsControl.DataTemplates>
+					</ItemsControl>
+				</Panel>
+
+				<ContentControl Padding="{DynamicResource Margin15}"
+				                Content="{Binding NavigationStore.CurrentViewModel}"/>
+			</DockPanel>
 
 			<!-- Status bar -->
 			<Border Grid.Row="2">
