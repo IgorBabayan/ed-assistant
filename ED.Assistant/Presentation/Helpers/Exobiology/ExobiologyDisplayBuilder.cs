@@ -7,6 +7,8 @@ namespace ED.Assistant.Presentation.Helpers.Exobiology;
 
 static class ExobiologyDisplayBuilder
 {
+    private const decimal FIRST_FOOT_FALL_MULTIPLIER = 5m;
+    
     public static IReadOnlyList<OrganicPlanetViewModel> Build(
         JournalState state,
         IReadOnlyList<Genus> catalog,
@@ -70,6 +72,8 @@ static class ExobiologyDisplayBuilder
                 planet.Signals.Add(new OrganicSignalViewModel
                 {
                     Type = Text(latest.Genus, latest.GenusId),
+                    
+                    GenusId = latest.GenusId,
 
                     Name = entry?.Name ??
                            Text(latest.Species, latest.SpeciesId),
@@ -196,10 +200,31 @@ static class ExobiologyDisplayBuilder
             var collectedSignals = confirmed
                 .Count(group => group.Any(e => e.ScanType == ScanType.Analyse));
 
+            var isComplete = allSignals > 0 && collectedSignals >= allSignals;
+
+            string valueText;
+
+            if (isComplete)
+            {
+                // Same rule as JournalStateApplier.HasFirstFootStep,
+                // so the title agrees with the Evaluator totals.
+                var hasFirstFootfall = scan is { WasFootfalled: false };
+
+                var total = CollectedValue(planet.Signals) *
+                            (hasFirstFootfall ? FIRST_FOOT_FALL_MULTIPLIER : 1);
+
+                valueText = FormatValue(total);
+            }
+            else
+            {
+                var (minValue, maxValue) = EstimateValue(planet.Signals);
+                valueText = $"{FormatValue(minValue)}/{FormatValue(maxValue)}";
+            }
+
             var displayPlanet = new OrganicPlanetViewModel
             {
                 BodyId = planet.BodyId,
-                BodyName = $"{body.BodyName} ({collectedSignals}/{allSignals} signals)"
+                BodyName = $"{body.BodyName} ({collectedSignals}/{allSignals} signals) ({valueText})"
             };
 
             foreach (var signal in planet.Signals)
@@ -210,6 +235,12 @@ static class ExobiologyDisplayBuilder
 
         return planets;
     }
+    
+    private static decimal CollectedValue(
+        IEnumerable<OrganicSignalViewModel> signals) =>
+        signals
+            .Where(s => !s.IsPrediction && s.CollectedCount >= 3)
+            .Sum(s => s.Value);
 
     private static void AddPredictions(
         OrganicPlanetViewModel planet,
@@ -430,4 +461,27 @@ static class ExobiologyDisplayBuilder
         value > 0
             ? value.ToMillions()
             : "—";
+    
+    private static (decimal Min, decimal Max) EstimateValue(
+        IEnumerable<OrganicSignalViewModel> signals)
+    {
+        // One signal per genus: several candidate species of the same
+        // genus are alternatives for a single signal, not extra signals.
+        var genera = signals
+            .Where(s => !s.IsExcluded && s.Value > 0)
+            .GroupBy(GenusKey, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        var min = genera.Sum(g => g.Min(s => s.Value));
+
+        var max = genera.Sum(g => g.Max(s => s.Value)) *
+                  FIRST_FOOT_FALL_MULTIPLIER;
+
+        return (min, max);
+    }
+
+    private static string GenusKey(OrganicSignalViewModel signal) =>
+        !string.IsNullOrWhiteSpace(signal.GenusId)
+            ? signal.GenusId
+            : signal.BiologyType;
 }
