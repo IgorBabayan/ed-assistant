@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
 using ED.Assistant.Application.Evaluation;
 
@@ -6,6 +7,10 @@ namespace ED.Assistant.Application.JournalLoading;
 
 sealed class JournalWatchService : IJournalWatchService
 {
+	// Changed events arrive in bursts (several per write, dozens per second while scanning).
+	// Wait this long after the first one, then read everything new in a single pass.
+	private static readonly TimeSpan ReadDelay = TimeSpan.FromMilliseconds(150);
+
 	private readonly IJournalStateStore _stateStore;
 	private readonly IJournalStateApplier _journalStateApplier;
 	private readonly IEvaluatorSyncService _evaluatorSync;
@@ -14,7 +19,7 @@ sealed class JournalWatchService : IJournalWatchService
 	private FileSystemWatcher? _watcher;
 	private string? _currentFile;
 	private long _position;
-	private DateTime _lastRead;
+	private int _readScheduled;
 
 	public JournalWatchService(IJournalStateStore stateStore, IJournalStateApplier journalStateApplier,
 		IEvaluatorSyncService evaluatorSync)
@@ -24,7 +29,6 @@ sealed class JournalWatchService : IJournalWatchService
 		_evaluatorSync = evaluatorSync;
 
 		_gate = new(1, 1);
-		_lastRead = DateTime.MinValue;
 	}
 
 	public Task StartAsync(string logFolder, CancellationToken cancellationToken = default)
@@ -79,32 +83,48 @@ sealed class JournalWatchService : IJournalWatchService
 		_position = 0;
 	}
 
-	private void OnChanged(object sender, FileSystemEventArgs e) => _ = HandleChangedAsync(e.FullPath);
-
-	private void OnCreated(object sender, FileSystemEventArgs e) => _ = HandleCreatedAsync(e.FullPath);
-
-	private async Task HandleChangedAsync(string path) => await OnChangedAsync(path);
-
-	private async Task HandleCreatedAsync(string path) => await OnCreatedAsync(path);
-
-	private async Task OnChangedAsync(string path)
+	private void OnChanged(object sender, FileSystemEventArgs e)
 	{
-		if (!IsCurrentFile(path))
+		if (!IsCurrentFile(e.FullPath))
 			return;
 
-		if ((DateTime.UtcNow - _lastRead).TotalMilliseconds < 100)
+		// Trailing-edge debounce: only one read is scheduled at a time, and it runs
+		// after the burst, so the last write of a burst is never missed.
+		if (Interlocked.Exchange(ref _readScheduled, 1) == 1)
 			return;
 
-		_lastRead = DateTime.UtcNow;
+		_ = ReadAfterDelayAsync(e.FullPath);
+	}
 
-		await _gate.WaitAsync();
+	private void OnCreated(object sender, FileSystemEventArgs e) => _ = RunSafeAsync(() => OnCreatedAsync(e.FullPath));
+
+	private async Task ReadAfterDelayAsync(string path)
+	{
 		try
 		{
-			await ReadNewLinesAsync(path);
+			await Task.Delay(ReadDelay);
+
+			// Cleared before reading: a write that lands during the read schedules another pass
+			Volatile.Write(ref _readScheduled, 0);
+
+			await _gate.WaitAsync();
+			try
+			{
+				if (IsCurrentFile(path))
+					await ReadNewLinesAsync(path);
+			}
+			finally
+			{
+				_gate.Release();
+			}
 		}
-		finally
+		catch (ObjectDisposedException)
 		{
-			_gate.Release();
+			// Service disposed while a read was pending
+		}
+		catch (Exception ex)
+		{
+			Debug.WriteLine($"Journal read failed: {ex}");
 		}
 	}
 
@@ -127,6 +147,21 @@ sealed class JournalWatchService : IJournalWatchService
 		finally
 		{
 			_gate.Release();
+		}
+	}
+
+	private static async Task RunSafeAsync(Func<Task> action)
+	{
+		try
+		{
+			await action();
+		}
+		catch (ObjectDisposedException)
+		{
+		}
+		catch (Exception ex)
+		{
+			Debug.WriteLine($"Journal watch failed: {ex}");
 		}
 	}
 

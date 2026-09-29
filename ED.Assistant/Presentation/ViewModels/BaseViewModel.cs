@@ -1,13 +1,13 @@
-﻿namespace ED.Assistant.Presentation.ViewModels;
+﻿using System.Diagnostics;
+using Avalonia.Threading;
+
+namespace ED.Assistant.Presentation.ViewModels;
 
 public interface INavigationAware
 {
 	Task OnNavigatedToAsync(CancellationToken cancellationToken = default);
-}
 
-public interface ILoadableViewModel
-{
-	IAsyncRelayCommand LoadCommand { get; }
+	void OnNavigatedFrom();
 }
 
 public abstract class BaseViewModel : ObservableObject, IDisposable
@@ -26,6 +26,14 @@ public abstract class BaseViewModel : ObservableObject, IDisposable
 	}
 }
 
+/// <summary>
+/// Base for view models fed by <see cref="IJournalStateStore"/>.
+/// <para>
+/// Only the view model on screen is updated when the journal state changes; the others
+/// just remember that they're stale and refresh once when they're navigated to.
+/// Updates are coalesced: while one runs, only the newest pending state is kept.
+/// </para>
+/// </summary>
 public abstract partial class LoadableViewModel : BaseViewModel, INavigationAware
 {
 	protected readonly IJournalLoaderService _journalLoader;
@@ -35,8 +43,12 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 
 	private readonly object _activationLock = new();
 	private JournalState? _pendingState;
-	private bool _isActivated;
+	private bool _isRunning;
 
+	private volatile bool _isCurrent;
+	private volatile bool _isDirty = true;
+
+	/// <summary>True while an update is running. Always changed on the UI thread.</summary>
 	[ObservableProperty]
 	public partial bool IsActivating { get; set; }
 
@@ -50,28 +62,78 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 		_stateStore.StateChanged += OnStateChanged;
 	}
 
-	protected virtual bool ActivateOnNavigation => false;
+	/// <summary>
+	/// View models that are always on screen (the shell) and never navigated to
+	/// override this to keep updating on every state change.
+	/// </summary>
+	protected virtual bool IsAlwaysVisible => false;
+
+	/// <summary>
+	/// View models whose data doesn't come from the journal state (e.g. the database)
+	/// return false and call <see cref="Invalidate"/> when their own source changes.
+	/// </summary>
+	protected virtual bool ReactsToJournalChanges => true;
+
+	/// <summary>True while this view model is the navigation target.</summary>
+	protected bool IsCurrent => _isCurrent;
 
 	protected virtual void UpdateFromState(JournalState state) { }
 
+	/// <summary>
+	/// Called on the thread that raised the change (usually the journal watcher),
+	/// or on the UI thread during navigation. Bound properties/collections must be
+	/// changed on the UI thread.
+	/// </summary>
 	protected virtual Task UpdateFromStateAsync(JournalState state, CancellationToken cancellationToken = default)
 	{
 		UpdateFromState(state);
 		return Task.CompletedTask;
 	}
 
+	public async Task OnNavigatedToAsync(CancellationToken cancellationToken = default)
+	{
+		_isCurrent = true;
+
+		if (!_isDirty)
+			return;
+
+		_isDirty = false;
+
+		var state = _stateStore.CurrentState;
+		if (state is null)
+			return;
+
+		try
+		{
+			await ActivateAsync(state, cancellationToken);
+		}
+		catch
+		{
+			// Try again on the next navigation
+			_isDirty = true;
+			throw;
+		}
+	}
+
+	public void OnNavigatedFrom() => _isCurrent = false;
+
+	/// <summary>Refreshes now if visible, otherwise on the next navigation.</summary>
+	protected void Invalidate() => RequestUpdate(_stateStore.CurrentState);
+
 	protected async Task ActivateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
 	{
 		lock (_activationLock)
 		{
-			if (IsActivating)
+			if (_isRunning)
 			{
+				// Coalesce: only the newest state matters
 				_pendingState = state;
 				return;
 			}
 
-			IsActivating = true;
+			_isRunning = true;
+			SetActivating(true);
 		}
 
 		var currentState = state;
@@ -86,7 +148,8 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 				{
 					if (_pendingState is null)
 					{
-						IsActivating = false;
+						_isRunning = false;
+						SetActivating(false);
 						return;
 					}
 
@@ -100,7 +163,8 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 			lock (_activationLock)
 			{
 				_pendingState = null;
-				IsActivating = false;
+				_isRunning = false;
+				SetActivating(false);
 			}
 
 			throw;
@@ -133,33 +197,49 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 		return viewModel;
 	}
 
-	public async Task OnNavigatedToAsync(CancellationToken cancellationToken = default)
+	/// <summary>Runs <paramref name="action"/> on the UI thread (inline if already there).</summary>
+	protected static void RunOnUIThread(Action action)
 	{
-		var state = _stateStore.CurrentState;
+		if (Dispatcher.UIThread.CheckAccess())
+			action();
+		else
+			Dispatcher.UIThread.Post(action);
+	}
 
+	private void OnStateChanged(object? sender, JournalState state)
+	{
+		if (ReactsToJournalChanges)
+			RequestUpdate(state);
+	}
+
+	// async void is required for event-style fire-and-forget; it must never throw
+	private async void RequestUpdate(JournalState? state)
+	{
 		if (state is null)
 			return;
 
-		if (!ActivateOnNavigation)
+		if (!_isCurrent && !IsAlwaysVisible)
 		{
-			await UpdateFromStateAsync(state, cancellationToken);
+			_isDirty = true;
 			return;
 		}
 
-		if (_isActivated)
-			return;
-
-		_isActivated = true;
-		await ActivateAsync(state, cancellationToken);
-	}
-
-	private async void OnStateChanged(object? sender, JournalState state)
-	{
-		if (ActivateOnNavigation)
+		try
+		{
 			await ActivateAsync(state);
-		else
-			await UpdateFromStateAsync(state);
+		}
+		catch (OperationCanceledException)
+		{
+		}
+		catch (Exception ex)
+		{
+			_isDirty = true;
+			Debug.WriteLine($"{GetType().Name} update failed: {ex}");
+		}
 	}
+
+	// Called inside _activationLock so true/false posts can't be reordered
+	private void SetActivating(bool value) => RunOnUIThread(() => IsActivating = value);
 
 	[RelayCommand]
 	private async Task Load(CancellationToken cancellationToken = default) 

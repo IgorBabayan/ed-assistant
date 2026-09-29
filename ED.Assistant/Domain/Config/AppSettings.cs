@@ -15,4 +15,8 @@ public class AppSettings
 	
 	[JsonPropertyName(nameof(ReadLogsForDays))]
 	public int ReadLogsForDays { get; set; } = DEFAULT_READ_LOGS_FOR_DAYS;
+	
+	[JsonPropertyName("DockPosition")]
+	[JsonConverter(typeof(JsonStringEnumConverter<DockPosition>))]
+	public DockPosition DockPosition { get; set; } = DockPosition.Bottom;
 }

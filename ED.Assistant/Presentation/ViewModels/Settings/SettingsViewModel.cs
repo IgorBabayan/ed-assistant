@@ -24,6 +24,11 @@ public partial class SettingsViewModel : BaseViewModel
 	public partial decimal? ReadLogsForDays { get; set; } = AppSettings.DEFAULT_READ_LOGS_FOR_DAYS;
 
 	public bool CanUseFolderPicker => !DesktopEnvironmentHelper.IsHyprland();
+	
+	[ObservableProperty]
+	public partial DockPosition DockPosition { get; set; }
+
+	public IReadOnlyList<DockPosition> DockPositions { get; } = Enum.GetValues<DockPosition>();
 
 	public event Action<bool?>? CloseRequested;
 
@@ -48,7 +53,8 @@ public partial class SettingsViewModel : BaseViewModel
 			HideExcludedSignals = HideExcludedSignals,
 			ReadLogsForDays = ReadLogsForDays is { } days
 				? (int)Math.Max(0, days)
-				: AppSettings.DEFAULT_READ_LOGS_FOR_DAYS
+				: AppSettings.DEFAULT_READ_LOGS_FOR_DAYS,
+			DockPosition = DockPosition
 		}, cancellationToken);
 
 		CloseRequested?.Invoke(true);
@@ -76,6 +82,7 @@ public partial class SettingsViewModel : BaseViewModel
 			EnableAutoWatch = settings.IsAutoWatchEnable;
 			HideExcludedSignals = settings.HideExcludedSignals;
 			ReadLogsForDays = settings.ReadLogsForDays;
+			DockPosition = settings.DockPosition;
 		}
 		catch (Exception)
 		{

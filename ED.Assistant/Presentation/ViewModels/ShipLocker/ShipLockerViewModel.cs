@@ -1,12 +1,17 @@
-﻿using ED.Assistant.Presentation.ViewModels.Material;
+﻿using Avalonia.Threading;
+using ED.Assistant.Presentation.Collections;
+using ED.Assistant.Presentation.ViewModels.Material;
 
 namespace ED.Assistant.Presentation.ViewModels.ShipLocker;
 
 public partial class ShipLockerViewModel : LoadableViewModel
 {
-	public ObservableCollection<MaterialItemViewModel> Materials { get; } = [];
-	public ObservableCollection<MaterialItemViewModel> FilteredMaterials { get; } = [];
-	public ObservableCollection<MaterialSummaryViewModel> MaterialSummaries { get; } = [];
+	// Replaced only when a new ShipLocker line arrives; skip rebuilds for every other line
+	private volatile ShipLockerEvent? _lastShipLocker;
+
+	public BulkObservableCollection<MaterialItemViewModel> Materials { get; } = new();
+	public BulkObservableCollection<MaterialItemViewModel> FilteredMaterials { get; } = new();
+	public BulkObservableCollection<MaterialSummaryViewModel> MaterialSummaries { get; } = new();
 
 	public IReadOnlyList<string> Categories { get; } =
 	[
@@ -52,36 +57,38 @@ public partial class ShipLockerViewModel : LoadableViewModel
 		}
 	}
 
-	protected override bool ActivateOnNavigation => true;
-
 	public ShipLockerViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
 		IMemoryCache memoryCache) : base(journalLoader, stateStore, memoryCache) { }
 
 	protected override async Task UpdateFromStateAsync(JournalState state, 
 		CancellationToken cancellationToken = default)
 	{
-		if (state.ShipLocker is null)
+		var shipLocker = state.ShipLocker;
+		if (shipLocker is null || ReferenceEquals(shipLocker, _lastShipLocker))
 			return;
 
 		var materials = await Task.Run(() =>
 		{
 			var result = new List<MaterialItemViewModel>();
 
-			AddMaterials(result, state.ShipLocker.Items, Options.Categories.Items);
-			AddMaterials(result, state.ShipLocker.Components, Options.Categories.Components);
-			AddMaterials(result, state.ShipLocker.Consumables, Options.Categories.Consumables);
-			AddMaterials(result, state.ShipLocker.Data, Options.Categories.Data);
+			AddMaterials(result, shipLocker.Items, Options.Categories.Items);
+			AddMaterials(result, shipLocker.Components, Options.Categories.Components);
+			AddMaterials(result, shipLocker.Consumables, Options.Categories.Consumables);
+			AddMaterials(result, shipLocker.Data, Options.Categories.Data);
 
 			return result.OrderBy(x => x.Name).ToList();
 		}, cancellationToken);
 
-		Materials.Clear();
+		// Bound collections: change them on the UI thread only
+		await Dispatcher.UIThread.InvokeAsync(() =>
+		{
+			Materials.ReplaceAll(materials);
 
-		foreach (var material in materials)
-			Materials.Add(material);
+			BuildSummaries();
+			ApplyFilters();
 
-		BuildSummaries();
-		ApplyFilters();
+			_lastShipLocker = shipLocker;
+		});
 	}
 
 	partial void OnSearchTextChanged(string value) => ApplyFilters();
@@ -138,34 +145,33 @@ public partial class ShipLockerViewModel : LoadableViewModel
 			_ => query.OrderBy(x => x.Name)
 		};
 
-		FilteredMaterials.Clear();
-
-		foreach (var material in query)
-			FilteredMaterials.Add(material);
+		FilteredMaterials.ReplaceAll(query.ToList());
 	}
 
 	private void BuildSummaries()
 	{
-		MaterialSummaries.Clear();
-
-		AddSummary(Options.Categories.Items);
-		AddSummary(Options.Categories.Components);
-		AddSummary(Options.Categories.Consumables);
-		AddSummary(Options.Categories.Data);
-
-		MaterialSummaries.Add(new()
+		var summaries = new List<MaterialSummaryViewModel>
 		{
-			Title = "Low stock",
-			Value = Materials.Count(x => x.MaxCapacity > 0 && x.Count < x.MaxCapacity * 0.25),
-			Subtitle = "< 25%"
-		});
+			CreateSummary(Options.Categories.Items),
+			CreateSummary(Options.Categories.Components),
+			CreateSummary(Options.Categories.Consumables),
+			CreateSummary(Options.Categories.Data),
+			new()
+			{
+				Title = "Low stock",
+				Value = Materials.Count(x => x.MaxCapacity > 0 && x.Count < x.MaxCapacity * 0.25),
+				Subtitle = "< 25%"
+			}
+		};
+
+		MaterialSummaries.ReplaceAll(summaries);
 	}
 
-	private void AddSummary(string category) => MaterialSummaries.Add(new()
+	private MaterialSummaryViewModel CreateSummary(string category) => new()
 	{
 		Title = category,
 		Value = Materials
 				.Where(x => x.Category == category)
 				.Sum(x => x.Count)
-	});
+	};
 }

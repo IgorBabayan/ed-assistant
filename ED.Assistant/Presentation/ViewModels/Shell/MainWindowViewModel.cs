@@ -11,7 +11,9 @@ using ED.Assistant.Presentation.ViewModels.ShipLocker;
 using ED.Assistant.Presentation.ViewModels.System;
 using System.ComponentModel;
 using ED.Assistant.Application.Linux;
+using ED.Assistant.Domain.Config;
 using ED.Assistant.Presentation.ViewModels.Evaluator;
+using Material.Icons;
 
 namespace ED.Assistant.Presentation.ViewModels.Shell;
 
@@ -57,18 +59,23 @@ public partial class MainWindowViewModel : LoadableViewModel
 	public partial bool IsAutoWatchEnabled { get; set; }
 
 	public INavigationStore NavigationStore { get; }
+	
+	[ObservableProperty]
+	[NotifyPropertyChangedFor(nameof(IsDockBottom), nameof(IsDockLeft), nameof(IsDockRight))]
+	public partial DockPosition DockPosition { get; set; } = DockPosition.Bottom;
 
-	public bool IsDashboardActive => NavigationStore.CurrentViewModel is DashboardViewModel;
-	public bool IsSystemActive => NavigationStore.CurrentViewModel is SystemViewModel;
-	public bool IsExobilogicalActive => NavigationStore.CurrentViewModel is ExobiologyViewModel;
-	public bool IsJournalActive => NavigationStore.CurrentViewModel is JournalViewModel;
-	public bool IsMaterialActive => NavigationStore.CurrentViewModel is MaterialViewModel;
-	public bool IsShipLockerActive => NavigationStore.CurrentViewModel is ShipLockerViewModel;
-	public bool IsEvaluatorActive => NavigationStore.CurrentViewModel is EvaluatorViewModel;
+	public bool IsDockBottom => DockPosition == DockPosition.Bottom;
+	public bool IsDockLeft => DockPosition == DockPosition.Left;
+	public bool IsDockRight => DockPosition == DockPosition.Right;
+	
+	public ObservableCollection<object> DockItems { get; } = [];
 
 	public bool IsNotHyprland => !DesktopEnvironmentHelper.IsHyprland();
 	
 	public bool IsLinux => OperatingSystem.IsLinux();
+
+	// The shell header is always on screen and is never a navigation target
+	protected override bool IsAlwaysVisible => true;
 
 	public MainWindowViewModel(IDialogService dialogService, SettingsViewModel settingsViewModel,
 		INavigationStore navigationStore, IJournalStateStore stateStore, IMemoryCache memoryCache,
@@ -93,6 +100,8 @@ public partial class MainWindowViewModel : LoadableViewModel
 		{
 			notify.PropertyChanged += OnPropertyChanged;
 		}
+		
+		BuildDockItems();
 	}
 
 	protected override void OnDispose()
@@ -101,16 +110,47 @@ public partial class MainWindowViewModel : LoadableViewModel
 		{
 			notify.PropertyChanged -= OnPropertyChanged;
 		}
+
+		base.OnDispose();
 	}
 
 	protected override void UpdateFromState(JournalState state)
 	{
-		CMDR = $"o7, {state.Commander?.Name ?? "Commander"}";
-		Ship = state.LoadGame?.ShipFullTitle ?? DefaultState.Ship;
-		LogFile = state.FileName ?? DefaultState.LogFile;
-		LastEvent = string.IsNullOrWhiteSpace(state.LastEvent?.Event)
+		// Read the state here (watcher thread, state is consistent now), apply on the UI thread
+		var cmdr = $"o7, {state.Commander?.Name ?? "Commander"}";
+		var ship = state.LoadGame?.ShipFullTitle ?? DefaultState.Ship;
+		var logFile = state.FileName ?? DefaultState.LogFile;
+		var lastEvent = string.IsNullOrWhiteSpace(state.LastEvent?.Event)
 			? DefaultState.LastEvent
 			: $"event: '{state.LastEvent!.Event}'";
+
+		RunOnUIThread(() =>
+		{
+			CMDR = cmdr;
+			Ship = ship;
+			LogFile = logFile;
+			LastEvent = lastEvent;
+		});
+	}
+	
+	private void BuildDockItems()
+	{
+		DockItems.Add(new DockItemViewModel("Dashboard", MaterialIconKind.ViewDashboard, NavigateToDashboardViewCommand, typeof(DashboardViewModel)));
+		DockItems.Add(new DockItemViewModel("Materials", MaterialIconKind.HexagonMultiple, NavigateToMaterialViewCommand, typeof(MaterialViewModel)));
+		DockItems.Add(new DockItemViewModel("Ship locker", MaterialIconKind.PackageVariant, NavigateToShipLockerViewCommand, typeof(ShipLockerViewModel)));
+		DockItems.Add(new DockSeparatorViewModel());
+		DockItems.Add(new DockItemViewModel("System", MaterialIconKind.Orbit, NavigateToSystemViewCommand, typeof(SystemViewModel)));
+		DockItems.Add(new DockItemViewModel("Exobiology", MaterialIconKind.Leaf, NavigateToExobilogicalViewCommand, typeof(ExobiologyViewModel)));
+		DockItems.Add(new DockItemViewModel("Evaluator", MaterialIconKind.CalculatorVariant, NavigateToEvaluatorViewCommand, typeof(EvaluatorViewModel)));
+		DockItems.Add(new DockSeparatorViewModel());
+		DockItems.Add(new DockItemViewModel("Journal", MaterialIconKind.BookOpenVariant, NavigateToJournalViewCommand, typeof(JournalViewModel)));
+	}
+
+	private void UpdateDockActiveState()
+	{
+		var current = NavigationStore.CurrentViewModel;
+		foreach (var item in DockItems.OfType<DockItemViewModel>())
+			item.IsActive = item.TargetViewModel.IsInstanceOfType(current);
 	}
 
 	partial void OnIsAutoWatchEnabledChanged(bool value) => _ = UpdateWatchStatus(value);
@@ -121,7 +161,6 @@ public partial class MainWindowViewModel : LoadableViewModel
 		if (NavigationStore.CurrentViewModel is not DashboardViewModel)
 		{
 			await _navigationService.NavigateToAsync<DashboardViewModel>(cancellationToken);
-			RaiseActiveProperty();
 		}
 	}
 
@@ -131,7 +170,6 @@ public partial class MainWindowViewModel : LoadableViewModel
 		if (NavigationStore.CurrentViewModel is not SystemViewModel)
 		{
 			await _navigationService.NavigateToAsync<SystemViewModel>(cancellationToken);
-			RaiseActiveProperty();
 		}
 	}
 
@@ -141,7 +179,6 @@ public partial class MainWindowViewModel : LoadableViewModel
 		if (NavigationStore.CurrentViewModel is not ExobiologyViewModel)
 		{
 			await _navigationService.NavigateToAsync<ExobiologyViewModel>(cancellationToken);
-			RaiseActiveProperty();
 		}
 	}
 
@@ -151,7 +188,6 @@ public partial class MainWindowViewModel : LoadableViewModel
 		if (NavigationStore.CurrentViewModel is not JournalViewModel)
 		{
 			await _navigationService.NavigateToAsync<JournalViewModel>(cancellationToken);
-			RaiseActiveProperty();
 		}
 	}
 
@@ -161,7 +197,6 @@ public partial class MainWindowViewModel : LoadableViewModel
 		if (NavigationStore.CurrentViewModel is not MaterialViewModel)
 		{
 			await _navigationService.NavigateToAsync<MaterialViewModel>(cancellationToken);
-			RaiseActiveProperty();
 		}
 	}
 
@@ -171,7 +206,6 @@ public partial class MainWindowViewModel : LoadableViewModel
 		if (NavigationStore.CurrentViewModel is not ShipLockerViewModel)
 		{
 			await _navigationService.NavigateToAsync<ShipLockerViewModel>(cancellationToken);
-			RaiseActiveProperty();
 		}
 	}
 
@@ -181,7 +215,6 @@ public partial class MainWindowViewModel : LoadableViewModel
 		if (NavigationStore.CurrentViewModel is not EvaluatorViewModel)
 		{
 			await _navigationService.NavigateToAsync<EvaluatorViewModel>(cancellationToken);
-			RaiseActiveProperty();
 		}
 	}
 
@@ -199,6 +232,8 @@ public partial class MainWindowViewModel : LoadableViewModel
 
 			if (settings.ReadLogsForDays != previousDays)
 				await _journalLoader.LoadLastLogsAsync(cancellationToken);
+			
+			DockPosition = settings.DockPosition;
 		}
 	}
 
@@ -207,17 +242,6 @@ public partial class MainWindowViewModel : LoadableViewModel
 	{
 		_desktopService.BuildDesktopFile();
 		await _desktopService.SaveDesktopFileAsync(cancellationToken);
-	}
-
-	private void RaiseActiveProperty()
-	{
-		OnPropertyChanged(nameof(IsDashboardActive));
-		OnPropertyChanged(nameof(IsSystemActive));
-		OnPropertyChanged(nameof(IsExobilogicalActive));
-		OnPropertyChanged(nameof(IsJournalActive));
-		OnPropertyChanged(nameof(IsMaterialActive));
-		OnPropertyChanged(nameof(IsShipLockerActive));
-		OnPropertyChanged(nameof(IsEvaluatorActive));
 	}
 
 	private async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -229,6 +253,8 @@ public partial class MainWindowViewModel : LoadableViewModel
 
 			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
 			IsAutoWatchEnabled = settings.IsAutoWatchEnable;
+			
+			DockPosition = settings.DockPosition;
 		}
 		catch (Exception)
 		{
@@ -239,6 +265,8 @@ public partial class MainWindowViewModel : LoadableViewModel
 	{
 		if (args.PropertyName == nameof(NavigationStore.CurrentViewModel))
 			LoadCommand.NotifyCanExecuteChanged();
+		
+		UpdateDockActiveState();
 	}
 
 	private async Task UpdateWatchStatus(bool isAutoWatchEnabled, CancellationToken cancellationToken = default)
