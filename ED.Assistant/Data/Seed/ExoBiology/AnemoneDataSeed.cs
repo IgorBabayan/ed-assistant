@@ -35,13 +35,13 @@ static class AnemoneDataSeed
                 MinTemperature = 220.0
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             AnemoneRule.BlatteumBioluminescent,
             BodyClassEnum.MetalRichBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             AnemoneRule.BlatteumBioluminescent,
             VolcanismEnum.Any);
@@ -76,13 +76,13 @@ static class AnemoneDataSeed
                 MinTemperature = 400.0
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             AnemoneRule.RoseumBioluminescent,
             BodyClassEnum.MetalRichBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             AnemoneRule.RoseumBioluminescent,
             VolcanismEnum.Any);
@@ -118,7 +118,7 @@ static class AnemoneDataSeed
                 MaxTemperature = 3050.0
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             AnemoneRule.PrasinumBioluminescent,
             BodyClassEnum.MetalRichBody,
@@ -155,9 +155,9 @@ static class AnemoneDataSeed
                 MaxTemperature = 1800.0
             });
 
-        SeedBodyClasses(modelBuilder, AnemoneRule.RubeumBioluminescent, BodyClassEnum.MetalRichBody,
+        SeedHelpers.BodyClasses(modelBuilder, AnemoneRule.RubeumBioluminescent, BodyClassEnum.MetalRichBody,
             BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, AnemoneRule.RubeumBioluminescent, VolcanismEnum.Any);
+        SeedHelpers.Volcanisms(modelBuilder, AnemoneRule.RubeumBioluminescent, VolcanismEnum.Any);
         SeedStars(modelBuilder, AnemoneRule.RubeumBioluminescent, (StarClassEnum.B, "VI"),
             (StarClassEnum.A, "I"), (StarClassEnum.A, "II"),
             (StarClassEnum.A, "III"), (StarClassEnum.N, null));
@@ -187,8 +187,8 @@ static class AnemoneDataSeed
                 MaxTemperature = 440.0
             });
 
-        SeedBodyClasses(modelBuilder, AnemoneRule.Roseum, BodyClassEnum.RockyBody);
-        SeedVolcanisms(modelBuilder, AnemoneRule.Roseum, VolcanismEnum.Silicate,
+        SeedHelpers.BodyClasses(modelBuilder, AnemoneRule.Roseum, BodyClassEnum.RockyBody);
+        SeedHelpers.Volcanisms(modelBuilder, AnemoneRule.Roseum, VolcanismEnum.Silicate,
             VolcanismEnum.Rocky, VolcanismEnum.Metallic);
         SeedStars(modelBuilder, AnemoneRule.Roseum,
             (StarClassEnum.B, "I"), (StarClassEnum.B, "II"),
@@ -228,12 +228,12 @@ static class AnemoneDataSeed
                 MaxTemperature = 800.0
             });
 
-        SeedBodyClasses(modelBuilder, AnemoneRule.PuniceumNoVolcanism, BodyClassEnum.IcyBody,
+        SeedHelpers.BodyClasses(modelBuilder, AnemoneRule.PuniceumNoVolcanism, BodyClassEnum.IcyBody,
             BodyClassEnum.RockyIceBody);
-        SeedBodyClasses(modelBuilder, AnemoneRule.PuniceumCarbonDioxideGeysers, BodyClassEnum.IcyBody,
+        SeedHelpers.BodyClasses(modelBuilder, AnemoneRule.PuniceumCarbonDioxideGeysers, BodyClassEnum.IcyBody,
             BodyClassEnum.RockyIceBody);
-        SeedVolcanisms(modelBuilder, AnemoneRule.PuniceumNoVolcanism, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, AnemoneRule.PuniceumCarbonDioxideGeysers,
+        SeedHelpers.Volcanisms(modelBuilder, AnemoneRule.PuniceumNoVolcanism, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, AnemoneRule.PuniceumCarbonDioxideGeysers,
             VolcanismEnum.CarbonDioxideGeysers);
         SeedStars(modelBuilder, AnemoneRule.PuniceumNoVolcanism, (StarClassEnum.O, null));
         SeedStars(modelBuilder, AnemoneRule.PuniceumCarbonDioxideGeysers, (StarClassEnum.O, null));
@@ -263,8 +263,8 @@ static class AnemoneDataSeed
                 MaxTemperature = 440.0
             });
 
-        SeedBodyClasses(modelBuilder, AnemoneRule.Croceum, BodyClassEnum.RockyBody);
-        SeedVolcanisms(modelBuilder, AnemoneRule.Croceum, VolcanismEnum.Silicate,
+        SeedHelpers.BodyClasses(modelBuilder, AnemoneRule.Croceum, BodyClassEnum.RockyBody);
+        SeedHelpers.Volcanisms(modelBuilder, AnemoneRule.Croceum, VolcanismEnum.Silicate,
             VolcanismEnum.Rocky, VolcanismEnum.Metallic);
         SeedStars(modelBuilder, AnemoneRule.Croceum, (StarClassEnum.B, "V"),
             (StarClassEnum.B, "VI"), (StarClassEnum.A, "III"));
@@ -296,31 +296,11 @@ static class AnemoneDataSeed
             }
         );
         
-        SeedBodyClasses(modelBuilder, AnemoneRule.Luteolum, BodyClassEnum.RockyBody);
-        SeedVolcanisms(modelBuilder, AnemoneRule.Luteolum, VolcanismEnum.Metallic,
+        SeedHelpers.BodyClasses(modelBuilder, AnemoneRule.Luteolum, BodyClassEnum.RockyBody);
+        SeedHelpers.Volcanisms(modelBuilder, AnemoneRule.Luteolum, VolcanismEnum.Metallic,
             VolcanismEnum.Silicate, VolcanismEnum.Rocky, VolcanismEnum.Water);
         SeedStars(modelBuilder,AnemoneRule.Luteolum,
             (StarClassEnum.B, "IV"), (StarClassEnum.B, "V"));
-    }
-    
-    private static void SeedBodyClasses(ModelBuilder modelBuilder, AnemoneRule rule, params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(bodyClass => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)bodyClass
-            }));
-    }
-    
-    private static void SeedVolcanisms(ModelBuilder modelBuilder, AnemoneRule rule, params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(volcanism => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)volcanism
-            }));
     }
     
     private static void SeedStars(ModelBuilder modelBuilder, AnemoneRule rule,

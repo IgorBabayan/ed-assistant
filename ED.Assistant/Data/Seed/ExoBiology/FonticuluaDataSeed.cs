@@ -33,12 +33,12 @@ static class FonticuluaDataSeed
                 MinPressure = 0.03
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             FonticuluaRule.Digitos,
             AtmosphereEnum.Methane);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FonticuluaRule.Digitos,
             BodyClassEnum.IcyBody,
@@ -66,12 +66,12 @@ static class FonticuluaDataSeed
                 MinPressure = 0.012
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             FonticuluaRule.Fluctus,
             AtmosphereEnum.Oxygen);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FonticuluaRule.Fluctus,
             BodyClassEnum.IcyBody);
@@ -97,12 +97,12 @@ static class FonticuluaDataSeed
                 MaxTemperature = 81.0
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             FonticuluaRule.Lapida,
             AtmosphereEnum.Nitrogen);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FonticuluaRule.Lapida,
             BodyClassEnum.IcyBody,
@@ -130,12 +130,12 @@ static class FonticuluaDataSeed
                 MinPressure = 0.0175
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             FonticuluaRule.Upupam,
             AtmosphereEnum.ArgonRich);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FonticuluaRule.Upupam,
             BodyClassEnum.IcyBody,
@@ -162,12 +162,12 @@ static class FonticuluaDataSeed
                 MaxTemperature = 150.0
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             FonticuluaRule.Campestris,
             AtmosphereEnum.Argon);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FonticuluaRule.Campestris,
             BodyClassEnum.IcyBody,
@@ -195,18 +195,18 @@ static class FonticuluaDataSeed
                 MaxPressure = 0.006
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             FonticuluaRule.Segmentatus,
             AtmosphereEnum.Neon,
             AtmosphereEnum.NeonRich);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FonticuluaRule.Segmentatus,
             BodyClassEnum.IcyBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             FonticuluaRule.Segmentatus,
             VolcanismEnum.None);
@@ -229,44 +229,5 @@ static class FonticuluaDataSeed
                 Value = value,
                 Distance = 500
             });
-    }
-
-    private static void SeedAtmospheres(
-        ModelBuilder modelBuilder,
-        FonticuluaRule rule,
-        params AtmosphereEnum[] atmospheres)
-    {
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            atmospheres.Select(x => new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)x
-            }));
-    }
-
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        FonticuluaRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
-    }
-
-    private static void SeedVolcanisms(
-        ModelBuilder modelBuilder,
-        FonticuluaRule rule,
-        params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(x => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)x
-            }));
     }
 }

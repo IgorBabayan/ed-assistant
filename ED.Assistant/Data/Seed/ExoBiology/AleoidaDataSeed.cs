@@ -36,9 +36,9 @@ static class AleoidaDataSeed
                 MinPressure = 0.0161
             });
 
-        SeedBodyClasses(modelBuilder, AleoidaRule.Arcus);
-        SeedAtmosphere(modelBuilder, AleoidaRule.Arcus, AtmosphereEnum.CarbonDioxide);
-        SeedVolcanism(modelBuilder, AleoidaRule.Arcus, VolcanismEnum.None);
+        SeedHelpers.BodyClasses(modelBuilder, AleoidaRule.Arcus, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Atmospheres(modelBuilder, AleoidaRule.Arcus, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Volcanisms(modelBuilder, AleoidaRule.Arcus, VolcanismEnum.None);
     }
 
     private static void SeedCoronamus(ModelBuilder modelBuilder)
@@ -66,9 +66,9 @@ static class AleoidaDataSeed
                 MinPressure = 0.025
             });
 
-        SeedBodyClasses(modelBuilder, AleoidaRule.Coronamus);
-        SeedAtmosphere(modelBuilder, AleoidaRule.Coronamus, AtmosphereEnum.CarbonDioxide);
-        SeedVolcanism(modelBuilder, AleoidaRule.Coronamus, VolcanismEnum.None);
+        SeedHelpers.BodyClasses(modelBuilder, AleoidaRule.Coronamus, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Atmospheres(modelBuilder, AleoidaRule.Coronamus, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Volcanisms(modelBuilder, AleoidaRule.Coronamus, VolcanismEnum.None);
     }
 
     private static void SeedSpica(ModelBuilder modelBuilder)
@@ -96,8 +96,8 @@ static class AleoidaDataSeed
                 MaxPressure = 0.0135
             });
 
-        SeedBodyClasses(modelBuilder, AleoidaRule.Spica);
-        SeedAtmosphere(modelBuilder, AleoidaRule.Spica, AtmosphereEnum.Ammonia);
+        SeedHelpers.BodyClasses(modelBuilder, AleoidaRule.Spica, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Atmospheres(modelBuilder, AleoidaRule.Spica, AtmosphereEnum.Ammonia);
     }
 
     private static void SeedLaminiae(ModelBuilder modelBuilder)
@@ -125,8 +125,8 @@ static class AleoidaDataSeed
                 MaxPressure = 0.0135
             });
 
-        SeedBodyClasses(modelBuilder, AleoidaRule.Laminiae);
-        SeedAtmosphere(modelBuilder, AleoidaRule.Laminiae, AtmosphereEnum.Ammonia);
+        SeedHelpers.BodyClasses(modelBuilder, AleoidaRule.Laminiae, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Atmospheres(modelBuilder, AleoidaRule.Laminiae, AtmosphereEnum.Ammonia);
     }
 
     private static void SeedGravis(ModelBuilder modelBuilder)
@@ -154,39 +154,8 @@ static class AleoidaDataSeed
                 MinPressure = 0.054
             });
 
-        SeedBodyClasses(modelBuilder, AleoidaRule.Gravis);
-        SeedAtmosphere(modelBuilder, AleoidaRule.Gravis, AtmosphereEnum.CarbonDioxide);
-        SeedVolcanism(modelBuilder, AleoidaRule.Gravis, VolcanismEnum.None);
+        SeedHelpers.BodyClasses(modelBuilder, AleoidaRule.Gravis, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Atmospheres(modelBuilder, AleoidaRule.Gravis, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Volcanisms(modelBuilder, AleoidaRule.Gravis, VolcanismEnum.None);
     }
-
-    private static void SeedBodyClasses(ModelBuilder modelBuilder, AleoidaRule rule)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)BodyClassEnum.RockyBody
-            },
-            new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)BodyClassEnum.HighMetalContentBody
-            });
-    }
-
-    private static void SeedAtmosphere(ModelBuilder modelBuilder, AleoidaRule rule, AtmosphereEnum atmosphere) =>
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)atmosphere
-            });
-
-    private static void SeedVolcanism(ModelBuilder modelBuilder, AleoidaRule rule, VolcanismEnum volcanism) =>
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)volcanism
-            });
 }

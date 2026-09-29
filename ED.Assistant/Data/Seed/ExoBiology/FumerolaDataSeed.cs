@@ -106,43 +106,43 @@ static class FumerolaDataSeed
                 MaxGravity = 0.06
             });
         
-                SeedAtmospheres(modelBuilder, FumerolaRule.AquatisAmmonia, AtmosphereEnum.Ammonia);
-        SeedAtmospheres(modelBuilder, FumerolaRule.AquatisArgonGroup, AtmosphereEnum.Argon, AtmosphereEnum.ArgonRich);
-        SeedAtmospheres(modelBuilder, FumerolaRule.AquatisCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, FumerolaRule.AquatisMethane, AtmosphereEnum.Methane);
-        SeedAtmospheres(modelBuilder, FumerolaRule.AquatisNeon, AtmosphereEnum.Neon);
-        SeedAtmospheres(modelBuilder, FumerolaRule.AquatisNitrogen, AtmosphereEnum.Nitrogen);
-        SeedAtmospheres(modelBuilder, FumerolaRule.AquatisOxygen, AtmosphereEnum.Oxygen);
-        SeedAtmospheres(modelBuilder, FumerolaRule.AquatisSulphurDioxide, AtmosphereEnum.SulphurDioxide);
-        SeedAtmospheres(modelBuilder, FumerolaRule.AquatisWater, AtmosphereEnum.Water);
+                SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.AquatisAmmonia, AtmosphereEnum.Ammonia);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.AquatisArgonGroup, AtmosphereEnum.Argon, AtmosphereEnum.ArgonRich);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.AquatisCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.AquatisMethane, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.AquatisNeon, AtmosphereEnum.Neon);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.AquatisNitrogen, AtmosphereEnum.Nitrogen);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.AquatisOxygen, AtmosphereEnum.Oxygen);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.AquatisSulphurDioxide, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.AquatisWater, AtmosphereEnum.Water);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FumerolaRule.AquatisAmmonia,
             BodyClassEnum.IcyBody,
             BodyClassEnum.RockyIceBody,
             BodyClassEnum.RockyBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FumerolaRule.AquatisArgonGroup,
             BodyClassEnum.IcyBody,
             BodyClassEnum.RockyIceBody);
 
-        SeedBodyClasses(modelBuilder, FumerolaRule.AquatisCarbonDioxide, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, FumerolaRule.AquatisMethane, BodyClassEnum.RockyBody);
-        SeedBodyClasses(modelBuilder, FumerolaRule.AquatisNeon, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, FumerolaRule.AquatisNitrogen, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, FumerolaRule.AquatisOxygen, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, FumerolaRule.AquatisCarbonDioxide, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, FumerolaRule.AquatisMethane, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, FumerolaRule.AquatisNeon, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, FumerolaRule.AquatisNitrogen, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, FumerolaRule.AquatisOxygen, BodyClassEnum.IcyBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FumerolaRule.AquatisSulphurDioxide,
             BodyClassEnum.IcyBody,
             BodyClassEnum.RockyIceBody,
             BodyClassEnum.RockyBody);
 
-        SeedBodyClasses(modelBuilder, FumerolaRule.AquatisWater, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, FumerolaRule.AquatisWater, BodyClassEnum.RockyBody);
 
         foreach (var rule in new[]
         {
@@ -157,7 +157,7 @@ static class FumerolaDataSeed
             FumerolaRule.AquatisWater
         })
         {
-            SeedVolcanisms(modelBuilder, rule, VolcanismEnum.Water);
+            SeedHelpers.Volcanisms(modelBuilder, rule, VolcanismEnum.Water);
         }
     }
 
@@ -224,17 +224,17 @@ static class FumerolaDataSeed
                 MaxTemperature = 250.0
             });
 
-        SeedAtmospheres(modelBuilder, FumerolaRule.NitrisNeon, AtmosphereEnum.Neon);
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.NitrisNeon, AtmosphereEnum.Neon);
+        SeedHelpers.Atmospheres(
             modelBuilder,
             FumerolaRule.NitrisArgonGroup,
             AtmosphereEnum.Argon,
             AtmosphereEnum.ArgonRich,
             AtmosphereEnum.NeonRich);
-        SeedAtmospheres(modelBuilder, FumerolaRule.NitrisMethane, AtmosphereEnum.Methane);
-        SeedAtmospheres(modelBuilder, FumerolaRule.NitrisNitrogen, AtmosphereEnum.Nitrogen);
-        SeedAtmospheres(modelBuilder, FumerolaRule.NitrisOxygen, AtmosphereEnum.Oxygen);
-        SeedAtmospheres(modelBuilder, FumerolaRule.NitrisSulphurDioxide, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.NitrisMethane, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.NitrisNitrogen, AtmosphereEnum.Nitrogen);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.NitrisOxygen, AtmosphereEnum.Oxygen);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.NitrisSulphurDioxide, AtmosphereEnum.SulphurDioxide);
 
         foreach (var rule in new[]
         {
@@ -246,15 +246,15 @@ static class FumerolaDataSeed
             FumerolaRule.NitrisSulphurDioxide
         })
         {
-            SeedBodyClasses(modelBuilder, rule, BodyClassEnum.IcyBody);
+            SeedHelpers.BodyClasses(modelBuilder, rule, BodyClassEnum.IcyBody);
         }
 
-        SeedVolcanisms(modelBuilder, FumerolaRule.NitrisNeon, VolcanismEnum.Nitrogen, VolcanismEnum.Ammonia);
-        SeedVolcanisms(modelBuilder, FumerolaRule.NitrisArgonGroup, VolcanismEnum.Nitrogen, VolcanismEnum.Ammonia);
-        SeedVolcanisms(modelBuilder, FumerolaRule.NitrisMethane, VolcanismEnum.Nitrogen);
-        SeedVolcanisms(modelBuilder, FumerolaRule.NitrisNitrogen, VolcanismEnum.Nitrogen, VolcanismEnum.Ammonia);
-        SeedVolcanisms(modelBuilder, FumerolaRule.NitrisOxygen, VolcanismEnum.Nitrogen, VolcanismEnum.Ammonia);
-        SeedVolcanisms(modelBuilder, FumerolaRule.NitrisSulphurDioxide, VolcanismEnum.Nitrogen, VolcanismEnum.Ammonia);
+        SeedHelpers.Volcanisms(modelBuilder, FumerolaRule.NitrisNeon, VolcanismEnum.Nitrogen, VolcanismEnum.Ammonia);
+        SeedHelpers.Volcanisms(modelBuilder, FumerolaRule.NitrisArgonGroup, VolcanismEnum.Nitrogen, VolcanismEnum.Ammonia);
+        SeedHelpers.Volcanisms(modelBuilder, FumerolaRule.NitrisMethane, VolcanismEnum.Nitrogen);
+        SeedHelpers.Volcanisms(modelBuilder, FumerolaRule.NitrisNitrogen, VolcanismEnum.Nitrogen, VolcanismEnum.Ammonia);
+        SeedHelpers.Volcanisms(modelBuilder, FumerolaRule.NitrisOxygen, VolcanismEnum.Nitrogen, VolcanismEnum.Ammonia);
+        SeedHelpers.Volcanisms(modelBuilder, FumerolaRule.NitrisSulphurDioxide, VolcanismEnum.Nitrogen, VolcanismEnum.Ammonia);
     }
 
     private static void SeedExtremus(ModelBuilder modelBuilder)
@@ -314,40 +314,40 @@ static class FumerolaDataSeed
                 MinTemperature = 500.0
             });
 
-        SeedAtmospheres(modelBuilder, FumerolaRule.ExtremusAmmonia, AtmosphereEnum.Ammonia);
-        SeedAtmospheres(modelBuilder, FumerolaRule.ExtremusArgon, AtmosphereEnum.Argon);
-        SeedAtmospheres(modelBuilder, FumerolaRule.ExtremusMethane, AtmosphereEnum.Methane);
-        SeedAtmospheres(modelBuilder, FumerolaRule.ExtremusSulphurDioxide, AtmosphereEnum.SulphurDioxide);
-        SeedAtmospheres(modelBuilder, FumerolaRule.ExtremusCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.ExtremusAmmonia, AtmosphereEnum.Ammonia);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.ExtremusArgon, AtmosphereEnum.Argon);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.ExtremusMethane, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.ExtremusSulphurDioxide, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.ExtremusCarbonDioxide, AtmosphereEnum.CarbonDioxide);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FumerolaRule.ExtremusAmmonia,
             BodyClassEnum.RockyBody,
             BodyClassEnum.RockyIceBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FumerolaRule.ExtremusArgon,
             BodyClassEnum.RockyBody,
             BodyClassEnum.RockyIceBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FumerolaRule.ExtremusMethane,
             BodyClassEnum.RockyBody,
             BodyClassEnum.RockyIceBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FumerolaRule.ExtremusSulphurDioxide,
             BodyClassEnum.RockyBody,
             BodyClassEnum.RockyIceBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             FumerolaRule.ExtremusCarbonDioxide,
             BodyClassEnum.HighMetalContentBody);
@@ -361,7 +361,7 @@ static class FumerolaDataSeed
             FumerolaRule.ExtremusCarbonDioxide
         })
         {
-            SeedVolcanisms(
+            SeedHelpers.Volcanisms(
                 modelBuilder,
                 rule,
                 VolcanismEnum.Silicate,
@@ -442,34 +442,34 @@ static class FumerolaDataSeed
                 MaxGravity = 0.276
             });
 
-        SeedAtmospheres(modelBuilder, FumerolaRule.CarbosisArgon, AtmosphereEnum.Argon);
-        SeedAtmospheres(modelBuilder, FumerolaRule.CarbosisMethane, AtmosphereEnum.Methane);
-        SeedAtmospheres(modelBuilder, FumerolaRule.CarbosisNeon, AtmosphereEnum.Neon);
-        SeedAtmospheres(modelBuilder, FumerolaRule.CarbosisNitrogen, AtmosphereEnum.Nitrogen);
-        SeedAtmospheres(modelBuilder, FumerolaRule.CarbosisOxygen, AtmosphereEnum.Oxygen);
-        SeedAtmospheres(modelBuilder, FumerolaRule.CarbosisSulphurDioxide, AtmosphereEnum.SulphurDioxide);
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.CarbosisArgon, AtmosphereEnum.Argon);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.CarbosisMethane, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.CarbosisNeon, AtmosphereEnum.Neon);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.CarbosisNitrogen, AtmosphereEnum.Nitrogen);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.CarbosisOxygen, AtmosphereEnum.Oxygen);
+        SeedHelpers.Atmospheres(modelBuilder, FumerolaRule.CarbosisSulphurDioxide, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(
             modelBuilder,
             FumerolaRule.CarbosisOtherAtmospheres,
             AtmosphereEnum.Ammonia,
             AtmosphereEnum.ArgonRich,
             AtmosphereEnum.CarbonDioxideRich);
 
-        SeedBodyClasses(modelBuilder, FumerolaRule.CarbosisArgon, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
-        SeedBodyClasses(modelBuilder, FumerolaRule.CarbosisMethane, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, FumerolaRule.CarbosisNeon, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, FumerolaRule.CarbosisNitrogen, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, FumerolaRule.CarbosisOxygen, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, FumerolaRule.CarbosisSulphurDioxide, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
-        SeedBodyClasses(modelBuilder, FumerolaRule.CarbosisOtherAtmospheres, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, FumerolaRule.CarbosisArgon, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, FumerolaRule.CarbosisMethane, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, FumerolaRule.CarbosisNeon, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, FumerolaRule.CarbosisNitrogen, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, FumerolaRule.CarbosisOxygen, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, FumerolaRule.CarbosisSulphurDioxide, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, FumerolaRule.CarbosisOtherAtmospheres, BodyClassEnum.IcyBody);
 
-        SeedVolcanisms(modelBuilder, FumerolaRule.CarbosisArgon, VolcanismEnum.Carbon, VolcanismEnum.Methane);
-        SeedVolcanisms(modelBuilder, FumerolaRule.CarbosisMethane, VolcanismEnum.MethaneMagma);
-        SeedVolcanisms(modelBuilder, FumerolaRule.CarbosisNeon, VolcanismEnum.Carbon, VolcanismEnum.Methane);
-        SeedVolcanisms(modelBuilder, FumerolaRule.CarbosisNitrogen, VolcanismEnum.Carbon, VolcanismEnum.Methane);
-        SeedVolcanisms(modelBuilder, FumerolaRule.CarbosisOxygen, VolcanismEnum.Carbon);
-        SeedVolcanisms(modelBuilder, FumerolaRule.CarbosisSulphurDioxide, VolcanismEnum.Carbon, VolcanismEnum.Methane);
-        SeedVolcanisms(modelBuilder, FumerolaRule.CarbosisOtherAtmospheres, VolcanismEnum.Carbon);
+        SeedHelpers.Volcanisms(modelBuilder, FumerolaRule.CarbosisArgon, VolcanismEnum.Carbon, VolcanismEnum.Methane);
+        SeedHelpers.Volcanisms(modelBuilder, FumerolaRule.CarbosisMethane, VolcanismEnum.MethaneMagma);
+        SeedHelpers.Volcanisms(modelBuilder, FumerolaRule.CarbosisNeon, VolcanismEnum.Carbon, VolcanismEnum.Methane);
+        SeedHelpers.Volcanisms(modelBuilder, FumerolaRule.CarbosisNitrogen, VolcanismEnum.Carbon, VolcanismEnum.Methane);
+        SeedHelpers.Volcanisms(modelBuilder, FumerolaRule.CarbosisOxygen, VolcanismEnum.Carbon);
+        SeedHelpers.Volcanisms(modelBuilder, FumerolaRule.CarbosisSulphurDioxide, VolcanismEnum.Carbon, VolcanismEnum.Methane);
+        SeedHelpers.Volcanisms(modelBuilder, FumerolaRule.CarbosisOtherAtmospheres, VolcanismEnum.Carbon);
     }
 
     private static void SeedGenus(
@@ -489,44 +489,5 @@ static class FumerolaDataSeed
                 Value = value,
                 Distance = 100
             });
-    }
-
-    private static void SeedAtmospheres(
-        ModelBuilder modelBuilder,
-        FumerolaRule rule,
-        params AtmosphereEnum[] atmospheres)
-    {
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            atmospheres.Select(x => new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)x
-            }));
-    }
-
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        FumerolaRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
-    }
-
-    private static void SeedVolcanisms(
-        ModelBuilder modelBuilder,
-        FumerolaRule rule,
-        params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(x => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)x
-            }));
     }
 }

@@ -20,5 +20,11 @@ class GenusConfiguration : IEntityTypeConfiguration<Genus>
             .WithOne(x => x.Genus)
             .HasForeignKey(x => x.GenusId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder
+            .HasMany(x => x.Evaluators)
+            .WithOne(x => x.Genus)
+            .HasForeignKey(x => x.GenusId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

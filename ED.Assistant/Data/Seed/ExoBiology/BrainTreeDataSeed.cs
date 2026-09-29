@@ -33,12 +33,12 @@ static class BrainTreeDataSeed
                 Guardian = true
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             BrainTreeRule.Lividum,
             BodyClassEnum.RockyBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             BrainTreeRule.Lividum,
             VolcanismEnum.Metallic,
@@ -66,13 +66,13 @@ static class BrainTreeDataSeed
                 Guardian = true
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             BrainTreeRule.Lindigoticum,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             BrainTreeRule.Lindigoticum,
             VolcanismEnum.Rocky,
@@ -103,13 +103,13 @@ static class BrainTreeDataSeed
                 Guardian = true
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             BrainTreeRule.Puniceum,
             BodyClassEnum.MetalRichBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(modelBuilder, BrainTreeRule.Puniceum, VolcanismEnum.Any);
+        SeedHelpers.Volcanisms(modelBuilder, BrainTreeRule.Puniceum, VolcanismEnum.Any);
 
         SeedSystemBodyClasses(
             modelBuilder,
@@ -138,13 +138,13 @@ static class BrainTreeDataSeed
                 Guardian = true
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             BrainTreeRule.Aureum,
             BodyClassEnum.MetalRichBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             BrainTreeRule.Aureum,
             VolcanismEnum.Metallic,
@@ -171,12 +171,12 @@ static class BrainTreeDataSeed
                 Guardian = true
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             BrainTreeRule.Viride,
             BodyClassEnum.RockyIceBody);
 
-        SeedVolcanisms(modelBuilder, BrainTreeRule.Viride, VolcanismEnum.Any);
+        SeedHelpers.Volcanisms(modelBuilder, BrainTreeRule.Viride, VolcanismEnum.Any);
 
         SeedSystemBodyClasses(
             modelBuilder,
@@ -202,14 +202,14 @@ static class BrainTreeDataSeed
                 Guardian = true
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             BrainTreeRule.Ostrinum,
             BodyClassEnum.MetalRichBody,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             BrainTreeRule.Ostrinum,
             VolcanismEnum.Metallic,
@@ -236,12 +236,12 @@ static class BrainTreeDataSeed
                 Guardian = true
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             BrainTreeRule.Gypseeum,
             BodyClassEnum.RockyBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             BrainTreeRule.Gypseeum,
             VolcanismEnum.Metallic,
@@ -275,7 +275,7 @@ static class BrainTreeDataSeed
                 Guardian = true
             });
 
-        SeedVolcanisms(modelBuilder, BrainTreeRule.Roseum, VolcanismEnum.Any);
+        SeedHelpers.Volcanisms(modelBuilder, BrainTreeRule.Roseum, VolcanismEnum.Any);
     }
     
     private static void SeedGenus(
@@ -296,19 +296,6 @@ static class BrainTreeDataSeed
             });
     }
 
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        BrainTreeRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
-    }
-
     private static void SeedSystemBodyClasses(
         ModelBuilder modelBuilder,
         BrainTreeRule rule,
@@ -319,19 +306,6 @@ static class BrainTreeDataSeed
             {
                 RuleId = (int)rule,
                 BodyClassId = (int)x
-            }));
-    }
-
-    private static void SeedVolcanisms(
-        ModelBuilder modelBuilder,
-        BrainTreeRule rule,
-        params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(x => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)x
             }));
     }
 }

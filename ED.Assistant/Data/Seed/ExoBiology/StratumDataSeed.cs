@@ -4,7 +4,6 @@ static class StratumDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {
-        SeedAranaemus(modelBuilder);
         SeedExcutitus(modelBuilder);
         SeedPaleas(modelBuilder);
         SeedLaminamus(modelBuilder);
@@ -55,9 +54,9 @@ static class StratumDataSeed
                 MaxTemperature = 369.0
             });
 
-        SeedAtmospheres(modelBuilder, StratumRule.FrigusCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, StratumRule.FrigusCarbonDioxideRich, AtmosphereEnum.CarbonDioxideRich);
-        SeedAtmospheres(modelBuilder, StratumRule.FrigusSulphurDioxide, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.FrigusCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.FrigusCarbonDioxideRich, AtmosphereEnum.CarbonDioxideRich);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.FrigusSulphurDioxide, AtmosphereEnum.SulphurDioxide);
 
         foreach (var rule in new[]
         {
@@ -66,11 +65,11 @@ static class StratumDataSeed
             StratumRule.FrigusSulphurDioxide
         })
         {
-            SeedBodyClasses(modelBuilder, rule, BodyClassEnum.RockyBody);
+            SeedHelpers.BodyClasses(modelBuilder, rule, BodyClassEnum.RockyBody);
         }
 
-        SeedVolcanisms(modelBuilder, StratumRule.FrigusCarbonDioxide, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, StratumRule.FrigusCarbonDioxideRich, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, StratumRule.FrigusCarbonDioxide, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, StratumRule.FrigusCarbonDioxideRich, VolcanismEnum.None);
     }
 
     private static void SeedTectonicas(ModelBuilder modelBuilder)
@@ -145,13 +144,13 @@ static class StratumDataSeed
                 MaxGravity = 0.063
             });
         
-        SeedAtmospheres(modelBuilder, StratumRule.TectonicasAmmonia, AtmosphereEnum.Ammonia);
-        SeedAtmospheres(modelBuilder, StratumRule.TectonicasArgon, AtmosphereEnum.Argon, AtmosphereEnum.ArgonRich);
-        SeedAtmospheres(modelBuilder, StratumRule.TectonicasCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, StratumRule.TectonicasCarbonDioxideRich, AtmosphereEnum.CarbonDioxideRich);
-        SeedAtmospheres(modelBuilder, StratumRule.TectonicasOxygen, AtmosphereEnum.Oxygen);
-        SeedAtmospheres(modelBuilder, StratumRule.TectonicasSulphurDioxide, AtmosphereEnum.SulphurDioxide);
-        SeedAtmospheres(modelBuilder, StratumRule.TectonicasWater, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.TectonicasAmmonia, AtmosphereEnum.Ammonia);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.TectonicasArgon, AtmosphereEnum.Argon, AtmosphereEnum.ArgonRich);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.TectonicasCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.TectonicasCarbonDioxideRich, AtmosphereEnum.CarbonDioxideRich);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.TectonicasOxygen, AtmosphereEnum.Oxygen);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.TectonicasSulphurDioxide, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.TectonicasWater, AtmosphereEnum.Water);
 
         foreach (var rule in new[]
                  {
@@ -164,11 +163,11 @@ static class StratumDataSeed
                      StratumRule.TectonicasWater
                  })
         {
-            SeedBodyClasses(modelBuilder, rule, BodyClassEnum.HighMetalContentBody);
+            SeedHelpers.BodyClasses(modelBuilder, rule, BodyClassEnum.HighMetalContentBody);
         }
 
-        SeedVolcanisms(modelBuilder, StratumRule.TectonicasArgon, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, StratumRule.TectonicasWater, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, StratumRule.TectonicasArgon, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, StratumRule.TectonicasWater, VolcanismEnum.None);
     }
 
     private static void SeedCucumisis(ModelBuilder modelBuilder)
@@ -220,10 +219,10 @@ static class StratumDataSeed
                 MaxTemperature = 373.0
             });
 
-        SeedAtmospheres(modelBuilder, StratumRule.CucumisisCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, StratumRule.CucumisisCarbonDioxideRich, AtmosphereEnum.CarbonDioxideRich);
-        SeedAtmospheres(modelBuilder, StratumRule.CucumisisOxygen, AtmosphereEnum.Oxygen);
-        SeedAtmospheres(modelBuilder, StratumRule.CucumisisSulphurDioxide, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.CucumisisCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.CucumisisCarbonDioxideRich, AtmosphereEnum.CarbonDioxideRich);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.CucumisisOxygen, AtmosphereEnum.Oxygen);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.CucumisisSulphurDioxide, AtmosphereEnum.SulphurDioxide);
 
         foreach (var rule in new[]
                  {
@@ -233,11 +232,11 @@ static class StratumDataSeed
                      StratumRule.CucumisisSulphurDioxide
                  })
         {
-            SeedBodyClasses(modelBuilder, rule, BodyClassEnum.RockyBody);
+            SeedHelpers.BodyClasses(modelBuilder, rule, BodyClassEnum.RockyBody);
         }
 
-        SeedVolcanisms(modelBuilder, StratumRule.CucumisisCarbonDioxide, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, StratumRule.CucumisisCarbonDioxideRich, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, StratumRule.CucumisisCarbonDioxide, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, StratumRule.CucumisisCarbonDioxideRich, VolcanismEnum.None);
     }
 
     private static void SeedLimaxus(ModelBuilder modelBuilder)
@@ -270,13 +269,13 @@ static class StratumDataSeed
                 MaxTemperature = 190.0
             });
 
-        SeedAtmospheres(modelBuilder, StratumRule.LimaxusCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, StratumRule.LimaxusSulphurDioxide, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.LimaxusCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.LimaxusSulphurDioxide, AtmosphereEnum.SulphurDioxide);
 
-        SeedBodyClasses(modelBuilder, StratumRule.LimaxusCarbonDioxide, BodyClassEnum.RockyBody);
-        SeedBodyClasses(modelBuilder, StratumRule.LimaxusSulphurDioxide, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, StratumRule.LimaxusCarbonDioxide, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, StratumRule.LimaxusSulphurDioxide, BodyClassEnum.RockyBody);
 
-        SeedVolcanisms(modelBuilder, StratumRule.LimaxusCarbonDioxide, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, StratumRule.LimaxusCarbonDioxide, VolcanismEnum.None);
     }
 
     private static void SeedAraneamus(ModelBuilder modelBuilder)
@@ -299,8 +298,8 @@ static class StratumDataSeed
                 MaxTemperature = 373.0
             });
 
-        SeedAtmospheres(modelBuilder, StratumRule.Araneamus, AtmosphereEnum.SulphurDioxide);
-        SeedBodyClasses(modelBuilder, StratumRule.Araneamus, BodyClassEnum.RockyBody);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.Araneamus, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, StratumRule.Araneamus, BodyClassEnum.RockyBody);
     }
 
     private static void SeedLaminamus(ModelBuilder modelBuilder)
@@ -324,8 +323,8 @@ static class StratumDataSeed
                 MaxPressure = 0.0135
             });
 
-        SeedAtmospheres(modelBuilder, StratumRule.Laminamus, AtmosphereEnum.Ammonia);
-        SeedBodyClasses(modelBuilder, StratumRule.Laminamus, BodyClassEnum.RockyBody);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.Laminamus, AtmosphereEnum.Ammonia);
+        SeedHelpers.BodyClasses(modelBuilder, StratumRule.Laminamus, BodyClassEnum.RockyBody);
     }
 
     private static void SeedPaleas(ModelBuilder modelBuilder)
@@ -393,12 +392,12 @@ static class StratumDataSeed
                 MinPressure = 0.022
             });
         
-        SeedAtmospheres(modelBuilder, StratumRule.PaleasAmmonia, AtmosphereEnum.Ammonia);
-        SeedAtmospheres(modelBuilder, StratumRule.PaleasCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, StratumRule.PaleasCarbonDioxideRich, AtmosphereEnum.CarbonDioxideRich);
-        SeedAtmospheres(modelBuilder, StratumRule.PaleasWaterNone, AtmosphereEnum.Water);
-        SeedAtmospheres(modelBuilder, StratumRule.PaleasWaterVolcanism, AtmosphereEnum.Water);
-        SeedAtmospheres(modelBuilder, StratumRule.PaleasOxygen, AtmosphereEnum.Oxygen);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.PaleasAmmonia, AtmosphereEnum.Ammonia);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.PaleasCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.PaleasCarbonDioxideRich, AtmosphereEnum.CarbonDioxideRich);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.PaleasWaterNone, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.PaleasWaterVolcanism, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.PaleasOxygen, AtmosphereEnum.Oxygen);
 
         foreach (var rule in new[]
                  {
@@ -410,13 +409,13 @@ static class StratumDataSeed
                      StratumRule.PaleasOxygen
                  })
         {
-            SeedBodyClasses(modelBuilder, rule, BodyClassEnum.RockyBody);
+            SeedHelpers.BodyClasses(modelBuilder, rule, BodyClassEnum.RockyBody);
         }
 
-        SeedVolcanisms(modelBuilder, StratumRule.PaleasCarbonDioxide, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, StratumRule.PaleasCarbonDioxideRich, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, StratumRule.PaleasWaterNone, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, StratumRule.PaleasWaterVolcanism, VolcanismEnum.Water);
+        SeedHelpers.Volcanisms(modelBuilder, StratumRule.PaleasCarbonDioxide, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, StratumRule.PaleasCarbonDioxideRich, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, StratumRule.PaleasWaterNone, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, StratumRule.PaleasWaterVolcanism, VolcanismEnum.Water);
     }
 
     private static void SeedExcutitus(ModelBuilder modelBuilder)
@@ -449,26 +448,13 @@ static class StratumDataSeed
                 MaxTemperature = 190.0
             });
 
-        SeedAtmospheres(modelBuilder, StratumRule.ExcutitusCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, StratumRule.ExcutitusSulphurDioxide, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.ExcutitusCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, StratumRule.ExcutitusSulphurDioxide, AtmosphereEnum.SulphurDioxide);
 
-        SeedBodyClasses(modelBuilder, StratumRule.ExcutitusCarbonDioxide, BodyClassEnum.RockyBody);
-        SeedBodyClasses(modelBuilder, StratumRule.ExcutitusSulphurDioxide, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, StratumRule.ExcutitusCarbonDioxide, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, StratumRule.ExcutitusSulphurDioxide, BodyClassEnum.RockyBody);
 
-        SeedVolcanisms(modelBuilder, StratumRule.ExcutitusCarbonDioxide, VolcanismEnum.None);
-    }
-
-    private static void SeedAranaemus(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Genus>().HasData(
-            new Genus
-            {
-                Id = (int)StratumGenus.Aranaemus,
-                CodexType = "$Codex_Ent_Stratum_04_Name;",
-                CodexName = "$Codex_Ent_Stratum_04_Name;",
-                Name = "Stratum Aranaemus",
-                Value = 2_448_900
-            });
+        SeedHelpers.Volcanisms(modelBuilder, StratumRule.ExcutitusCarbonDioxide, VolcanismEnum.None);
     }
 
     private static void SeedGenus(
@@ -488,44 +474,5 @@ static class StratumDataSeed
                 Value = value,
                 Distance = 500
             });
-    }
-
-    private static void SeedAtmospheres(
-        ModelBuilder modelBuilder,
-        StratumRule rule,
-        params AtmosphereEnum[] atmospheres)
-    {
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            atmospheres.Select(x => new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)x
-            }));
-    }
-
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        StratumRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
-    }
-
-    private static void SeedVolcanisms(
-        ModelBuilder modelBuilder,
-        StratumRule rule,
-        params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(x => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)x
-            }));
     }
 }
