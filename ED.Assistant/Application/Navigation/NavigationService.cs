@@ -18,6 +18,8 @@ class NavigationService : INavigationService
 	public async Task NavigateToAsync<TViewModel>(CancellationToken cancellationToken = default)
 		where TViewModel : LoadableViewModel
 	{
+		cancellationToken.ThrowIfCancellationRequested();
+		
 		var viewModel = _serviceProvider.GetRequiredService<TViewModel>();
 		_navigationStore.CurrentViewModel = viewModel;
 

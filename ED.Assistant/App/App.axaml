@@ -1,21 +1,23 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:converters="using:ED.Assistant.Presentation.Converters"
              xmlns:dashboard="using:ED.Assistant.Presentation.Views.Dashboard"
-             xmlns:exobiologyVM="using:ED.Assistant.Presentation.ViewModels.Exobiology"
+             xmlns:exobiologyVm="using:ED.Assistant.Presentation.ViewModels.Exobiology"
              xmlns:exobiology="using:ED.Assistant.Presentation.Views.Exobiology"
-             xmlns:journalVM="using:ED.Assistant.Presentation.ViewModels.Journal"
+             xmlns:journalVm="using:ED.Assistant.Presentation.ViewModels.Journal"
              xmlns:journal="using:ED.Assistant.Presentation.Views.Journal"
-             xmlns:materialVM="using:ED.Assistant.Presentation.ViewModels.Material"
+             xmlns:materialVm="using:ED.Assistant.Presentation.ViewModels.Material"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 x:Class="ED.Assistant.App.App.App"
 			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             xmlns:shiplockerVM="using:ED.Assistant.Presentation.ViewModels.ShipLocker"
+             xmlns:shiplockerVm="using:ED.Assistant.Presentation.ViewModels.ShipLocker"
              xmlns:shiplocker="using:ED.Assistant.Presentation.Views.ShipLocker"
              xmlns:system="using:ED.Assistant.Presentation.Views.System"
-             xmlns:systemVM="using:ED.Assistant.Presentation.ViewModels.System"
+             xmlns:systemVm="using:ED.Assistant.Presentation.ViewModels.System"
              xmlns:material="using:ED.Assistant.Presentation.Views.Material"
-             xmlns:dashboardVM="using:ED.Assistant.Presentation.ViewModels.Dashboard"
-			 RequestedThemeVariant="Default">
+             xmlns:dashboardVm="using:ED.Assistant.Presentation.ViewModels.Dashboard"
+             xmlns:evaluatorVm="clr-namespace:ED.Assistant.Presentation.ViewModels.Evaluator"
+             xmlns:evaluator="clr-namespace:ED.Assistant.Presentation.Views.Evaluator"
+             RequestedThemeVariant="Default">
 	<!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
 	<Application.Resources>
@@ -43,28 +45,32 @@
 	</Application.Styles>
 
 	<Application.DataTemplates>
-		<DataTemplate DataType="{x:Type dashboardVM:DashboardViewModel}">
+		<DataTemplate DataType="{x:Type dashboardVm:DashboardViewModel}">
 			<dashboard:DashboardView />
 		</DataTemplate>
 
-		<DataTemplate DataType="{x:Type systemVM:SystemViewModel}">
+		<DataTemplate DataType="{x:Type systemVm:SystemViewModel}">
 			<system:SystemView />
 		</DataTemplate>
 
-		<DataTemplate DataType="{x:Type exobiologyVM:ExobiologyViewModel}">
+		<DataTemplate DataType="{x:Type exobiologyVm:ExobiologyViewModel}">
 			<exobiology:ExobiologyView />
 		</DataTemplate>
 
-		<DataTemplate DataType="{x:Type journalVM:JournalViewModel}">
+		<DataTemplate DataType="{x:Type journalVm:JournalViewModel}">
 			<journal:JournalView />
 		</DataTemplate>
 
-		<DataTemplate DataType="{x:Type materialVM:MaterialViewModel}">
+		<DataTemplate DataType="{x:Type materialVm:MaterialViewModel}">
 			<material:MaterialView />
 		</DataTemplate>
 
-		<DataTemplate DataType="{x:Type shiplockerVM:ShipLockerViewModel}">
+		<DataTemplate DataType="{x:Type shiplockerVm:ShipLockerViewModel}">
 			<shiplocker:ShipLockerView />
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type evaluatorVm:EvaluatorViewModel}">
+			<evaluator:EvaluatorView />
 		</DataTemplate>
 	</Application.DataTemplates>
 </Application>

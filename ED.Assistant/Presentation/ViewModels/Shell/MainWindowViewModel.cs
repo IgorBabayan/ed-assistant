@@ -11,6 +11,7 @@ using ED.Assistant.Presentation.ViewModels.ShipLocker;
 using ED.Assistant.Presentation.ViewModels.System;
 using System.ComponentModel;
 using ED.Assistant.Application.Linux;
+using ED.Assistant.Presentation.ViewModels.Evaluator;
 
 namespace ED.Assistant.Presentation.ViewModels.Shell;
 
@@ -63,6 +64,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	public bool IsJournalActive => NavigationStore.CurrentViewModel is JournalViewModel;
 	public bool IsMaterialActive => NavigationStore.CurrentViewModel is MaterialViewModel;
 	public bool IsShipLockerActive => NavigationStore.CurrentViewModel is ShipLockerViewModel;
+	public bool IsEvaluatorActive => NavigationStore.CurrentViewModel is EvaluatorViewModel;
 
 	public bool IsNotHyprland => !DesktopEnvironmentHelper.IsHyprland();
 	
@@ -174,6 +176,16 @@ public partial class MainWindowViewModel : LoadableViewModel
 	}
 
 	[RelayCommand]
+	private async Task NavigateToEvaluatorView(CancellationToken cancellationToken = default)
+	{
+		if (NavigationStore.CurrentViewModel is not EvaluatorViewModel)
+		{
+			await _navigationService.NavigateToAsync<EvaluatorViewModel>(cancellationToken);
+			RaiseActiveProperty();
+		}
+	}
+
+	[RelayCommand]
 	private async Task Settings(CancellationToken cancellationToken = default)
 	{
 		var result = await _dialogService.ShowDialogAsync<SettingsViewModel, bool>(_settingsViewModel);
@@ -199,6 +211,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 		OnPropertyChanged(nameof(IsJournalActive));
 		OnPropertyChanged(nameof(IsMaterialActive));
 		OnPropertyChanged(nameof(IsShipLockerActive));
+		OnPropertyChanged(nameof(IsEvaluatorActive));
 	}
 
 	private async Task InitializeAsync(CancellationToken cancellationToken = default)
