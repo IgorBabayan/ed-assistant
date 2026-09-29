@@ -21,7 +21,7 @@ class DesktopService : IDesktopService
             .AppendLine("Terminal=false")
             .AppendLine("Name=ED Assistant")
             .AppendLine("StartupWMClass=ED.Assistant")
-            .AppendLine($"Exec={GetAppPath()}")
+            .AppendLine($"Exec={QuoteExecArgument(GetAppPath())}")
             .AppendLine($"Icon={GetAppIcon()}");
     }
 
@@ -75,5 +75,34 @@ class DesktopService : IDesktopService
         }
 
         return IOPath.Combine(dataHome, "applications");
+    }
+    
+    private static string QuoteExecArgument(string value)
+    {
+        var builder = new StringBuilder(value.Length + 2);
+        builder.Append('"');
+
+        foreach (var c in value)
+        {
+            switch (c)
+            {
+                case '"':
+                case '`':
+                case '$':
+                    builder.Append('\\').Append(c);
+                    break;
+                case '\\':
+                    builder.Append(@"\\\\");
+                    break;
+                case '%':
+                    builder.Append("%%");
+                    break;
+                default:
+                    builder.Append(c);
+                    break;
+            }
+        }
+
+        return builder.Append('"').ToString();
     }
 }
