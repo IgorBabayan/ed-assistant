@@ -1,4 +1,5 @@
 ﻿using ED.Assistant.Application.Dialog;
+using ED.Assistant.Application.Evaluation;
 using ED.Assistant.Application.Linux;
 using ED.Assistant.Application.Navigation;
 using ED.Assistant.Application.Path;
@@ -78,6 +79,7 @@ static class ServiceCollectionExtensions
 			.AddSingleton<IJournalStateApplier, JournalStateApplier>()
 			.AddSingleton<IJournalWatchService, JournalWatchService>()
 			.AddSingleton<IDbPathProvider, DbPathProvider>()
+			.AddSingleton<IEvaluatorSyncService, EvaluatorSyncService>()
 			.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
 
 		if (OperatingSystem.IsLinux())

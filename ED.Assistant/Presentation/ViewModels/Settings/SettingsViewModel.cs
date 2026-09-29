@@ -1,6 +1,7 @@
 ﻿using ED.Assistant.Application.Dialog;
 using ED.Assistant.Application.Path;
 using ED.Assistant.Application.Settings;
+using ED.Assistant.Domain.Config;
 
 namespace ED.Assistant.Presentation.ViewModels.Settings;
 
@@ -18,6 +19,9 @@ public partial class SettingsViewModel : BaseViewModel
 	
 	[ObservableProperty]
 	public partial bool HideExcludedSignals { get; set; }
+	
+	[ObservableProperty]
+	public partial decimal? ReadLogsForDays { get; set; } = AppSettings.DEFAULT_READ_LOGS_FOR_DAYS;
 
 	public bool CanUseFolderPicker => !DesktopEnvironmentHelper.IsHyprland();
 
@@ -41,7 +45,10 @@ public partial class SettingsViewModel : BaseViewModel
 		{ 
 			LogFolder = LogFolder,
 			IsAutoWatchEnable = EnableAutoWatch,
-			HideExcludedSignals = HideExcludedSignals
+			HideExcludedSignals = HideExcludedSignals,
+			ReadLogsForDays = ReadLogsForDays is { } days
+				? (int)Math.Max(0, days)
+				: AppSettings.DEFAULT_READ_LOGS_FOR_DAYS
 		}, cancellationToken);
 
 		CloseRequested?.Invoke(true);
@@ -68,6 +75,7 @@ public partial class SettingsViewModel : BaseViewModel
 			LogFolder = settings.LogFolder ?? _pathFinder.GetPathToLogs();
 			EnableAutoWatch = settings.IsAutoWatchEnable;
 			HideExcludedSignals = settings.HideExcludedSignals;
+			ReadLogsForDays = settings.ReadLogsForDays;
 		}
 		catch (Exception)
 		{

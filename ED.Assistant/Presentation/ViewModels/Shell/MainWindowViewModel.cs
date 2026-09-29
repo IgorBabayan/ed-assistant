@@ -188,11 +188,17 @@ public partial class MainWindowViewModel : LoadableViewModel
 	[RelayCommand]
 	private async Task Settings(CancellationToken cancellationToken = default)
 	{
+		var configPath = _pathFinder.GetConfigPath();
+		var previousDays = (await _settingsStorage.LoadAsync(configPath, cancellationToken)).ReadLogsForDays;
+
 		var result = await _dialogService.ShowDialogAsync<SettingsViewModel, bool>(_settingsViewModel);
 		if (result)
 		{
-			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
+			var settings = await _settingsStorage.LoadAsync(configPath, cancellationToken);
 			IsAutoWatchEnabled = settings.IsAutoWatchEnable;
+
+			if (settings.ReadLogsForDays != previousDays)
+				await _journalLoader.LoadLastLogsAsync(cancellationToken);
 		}
 	}
 

@@ -2,7 +2,83 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:ED.Assistant.Presentation.ViewModels.Evaluator"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="ED.Assistant.Presentation.Views.Evaluator.EvaluatorView">
-    Welcome to Avalonia!
+             x:Class="ED.Assistant.Presentation.Views.Evaluator.EvaluatorView"
+             x:DataType="vm:EvaluatorViewModel">
+    <UserControl.Styles>
+        <Style Selector="TextBlock.bonus">
+            <Setter Property="Foreground" Value="#66BB6A" />
+        </Style>
+        <Style Selector="TextBlock.number">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*" RowSpacing="16">
+        <!-- Summary -->
+        <UniformGrid Columns="3" ColumnSpacing="8">
+            <Border Classes="dashboard-card">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Unsold samples" Classes="dashboard-label" />
+                    <TextBlock Text="{Binding UnsoldCount}" Classes="dashboard-value" />
+                </StackPanel>
+            </Border>
+            <Border Classes="dashboard-card">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Unsold value" Classes="dashboard-label" />
+                    <TextBlock Text="{Binding UnsoldValue}" Classes="dashboard-value" />
+                </StackPanel>
+            </Border>
+            <Border Classes="dashboard-card">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="First footfall (×5)" Classes="dashboard-label" />
+                    <TextBlock Text="{Binding FirstFootStepCount}" Classes="dashboard-value" />
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <!-- List -->
+        <Border Grid.Row="1" Classes="dashboard-card">
+            <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
+                <TextBlock Text="UNSOLD EXOBIOLOGY DATA" Classes="dashboard-card-header" />
+
+                <Grid Grid.Row="1" ColumnDefinitions="2*,*,*,60,*" ColumnSpacing="12">
+                    <TextBlock Grid.Column="0" Text="Species" Classes="dashboard-label" />
+                    <TextBlock Grid.Column="1" Text="Sampled" Classes="dashboard-label" />
+                    <TextBlock Grid.Column="2" Text="Base value" Classes="dashboard-label number" />
+                    <TextBlock Grid.Column="3" Text="Bonus" Classes="dashboard-label number" />
+                    <TextBlock Grid.Column="4" Text="Total" Classes="dashboard-label number" />
+                </Grid>
+
+                <TextBlock Grid.Row="2"
+                           Text="No unsold exobiology data"
+                           IsVisible="{Binding !HasItems}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="18"
+                           Foreground="{DynamicResource SecondaryTextBrush}" />
+
+                <ScrollViewer Grid.Row="2" IsVisible="{Binding HasItems}">
+                    <ItemsControl ItemsSource="{Binding Items}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:EvaluatorItemViewModel">
+                                <Grid ColumnDefinitions="2*,*,*,60,*" ColumnSpacing="12" Margin="0,4">
+                                    <TextBlock Grid.Column="0" Text="{Binding Name}" Classes="dashboard-value" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Sampled}" Classes="dashboard-label" />
+                                    <TextBlock Grid.Column="2" Text="{Binding BaseValue}" Classes="dashboard-value number" />
+                                    <TextBlock Grid.Column="3" Text="{Binding Multiplier}"
+                                               Classes="dashboard-value number"
+                                               Classes.bonus="{Binding HasFirstFootStep}" />
+                                    <TextBlock Grid.Column="4" Text="{Binding Total}"
+                                               Classes="dashboard-value number"
+                                               Classes.bonus="{Binding HasFirstFootStep}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
 </UserControl>

@@ -4,6 +4,7 @@ public sealed class Evaluator
 {
     public int Id { get; set; }
     public DateTime DateCreation { get; set; }
+    public DateTime? DateSold { get; set; }
     public bool HasFirstFootStep { get; set; }
     public bool IsActive { get; set; } = true;
     public decimal Total { get; set; }

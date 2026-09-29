@@ -12,5 +12,8 @@ class EvaluatorConfiguration : IEntityTypeConfiguration<Evaluator.Evaluator>
         builder.Property(ev => ev.IsActive).IsRequired();
         
         builder.HasQueryFilter(x => x.IsActive);
+        
+        builder.Property(ev => ev.DateSold);
+        builder.HasIndex(ev => new { ev.GenusId, ev.DateCreation });
     }
 }

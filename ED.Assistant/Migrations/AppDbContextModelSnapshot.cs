@@ -4248,6 +4248,9 @@ namespace ED.Assistant.Migrations
                     b.Property<DateTime>("DateCreation")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("DateSold")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("GenusId")
                         .HasColumnType("INTEGER");
 
@@ -4262,7 +4265,7 @@ namespace ED.Assistant.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GenusId");
+                    b.HasIndex("GenusId", "DateCreation");
 
                     b.ToTable("Evaluator", (string)null);
                 });
