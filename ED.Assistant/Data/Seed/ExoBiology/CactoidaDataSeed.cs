@@ -32,12 +32,12 @@ static class CactoidaDataSeed
                 MaxPressure = 0.0135
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             CactoidaRule.Peperatis,
             AtmosphereEnum.Ammonia);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             CactoidaRule.Peperatis,
             BodyClassEnum.RockyBody,
@@ -65,18 +65,18 @@ static class CactoidaDataSeed
                 MinPressure = 0.025
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             CactoidaRule.Pullulanta,
             AtmosphereEnum.CarbonDioxide);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             CactoidaRule.Pullulanta,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             CactoidaRule.Pullulanta,
             VolcanismEnum.None);
@@ -117,49 +117,49 @@ static class CactoidaDataSeed
                 MaxGravity = 0.276
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             CactoidaRule.VermisSulphurDioxide,
             AtmosphereEnum.SulphurDioxide);
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             CactoidaRule.VermisWaterNone,
             AtmosphereEnum.Water);
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             CactoidaRule.VermisWaterVolcanism,
             AtmosphereEnum.Water);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             CactoidaRule.VermisSulphurDioxide,
             BodyClassEnum.RockyBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             CactoidaRule.VermisWaterNone,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             CactoidaRule.VermisWaterVolcanism,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             CactoidaRule.VermisSulphurDioxide,
             VolcanismEnum.None);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             CactoidaRule.VermisWaterNone,
             VolcanismEnum.None);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             CactoidaRule.VermisWaterVolcanism,
             VolcanismEnum.Water);
@@ -186,12 +186,12 @@ static class CactoidaDataSeed
                 MaxPressure = 0.0135
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             CactoidaRule.Lapis,
             AtmosphereEnum.Ammonia);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             CactoidaRule.Lapis,
             BodyClassEnum.RockyBody,
@@ -219,18 +219,18 @@ static class CactoidaDataSeed
                 MinPressure = 0.025
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             CactoidaRule.Cortexum,
             AtmosphereEnum.CarbonDioxide);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             CactoidaRule.Cortexum,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             CactoidaRule.Cortexum,
             VolcanismEnum.None);
@@ -253,44 +253,5 @@ static class CactoidaDataSeed
                 Value = value,
                 Distance = 300
             });
-    }
-
-    private static void SeedAtmospheres(
-        ModelBuilder modelBuilder,
-        CactoidaRule rule,
-        params AtmosphereEnum[] atmospheres)
-    {
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            atmospheres.Select(x => new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)x
-            }));
-    }
-
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        CactoidaRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
-    }
-
-    private static void SeedVolcanisms(
-        ModelBuilder modelBuilder,
-        CactoidaRule rule,
-        params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(x => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)x
-            }));
     }
 }

@@ -32,13 +32,13 @@ static class TubersDataSeed
                 MaxTemperature = 500.0
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubersRule.Blatteum,
             BodyClassEnum.MetalRichBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             TubersRule.Blatteum,
             VolcanismEnum.MetallicMagmaVolcanism,
@@ -72,12 +72,12 @@ static class TubersDataSeed
                 MaxOrbitalPeriod = 86_400
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubersRule.VirideHighMetalContent,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubersRule.VirideRocky,
             BodyClassEnum.RockyBody);
@@ -88,7 +88,7 @@ static class TubersDataSeed
                      TubersRule.VirideRocky
                  })
         {
-            SeedVolcanisms(
+            SeedHelpers.Volcanisms(
                 modelBuilder,
                 rule,
                 VolcanismEnum.MajorRockyMagma,
@@ -114,13 +114,13 @@ static class TubersDataSeed
                 MaxTemperature = 500.0
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubersRule.Violaceum,
             BodyClassEnum.MetalRichBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             TubersRule.Violaceum,
             VolcanismEnum.MajorRockyMagma,
@@ -146,12 +146,12 @@ static class TubersDataSeed
                 MaxOrbitalPeriod = 86_400
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubersRule.Lindigoticum,
             BodyClassEnum.RockyBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             TubersRule.Lindigoticum,
             VolcanismEnum.MajorSilicateVapour);
@@ -183,22 +183,22 @@ static class TubersDataSeed
                 MaxTemperature = 500.0
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubersRule.CaeruleumTuberCondition,
             BodyClassEnum.RockyBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubersRule.CaeruleumRegionCondition,
             BodyClassEnum.RockyBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             TubersRule.CaeruleumTuberCondition,
             VolcanismEnum.MajorSilicateVapour);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             TubersRule.CaeruleumRegionCondition,
             VolcanismEnum.MajorSilicateVapour);
@@ -223,12 +223,12 @@ static class TubersDataSeed
                 MaxOrbitalPeriod = 86_400
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubersRule.Albidum,
             BodyClassEnum.RockyBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             TubersRule.Albidum,
             VolcanismEnum.MajorSilicateVapour,
@@ -267,37 +267,37 @@ static class TubersDataSeed
                 MaxTemperature = 500.0
             });
         
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubersRule.PrasinumAny,
             BodyClassEnum.MetalRichBody,
             BodyClassEnum.HighMetalContentBody,
             BodyClassEnum.RockyBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubersRule.PrasinumTuberCondition,
             BodyClassEnum.MetalRichBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubersRule.PrasinumRegionCondition,
             BodyClassEnum.MetalRichBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             TubersRule.PrasinumAny,
             VolcanismEnum.Any);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             TubersRule.PrasinumTuberCondition,
             VolcanismEnum.MajorRockyMagma,
             VolcanismEnum.MajorSilicateVapour);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             TubersRule.PrasinumRegionCondition,
             VolcanismEnum.MajorRockyMagma,
@@ -322,12 +322,12 @@ static class TubersDataSeed
                 MaxTemperature = 500.0
             });
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             TubersRule.Roseum,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             TubersRule.Roseum,
             VolcanismEnum.RockyMagma);
@@ -350,31 +350,5 @@ static class TubersDataSeed
                 Value = value,
                 Distance = 100
             });
-    }
-
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        TubersRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
-    }
-
-    private static void SeedVolcanisms(
-        ModelBuilder modelBuilder,
-        TubersRule rule,
-        params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(x => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)x
-            }));
     }
 }

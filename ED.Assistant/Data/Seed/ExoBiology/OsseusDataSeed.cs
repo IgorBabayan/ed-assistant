@@ -32,13 +32,13 @@ static class OsseusDataSeed
                 MinPressure = 0.057
             });
 
-        SeedAtmospheres(modelBuilder, OsseusRule.Pellebantus, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(
+        SeedHelpers.Atmospheres(modelBuilder, OsseusRule.Pellebantus, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(
             modelBuilder,
             OsseusRule.Pellebantus,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, OsseusRule.Pellebantus, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, OsseusRule.Pellebantus, VolcanismEnum.None);
     }
 
     private static void SeedCornibus(ModelBuilder modelBuilder)
@@ -61,13 +61,13 @@ static class OsseusDataSeed
                 MinPressure = 0.025
             });
 
-        SeedAtmospheres(modelBuilder, OsseusRule.Cornibus, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(
+        SeedHelpers.Atmospheres(modelBuilder, OsseusRule.Cornibus, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(
             modelBuilder,
             OsseusRule.Cornibus,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, OsseusRule.Cornibus, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, OsseusRule.Cornibus, VolcanismEnum.None);
     }
 
     private static void SeedPumice(ModelBuilder modelBuilder)
@@ -127,41 +127,41 @@ static class OsseusDataSeed
                 MaxTemperature = 70.1
             });
         
-        SeedAtmospheres(modelBuilder, OsseusRule.PumiceArgonNone, AtmosphereEnum.Argon);
-        SeedAtmospheres(modelBuilder, OsseusRule.PumiceArgonWaterGeysers, AtmosphereEnum.Argon);
-        SeedAtmospheres(modelBuilder, OsseusRule.PumiceArgonRich, AtmosphereEnum.ArgonRich);
-        SeedAtmospheres(modelBuilder, OsseusRule.PumiceMethane, AtmosphereEnum.Methane);
-        SeedAtmospheres(modelBuilder, OsseusRule.PumiceNitrogen, AtmosphereEnum.Nitrogen);
+        SeedHelpers.Atmospheres(modelBuilder, OsseusRule.PumiceArgonNone, AtmosphereEnum.Argon);
+        SeedHelpers.Atmospheres(modelBuilder, OsseusRule.PumiceArgonWaterGeysers, AtmosphereEnum.Argon);
+        SeedHelpers.Atmospheres(modelBuilder, OsseusRule.PumiceArgonRich, AtmosphereEnum.ArgonRich);
+        SeedHelpers.Atmospheres(modelBuilder, OsseusRule.PumiceMethane, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, OsseusRule.PumiceNitrogen, AtmosphereEnum.Nitrogen);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             OsseusRule.PumiceArgonNone,
             BodyClassEnum.RockyBody,
             BodyClassEnum.RockyIceBody,
             BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, OsseusRule.PumiceArgonWaterGeysers, BodyClassEnum.RockyIceBody);
-        SeedBodyClasses(modelBuilder, OsseusRule.PumiceArgonRich, BodyClassEnum.RockyIceBody);
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(modelBuilder, OsseusRule.PumiceArgonWaterGeysers, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, OsseusRule.PumiceArgonRich, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(
             modelBuilder,
             OsseusRule.PumiceMethane,
             BodyClassEnum.RockyBody,
             BodyClassEnum.RockyIceBody,
             BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             OsseusRule.PumiceNitrogen,
             BodyClassEnum.RockyBody,
             BodyClassEnum.RockyIceBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(modelBuilder, OsseusRule.PumiceArgonNone, VolcanismEnum.None);
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(modelBuilder, OsseusRule.PumiceArgonNone, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(
             modelBuilder,
             OsseusRule.PumiceArgonWaterGeysers,
             VolcanismEnum.Water,
             VolcanismEnum.Geysers);
-        SeedVolcanisms(modelBuilder, OsseusRule.PumiceArgonRich, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, OsseusRule.PumiceNitrogen, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, OsseusRule.PumiceArgonRich, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, OsseusRule.PumiceNitrogen, VolcanismEnum.None);
 
     }
 
@@ -186,8 +186,8 @@ static class OsseusDataSeed
                 MaxPressure = 0.0135
             });
 
-        SeedAtmospheres(modelBuilder, OsseusRule.Spiralis, AtmosphereEnum.Ammonia);
-        SeedBodyClasses(
+        SeedHelpers.Atmospheres(modelBuilder, OsseusRule.Spiralis, AtmosphereEnum.Ammonia);
+        SeedHelpers.BodyClasses(
             modelBuilder,
             OsseusRule.Spiralis,
             BodyClassEnum.RockyBody,
@@ -250,31 +250,31 @@ static class OsseusDataSeed
                 MaxGravity = 0.055
             });
         
-        SeedAtmospheres(modelBuilder, OsseusRule.DiscusAmmonia, AtmosphereEnum.Ammonia);
-        SeedAtmospheres(modelBuilder, OsseusRule.DiscusArgon, AtmosphereEnum.Argon);
-        SeedAtmospheres(modelBuilder, OsseusRule.DiscusCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, OsseusRule.DiscusMethane, AtmosphereEnum.Methane);
-        SeedAtmospheres(modelBuilder, OsseusRule.DiscusWater, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, OsseusRule.DiscusAmmonia, AtmosphereEnum.Ammonia);
+        SeedHelpers.Atmospheres(modelBuilder, OsseusRule.DiscusArgon, AtmosphereEnum.Argon);
+        SeedHelpers.Atmospheres(modelBuilder, OsseusRule.DiscusCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, OsseusRule.DiscusMethane, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, OsseusRule.DiscusWater, AtmosphereEnum.Water);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             OsseusRule.DiscusAmmonia,
             BodyClassEnum.RockyBody,
             BodyClassEnum.RockyIceBody,
             BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, OsseusRule.DiscusArgon, BodyClassEnum.RockyIceBody);
-        SeedBodyClasses(modelBuilder, OsseusRule.DiscusCarbonDioxide, BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, OsseusRule.DiscusMethane, BodyClassEnum.RockyBody);
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(modelBuilder, OsseusRule.DiscusArgon, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, OsseusRule.DiscusCarbonDioxide, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, OsseusRule.DiscusMethane, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(
             modelBuilder,
             OsseusRule.DiscusWater,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(modelBuilder, OsseusRule.DiscusAmmonia, VolcanismEnum.Any);
-        SeedVolcanisms(modelBuilder, OsseusRule.DiscusArgon, VolcanismEnum.Any);
-        SeedVolcanisms(modelBuilder, OsseusRule.DiscusCarbonDioxide, VolcanismEnum.Any);
-        SeedVolcanisms(modelBuilder, OsseusRule.DiscusMethane, VolcanismEnum.Any);
+        SeedHelpers.Volcanisms(modelBuilder, OsseusRule.DiscusAmmonia, VolcanismEnum.Any);
+        SeedHelpers.Volcanisms(modelBuilder, OsseusRule.DiscusArgon, VolcanismEnum.Any);
+        SeedHelpers.Volcanisms(modelBuilder, OsseusRule.DiscusCarbonDioxide, VolcanismEnum.Any);
+        SeedHelpers.Volcanisms(modelBuilder, OsseusRule.DiscusMethane, VolcanismEnum.Any);
     }
 
     private static void SeedFractus(ModelBuilder modelBuilder)
@@ -297,13 +297,13 @@ static class OsseusDataSeed
                 MinPressure = 0.025
             });
 
-        SeedAtmospheres(modelBuilder, OsseusRule.Fractus, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(
+        SeedHelpers.Atmospheres(modelBuilder, OsseusRule.Fractus, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(
             modelBuilder,
             OsseusRule.Fractus,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, OsseusRule.Fractus, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, OsseusRule.Fractus, VolcanismEnum.None);
     }
 
     private static void SeedGenus(
@@ -323,44 +323,5 @@ static class OsseusDataSeed
                 Value = value,
                 Distance = 800
             });
-    }
-
-    private static void SeedAtmospheres(
-        ModelBuilder modelBuilder,
-        OsseusRule rule,
-        params AtmosphereEnum[] atmospheres)
-    {
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            atmospheres.Select(x => new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)x
-            }));
-    }
-
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        OsseusRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
-    }
-
-    private static void SeedVolcanisms(
-        ModelBuilder modelBuilder,
-        OsseusRule rule,
-        params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(x => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)x
-            }));
     }
 }

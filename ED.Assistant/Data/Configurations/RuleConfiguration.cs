@@ -27,6 +27,15 @@ class RuleConfiguration : IEntityTypeConfiguration<Rule>
             .WithMany(x => x.Rules)
             .HasForeignKey(x => x.GenusId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder
+            .HasMany(x => x.ParentBodyClasses)
+            .WithMany(x => x.Rules)
+            .UsingEntity<Dictionary<string, object>>(
+                "RuleParentBodyClass",
+                r => r.HasOne<ParentBodyClass>().WithMany().HasForeignKey("ParentBodyClassId").OnDelete(DeleteBehavior.Cascade),
+                l => l.HasOne<Rule>().WithMany().HasForeignKey("RuleId").OnDelete(DeleteBehavior.Cascade),
+                j => j.HasKey("RuleId", "ParentBodyClassId"));
 
         ConfigureBodyClasses(builder);
         ConfigureSystemBodyClasses(builder);

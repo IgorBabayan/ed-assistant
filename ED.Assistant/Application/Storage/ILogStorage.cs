@@ -2,5 +2,5 @@
 
 public interface ILogStorage
 {
-	Task<JournalState> LoadLastLogsAsync(string logFolder, CancellationToken cancellationToken = default);
+	Task<JournalState> LoadLastLogsAsync(string logFolder, int days, CancellationToken cancellationToken = default);
 }

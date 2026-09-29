@@ -36,27 +36,27 @@ static class BacteriumDataSeed
             new Rule { Id = (int)BacteriumRule.VerrataWater, GenusId = (int)BacteriumGenus.Verrata, MinGravity = 0.04, MaxGravity = 0.054 }
         );
 
-        SeedAtmospheres(modelBuilder, BacteriumRule.VerrataAmmonia, AtmosphereEnum.Ammonia);
-        SeedAtmospheres(modelBuilder, BacteriumRule.VerrataArgon, AtmosphereEnum.Argon);
-        SeedAtmospheres(modelBuilder, BacteriumRule.VerrataArgonRich, AtmosphereEnum.ArgonRich);
-        SeedAtmospheres(modelBuilder, BacteriumRule.VerrataCarbonDioxide, AtmosphereEnum.CarbonDioxide, AtmosphereEnum.CarbonDioxideRich);
-        SeedAtmospheres(modelBuilder, BacteriumRule.VerrataHelium, AtmosphereEnum.Helium);
-        SeedAtmospheres(modelBuilder, BacteriumRule.VerrataNeon, AtmosphereEnum.Neon);
-        SeedAtmospheres(modelBuilder, BacteriumRule.VerrataNeonRich, AtmosphereEnum.NeonRich);
-        SeedAtmospheres(modelBuilder, BacteriumRule.VerrataNitrogen, AtmosphereEnum.Nitrogen);
-        SeedAtmospheres(modelBuilder, BacteriumRule.VerrataOxygen, AtmosphereEnum.Oxygen);
-        SeedAtmospheres(modelBuilder, BacteriumRule.VerrataWater, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.VerrataAmmonia, AtmosphereEnum.Ammonia);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.VerrataArgon, AtmosphereEnum.Argon);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.VerrataArgonRich, AtmosphereEnum.ArgonRich);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.VerrataCarbonDioxide, AtmosphereEnum.CarbonDioxide, AtmosphereEnum.CarbonDioxideRich);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.VerrataHelium, AtmosphereEnum.Helium);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.VerrataNeon, AtmosphereEnum.Neon);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.VerrataNeonRich, AtmosphereEnum.NeonRich);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.VerrataNitrogen, AtmosphereEnum.Nitrogen);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.VerrataOxygen, AtmosphereEnum.Oxygen);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.VerrataWater, AtmosphereEnum.Water);
 
-        SeedBodyClasses(modelBuilder, BacteriumRule.VerrataAmmonia, BodyClassEnum.RockyBody, BodyClassEnum.RockyIceBody, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.VerrataArgon, BodyClassEnum.RockyIceBody, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.VerrataArgonRich, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.VerrataCarbonDioxide, BodyClassEnum.RockyIceBody, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.VerrataHelium, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.VerrataNeon, BodyClassEnum.RockyIceBody, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.VerrataNeonRich, BodyClassEnum.RockyIceBody, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.VerrataNitrogen, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.VerrataOxygen, BodyClassEnum.RockyIceBody, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.VerrataWater, BodyClassEnum.RockyBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.VerrataAmmonia, BodyClassEnum.RockyBody, BodyClassEnum.RockyIceBody, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.VerrataArgon, BodyClassEnum.RockyIceBody, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.VerrataArgonRich, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.VerrataCarbonDioxide, BodyClassEnum.RockyIceBody, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.VerrataHelium, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.VerrataNeon, BodyClassEnum.RockyIceBody, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.VerrataNeonRich, BodyClassEnum.RockyIceBody, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.VerrataNitrogen, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.VerrataOxygen, BodyClassEnum.RockyIceBody, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.VerrataWater, BodyClassEnum.RockyBody);
 
         foreach (var rule in new[]
         {
@@ -72,7 +72,7 @@ static class BacteriumDataSeed
             BacteriumRule.VerrataWater
         })
         {
-            SeedVolcanisms(modelBuilder, rule, VolcanismEnum.Water);
+            SeedHelpers.Volcanisms(modelBuilder, rule, VolcanismEnum.Water);
         }
     }
 
@@ -87,19 +87,19 @@ static class BacteriumDataSeed
             new Rule { Id = (int)BacteriumRule.CerbrusWaterRich, GenusId = (int)BacteriumGenus.Cerbrus, MinGravity = 0.4, MaxGravity = 0.5, MinTemperature = 190.0, MaxTemperature = 330.0 }
         );
 
-        SeedAtmospheres(modelBuilder, BacteriumRule.CerbrusSulphurDioxide, AtmosphereEnum.SulphurDioxide);
-        SeedAtmospheres(modelBuilder, BacteriumRule.CerbrusWaterNone, AtmosphereEnum.Water);
-        SeedAtmospheres(modelBuilder, BacteriumRule.CerbrusWaterVolcanism, AtmosphereEnum.Water);
-        SeedAtmospheres(modelBuilder, BacteriumRule.CerbrusWaterRich, AtmosphereEnum.WaterRich);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.CerbrusSulphurDioxide, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.CerbrusWaterNone, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.CerbrusWaterVolcanism, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.CerbrusWaterRich, AtmosphereEnum.WaterRich);
 
-        SeedBodyClasses(modelBuilder, BacteriumRule.CerbrusSulphurDioxide, BodyClassEnum.RockyBody, BodyClassEnum.RockyIceBody, BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.CerbrusWaterNone, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.CerbrusWaterVolcanism, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.CerbrusWaterRich, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.CerbrusSulphurDioxide, BodyClassEnum.RockyBody, BodyClassEnum.RockyIceBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.CerbrusWaterNone, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.CerbrusWaterVolcanism, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.CerbrusWaterRich, BodyClassEnum.RockyIceBody);
 
-        SeedVolcanisms(modelBuilder, BacteriumRule.CerbrusWaterNone, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, BacteriumRule.CerbrusWaterVolcanism, VolcanismEnum.Water);
-        SeedVolcanisms(modelBuilder, BacteriumRule.CerbrusWaterRich, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.CerbrusWaterNone, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.CerbrusWaterVolcanism, VolcanismEnum.Water);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.CerbrusWaterRich, VolcanismEnum.None);
     }
 
     private static void SeedOmentum(ModelBuilder modelBuilder)
@@ -143,9 +143,9 @@ static class BacteriumDataSeed
 
         for (var i = 0; i < rules.Length; i++)
         {
-            SeedAtmospheres(modelBuilder, rules[i], atmospheres[i]);
-            SeedBodyClasses(modelBuilder, rules[i], BodyClassEnum.IcyBody);
-            SeedVolcanisms(modelBuilder, rules[i], VolcanismEnum.Nitrogen, VolcanismEnum.Ammonia);
+            SeedHelpers.Atmospheres(modelBuilder, rules[i], atmospheres[i]);
+            SeedHelpers.BodyClasses(modelBuilder, rules[i], BodyClassEnum.IcyBody);
+            SeedHelpers.Volcanisms(modelBuilder, rules[i], VolcanismEnum.Nitrogen, VolcanismEnum.Ammonia);
         }
     }
 
@@ -158,10 +158,10 @@ static class BacteriumDataSeed
             new Rule { Id = (int)BacteriumRule.BullarisMethaneRich, GenusId = (int)BacteriumGenus.Bullaris, MinGravity = 0.44, MaxGravity = 0.6, MinTemperature = 74.0, MaxTemperature = 141.0, MinPressure = 0.01, MaxPressure = 0.05 }
         );
 
-        SeedAtmospheres(modelBuilder, BacteriumRule.BullarisMethane, AtmosphereEnum.Methane);
-        SeedAtmospheres(modelBuilder, BacteriumRule.BullarisMethaneRich, AtmosphereEnum.MethaneRich);
-        SeedBodyClasses(modelBuilder, BacteriumRule.BullarisMethaneRich, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, BacteriumRule.BullarisMethaneRich, VolcanismEnum.None);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.BullarisMethane, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.BullarisMethaneRich, AtmosphereEnum.MethaneRich);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.BullarisMethaneRich, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.BullarisMethaneRich, VolcanismEnum.None);
     }
 
     private static void SeedVolu(ModelBuilder modelBuilder)
@@ -179,7 +179,7 @@ static class BacteriumDataSeed
             MinPressure = 0.013
         });
 
-        SeedAtmospheres(modelBuilder, BacteriumRule.Volu, AtmosphereEnum.Oxygen);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.Volu, AtmosphereEnum.Oxygen);
     }
 
     private static void SeedInformem(ModelBuilder modelBuilder)
@@ -191,11 +191,11 @@ static class BacteriumDataSeed
             new Rule { Id = (int)BacteriumRule.InformemIcy, GenusId = (int)BacteriumGenus.Informem, MinGravity = 0.17, MaxGravity = 0.63, MinTemperature = 50.0, MaxTemperature = 90.0 }
         );
 
-        SeedAtmospheres(modelBuilder, BacteriumRule.InformemRocky, AtmosphereEnum.Nitrogen);
-        SeedAtmospheres(modelBuilder, BacteriumRule.InformemIcy, AtmosphereEnum.Nitrogen);
-        SeedBodyClasses(modelBuilder, BacteriumRule.InformemRocky, BodyClassEnum.RockyBody, BodyClassEnum.RockyIceBody, BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.InformemIcy, BodyClassEnum.IcyBody);
-        SeedVolcanisms(modelBuilder, BacteriumRule.InformemRocky, VolcanismEnum.None);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.InformemRocky, AtmosphereEnum.Nitrogen);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.InformemIcy, AtmosphereEnum.Nitrogen);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.InformemRocky, BodyClassEnum.RockyBody, BodyClassEnum.RockyIceBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.InformemIcy, BodyClassEnum.IcyBody);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.InformemRocky, VolcanismEnum.None);
     }
 
     private static void SeedTela(ModelBuilder modelBuilder)
@@ -221,31 +221,31 @@ static class BacteriumDataSeed
             new Rule { Id = (int)BacteriumRule.TelaWaterRich, GenusId = (int)BacteriumGenus.Tela, MinGravity = 0.315, MaxGravity = 0.44, MinTemperature = 190.0, MaxTemperature = 330.0, MinPressure = 0.01 }
         );
 
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaArgon, AtmosphereEnum.Argon);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaArgonRich, AtmosphereEnum.ArgonRich);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaAmmonia, AtmosphereEnum.Ammonia);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaCarbonDioxideNone, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaCarbonDioxideAny, AtmosphereEnum.CarbonDioxide, AtmosphereEnum.CarbonDioxideRich);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaHelium, AtmosphereEnum.Helium);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaMethane, AtmosphereEnum.Methane);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaNeon, AtmosphereEnum.Neon);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaNeonRich, AtmosphereEnum.NeonRich);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaNitrogen, AtmosphereEnum.Nitrogen);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaOxygen, AtmosphereEnum.Oxygen);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaSulphurDioxideAny, AtmosphereEnum.SulphurDioxide);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaSulphurDioxideNone, AtmosphereEnum.SulphurDioxide);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaSulphurDioxideHotThin, AtmosphereEnum.SulphurDioxide);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaWater, AtmosphereEnum.Water);
-        SeedAtmospheres(modelBuilder, BacteriumRule.TelaWaterRich, AtmosphereEnum.WaterRich);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaArgon, AtmosphereEnum.Argon);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaArgonRich, AtmosphereEnum.ArgonRich);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaAmmonia, AtmosphereEnum.Ammonia);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaCarbonDioxideNone, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaCarbonDioxideAny, AtmosphereEnum.CarbonDioxide, AtmosphereEnum.CarbonDioxideRich);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaHelium, AtmosphereEnum.Helium);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaMethane, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaNeon, AtmosphereEnum.Neon);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaNeonRich, AtmosphereEnum.NeonRich);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaNitrogen, AtmosphereEnum.Nitrogen);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaOxygen, AtmosphereEnum.Oxygen);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaSulphurDioxideAny, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaSulphurDioxideNone, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaSulphurDioxideHotThin, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaWater, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.TelaWaterRich, AtmosphereEnum.WaterRich);
 
-        SeedBodyClasses(modelBuilder, BacteriumRule.TelaArgon, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody, BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.TelaHelium, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.TelaMethane, BodyClassEnum.IcyBody, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.TelaNeon, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.TelaNeonRich, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.TelaSulphurDioxideHotThin, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.TelaWater, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.TelaWaterRich, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.TelaArgon, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.TelaHelium, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.TelaMethane, BodyClassEnum.IcyBody, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.TelaNeon, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.TelaNeonRich, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.TelaSulphurDioxideHotThin, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.TelaWater, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.TelaWaterRich, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
 
         foreach (var rule in new[]
         {
@@ -264,12 +264,12 @@ static class BacteriumDataSeed
             BacteriumRule.TelaWaterRich
         })
         {
-            SeedVolcanisms(modelBuilder, rule, VolcanismEnum.Any);
+            SeedHelpers.Volcanisms(modelBuilder, rule, VolcanismEnum.Any);
         }
 
-        SeedVolcanisms(modelBuilder, BacteriumRule.TelaCarbonDioxideNone, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, BacteriumRule.TelaSulphurDioxideNone, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, BacteriumRule.TelaWater, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.TelaCarbonDioxideNone, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.TelaSulphurDioxideNone, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.TelaWater, VolcanismEnum.None);
     }
 
     private static void SeedAlcyoneum(ModelBuilder modelBuilder)
@@ -287,8 +287,8 @@ static class BacteriumDataSeed
             MaxPressure = 0.0135
         });
 
-        SeedAtmospheres(modelBuilder, BacteriumRule.Alcyoneum, AtmosphereEnum.Ammonia);
-        SeedBodyClasses(modelBuilder, BacteriumRule.Alcyoneum,
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.Alcyoneum, AtmosphereEnum.Ammonia);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.Alcyoneum,
             BodyClassEnum.RockyBody,
             BodyClassEnum.RockyIceBody,
             BodyClassEnum.HighMetalContentBody);
@@ -308,7 +308,7 @@ static class BacteriumDataSeed
             MaxTemperature = 245.0
         });
 
-        SeedAtmospheres(modelBuilder, BacteriumRule.Vesicula, AtmosphereEnum.Argon);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.Vesicula, AtmosphereEnum.Argon);
     }
 
     private static void SeedAcies(ModelBuilder modelBuilder)
@@ -327,8 +327,8 @@ static class BacteriumDataSeed
             MaxPressure = 0.01
         });
 
-        SeedAtmospheres(modelBuilder, BacteriumRule.Acies, AtmosphereEnum.Neon);
-        SeedBodyClasses(modelBuilder, BacteriumRule.Acies, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.Acies, AtmosphereEnum.Neon);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.Acies, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
     }
 
     private static void SeedScopulum(ModelBuilder modelBuilder)
@@ -345,29 +345,29 @@ static class BacteriumDataSeed
             new Rule { Id = (int)BacteriumRule.ScopulumOxygen, GenusId = (int)BacteriumGenus.Scopulum, MinGravity = 0.27, MaxGravity = 0.40, MinTemperature = 150, MaxTemperature = 220, MinPressure = 0.01 }
         );
 
-        SeedAtmospheres(modelBuilder, BacteriumRule.ScopulumArgon, AtmosphereEnum.Argon);
-        SeedAtmospheres(modelBuilder, BacteriumRule.ScopulumHelium, AtmosphereEnum.Helium);
-        SeedAtmospheres(modelBuilder, BacteriumRule.ScopulumMethane, AtmosphereEnum.Methane);
-        SeedAtmospheres(modelBuilder, BacteriumRule.ScopulumNeon, AtmosphereEnum.Neon);
-        SeedAtmospheres(modelBuilder, BacteriumRule.ScopulumNeonRich, AtmosphereEnum.NeonRich);
-        SeedAtmospheres(modelBuilder, BacteriumRule.ScopulumNitrogen, AtmosphereEnum.Nitrogen);
-        SeedAtmospheres(modelBuilder, BacteriumRule.ScopulumOxygen, AtmosphereEnum.Oxygen);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.ScopulumArgon, AtmosphereEnum.Argon);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.ScopulumHelium, AtmosphereEnum.Helium);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.ScopulumMethane, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.ScopulumNeon, AtmosphereEnum.Neon);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.ScopulumNeonRich, AtmosphereEnum.NeonRich);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.ScopulumNitrogen, AtmosphereEnum.Nitrogen);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.ScopulumOxygen, AtmosphereEnum.Oxygen);
 
-        SeedBodyClasses(modelBuilder, BacteriumRule.ScopulumArgon, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.ScopulumHelium, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.ScopulumMethane, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.ScopulumNeon, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.ScopulumNeonRich, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.ScopulumNitrogen, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.ScopulumOxygen, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.ScopulumArgon, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.ScopulumHelium, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.ScopulumMethane, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.ScopulumNeon, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.ScopulumNeonRich, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.ScopulumNitrogen, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.ScopulumOxygen, BodyClassEnum.IcyBody, BodyClassEnum.RockyIceBody);
 
-        SeedVolcanisms(modelBuilder, BacteriumRule.ScopulumArgon, VolcanismEnum.CarbonDioxide, VolcanismEnum.Methane);
-        SeedVolcanisms(modelBuilder, BacteriumRule.ScopulumHelium, VolcanismEnum.Methane);
-        SeedVolcanisms(modelBuilder, BacteriumRule.ScopulumMethane, VolcanismEnum.Methane);
-        SeedVolcanisms(modelBuilder, BacteriumRule.ScopulumNeon, VolcanismEnum.CarbonDioxide, VolcanismEnum.Methane);
-        SeedVolcanisms(modelBuilder, BacteriumRule.ScopulumNeonRich, VolcanismEnum.CarbonDioxide, VolcanismEnum.Methane);
-        SeedVolcanisms(modelBuilder, BacteriumRule.ScopulumNitrogen, VolcanismEnum.CarbonDioxide, VolcanismEnum.Methane);
-        SeedVolcanisms(modelBuilder, BacteriumRule.ScopulumOxygen, VolcanismEnum.CarbonDioxide, VolcanismEnum.Methane);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.ScopulumArgon, VolcanismEnum.CarbonDioxide, VolcanismEnum.Methane);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.ScopulumHelium, VolcanismEnum.Methane);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.ScopulumMethane, VolcanismEnum.Methane);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.ScopulumNeon, VolcanismEnum.CarbonDioxide, VolcanismEnum.Methane);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.ScopulumNeonRich, VolcanismEnum.CarbonDioxide, VolcanismEnum.Methane);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.ScopulumNitrogen, VolcanismEnum.CarbonDioxide, VolcanismEnum.Methane);
+        SeedHelpers.Volcanisms(modelBuilder, BacteriumRule.ScopulumOxygen, VolcanismEnum.CarbonDioxide, VolcanismEnum.Methane);
     }
 
     private static void SeedNebulus(ModelBuilder modelBuilder)
@@ -396,10 +396,10 @@ static class BacteriumDataSeed
                 MinPressure = 0.067
             });
 
-        SeedAtmospheres(modelBuilder, BacteriumRule.NebulusIcy, AtmosphereEnum.Helium);
-        SeedAtmospheres(modelBuilder, BacteriumRule.NebulusRockyIce, AtmosphereEnum.Helium);
-        SeedBodyClasses(modelBuilder, BacteriumRule.NebulusIcy, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, BacteriumRule.NebulusRockyIce, BodyClassEnum.RockyIceBody);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.NebulusIcy, AtmosphereEnum.Helium);
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.NebulusRockyIce, AtmosphereEnum.Helium);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.NebulusIcy, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.NebulusRockyIce, BodyClassEnum.RockyIceBody);
     }
 
     private static void SeedAurasus(ModelBuilder modelBuilder)
@@ -416,8 +416,8 @@ static class BacteriumDataSeed
             MaxTemperature = 400.0
         });
 
-        SeedAtmospheres(modelBuilder, BacteriumRule.Aurasus, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(modelBuilder, BacteriumRule.Aurasus,
+        SeedHelpers.Atmospheres(modelBuilder, BacteriumRule.Aurasus, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, BacteriumRule.Aurasus,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody,
             BodyClassEnum.RockyIceBody);
@@ -434,35 +434,5 @@ static class BacteriumDataSeed
             Value = value,
             Distance = 500
         });
-    }
-
-    private static void SeedAtmospheres(ModelBuilder modelBuilder, BacteriumRule rule, params AtmosphereEnum[] atmospheres)
-    {
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            atmospheres.Select(atmosphere => new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)atmosphere
-            }));
-    }
-
-    private static void SeedBodyClasses(ModelBuilder modelBuilder, BacteriumRule rule, params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(bodyClass => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)bodyClass
-            }));
-    }
-
-    private static void SeedVolcanisms(ModelBuilder modelBuilder, BacteriumRule rule, params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(volcanism => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)volcanism
-            }));
     }
 }

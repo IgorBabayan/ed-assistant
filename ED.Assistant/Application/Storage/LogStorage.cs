@@ -9,7 +9,7 @@ class LogStorage : ILogStorage
 
 	public LogStorage(IJournalStateApplier journalStateApplier) => _journalStateApplier = journalStateApplier;
 
-	public async Task<JournalState> LoadLastLogsAsync(string logFolder, CancellationToken cancellationToken = default)
+	public async Task<JournalState> LoadLastLogsAsync(string logFolder, int days, CancellationToken cancellationToken = default)
 	{
 		if (string.IsNullOrWhiteSpace(logFolder))
 			throw new ArgumentNullException(nameof(logFolder));
@@ -20,7 +20,7 @@ class LogStorage : ILogStorage
 				$"Journal folder '{logFolder}' does not exist.");
 		}
 
-		var files = Directory
+		var allFiles = Directory
 			.GetFiles(logFolder, "Journal.*.log")
 			.Select(path => (
 				Path: path,
@@ -32,16 +32,18 @@ class LogStorage : ILogStorage
 				file.Path,
 				Time: ParseTime(file.Parts[1])))
 			.Where(file => file.Time is not null)
+			.Select(file => (file.Path, Time: file.Time!.Value))
 			.OrderBy(file => file.Time)
 			.ThenBy(file => file.Path, StringComparer.Ordinal)
-			.Select(file => file.Path)
 			.ToArray();
 
-		if (files.Length == 0)
+		if (allFiles.Length == 0)
 		{
 			throw new InvalidOperationException(
 				"Journal files not found.");
 		}
+
+		var files = SelectWindow(allFiles, days);
 
 		var state = new JournalState
 		{
@@ -69,5 +71,27 @@ class LogStorage : ILogStorage
 			out var time)
 			? time
 			: null;
+	}
+	
+	private static string[] SelectWindow(IReadOnlyList<(string Path, DateTime Time)> files, int days)
+	{
+		if (days <= 0)
+			return files.Select(f => f.Path).ToArray();
+
+		// Journal file names use the game machine's local time
+		var cutoff = DateTime.Now.AddDays(-days);
+
+		var first = files.Count;
+		for (var i = 0; i < files.Count; i++)
+		{
+			if (files[i].Time >= cutoff)
+			{
+				first = i;
+				break;
+			}
+		}
+
+		var start = Math.Max(0, first - 1);
+		return files.Skip(start).Select(f => f.Path).ToArray();
 	}
 }

@@ -45,11 +45,11 @@ static class TussockDataSeed
                 MaxTemperature = 110.0
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.CapillumArgon, AtmosphereEnum.Argon);
-        SeedAtmospheres(modelBuilder, TussockRule.CapillumMethane, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.CapillumArgon, AtmosphereEnum.Argon);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.CapillumMethane, AtmosphereEnum.Methane);
 
-        SeedBodyClasses(modelBuilder, TussockRule.CapillumArgon, BodyClassEnum.RockyIceBody);
-        SeedBodyClasses(modelBuilder, TussockRule.CapillumMethane, BodyClassEnum.RockyBody, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.CapillumArgon, BodyClassEnum.RockyIceBody);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.CapillumMethane, BodyClassEnum.RockyBody, BodyClassEnum.RockyIceBody);
     }
 
     private static void SeedVirgam(ModelBuilder modelBuilder)
@@ -72,14 +72,14 @@ static class TussockDataSeed
                 MaxGravity = 0.065
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.VirgamNone, AtmosphereEnum.Water);
-        SeedAtmospheres(modelBuilder, TussockRule.VirgamWater, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.VirgamNone, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.VirgamWater, AtmosphereEnum.Water);
 
-        SeedBodyClasses(modelBuilder, TussockRule.VirgamNone, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedBodyClasses(modelBuilder, TussockRule.VirgamWater, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.VirgamNone, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.VirgamWater, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
 
-        SeedVolcanisms(modelBuilder, TussockRule.VirgamNone, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, TussockRule.VirgamWater, VolcanismEnum.Water);
+        SeedHelpers.Volcanisms(modelBuilder, TussockRule.VirgamNone, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, TussockRule.VirgamWater, VolcanismEnum.Water);
     }
 
     private static void SeedStigmasis(ModelBuilder modelBuilder)
@@ -98,8 +98,8 @@ static class TussockDataSeed
                 MaxPressure = 0.01
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.Stigmasis, AtmosphereEnum.SulphurDioxide);
-        SeedBodyClasses(modelBuilder, TussockRule.Stigmasis, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.Stigmasis, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.Stigmasis, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
     }
 
     private static void SeedTriticum(ModelBuilder modelBuilder)
@@ -118,9 +118,9 @@ static class TussockDataSeed
                 MinPressure = 0.058
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.Triticum, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(modelBuilder, TussockRule.Triticum, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, TussockRule.Triticum, VolcanismEnum.None);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.Triticum, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.Triticum, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Volcanisms(modelBuilder, TussockRule.Triticum, VolcanismEnum.None);
     }
 
     private static void SeedCaputus(ModelBuilder modelBuilder)
@@ -139,9 +139,9 @@ static class TussockDataSeed
                 MinPressure = 0.0275
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.Caputus, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(modelBuilder, TussockRule.Caputus, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, TussockRule.Caputus, VolcanismEnum.None);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.Caputus, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.Caputus, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Volcanisms(modelBuilder, TussockRule.Caputus, VolcanismEnum.None);
     }
 
     private static void SeedDivisa(ModelBuilder modelBuilder)
@@ -160,8 +160,8 @@ static class TussockDataSeed
                 MaxPressure = 0.0135
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.Divisa, AtmosphereEnum.Ammonia);
-        SeedBodyClasses(modelBuilder, TussockRule.Divisa, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.Divisa, AtmosphereEnum.Ammonia);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.Divisa, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
     }
 
     private static void SeedPropagito(ModelBuilder modelBuilder)
@@ -180,9 +180,9 @@ static class TussockDataSeed
                 MinPressure = 0.00289
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.Propagito, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(modelBuilder, TussockRule.Propagito, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, TussockRule.Propagito, VolcanismEnum.None);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.Propagito, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.Propagito, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Volcanisms(modelBuilder, TussockRule.Propagito, VolcanismEnum.None);
     }
 
     private static void SeedAlbata(ModelBuilder modelBuilder)
@@ -201,9 +201,9 @@ static class TussockDataSeed
                 MinPressure = 0.016
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.Albata, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(modelBuilder, TussockRule.Albata, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, TussockRule.Albata, VolcanismEnum.None);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.Albata, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.Albata, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Volcanisms(modelBuilder, TussockRule.Albata, VolcanismEnum.None);
     }
 
     private static void SeedSerrati(ModelBuilder modelBuilder)
@@ -223,9 +223,9 @@ static class TussockDataSeed
                 MaxPressure = 0.071
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.Serrati, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(modelBuilder, TussockRule.Serrati, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, TussockRule.Serrati, VolcanismEnum.None);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.Serrati, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.Serrati, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Volcanisms(modelBuilder, TussockRule.Serrati, VolcanismEnum.None);
     }
 
     private static void SeedPennatis(ModelBuilder modelBuilder)
@@ -244,9 +244,9 @@ static class TussockDataSeed
                 MinPressure = 0.00289
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.Pennatis, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(modelBuilder, TussockRule.Pennatis, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, TussockRule.Pennatis, VolcanismEnum.None);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.Pennatis, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.Pennatis, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Volcanisms(modelBuilder, TussockRule.Pennatis, VolcanismEnum.None);
     }
 
     private static void SeedCatena(ModelBuilder modelBuilder)
@@ -265,8 +265,8 @@ static class TussockDataSeed
                 MaxPressure = 0.0135
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.Catena, AtmosphereEnum.Ammonia);
-        SeedBodyClasses(modelBuilder, TussockRule.Catena, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.Catena, AtmosphereEnum.Ammonia);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.Catena, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
     }
 
     private static void SeedCultro(ModelBuilder modelBuilder)
@@ -285,8 +285,8 @@ static class TussockDataSeed
                 MaxPressure = 0.0135
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.Cultro, AtmosphereEnum.Ammonia);
-        SeedBodyClasses(modelBuilder, TussockRule.Cultro, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.Cultro, AtmosphereEnum.Ammonia);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.Cultro, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
     }
 
     private static void SeedIgnis(ModelBuilder modelBuilder)
@@ -305,9 +305,9 @@ static class TussockDataSeed
                 MinPressure = 0.00289
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.Ignis, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(modelBuilder, TussockRule.Ignis, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, TussockRule.Ignis, VolcanismEnum.None);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.Ignis, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.Ignis, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Volcanisms(modelBuilder, TussockRule.Ignis, VolcanismEnum.None);
     }
 
     private static void SeedVentusa(ModelBuilder modelBuilder)
@@ -326,9 +326,9 @@ static class TussockDataSeed
                 MinPressure = 0.00289
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.Ventusa, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(modelBuilder, TussockRule.Ventusa, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, TussockRule.Ventusa, VolcanismEnum.None);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.Ventusa, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.Ventusa, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Volcanisms(modelBuilder, TussockRule.Ventusa, VolcanismEnum.None);
     }
 
     private static void SeedPennata(ModelBuilder modelBuilder)
@@ -347,9 +347,9 @@ static class TussockDataSeed
                 MinPressure = 0.00289
             });
 
-        SeedAtmospheres(modelBuilder, TussockRule.Pennata, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(modelBuilder, TussockRule.Pennata, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, TussockRule.Pennata, VolcanismEnum.None);
+        SeedHelpers.Atmospheres(modelBuilder, TussockRule.Pennata, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, TussockRule.Pennata, BodyClassEnum.RockyBody, BodyClassEnum.HighMetalContentBody);
+        SeedHelpers.Volcanisms(modelBuilder, TussockRule.Pennata, VolcanismEnum.None);
     }
 
     private static void SeedGenus(
@@ -369,44 +369,5 @@ static class TussockDataSeed
                 Value = value,
                 Distance = 200
             });
-    }
-
-    private static void SeedAtmospheres(
-        ModelBuilder modelBuilder,
-        TussockRule rule,
-        params AtmosphereEnum[] atmospheres)
-    {
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            atmospheres.Select(x => new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)x
-            }));
-    }
-
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        TussockRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
-    }
-
-    private static void SeedVolcanisms(
-        ModelBuilder modelBuilder,
-        TussockRule rule,
-        params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(x => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)x
-            }));
     }
 }

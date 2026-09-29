@@ -12,7 +12,7 @@ static class ConchaDataSeed
 
     private static void SeedBiconcavis(ModelBuilder modelBuilder)
     {
-        SeedGenus(modelBuilder, ConchaGenus.Biconcavis, "$Codex_Ent_Conchas_04_Name;", "Concha Biconcavis", 16_777_215);
+        SeedGenus(modelBuilder, ConchaGenus.Biconcavis, "$Codex_Ent_Conchas_04_Name;", "Concha Biconcavis", 19_010_800);
 
         modelBuilder.Entity<Rule>().HasData(
             new Rule
@@ -26,11 +26,11 @@ static class ConchaDataSeed
                 MaxPressure = 0.0047
             });
 
-        SeedAtmospheres(modelBuilder, ConchaRule.Biconcavis, AtmosphereEnum.Nitrogen);
-        SeedBodyClasses(modelBuilder, ConchaRule.Biconcavis,
+        SeedHelpers.Atmospheres(modelBuilder, ConchaRule.Biconcavis, AtmosphereEnum.Nitrogen);
+        SeedHelpers.BodyClasses(modelBuilder, ConchaRule.Biconcavis,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, ConchaRule.Biconcavis, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, ConchaRule.Biconcavis, VolcanismEnum.None);
     }
 
     private static void SeedLabiata(ModelBuilder modelBuilder)
@@ -49,11 +49,11 @@ static class ConchaDataSeed
                 MinPressure = 0.002
             });
 
-        SeedAtmospheres(modelBuilder, ConchaRule.Labiata, AtmosphereEnum.CarbonDioxide);
-        SeedBodyClasses(modelBuilder, ConchaRule.Labiata,
+        SeedHelpers.Atmospheres(modelBuilder, ConchaRule.Labiata, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.BodyClasses(modelBuilder, ConchaRule.Labiata,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
-        SeedVolcanisms(modelBuilder, ConchaRule.Labiata, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, ConchaRule.Labiata, VolcanismEnum.None);
     }
 
     private static void SeedAureolas(ModelBuilder modelBuilder)
@@ -72,8 +72,8 @@ static class ConchaDataSeed
                 MaxPressure = 0.0135
             });
 
-        SeedAtmospheres(modelBuilder, ConchaRule.Aureolas, AtmosphereEnum.Ammonia);
-        SeedBodyClasses(modelBuilder, ConchaRule.Aureolas,
+        SeedHelpers.Atmospheres(modelBuilder, ConchaRule.Aureolas, AtmosphereEnum.Ammonia);
+        SeedHelpers.BodyClasses(modelBuilder, ConchaRule.Aureolas,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
     }
@@ -126,11 +126,11 @@ static class ConchaDataSeed
                 MaxGravity = 0.65
             });
 
-        SeedAtmospheres(modelBuilder, ConchaRule.RenibusAmmonia, AtmosphereEnum.Ammonia);
-        SeedAtmospheres(modelBuilder, ConchaRule.RenibusCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, ConchaRule.RenibusMethane, AtmosphereEnum.Methane);
-        SeedAtmospheres(modelBuilder, ConchaRule.RenibusWaterNone, AtmosphereEnum.Water);
-        SeedAtmospheres(modelBuilder, ConchaRule.RenibusWaterVolcanism, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, ConchaRule.RenibusAmmonia, AtmosphereEnum.Ammonia);
+        SeedHelpers.Atmospheres(modelBuilder, ConchaRule.RenibusCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, ConchaRule.RenibusMethane, AtmosphereEnum.Methane);
+        SeedHelpers.Atmospheres(modelBuilder, ConchaRule.RenibusWaterNone, AtmosphereEnum.Water);
+        SeedHelpers.Atmospheres(modelBuilder, ConchaRule.RenibusWaterVolcanism, AtmosphereEnum.Water);
 
         foreach (var rule in new[]
         {
@@ -141,26 +141,26 @@ static class ConchaDataSeed
             ConchaRule.RenibusWaterVolcanism
         })
         {
-            SeedBodyClasses(modelBuilder, rule,
+            SeedHelpers.BodyClasses(modelBuilder, rule,
                 BodyClassEnum.RockyBody,
                 BodyClassEnum.HighMetalContentBody);
         }
 
-        SeedVolcanisms(modelBuilder, ConchaRule.RenibusAmmonia,
+        SeedHelpers.Volcanisms(modelBuilder, ConchaRule.RenibusAmmonia,
             VolcanismEnum.Silicate,
             VolcanismEnum.Metallic);
 
-        SeedVolcanisms(modelBuilder, ConchaRule.RenibusCarbonDioxide,
+        SeedHelpers.Volcanisms(modelBuilder, ConchaRule.RenibusCarbonDioxide,
             VolcanismEnum.None);
 
-        SeedVolcanisms(modelBuilder, ConchaRule.RenibusMethane,
+        SeedHelpers.Volcanisms(modelBuilder, ConchaRule.RenibusMethane,
             VolcanismEnum.Silicate,
             VolcanismEnum.Metallic);
 
-        SeedVolcanisms(modelBuilder, ConchaRule.RenibusWaterNone,
+        SeedHelpers.Volcanisms(modelBuilder, ConchaRule.RenibusWaterNone,
             VolcanismEnum.None);
 
-        SeedVolcanisms(modelBuilder, ConchaRule.RenibusWaterVolcanism,
+        SeedHelpers.Volcanisms(modelBuilder, ConchaRule.RenibusWaterVolcanism,
             VolcanismEnum.Water);
     }
 
@@ -181,44 +181,5 @@ static class ConchaDataSeed
                 Value = value,
                 Distance = 150
             });
-    }
-
-    private static void SeedAtmospheres(
-        ModelBuilder modelBuilder,
-        ConchaRule rule,
-        params AtmosphereEnum[] atmospheres)
-    {
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            atmospheres.Select(x => new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)x
-            }));
-    }
-
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        ConchaRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
-    }
-
-    private static void SeedVolcanisms(
-        ModelBuilder modelBuilder,
-        ConchaRule rule,
-        params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(x => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)x
-            }));
     }
 }

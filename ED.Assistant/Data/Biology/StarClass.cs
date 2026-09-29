@@ -2,7 +2,7 @@ namespace ED.Assistant.Data.Biology;
 
 enum StarClassEnum
 {
-    A,
+    A = 1,
     B,
     O,
     N,
@@ -13,7 +13,8 @@ enum StarClassEnum
     G,
     K,
     MS,
-    S
+    S,
+    M
 }
 
 public sealed class StarClass

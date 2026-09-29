@@ -44,20 +44,20 @@ static class ElectricaeDataSeed
                 Nebula = NebulaRuleType.All
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             ElectricaeRule.RadialemArgon,
             AtmosphereEnum.Argon,
             AtmosphereEnum.ArgonRich);
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             ElectricaeRule.RadialemNeon,
             AtmosphereEnum.Neon,
             AtmosphereEnum.NeonRich);
 
-        SeedBodyClasses(modelBuilder, ElectricaeRule.RadialemArgon, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, ElectricaeRule.RadialemNeon, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, ElectricaeRule.RadialemArgon, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, ElectricaeRule.RadialemNeon, BodyClassEnum.IcyBody);
     }
 
     private static void SeedPluma(ModelBuilder modelBuilder)
@@ -94,20 +94,20 @@ static class ElectricaeDataSeed
                 MaxPressure = 0.005
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             ElectricaeRule.PlumaArgon,
             AtmosphereEnum.Argon,
             AtmosphereEnum.ArgonRich);
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             ElectricaeRule.PlumaNeon,
             AtmosphereEnum.Neon,
             AtmosphereEnum.NeonRich);
 
-        SeedBodyClasses(modelBuilder, ElectricaeRule.PlumaArgon, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, ElectricaeRule.PlumaNeon, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, ElectricaeRule.PlumaArgon, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, ElectricaeRule.PlumaNeon, BodyClassEnum.IcyBody);
 
         SeedParentStars(
             modelBuilder,
@@ -126,32 +126,6 @@ static class ElectricaeDataSeed
             StarClassEnum.D,
             StarClassEnum.H,
             StarClassEnum.AeBe);
-    }
-
-    private static void SeedAtmospheres(
-        ModelBuilder modelBuilder,
-        ElectricaeRule rule,
-        params AtmosphereEnum[] atmospheres)
-    {
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            atmospheres.Select(x => new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)x
-            }));
-    }
-
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        ElectricaeRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
     }
 
     private static void SeedParentStars(

@@ -58,29 +58,29 @@ static class ReceptaDataSeed
                 MaxTemperature = 275.0
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             ReceptaRule.ConditivusCarbonDioxide,
             AtmosphereEnum.CarbonDioxide,
             AtmosphereEnum.CarbonDioxideRich);
         
-        SeedAtmospheres(modelBuilder, ReceptaRule.ConditivusOxygenNone, AtmosphereEnum.Oxygen);
-        SeedAtmospheres(modelBuilder, ReceptaRule.ConditivusOxygenWater, AtmosphereEnum.Oxygen);
-        SeedAtmospheres(modelBuilder, ReceptaRule.ConditivusSulphurDioxide, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, ReceptaRule.ConditivusOxygenNone, AtmosphereEnum.Oxygen);
+        SeedHelpers.Atmospheres(modelBuilder, ReceptaRule.ConditivusOxygenWater, AtmosphereEnum.Oxygen);
+        SeedHelpers.Atmospheres(modelBuilder, ReceptaRule.ConditivusSulphurDioxide, AtmosphereEnum.SulphurDioxide);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             ReceptaRule.ConditivusCarbonDioxide,
             BodyClassEnum.IcyBody,
             BodyClassEnum.RockyBody,
             BodyClassEnum.HighMetalContentBody);
 
-        SeedBodyClasses(modelBuilder, ReceptaRule.ConditivusOxygenNone, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, ReceptaRule.ConditivusOxygenWater, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, ReceptaRule.ConditivusOxygenNone, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, ReceptaRule.ConditivusOxygenWater, BodyClassEnum.IcyBody);
 
-        SeedVolcanisms(modelBuilder, ReceptaRule.ConditivusCarbonDioxide, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, ReceptaRule.ConditivusOxygenNone, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, ReceptaRule.ConditivusOxygenWater, VolcanismEnum.Water);
+        SeedHelpers.Volcanisms(modelBuilder, ReceptaRule.ConditivusCarbonDioxide, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, ReceptaRule.ConditivusOxygenNone, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, ReceptaRule.ConditivusOxygenWater, VolcanismEnum.Water);
 
         SeedSulphurDioxideComponent(modelBuilder, ReceptaRule.ConditivusCarbonDioxide);
         SeedSulphurDioxideComponent(modelBuilder, ReceptaRule.ConditivusOxygenNone);
@@ -126,33 +126,33 @@ static class ReceptaDataSeed
                 MaxTemperature = 272.0
             });
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             ReceptaRule.DeltahedronixCarbonDioxideNone,
             AtmosphereEnum.CarbonDioxide);
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             ReceptaRule.DeltahedronixCarbonDioxideWater,
             AtmosphereEnum.CarbonDioxide);
 
-        SeedAtmospheres(
+        SeedHelpers.Atmospheres(
             modelBuilder,
             ReceptaRule.DeltahedronixSulphurDioxide,
             AtmosphereEnum.SulphurDioxide);
 
-        SeedBodyClasses(
+        SeedHelpers.BodyClasses(
             modelBuilder,
             ReceptaRule.DeltahedronixCarbonDioxideWater,
             BodyClassEnum.IcyBody,
             BodyClassEnum.RockyIceBody);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             ReceptaRule.DeltahedronixCarbonDioxideNone,
             VolcanismEnum.None);
 
-        SeedVolcanisms(
+        SeedHelpers.Volcanisms(
             modelBuilder,
             ReceptaRule.DeltahedronixCarbonDioxideWater,
             VolcanismEnum.Water);
@@ -211,16 +211,16 @@ static class ReceptaDataSeed
                 MaxTemperature = 273.0
             });
         
-        SeedAtmospheres(modelBuilder, ReceptaRule.UmbruxCarbonDioxide, AtmosphereEnum.CarbonDioxide);
-        SeedAtmospheres(modelBuilder, ReceptaRule.UmbruxOxygenNone, AtmosphereEnum.Oxygen);
-        SeedAtmospheres(modelBuilder, ReceptaRule.UmbruxOxygenWater, AtmosphereEnum.Oxygen);
-        SeedAtmospheres(modelBuilder, ReceptaRule.UmbruxSulphurDioxide, AtmosphereEnum.SulphurDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, ReceptaRule.UmbruxCarbonDioxide, AtmosphereEnum.CarbonDioxide);
+        SeedHelpers.Atmospheres(modelBuilder, ReceptaRule.UmbruxOxygenNone, AtmosphereEnum.Oxygen);
+        SeedHelpers.Atmospheres(modelBuilder, ReceptaRule.UmbruxOxygenWater, AtmosphereEnum.Oxygen);
+        SeedHelpers.Atmospheres(modelBuilder, ReceptaRule.UmbruxSulphurDioxide, AtmosphereEnum.SulphurDioxide);
 
-        SeedBodyClasses(modelBuilder, ReceptaRule.UmbruxOxygenNone, BodyClassEnum.IcyBody);
-        SeedBodyClasses(modelBuilder, ReceptaRule.UmbruxOxygenWater, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, ReceptaRule.UmbruxOxygenNone, BodyClassEnum.IcyBody);
+        SeedHelpers.BodyClasses(modelBuilder, ReceptaRule.UmbruxOxygenWater, BodyClassEnum.IcyBody);
 
-        SeedVolcanisms(modelBuilder, ReceptaRule.UmbruxOxygenNone, VolcanismEnum.None);
-        SeedVolcanisms(modelBuilder, ReceptaRule.UmbruxOxygenWater, VolcanismEnum.Water);
+        SeedHelpers.Volcanisms(modelBuilder, ReceptaRule.UmbruxOxygenNone, VolcanismEnum.None);
+        SeedHelpers.Volcanisms(modelBuilder, ReceptaRule.UmbruxOxygenWater, VolcanismEnum.Water);
 
         SeedSulphurDioxideComponent(modelBuilder, ReceptaRule.UmbruxCarbonDioxide);
         SeedSulphurDioxideComponent(modelBuilder, ReceptaRule.UmbruxOxygenNone);
@@ -245,45 +245,6 @@ static class ReceptaDataSeed
                 Value = value,
                 Distance = 150
             });
-    }
-
-    private static void SeedAtmospheres(
-        ModelBuilder modelBuilder,
-        ReceptaRule rule,
-        params AtmosphereEnum[] atmospheres)
-    {
-        modelBuilder.Entity("RuleAtmosphere").HasData(
-            atmospheres.Select(x => new
-            {
-                RuleId = (int)rule,
-                AtmosphereId = (int)x
-            }));
-    }
-
-    private static void SeedBodyClasses(
-        ModelBuilder modelBuilder,
-        ReceptaRule rule,
-        params BodyClassEnum[] bodyClasses)
-    {
-        modelBuilder.Entity("RuleBodyClass").HasData(
-            bodyClasses.Select(x => new
-            {
-                RuleId = (int)rule,
-                BodyClassId = (int)x
-            }));
-    }
-
-    private static void SeedVolcanisms(
-        ModelBuilder modelBuilder,
-        ReceptaRule rule,
-        params VolcanismEnum[] volcanisms)
-    {
-        modelBuilder.Entity("RuleVolcanism").HasData(
-            volcanisms.Select(x => new
-            {
-                RuleId = (int)rule,
-                VolcanismId = (int)x
-            }));
     }
 
     private static void SeedSulphurDioxideComponent(
