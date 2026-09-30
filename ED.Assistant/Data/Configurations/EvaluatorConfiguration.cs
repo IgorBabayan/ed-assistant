@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Configurations;
 
-class EvaluatorConfiguration : IEntityTypeConfiguration<Evaluator.Evaluator>
+internal class EvaluatorConfiguration : IEntityTypeConfiguration<Evaluator.Evaluator>
 {
     public void Configure(EntityTypeBuilder<Evaluator.Evaluator> builder)
     {
@@ -10,6 +10,10 @@ class EvaluatorConfiguration : IEntityTypeConfiguration<Evaluator.Evaluator>
         builder.Property(ev => ev.HasFirstFootStep).IsRequired();
         builder.Property(ev => ev.Total).IsRequired();
         builder.Property(ev => ev.IsActive).IsRequired();
+        
+        builder.Property(ev => ev.SystemAddress);
+        builder.Property(ev => ev.BodyId);
+        builder.HasIndex(ev => new { ev.SystemAddress, ev.BodyId, ev.GenusId });
         
         builder.HasQueryFilter(x => x.IsActive);
         

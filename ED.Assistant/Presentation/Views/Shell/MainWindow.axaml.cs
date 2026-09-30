@@ -1,5 +1,3 @@
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -24,10 +22,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (args.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
-        {
-            BeginMoveDrag(args);
-        }
+        BeginMoveDrag(args);
     }
 
 	private void OnMinimizeClick(object? sender, RoutedEventArgs args) => WindowState = WindowState.Minimized;

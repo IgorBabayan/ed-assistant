@@ -5,13 +5,13 @@ public class ShipLockerEvent : BaseJournalEvent
 	internal const string EventName = "ShipLocker";
 
 	[JsonPropertyName("Items")]
-	public IEnumerable<MaterialItem>? Items { get; set; } = default;
+	public IEnumerable<MaterialItem>? Items { get; set; }
 
 	[JsonPropertyName("Components")]
-	public IEnumerable<MaterialItem>? Components { get; set; } = default;
+	public IEnumerable<MaterialItem>? Components { get; set; }
 
 	[JsonPropertyName("Consumables")]
-	public IEnumerable<MaterialItem>? Consumables { get; set; } = default;
+	public IEnumerable<MaterialItem>? Consumables { get; set; }
 
 	[JsonPropertyName("Data")]
 	public IEnumerable<MaterialItem>? Data { get; set; }

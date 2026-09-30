@@ -2,7 +2,7 @@
 
 namespace ED.Assistant.Extensions;
 
-static class EnumExtensions
+internal static class EnumExtensions
 {
 	public static string GetDisplayName(this Enum value)
 	{

@@ -3,7 +3,7 @@ using ED.Assistant.Presentation.ViewModels.System;
 
 namespace ED.Assistant.Presentation.Helpers.Exobiology;
 
-static class BiologyRuleDisplayBuilder
+internal static class BiologyRuleDisplayBuilder
 {
     public static IReadOnlyList<OrganicSpawnRuleViewModel> Build(
         Genus genus,
@@ -28,8 +28,9 @@ static class BiologyRuleDisplayBuilder
             ? relevant
             : evaluated;
 
-        return selected
-            .Select((item, index) =>
+        return
+        [
+            ..selected.Select((item, index) =>
                 new OrganicSpawnRuleViewModel
                 {
                     Title = isConfirmed
@@ -40,7 +41,7 @@ static class BiologyRuleDisplayBuilder
 
                     Description = Describe(item.Rule)
                 })
-            .ToArray();
+        ];
     }
 
     private static string Describe(Rule rule)
@@ -88,6 +89,8 @@ static class BiologyRuleDisplayBuilder
             "System body",
             rule.SystemBodyClasses.Select(x => x.Name));
 
+        AddList(rows, "Parent body", rule.ParentBodyClasses.Select(x => x.Name));
+
         foreach (var group in rule.Stars.GroupBy(x => x.Type))
         {
             var title = group.Key == RuleStarType.ParentStar
@@ -102,13 +105,10 @@ static class BiologyRuleDisplayBuilder
             AddList(rows, title, values);
         }
 
-        foreach (var component in rule.AtmosphereComponents)
-        {
-            rows.Add(
-                $"Atmosphere component: " +
-                $"{component.Atmosphere.Name} ≥ " +
-                $"{Number(component.MinPercentage)}%");
-        }
+        rows.AddRange(rule.AtmosphereComponents.Select(component =>
+            $"Atmosphere component: " +
+            $"{component.Atmosphere.Name} ≥ " +
+            $"{Number(component.MinPercentage)}%"));
 
         if (rule.MaxOrbitalPeriod is { } orbitalPeriod)
         {
@@ -133,7 +133,7 @@ static class BiologyRuleDisplayBuilder
     }
 
     private static void AddList(
-        ICollection<string> rows,
+        List<string> rows,
         string title,
         IEnumerable<string> values)
     {
@@ -150,7 +150,7 @@ static class BiologyRuleDisplayBuilder
     }
 
     private static void AddRange(
-        ICollection<string> rows,
+        List<string> rows,
         string title,
         double? min,
         double? max,

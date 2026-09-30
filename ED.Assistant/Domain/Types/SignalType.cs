@@ -7,9 +7,8 @@ public sealed class SignalType : IEquatable<SignalType>, IEquatable<string>
 	public static readonly SignalType Human = new("$SAA_SignalType_Human;");
 	public static readonly SignalType Xeno = new("Xeno");
 
-	private readonly string? _value;
+	private readonly string _value;
 
-	public SignalType() { }
 
 	private SignalType(string value) => _value = value;
 
@@ -31,11 +30,11 @@ public sealed class SignalType : IEquatable<SignalType>, IEquatable<string>
 
 	public static bool operator !=(string? left, SignalType? right) => !(left == right);
 
-	public static explicit operator string(SignalType scanType) => scanType._value!;
+	public static explicit operator string(SignalType scanType) => scanType._value;
 
-	public override string ToString() => _value!;
+	public override string ToString() => _value;
 
-	public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_value!);
+	public override int GetHashCode() => StringComparer.Ordinal.GetHashCode(_value);
 
 	public override bool Equals(object? obj) => obj switch
 	{
@@ -49,10 +48,7 @@ public sealed class SignalType : IEquatable<SignalType>, IEquatable<string>
 		if (other is null)
 			return false;
 
-		if (ReferenceEquals(this, other))
-			return true;
-
-		return string.Equals(_value, other._value, StringComparison.OrdinalIgnoreCase);
+		return ReferenceEquals(this, other) || string.Equals(_value, other._value, StringComparison.Ordinal);
 	}
 
 	public bool Equals(string? other) => string.Equals(_value, other, StringComparison.Ordinal);

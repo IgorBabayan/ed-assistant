@@ -4,13 +4,12 @@ using System.Globalization;
 using Avalonia.Data.Converters;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using ED.Assistant.Presentation.ViewModels.System;
 
 namespace ED.Assistant.Presentation.Converters;
 
 public sealed class BiologyImageConverter : IValueConverter
 {
-    private static readonly ConcurrentDictionary<string, Bitmap> Cache = new();
+    private static readonly ConcurrentDictionary<string, Lazy<Bitmap>> Cache = new();
 
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
@@ -25,23 +24,27 @@ public sealed class BiologyImageConverter : IValueConverter
         var path = $"avares://ED.Assistant/Assets/Biology/{folder}/{id}.webp";
         var uri = new Uri(path);
 
-        Debug.WriteLine($"[BIO IMAGE] Trying: {uri}");
-
-        if (!AssetLoader.Exists(uri))
+        if (AssetLoader.Exists(uri))
         {
-            Debug.WriteLine($"[BIO IMAGE] NOT FOUND: {uri}");
-            return null;
+            return Cache.GetOrAdd(
+                path,
+                _ => new Lazy<Bitmap>(() =>
+                {
+                    using var stream = AssetLoader.Open(uri);
+                    return new Bitmap(stream);
+                })).Value;
         }
 
-        Debug.WriteLine($"[BIO IMAGE] FOUND: {uri}");
+        Debug.WriteLine($"[BIO IMAGE] NOT FOUND: {uri}");
+        return null;
+    }
 
-        return Cache.GetOrAdd(
-            path,
-            _ =>
-            {
-                using var stream = AssetLoader.Open(uri);
-                return new Bitmap(stream);
-            });
+    internal static void ClearCache()
+    {
+        foreach (var bitmap in Cache.Values)
+            if (bitmap.IsValueCreated)
+                bitmap.Value.Dispose();
+        Cache.Clear();
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter,

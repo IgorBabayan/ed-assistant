@@ -79,7 +79,7 @@ public class ScanEvent : BaseJournalEvent
 	public bool WasFootfalled { get; set; }
 
 	[JsonPropertyName("Parents")]
-	public IEnumerable<Parent>? Parents { get; set; } = default;
+	public IEnumerable<Parent>? Parents { get; set; }
 
 	[JsonPropertyName("PlanetClass")]
 	public string PlanetClass { get; set; } = string.Empty;
@@ -97,7 +97,7 @@ public class ScanEvent : BaseJournalEvent
 	public string AtmosphereType { get; set; } = string.Empty;
 
 	[JsonPropertyName("AtmosphereComposition")]
-	public IEnumerable<CompositionItem>? AtmosphereCompositions { get; set; } = default;
+	public IEnumerable<CompositionItem>? AtmosphereCompositions { get; set; }
 
 	[JsonPropertyName("Volcanism")]
 	public string Volcanism { get; set; } = string.Empty;
@@ -115,8 +115,8 @@ public class ScanEvent : BaseJournalEvent
 	public bool IsLandable { get; set; }
 
 	[JsonPropertyName("Materials")]
-	public IEnumerable<CompositionItem>? Materials { get; set; } = default;
+	public IEnumerable<CompositionItem>? Materials { get; set; }
 
 	[JsonPropertyName("Composition")]
-	public Composition? Composition { get; set; } = default;
+	public Composition? Composition { get; set; }
 }

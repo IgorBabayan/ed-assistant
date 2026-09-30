@@ -1,6 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Data.Converters;
-using Avalonia.Media;
+﻿using Avalonia.Data.Converters;
 using ED.Assistant.Domain.Types;
 using System.Globalization;
 
@@ -8,18 +6,26 @@ namespace ED.Assistant.Presentation.Converters;
 
 public sealed class ScanTypeForegroundConverter : IValueConverter
 {
+	// The indexer on Application.Resources only looks at the top-level dictionary and throws
+	// KeyNotFoundException for keys that live in merged dictionaries (Theme.axaml).
+	// TryGetResource searches merged dictionaries and theme variants.
+	private static IBrush FindBrush(string key, IBrush fallback)
+	{
+		var app = Avalonia.Application.Current;
+		return app is not null
+			   && app.TryGetResource(key, app.ActualThemeVariant, out var resource)
+			   && resource is IBrush brush
+			? brush
+			: fallback;
+	}
+
 	public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
 	{
-		var resources = Avalonia.Application.Current?.Resources;
-
-		if (resources is null)
-			return Brushes.White;
-
 		return value?.ToString() switch
 		{
-			var t when t == ScanType.AutoScan => resources["SecondaryTextBrush"] as IBrush ?? Brushes.Gray,
-			var t when t == ScanType.Detailed => resources["PrimaryAccentBrush"] as IBrush ?? Brushes.DeepSkyBlue,
-			_ => resources["PrimaryTextBrush"] as IBrush ?? Brushes.White
+			var t when t == ScanType.AutoScan => FindBrush("SecondaryTextBrush", Brushes.Gray),
+			var t when t == ScanType.Detailed => FindBrush("PrimaryAccentBrush", Brushes.DeepSkyBlue),
+			_ => FindBrush("PrimaryTextBrush", Brushes.White)
 		};
 	}
 

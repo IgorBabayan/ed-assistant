@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed.ExoBiology;
 
-static class StratumDataSeed
+internal static class StratumDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {

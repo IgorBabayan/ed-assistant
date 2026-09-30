@@ -1,15 +1,71 @@
-using Avalonia;
-using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using ED.Assistant.Presentation.ViewModels.Journal;
 
 namespace ED.Assistant.Presentation.Views.Journal;
 
 public partial class JournalView : UserControl
 {
+    private const int MaxAnchorPasses = 3;
+    
     private JournalViewModel? _viewModel;
 
-    public JournalView() => InitializeComponent();
+    public JournalView()
+    {
+        InitializeComponent();
+        
+        LogItems.AddHandler(Button.ClickEvent, OnRowHeaderClick,
+            RoutingStrategies.Bubble, handledEventsToo: true);
+    }
+    
+    private void OnRowHeaderClick(object? sender, RoutedEventArgs e)
+    {
+        if (e.Source is not Control source
+            || source.FindAncestorOfType<Button>(includeSelf: true) is not { } header
+            || !header.Classes.Contains("journal-row-header")
+            || header.DataContext is not JournalEntryViewModel entry
+            || LogItems.ContainerFromItem(entry) is not { } container
+            || container.TranslatePoint(default, LogScroll) is not { } before)
+            return;
+
+        Dispatcher.UIThread.Post(() => RestoreAnchor(entry, before.Y, 0), DispatcherPriority.Background);
+    }
+    
+    private void RestoreAnchor(JournalEntryViewModel entry, double targetY, int pass)
+    {
+        var index = LogItems.Items.IndexOf(entry);
+        if (index < 0)
+            return;
+
+        if (LogItems.ContainerFromIndex(index) is not { } container)
+        {
+            // The jump pushed the row out of the realized range; bring it back, then fine-tune
+            LogItems.ScrollIntoView(index);
+            ScheduleNextPass();
+            return;
+        }
+
+        if (container.TranslatePoint(default, LogScroll) is not { } now)
+            return;
+
+        var delta = now.Y - targetY;
+        if (Math.Abs(delta) < 0.5)
+            return;
+
+        LogScroll.Offset = LogScroll.Offset.WithY(LogScroll.Offset.Y + delta);
+
+        // Re-realizing rows can refine the estimate once more, so check again
+        ScheduleNextPass();
+        return;
+
+        void ScheduleNextPass()
+        {
+            if (pass + 1 < MaxAnchorPasses)
+                Dispatcher.UIThread.Post(() => RestoreAnchor(entry, targetY, pass + 1),
+                    DispatcherPriority.Background);
+        }
+    }
 
     protected override void OnDataContextChanged(EventArgs e)
     {

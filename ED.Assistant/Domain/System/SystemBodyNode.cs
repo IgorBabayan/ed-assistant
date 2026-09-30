@@ -2,12 +2,12 @@
 
 public sealed class SystemBodyNode
 {
-	public string Name { get; set; } = string.Empty;
-	public int BodyId { get; set; }
-	public string Type { get; set; } = string.Empty;
+	public string Name { get; init; } = string.Empty;
+	public int BodyId { get; init; }
+	public string Type { get; init; } = string.Empty;
 
 	public SystemBodyNode? Parent { get; set; }
-	public List<SystemBodyNode> Children { get; } = new();
+	public List<SystemBodyNode> Children { get; } = [];
 
 	public ScanEvent? Scan { get; set; }
 

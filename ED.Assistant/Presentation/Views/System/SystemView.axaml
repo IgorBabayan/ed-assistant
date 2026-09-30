@@ -13,18 +13,13 @@
 		</Grid.ColumnDefinitions>
 
 		<Border Classes="dashboard-card">
-			<Grid RowSpacing="12">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="*"/>
-				</Grid.RowDefinitions>
+			<Grid RowDefinitions="Auto,*" RowSpacing="12">
 
 				<TextBlock Text="SYSTEM STRUCTURE"
 						   Classes="dashboard-card-header"/>
 
 				<ScrollViewer Grid.Row="1">
-					<TreeView Classes="system-tree"
-							  ItemsSource="{Binding Bodies}"
+					<TreeView ItemsSource="{Binding Bodies}"
 							  SelectedItem="{Binding SelectedBody, Mode=TwoWay}">
 						<TreeView.ItemTemplate>
 							<TreeDataTemplate ItemsSource="{Binding Children}">
@@ -49,202 +44,161 @@
 				<StackPanel Spacing="12">
 					<TextBlock Text="BODY DETAILS"
 							   Classes="dashboard-card-header"/>
-					<TextBlock Text="{Binding SelectedBody.Name}"
+					<TextBlock Text="{Binding SelectedBody.Name, FallbackValue=''}"
 							   Classes="dashboard-system-name"/>
-					<TextBlock Text="{Binding SelectedBody.Type}"
+					<TextBlock Text="{Binding SelectedBody.Type, FallbackValue=''}"
 							   Classes="dashboard-label"/>
 
-					<Grid RowSpacing="6"
+					<Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="160,*" RowSpacing="6"
 						  ColumnSpacing="12">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="160"/>
-							<ColumnDefinition Width="*"/>
-						</Grid.ColumnDefinitions>
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="Auto"/>
-						</Grid.RowDefinitions>
 
 						<TextBlock Text="Scan type"
 								   Classes="dashboard-label"/>
-						<TextBlock Grid.Column="1"
-								   Text="{Binding SelectedBody.Scan.ScanType}"
+						<TextBlock Grid.Column="1" Grid.Row="0"
+								   Text="{Binding SelectedBody.Scan.ScanType, FallbackValue=''}"
 								   Foreground="{Binding SelectedBody.Scan.ScanType,
-								   Converter={StaticResource ScanTypeForegroundConverter}}"
+								   Converter={StaticResource ScanTypeForegroundConverter}, FallbackValue={x:Null}}"
 								   Classes="dashboard-value"/>
 
-						<TextBlock Grid.Row="1"
+						<TextBlock Grid.Row="1" Grid.Column="0"
 								   Text="Distance"
 								   Classes="dashboard-label"/>
 						<TextBlock Grid.Row="1"
 								   Grid.Column="1"
-								   Text="{Binding SelectedBody.DistanceLs}"
+								   Text="{Binding SelectedBody.DistanceLs, FallbackValue=''}"
 								   Classes="dashboard-value"/>
 
-						<TextBlock Grid.Row="2"
+						<TextBlock Grid.Row="2" Grid.Column="0"
 								   Text="Radius"
 								   Classes="dashboard-label"/>
 						<TextBlock Grid.Row="2"
 								   Grid.Column="1"
-								   Text="{Binding SelectedBody.RadiusKm}"
+								   Text="{Binding SelectedBody.RadiusKm, FallbackValue=''}"
 								   Classes="dashboard-value"/>
 
-						<TextBlock Grid.Row="3"
+						<TextBlock Grid.Row="3" Grid.Column="0"
 								   Text="Temperature"
 								   Classes="dashboard-label"/>
 						<TextBlock Grid.Row="3"
 								   Grid.Column="1"
-								   Text="{Binding SelectedBody.SurfaceTemperatureK}"
+								   Text="{Binding SelectedBody.SurfaceTemperatureK, FallbackValue=''}"
 								   Classes="dashboard-value"/>
 					</Grid>
 
 					<Border Classes="dashboard-card"
-							IsVisible="{Binding SelectedBody.IsStar}">
-						<Grid RowSpacing="6"
+							IsVisible="{Binding SelectedBody.IsStar, FallbackValue=False}">
+						<Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="160,*" RowSpacing="6"
 							  ColumnSpacing="12">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="160"/>
-								<ColumnDefinition Width="*"/>
-							</Grid.ColumnDefinitions>
-							<Grid.RowDefinitions>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto"/>
-							</Grid.RowDefinitions>
 
 							<TextBlock Text="Star type"
 									   Classes="dashboard-label"/>
-							<TextBlock Grid.Column="1"
-									   Text="{Binding SelectedBody.Scan.StarType}"
+							<TextBlock Grid.Column="1" Grid.Row="0"
+									   Text="{Binding SelectedBody.Scan.StarType, FallbackValue=''}"
 									   Classes="dashboard-value"/>
 
-							<TextBlock Grid.Row="1"
+							<TextBlock Grid.Row="1" Grid.Column="0"
 									   Text="Mass"
 									   Classes="dashboard-label"/>
 							<TextBlock Grid.Row="1"
 									   Grid.Column="1"
-									   Text="{Binding SelectedBody.Mass}"
+									   Text="{Binding SelectedBody.Mass, FallbackValue=''}"
 									   Classes="dashboard-value"/>
 
-							<TextBlock Grid.Row="2"
+							<TextBlock Grid.Row="2" Grid.Column="0"
 									   Text="Luminosity"
 									   Classes="dashboard-label"/>
 							<TextBlock Grid.Row="2"
 									   Grid.Column="1"
-									   Text="{Binding SelectedBody.Scan.Luminosity}"
+									   Text="{Binding SelectedBody.Scan.Luminosity, FallbackValue=''}"
 									   Classes="dashboard-value"/>
 
-							<TextBlock Grid.Row="3"
+							<TextBlock Grid.Row="3" Grid.Column="0"
 									   Text="Age"
 									   Classes="dashboard-label"/>
 							<TextBlock Grid.Row="3"
 									   Grid.Column="1"
-									   Text="{Binding SelectedBody.Scan.Age}"
+									   Text="{Binding SelectedBody.Scan.Age, FallbackValue=''}"
 									   Classes="dashboard-value"/>
 						</Grid>
 					</Border>
 
 					<Border Classes="dashboard-card"
-							IsVisible="{Binding SelectedBody.IsPlanet}">
-						<Grid RowSpacing="6"
+							IsVisible="{Binding SelectedBody.IsPlanet, FallbackValue=False}">
+						<Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="160,*" RowSpacing="6"
 							  ColumnSpacing="12">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="160"/>
-								<ColumnDefinition Width="*"/>
-							</Grid.ColumnDefinitions>
-							<Grid.RowDefinitions>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto"/>
-							</Grid.RowDefinitions>
 
 							<TextBlock Text="Planet class"
 									   Classes="dashboard-label"/>
-							<TextBlock Grid.Column="1"
-									   Text="{Binding SelectedBody.Scan.PlanetClass}"
+							<TextBlock Grid.Column="1" Grid.Row="0"
+									   Text="{Binding SelectedBody.Scan.PlanetClass, FallbackValue=''}"
 									   Classes="dashboard-value"/>
 
-							<TextBlock Grid.Row="1"
+							<TextBlock Grid.Row="1" Grid.Column="0"
 									   Text="Mass"
 									   Classes="dashboard-label"/>
 							<TextBlock Grid.Row="1"
 									   Grid.Column="1"
-									   Text="{Binding SelectedBody.Mass}"
+									   Text="{Binding SelectedBody.Mass, FallbackValue=''}"
 									   Classes="dashboard-value"/>
 
-							<TextBlock Grid.Row="2"
+							<TextBlock Grid.Row="2" Grid.Column="0"
 									   Text="Gravity"
 									   Classes="dashboard-label"/>
 							<TextBlock Grid.Row="2"
 									   Grid.Column="1"
-									   Text="{Binding SelectedBody.Gravity}"
+									   Text="{Binding SelectedBody.Gravity, FallbackValue=''}"
 									   Classes="dashboard-value"/>
 
-							<TextBlock Grid.Row="3"
+							<TextBlock Grid.Row="3" Grid.Column="0"
 									   Text="Atmosphere"
 									   Classes="dashboard-label"/>
 							<TextBlock Grid.Row="3"
 									   Grid.Column="1"
-									   Text="{Binding SelectedBody.Scan.Atmosphere}"
+									   Text="{Binding SelectedBody.Scan.Atmosphere, FallbackValue=''}"
 									   TextWrapping="Wrap"
 									   Classes="dashboard-value"/>
 
-							<TextBlock Grid.Row="4"
+							<TextBlock Grid.Row="4" Grid.Column="0"
 									   Text="Terraform"
 									   Classes="dashboard-label"/>
 							<TextBlock Grid.Row="4"
 									   Grid.Column="1"
-									   Text="{Binding SelectedBody.Scan.TerraformState}"
+									   Text="{Binding SelectedBody.Scan.TerraformState, FallbackValue=''}"
 									   Classes="dashboard-value"/>
 
-							<TextBlock Grid.Row="5"
+							<TextBlock Grid.Row="5" Grid.Column="0"
 									   Text="Landable"
 									   Classes="dashboard-label"/>
 							<TextBlock Grid.Row="5"
 									   Grid.Column="1"
-									   Text="{Binding SelectedBody.Scan.IsLandable}"
+									   Text="{Binding SelectedBody.Scan.IsLandable, FallbackValue=''}"
 									   Classes="dashboard-value"/>
 						</Grid>
 					</Border>
 
-					<Grid RowSpacing="6"
+					<Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="160,*" RowSpacing="6"
 						  ColumnSpacing="12">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="160"/>
-							<ColumnDefinition Width="*"/>
-						</Grid.ColumnDefinitions>
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="Auto"/>
-						</Grid.RowDefinitions>
 
 						<TextBlock Text="Discovered"
 								   Classes="dashboard-label"/>
-						<TextBlock Grid.Column="1"
-								   Text="{Binding SelectedBody.Scan.WasDiscovered}"
+						<TextBlock Grid.Column="1" Grid.Row="0"
+								   Text="{Binding SelectedBody.Scan.WasDiscovered, FallbackValue=''}"
 								   Classes="dashboard-value"/>
 
-						<TextBlock Grid.Row="1"
+						<TextBlock Grid.Row="1" Grid.Column="0"
 								   Text="Mapped"
 								   Classes="dashboard-label"/>
 						<TextBlock Grid.Row="1"
 								   Grid.Column="1"
-								   Text="{Binding SelectedBody.Scan.WasMapped}"
+								   Text="{Binding SelectedBody.Scan.WasMapped, FallbackValue=''}"
 								   Classes="dashboard-value"/>
 
-						<TextBlock Grid.Row="2"
+						<TextBlock Grid.Row="2" Grid.Column="0"
 								   Text="Footfall"
 								   Classes="dashboard-label"/>
 						<TextBlock Grid.Row="2"
 								   Grid.Column="1"
-								   Text="{Binding SelectedBody.Scan.WasFootfalled}"
+								   Text="{Binding SelectedBody.Scan.WasFootfalled, FallbackValue=''}"
 								   Classes="dashboard-value"/>
 					</Grid>
 
@@ -257,20 +211,15 @@
 										   Classes="dashboard-card-header"/>
 
 								<TextBlock Grid.Column="1"
-										   Text="{Binding SelectedBody.SignalsTotalCount}"
+										   Text="{Binding SelectedBody.SignalsTotalCount, FallbackValue=''}"
 										   Classes="dashboard-value"/>
 							</Grid>
 
-							<ItemsControl ItemsSource="{Binding SelectedBody.Signals}">
+							<ItemsControl ItemsSource="{Binding SelectedBody.Signals, FallbackValue={x:Null}}">
 								<ItemsControl.ItemTemplate>
 									<DataTemplate>
 										<Border Classes="signal-row">
-											<Grid ColumnSpacing="10">
-												<Grid.ColumnDefinitions>
-													<ColumnDefinition Width="Auto"/>
-													<ColumnDefinition Width="*"/>
-													<ColumnDefinition Width="Auto"/>
-												</Grid.ColumnDefinitions>
+											<Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
 
 												<Border Classes="signal-dot"
 														Tag="{Binding Type}"/>

@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed.ExoBiology;
 
-static class BrainTreeDataSeed
+internal static class BrainTreeDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {

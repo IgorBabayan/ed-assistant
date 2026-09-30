@@ -1,7 +1,7 @@
 ﻿namespace ED.Assistant.Application.Navigation;
 
-partial class NavigationStore : BaseViewModel, INavigationStore
+internal partial class NavigationStore : BaseViewModel, INavigationStore
 {
 	[ObservableProperty]
-	public partial LoadableViewModel? CurrentViewModel { get; set; } = default;
+	public partial LoadableViewModel? CurrentViewModel { get; set; }
 }

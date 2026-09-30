@@ -3,7 +3,7 @@ using ED.Assistant.Presentation.ViewModels.Dashboard;
 
 namespace ED.Assistant.Presentation.Helpers.Dashboard;
 
-static class RecentEventsBuilder
+internal static class RecentEventsBuilder
 {
 	/// <summary>Newest first, only events that have a readable message.</summary>
 	public static IReadOnlyList<RecentEventViewModel> Build(

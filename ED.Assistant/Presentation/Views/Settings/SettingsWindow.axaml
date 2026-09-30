@@ -4,7 +4,8 @@
 		xmlns:materialIcons="using:Material.Icons.Avalonia"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:ED.Assistant.Presentation.ViewModels.Settings"
-		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:local="clr-namespace:ED.Assistant.Presentation.Views.Settings"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 		x:Class="ED.Assistant.Presentation.Views.Settings.SettingsWindow"
 		x:DataType="vm:SettingsViewModel"
 		WindowDecorations="None"
@@ -30,12 +31,7 @@
 					HorizontalAlignment="Center"
 					VerticalAlignment="Center">
 
-				<Grid RowSpacing="{DynamicResource Spacing5}">
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="*"/>
-						<RowDefinition Height="Auto"/>
-					</Grid.RowDefinitions>
+				<Grid RowDefinitions="Auto,*,Auto" RowSpacing="{DynamicResource Spacing5}">
 
 					<TextBlock Grid.Row="0"
 							   Classes="primary"
@@ -45,12 +41,7 @@
 
 					<StackPanel Grid.Row="1"
 								Spacing="{DynamicResource Spacing5}">
-						<Grid ColumnSpacing="{DynamicResource Spacing5}">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="Auto"/>
-								<ColumnDefinition Width="*"/>
-								<ColumnDefinition Width="Auto"/>
-							</Grid.ColumnDefinitions>
+						<Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{DynamicResource Spacing5}">
 
 							<TextBlock Grid.Column="0"
 									   Text="Log folder:"
@@ -60,7 +51,7 @@
 									 Text="{Binding LogFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
 							<Button Grid.Column="2"
-							        IsVisible="{Binding CanUseFolderPicker}"
+							        CommandParameter="{Binding $parent[local:SettingsWindow]}"
 									Command="{Binding OpenFolderCommand}"
 									Classes="app-button">
 								<materialIcons:MaterialIcon Kind="FolderOpen"/>

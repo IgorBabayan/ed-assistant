@@ -1,4 +1,6 @@
-﻿namespace ED.Assistant.Domain.Events;
+﻿using ED.Assistant.Domain.Types;
+
+namespace ED.Assistant.Domain.Events;
 
 public sealed class JournalState
 {
@@ -6,7 +8,7 @@ public sealed class JournalState
 
     private readonly List<IJournalEvent> _recentEvents = [];
 
-    public string? FileName { get; init; }
+    public string? FileName { get; set; }
     public IJournalEvent? LastEvent { get; set; }
 
     public CommanderEvent? Commander { get; set; }
@@ -18,6 +20,8 @@ public sealed class JournalState
 
     public List<ScanOrganicEvent> Organics { get; } = [];
     public List<EvaluatorChange> PendingEvaluatorChanges { get; } = [];
+    
+    public List<BioAlert> PendingAlerts { get; } = [];
 
     public Dictionary<int, ScanEvent> Scans { get; } = new();
     public Dictionary<int, SAASignalsFoundEvent> SAASignals { get; } = new();
@@ -30,7 +34,7 @@ public sealed class JournalState
     /// <summary>Latest journal events, oldest first. Survives system changes.</summary>
     public IReadOnlyList<IJournalEvent> RecentEvents => _recentEvents;
     
-    public JournalLog Log { get; } = new();
+    public JournalLog Log { get; private init; } = new();
 
     public LocationEvent? Location { get; set; }
 
@@ -45,6 +49,22 @@ public sealed class JournalState
             _recentEvents.RemoveRange(0, _recentEvents.Count - RecentEventsCapacity);
     }
 
-    public static string OrganicKey(long systemAddress, int bodyId, string genus, string species, string variant)
-        => $"{systemAddress}:{bodyId}:{genus}:{species}:{variant}";
+    public JournalState CreateSnapshot()
+    {
+        var copy = new JournalState
+        {
+            FileName = FileName, LastEvent = LastEvent, Commander = Commander,
+            LoadGame = LoadGame, Materials = Materials, Ranks = Ranks, FSDJump = FSDJump,
+            ShipLocker = ShipLocker, Location = Location, Log = Log
+        };
+        copy.Organics.AddRange(Organics);
+        copy.PendingEvaluatorChanges.AddRange(PendingEvaluatorChanges);
+        copy._recentEvents.AddRange(_recentEvents);
+        foreach (var pair in Scans) copy.Scans.Add(pair.Key, pair.Value);
+        foreach (var pair in SAASignals) copy.SAASignals.Add(pair.Key, pair.Value);
+        foreach (var pair in BaryCentres) copy.BaryCentres.Add(pair.Key, pair.Value);
+        foreach (var pair in FSSSignals) copy.FSSSignals.Add(pair.Key, pair.Value);
+        foreach (var pair in SystemSignals) copy.SystemSignals.Add(pair.Key, pair.Value);
+        return copy;
+    }
 }

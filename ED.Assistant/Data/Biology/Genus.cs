@@ -1,6 +1,7 @@
+// ReSharper disable EntityFramework.ModelValidation.UnlimitedStringLength
 namespace ED.Assistant.Data.Biology;
 
-enum AleoidaGenus
+internal enum AleoidaGenus
 {
     Arcus = 1001,
     Coronamus = 1002,
@@ -9,7 +10,7 @@ enum AleoidaGenus
     Gravis = 1005
 }
 
-enum AnemoneGenus
+internal enum AnemoneGenus
 {
     Luteolum = 1101,
     Croceum = 1102,
@@ -21,7 +22,7 @@ enum AnemoneGenus
     BlatteumBioluminescent = 1108
 }
 
-enum BacteriumGenus
+internal enum BacteriumGenus
 {
     Aurasus = 1201,
     Nebulus = 1202,
@@ -38,7 +39,7 @@ enum BacteriumGenus
     Verrata = 1213
 }
 
-enum BrainTreeGenus
+internal enum BrainTreeGenus
 {
     Roseum = 1301,
     Gypseeum = 1302,
@@ -50,7 +51,7 @@ enum BrainTreeGenus
     Lividum = 1308
 }
 
-enum CactoidaGenus
+internal enum CactoidaGenus
 {
     Cortexum = 1401,
     Lapis = 1402,
@@ -59,14 +60,14 @@ enum CactoidaGenus
     Peperatis = 1405
 }
 
-enum ClypeusGenus
+internal enum ClypeusGenus
 {
     Lacrimam = 1501,
     Margaritus = 1502,
     Speculumi = 1503
 }
 
-enum ConchaGenus
+internal enum ConchaGenus
 {
     Renibus = 1601,
     Aureolas = 1602,
@@ -74,13 +75,13 @@ enum ConchaGenus
     Biconcavis = 1604
 }
 
-enum ElectricaeGenus
+internal enum ElectricaeGenus
 {
     Pluma = 1701,
     Radialem = 1702
 }
 
-enum FrutexaGenus
+internal enum FrutexaGenus
 {
     Flabellum = 1901,
     Acus = 1902,
@@ -91,7 +92,7 @@ enum FrutexaGenus
     Collum = 1907
 }
 
-enum FumerolaGenus
+internal enum FumerolaGenus
 {
     Carbosis = 2001,
     Extremus = 2002,
@@ -99,7 +100,7 @@ enum FumerolaGenus
     Aquatis = 2004
 }
 
-enum FungoidaGenus
+internal enum FungoidaGenus
 {
     Setisis = 2101,
     Stabitis = 2102,
@@ -107,7 +108,7 @@ enum FungoidaGenus
     Gelata = 2104
 }
 
-enum FonticuluaGenus
+internal enum FonticuluaGenus
 {
     Segmentatus = 1801,
     Campestris = 1802,
@@ -117,7 +118,7 @@ enum FonticuluaGenus
     Digitos = 1806
 }
 
-enum OsseusGenus
+internal enum OsseusGenus
 {
     Fractus = 2201,
     Discus = 2202,
@@ -127,19 +128,19 @@ enum OsseusGenus
     Pellebantus = 2206
 }
 
-enum ReceptaGenus
+internal enum ReceptaGenus
 {
     Umbrux = 2301,
     Deltahedronix = 2302,
     Conditivus = 2303
 }
 
-enum ShardGenus
+internal enum ShardGenus
 {
     CrystallineShards = 2401
 }
 
-enum StratumGenus
+internal enum StratumGenus
 {
     Excutitus = 2502,
     Paleas = 2503,
@@ -151,7 +152,7 @@ enum StratumGenus
     Frigus = 2509
 }
 
-enum TubersGenus
+internal enum TubersGenus
 {
     Roseum = 2601,
     Prasinum = 2602,
@@ -163,7 +164,7 @@ enum TubersGenus
     Blatteum = 2608
 }
 
-enum TubusGenus
+internal enum TubusGenus
 {
     Conifer = 2701,
     Sororibus = 2702,
@@ -172,7 +173,7 @@ enum TubusGenus
     Compagibus = 2705
 }
 
-enum TussockGenus
+internal enum TussockGenus
 {
     Pennata = 2801,
     Ventusa = 2802,

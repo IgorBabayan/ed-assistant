@@ -2,24 +2,20 @@
 
 namespace ED.Assistant.Domain.System;
 
-sealed class SystemStructureBuilder : ISystemStructureBuilder
+internal sealed class SystemStructureBuilder : ISystemStructureBuilder
 {
 	public SystemStructure Build(JournalState state)
 	{
 		ArgumentNullException.ThrowIfNull(state);
 
-		if (state.FSDJump is null)
-			throw new ArgumentException("FSDJump is required");
+		if (state.CurrentSystemAddress is not { } currentSystemAddress)
+			return new SystemStructure();
 
-		var currentSystemAddress = state.FSDJump.SystemAddress;
-		var structure = new SystemStructure
-		{
-			Name = state.FSDJump.StarSystem
-		};
+		var structure = new SystemStructure();
 
-		var scans = state.Scans?.Values
+		var scans = state.Scans.Values
 			.Where(x => x.SystemAddress == currentSystemAddress)
-			.ToList() ?? [];
+			.ToList();
 
 		var nodes = new Dictionary<int, SystemBodyNode>();
 		foreach (var scan in scans)
@@ -40,9 +36,11 @@ sealed class SystemStructureBuilder : ISystemStructureBuilder
 				continue;
 
 			var parentId = GetParentId(scan);
-			if (parentId is not null && nodes.TryGetValue(parentId.Value, out var parent))
+			if (parentId is not null && nodes.TryGetValue(parentId.Value, out var parent)
+			    && !CreatesCycle(node, parent))
 			{
 				parent.Children.Add(node);
+				node.Parent = parent;
 			}
 			else
 			{
@@ -51,6 +49,14 @@ sealed class SystemStructureBuilder : ISystemStructureBuilder
 		}
 
 		return structure;
+	}
+
+	private static bool CreatesCycle(SystemBodyNode node, SystemBodyNode? parent)
+	{
+		for (; parent is not null; parent = parent.Parent)
+			if (ReferenceEquals(parent, node))
+				return true;
+		return false;
 	}
 
 	private static SystemBodyNode GetOrCreateNode(Dictionary<int, SystemBodyNode> nodes, ScanEvent scan)
@@ -93,9 +99,6 @@ sealed class SystemStructureBuilder : ISystemStructureBuilder
 		if (!string.IsNullOrEmpty(scan.PlanetClass))
 			return "Planet";
 
-		if (scan.BodyName.Contains("Belt Cluster"))
-			return "Belt Cluster";
-
-		return "Unknown";
+		return scan.BodyName.Contains("Belt Cluster") ? "Belt Cluster" : "Unknown";
 	}
 }

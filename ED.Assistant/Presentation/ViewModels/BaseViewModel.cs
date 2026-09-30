@@ -3,13 +3,6 @@ using Avalonia.Threading;
 
 namespace ED.Assistant.Presentation.ViewModels;
 
-public interface INavigationAware
-{
-	Task OnNavigatedToAsync(CancellationToken cancellationToken = default);
-
-	void OnNavigatedFrom();
-}
-
 public abstract class BaseViewModel : ObservableObject, IDisposable
 {
 	private bool _disposed;
@@ -21,8 +14,9 @@ public abstract class BaseViewModel : ObservableObject, IDisposable
 		if (_disposed)
 			return;
 
-		OnDispose();
 		_disposed = true;
+		OnDispose();
+		GC.SuppressFinalize(this);
 	}
 }
 
@@ -34,14 +28,14 @@ public abstract class BaseViewModel : ObservableObject, IDisposable
 /// Updates are coalesced: while one runs, only the newest pending state is kept.
 /// </para>
 /// </summary>
-public abstract partial class LoadableViewModel : BaseViewModel, INavigationAware
+public abstract partial class LoadableViewModel : BaseViewModel
 {
-	protected readonly IJournalLoaderService _journalLoader;
+	protected IJournalLoaderService JournalLoader { get; }
 
 	private readonly IJournalStateStore _stateStore;
 	private readonly IMemoryCache _memoryCache;
 
-	private readonly object _activationLock = new();
+	private readonly Lock _activationLock = new();
 	private JournalState? _pendingState;
 	private bool _isRunning;
 
@@ -49,13 +43,15 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 	private volatile bool _isDirty = true;
 
 	/// <summary>True while an update is running. Always changed on the UI thread.</summary>
+	/// <remarks>Not bound by any view yet; kept for a loading indicator and for tests.</remarks>
 	[ObservableProperty]
+	// ReSharper disable once UnusedMember.Global
 	public partial bool IsActivating { get; set; }
 
 	protected LoadableViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
 		IMemoryCache memoryCache)
 	{
-		_journalLoader = journalLoader;
+		JournalLoader = journalLoader;
 		_stateStore = stateStore;
 		_memoryCache = memoryCache;
 
@@ -73,9 +69,6 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 	/// return false and call <see cref="Invalidate"/> when their own source changes.
 	/// </summary>
 	protected virtual bool ReactsToJournalChanges => true;
-
-	/// <summary>True while this view model is the navigation target.</summary>
-	protected bool IsCurrent => _isCurrent;
 
 	protected virtual void UpdateFromState(JournalState state) { }
 
@@ -100,9 +93,6 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 		_isDirty = false;
 
 		var state = _stateStore.CurrentState;
-		if (state is null)
-			return;
-
 		try
 		{
 			await ActivateAsync(state, cancellationToken);
@@ -120,7 +110,7 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 	/// <summary>Refreshes now if visible, otherwise on the next navigation.</summary>
 	protected void Invalidate() => RequestUpdate(_stateStore.CurrentState);
 
-	protected async Task ActivateAsync(JournalState state,
+	private async Task ActivateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
 	{
 		lock (_activationLock)
@@ -212,24 +202,28 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 			RequestUpdate(state);
 	}
 
-	// async void is required for event-style fire-and-forget; it must never throw
-	private async void RequestUpdate(JournalState? state)
+	// Fire-and-forget from an event handler: the returned task is intentionally not awaited
+	// and RunUpdateAsync handles every exception itself, so nothing can go unobserved.
+	private void RequestUpdate(JournalState state)
 	{
-		if (state is null)
-			return;
-
 		if (!_isCurrent && !IsAlwaysVisible)
 		{
 			_isDirty = true;
 			return;
 		}
 
+		_ = RunUpdateAsync(state);
+	}
+
+	private async Task RunUpdateAsync(JournalState state)
+	{
 		try
 		{
 			await ActivateAsync(state);
 		}
 		catch (OperationCanceledException)
 		{
+			// Cancelled update: nothing to report
 		}
 		catch (Exception ex)
 		{
@@ -243,5 +237,5 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 
 	[RelayCommand]
 	private async Task Load(CancellationToken cancellationToken = default) 
-		=> await _journalLoader.LoadLastLogsAsync(cancellationToken);
+		=> await JournalLoader.LoadLastLogsAsync(cancellationToken);
 }

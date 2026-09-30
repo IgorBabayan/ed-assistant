@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Configurations;
 
-class AtmosphereConfiguration : IEntityTypeConfiguration<Atmosphere>
+internal class AtmosphereConfiguration : IEntityTypeConfiguration<Atmosphere>
 {
     public void Configure(EntityTypeBuilder<Atmosphere> builder)
     {

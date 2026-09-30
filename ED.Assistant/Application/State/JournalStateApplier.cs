@@ -4,12 +4,10 @@ using ED.Assistant.Domain.Types;
 
 namespace ED.Assistant.Application.State;
 
-class JournalStateApplier : IJournalStateApplier
+internal class JournalStateApplier : IJournalStateApplier
 {
-	/// <summary>
-	/// Snapshot-style or high-volume events that would only push
-	/// meaningful entries out of the recent events feed.
-	/// </summary>
+	private const string BIOLOGICAL_SIGNAL = "$SAA_SignalType_Biological;";
+	
 	private static readonly HashSet<string> NotRecentEvents = new(StringComparer.OrdinalIgnoreCase)
 	{
 		CommanderEvent.EventName,
@@ -23,21 +21,15 @@ class JournalStateApplier : IJournalStateApplier
 	public Task ApplyFromFilesAsync(JournalState state, IEnumerable<string> filePaths,
 		CancellationToken cancellationToken = default) => ApplyFromLinesAsync(state,
 			ReadLinesFromFilesAsync(filePaths, cancellationToken), cancellationToken);
+	
+	private static int BioCount(IEnumerable<SignalItem>? signals) =>
+		signals?.Where(s => string.Equals(s.TypeId, BIOLOGICAL_SIGNAL, StringComparison.OrdinalIgnoreCase))
+			.Sum(s => s.Count) ?? 0;
 
 	public async Task ApplyFromLinesAsync(JournalState state, IAsyncEnumerable<string> lines,
 		CancellationToken cancellationToken = default)
 	{
-		void ApplyLocation(LocationEvent e)
-		{
-			if (state.CurrentSystemAddress != e.SystemAddress)
-			{
-				ClearSystemData(state);
-				state.FSDJump = null;
-			}
-
-			state.Location = e;
-		}
-
+		// Used through their interfaces: the applier only depends on the dispatch/aggregate contracts
 		var dispatcher = new JournalEventDispatcher();
 		var aggregator = new JournalStateAggregator(dispatcher);
 
@@ -53,8 +45,8 @@ class JournalStateApplier : IJournalStateApplier
 		{
 			if (IsFirstSample(state, e))
 			{
-				state.PendingEvaluatorChanges.Add(
-					new OrganicSampled(e.Timestamp, e.SpeciesId, HasFirstFootStep(state, e)));
+				state.PendingEvaluatorChanges.Add(new OrganicSampled(
+					e.Timestamp, e.SystemAddress, e.BodyId, e.SpeciesId, HasFirstFootStep(state, e)));
 			}
 
 			state.Organics.Add(e);
@@ -63,7 +55,7 @@ class JournalStateApplier : IJournalStateApplier
 		dispatcher.On<SellOrganicDataEvent>(SellOrganicDataEvent.EventName, e =>
 			state.PendingEvaluatorChanges.Add(new OrganicDataSold(
 				e.Timestamp,
-				(e.BioData ?? []).Select(b => b.SpeciesId).ToArray())));
+				[..(e.BioData ?? []).Select(b => b.SpeciesId)])));
 
 		aggregator.RegisterLast<CommanderEvent>(
 			CommanderEvent.EventName,
@@ -95,24 +87,45 @@ class JournalStateApplier : IJournalStateApplier
 				state.FSDJump = e;
 			});
 
-		aggregator.RegisterByKey<ScanEvent, int>(
+		aggregator.RegisterByKey(
 			ScanEvent.EventName,
 			e => e.BodyId,
 			state.Scans);
 
-		aggregator.RegisterByKey<FSSBodySignalsEvent, int>(
+		aggregator.RegisterByKey(
 			FSSBodySignalsEvent.EventName,
-			e => e.BodyId,
+			e =>
+			{
+				var bio = BioCount(e.Signals);
+				if (bio > 0)
+					state.PendingAlerts.Add(new BioAlert(e.SystemAddress, e.BodyId, e.BodyName, bio, null));
+				
+				return e.BodyId;
+			},
 			state.FSSSignals);
 
-		aggregator.RegisterByKey<BaryCentreEvent, int>(
+		aggregator.RegisterByKey(
 			BaryCentreEvent.EventName,
 			e => e.BodyId,
 			state.BaryCentres);
 
-		aggregator.RegisterByKey<SAASignalsFoundEvent, int>(
+		aggregator.RegisterByKey(
 			SAASignalsFoundEvent.EventName,
-			e => e.BodyId,
+			e =>
+			{
+				var bio = BioCount(e.Signals);
+				if (bio > 0)
+				{
+					var genera = e.Genuses?
+						.Select(g => string.IsNullOrWhiteSpace(g.Genus) ? g.GenusId : g.Genus)
+						.Distinct()
+						.ToArray();
+
+					state.PendingAlerts.Add(new BioAlert(e.SystemAddress, e.BodyId, e.BodyName, bio, genera));
+				}
+				
+				return e.BodyId;
+			},
 			state.SAASignals);
 
 		aggregator.RegisterByKey<FSSSignalDiscoveredEvent, string>(
@@ -129,6 +142,18 @@ class JournalStateApplier : IJournalStateApplier
 			ApplyLocation);
 
 		await dispatcher.DispatchAsync(CaptureAsync(state.Log, lines, cancellationToken), cancellationToken);
+		return;
+
+		void ApplyLocation(LocationEvent e)
+		{
+			if (state.CurrentSystemAddress != e.SystemAddress)
+			{
+				ClearSystemData(state);
+				state.FSDJump = null;
+			}
+
+			state.Location = e;
+		}
 	}
 	
 	private static async IAsyncEnumerable<string> CaptureAsync(JournalLog log, IAsyncEnumerable<string> lines,

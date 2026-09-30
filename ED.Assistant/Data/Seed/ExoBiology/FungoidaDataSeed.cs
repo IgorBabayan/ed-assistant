@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed.ExoBiology;
 
-static class FungoidaDataSeed
+internal static class FungoidaDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {

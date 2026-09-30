@@ -8,9 +8,8 @@ public sealed class ScanType : IEquatable<ScanType>, IEquatable<string>
 	public static readonly ScanType Sample = new("Sample");
 	public static readonly ScanType Analyse = new("Analyse");
 
-	private readonly string? _value;
+	private readonly string _value;
 
-	private ScanType() { }
 
 	private ScanType(string value) => _value = value;
 
@@ -32,11 +31,11 @@ public sealed class ScanType : IEquatable<ScanType>, IEquatable<string>
 
 	public static bool operator !=(string? left, ScanType? right) => !(left == right);
 
-	public static explicit operator string(ScanType scanType) => scanType._value!;
+	public static explicit operator string(ScanType scanType) => scanType._value;
 
-	public override string ToString() => _value!;
+	public override string ToString() => _value;
 
-	public override int GetHashCode()  => StringComparer.OrdinalIgnoreCase.GetHashCode(_value!);
+	public override int GetHashCode()  => StringComparer.Ordinal.GetHashCode(_value);
 
 	public override bool Equals(object? obj) => obj switch
 	{
@@ -50,10 +49,7 @@ public sealed class ScanType : IEquatable<ScanType>, IEquatable<string>
 		if (other is null)
 			return false;
 
-		if (ReferenceEquals(this, other))
-			return true;
-
-		return string.Equals(_value, other._value, StringComparison.OrdinalIgnoreCase);
+		return ReferenceEquals(this, other) || string.Equals(_value, other._value, StringComparison.Ordinal);
 	}
 
 	public bool Equals(string? other) => string.Equals(_value, other, StringComparison.Ordinal);

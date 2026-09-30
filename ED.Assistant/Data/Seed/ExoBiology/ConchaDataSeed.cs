@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed.ExoBiology;
 
-static class ConchaDataSeed
+internal static class ConchaDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {

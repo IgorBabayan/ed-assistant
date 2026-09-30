@@ -1,13 +1,14 @@
+using System.Globalization;
 using System.IO;
 using System.Text;
 using Avalonia.Platform;
 
 namespace ED.Assistant.Application.Linux;
 
-class DesktopService : IDesktopService
+internal class DesktopService : IDesktopService
 {
-    const string ICON_NAME = "ed-assistant";
-    const string DESKTOP_FILE_NAME = "ed-assistant.desktop";
+    private const string IconName = "ed-assistant";
+    private const string DesktopFileName = "ed-assistant.desktop";
     
     private readonly StringBuilder _builder = new();
     
@@ -20,9 +21,9 @@ class DesktopService : IDesktopService
             .AppendLine("Comment=Exobiological and mining assistant for Elite Dangerous")
             .AppendLine("Terminal=false")
             .AppendLine("Name=ED Assistant")
-            .AppendLine("StartupWMClass=ED.Assistant")
-            .AppendLine($"Exec={QuoteExecArgument(GetAppPath())}")
-            .AppendLine($"Icon={GetAppIcon()}");
+            .AppendLine("StartupWMClass=ed-assistant")
+            .AppendLine(CultureInfo.InvariantCulture, $"Exec={QuoteExecArgument(GetAppPath())}")
+            .AppendLine(CultureInfo.InvariantCulture, $"Icon={GetAppIcon()}");
     }
 
     public async Task SaveDesktopFileAsync(CancellationToken cancellationToken)
@@ -32,7 +33,7 @@ class DesktopService : IDesktopService
         var directory = GetApplicationsDirectory();
         Directory.CreateDirectory(directory);
 
-        var path = IOPath.Combine(directory, DESKTOP_FILE_NAME);
+        var path = IOPath.Combine(directory, DesktopFileName);
         var tempPath = path + ".tmp";
 
         await File.WriteAllTextAsync(tempPath, _builder.ToString(), new UTF8Encoding(false), cancellationToken);
@@ -47,22 +48,23 @@ class DesktopService : IDesktopService
         }
     }
 
-    private string GetAppIcon()
+    private static string GetAppIcon()
     {
         var dataHome = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         var targetDir = IOPath.Combine(dataHome, "icons", "hicolor", "256x256", "apps");
         Directory.CreateDirectory(targetDir);
 
-        var targetPath = IOPath.Combine(targetDir, ICON_NAME + ".png");
+        var targetPath = IOPath.Combine(targetDir, IconName + ".png");
 
         using var source = AssetLoader.Open(new Uri("avares://ED.Assistant/Assets/logo.png"));
         using var target = File.Create(targetPath);
         source.CopyTo(target);
 
-        return ICON_NAME;
+        return IconName;
     }
 
-    private static string GetAppPath() => Environment.GetEnvironmentVariable("APPIMAGE") ?? Environment.ProcessPath!;
+    private static string GetAppPath() => Environment.GetEnvironmentVariable("APPIMAGE") ?? Environment.ProcessPath
+        ?? throw new InvalidOperationException("Cannot determine the application executable path.");
     
     private static string GetApplicationsDirectory()
     {

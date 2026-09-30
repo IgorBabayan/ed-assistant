@@ -6,46 +6,32 @@
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:Class="ED.Assistant.Presentation.Views.Dashboard.DashboardView"
 			 x:DataType="vm:DashboardViewModel">
-	<Grid RowSpacing="16"
+	<Grid ColumnDefinitions="2*,*" RowDefinitions="Auto,*,Auto" RowSpacing="16"
 		  ColumnSpacing="16">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
 
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="2*"/>
-			<ColumnDefinition Width="*"/>
-		</Grid.ColumnDefinitions>
 
 		<!-- Current System -->
 		<Border Grid.Row="0"
 				Grid.Column="0"
 				Classes="dashboard-card">
-			<Grid RowSpacing="14">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="*"/>
-				</Grid.RowDefinitions>
+			<Grid RowDefinitions="Auto,Auto,*" RowSpacing="14">
 
 				<DockPanel>
 					<TextBlock Text="CURRENT SYSTEM"
 							   Classes="dashboard-card-header"
 							   DockPanel.Dock="Left"/>
 
-					<TextBlock Text="{Binding CurrentSystem.Security}"
+					<TextBlock Text="{Binding CurrentSystem.Security, FallbackValue=''}"
 							   Classes="dashboard-rank"
 							   HorizontalAlignment="Right"/>
 				</DockPanel>
 
 				<StackPanel Grid.Row="1"
 							Spacing="4">
-					<TextBlock Text="{Binding CurrentSystem.StarSystem}"
+					<TextBlock Text="{Binding CurrentSystem.StarSystem, FallbackValue=''}"
 							   Classes="dashboard-system-name"/>
 
-					<TextBlock Text="{Binding CurrentSystem.Body}"
+					<TextBlock Text="{Binding CurrentSystem.Body, FallbackValue=''}"
 							   Classes="dashboard-label"/>
 				</StackPanel>
 
@@ -56,42 +42,42 @@
 					<StackPanel>
 						<TextBlock Text="Economy"
 								   Classes="dashboard-label"/>
-						<TextBlock Text="{Binding CurrentSystem.Economy}"
+						<TextBlock Text="{Binding CurrentSystem.Economy, FallbackValue=''}"
 								   Classes="dashboard-value"/>
 					</StackPanel>
 
 					<StackPanel>
 						<TextBlock Text="Allegiance"
 								   Classes="dashboard-label"/>
-						<TextBlock Text="{Binding CurrentSystem.Allegiance}"
+						<TextBlock Text="{Binding CurrentSystem.Allegiance, FallbackValue=''}"
 								   Classes="dashboard-value"/>
 					</StackPanel>
 
 					<StackPanel>
 						<TextBlock Text="Population"
 								   Classes="dashboard-label"/>
-						<TextBlock Text="{Binding CurrentSystem.Population}"
+						<TextBlock Text="{Binding CurrentSystem.Population, FallbackValue=''}"
 								   Classes="dashboard-value"/>
 					</StackPanel>
 
 					<StackPanel>
 						<TextBlock Text="Jump Dist"
 								   Classes="dashboard-label"/>
-						<TextBlock Text="{Binding CurrentSystem.JumpDist, StringFormat='{}{0:0.00} ly'}"
+						<TextBlock Text="{Binding CurrentSystem.JumpDist, StringFormat='{}{0:0.00} ly', FallbackValue=''}"
 								   Classes="dashboard-value"/>
 					</StackPanel>
 
 					<StackPanel>
 						<TextBlock Text="Fuel Used"
 								   Classes="dashboard-label"/>
-						<TextBlock Text="{Binding CurrentSystem.FuelUsed, StringFormat='{}{0:0.00} t'}"
+						<TextBlock Text="{Binding CurrentSystem.FuelUsed, StringFormat='{}{0:0.00} t', FallbackValue=''}"
 								   Classes="dashboard-value"/>
 					</StackPanel>
 
 					<StackPanel>
 						<TextBlock Text="Fuel Level"
 								   Classes="dashboard-label"/>
-						<TextBlock Text="{Binding CurrentSystem.FuelLevel, StringFormat='{}{0:0.00} t'}"
+						<TextBlock Text="{Binding CurrentSystem.FuelLevel, StringFormat='{}{0:0.00} t', FallbackValue=''}"
 								   Classes="dashboard-value"/>
 					</StackPanel>
 
@@ -107,10 +93,10 @@
 				<TextBlock Text="CMDR PROFILE"
 						   Classes="dashboard-card-header"/>
 
-				<TextBlock Text="{Binding Commander.Name}"
+				<TextBlock Text="{Binding Commander.Name, FallbackValue=''}"
 						   Classes="dashboard-commander-name"/>
 
-				<TextBlock Text="{Binding LoadGame.ShipFullTitle}"
+				<TextBlock Text="{Binding LoadGame.ShipFullTitle, FallbackValue=''}"
 						   Classes="dashboard-value"/>
 
 				<Separator Margin="0,2"/>

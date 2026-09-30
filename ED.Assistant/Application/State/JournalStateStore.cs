@@ -1,8 +1,8 @@
 ﻿namespace ED.Assistant.Application.State;
 
-class JournalStateStore : IJournalStateStore
+internal class JournalStateStore : IJournalStateStore
 {
-	private readonly object _lock = new();
+	private readonly Lock _lock = new();
 
 	private JournalState _currentState = new();
 

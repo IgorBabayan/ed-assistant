@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed.ExoBiology;
 
-static class OsseusDataSeed
+internal static class OsseusDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {

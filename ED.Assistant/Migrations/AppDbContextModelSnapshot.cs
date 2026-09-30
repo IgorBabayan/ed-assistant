@@ -4245,6 +4245,9 @@ namespace ED.Assistant.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("BodyId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("DateCreation")
                         .HasColumnType("TEXT");
 
@@ -4260,12 +4263,17 @@ namespace ED.Assistant.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
+                    b.Property<long?>("SystemAddress")
+                        .HasColumnType("INTEGER");
+
                     b.Property<decimal>("Total")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GenusId", "DateCreation");
+
+                    b.HasIndex("SystemAddress", "BodyId", "GenusId");
 
                     b.ToTable("Evaluator", (string)null);
                 });

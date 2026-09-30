@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace ED.Assistant.Application.JournalLoading;
 
-sealed class JournalEventDispatcher : IJournalEventDispatcher
+internal sealed class JournalEventDispatcher : IJournalEventDispatcher
 {
 	// One shared instance: System.Text.Json caches type metadata per options object,
 	// so creating options per batch rebuilt that cache on every watcher tick.

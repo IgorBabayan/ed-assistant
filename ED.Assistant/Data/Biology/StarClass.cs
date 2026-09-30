@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Biology;
 
-enum StarClassEnum
+internal enum StarClassEnum
 {
     A = 1,
     B,
@@ -12,8 +12,11 @@ enum StarClassEnum
     F,
     G,
     K,
+    // Star class codes as written in the journal
+    // ReSharper disable once InconsistentNaming
     MS,
     S,
+    // ReSharper disable once UnusedMember.Global
     M
 }
 

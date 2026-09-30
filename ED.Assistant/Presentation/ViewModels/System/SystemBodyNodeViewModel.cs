@@ -2,7 +2,7 @@
 
 namespace ED.Assistant.Presentation.ViewModels.System;
 
-public partial class SystemBodyNodeViewModel : BaseViewModel
+public class SystemBodyNodeViewModel : BaseViewModel
 {
 	public string Name { get; }
 
@@ -13,8 +13,6 @@ public partial class SystemBodyNodeViewModel : BaseViewModel
 	public ScanEvent? Scan { get; }
 
 	public ObservableCollection<SystemBodyNodeViewModel> Children { get; } = [];
-
-	public bool HasScan => Scan is not null;
 
 	public bool IsStar => !string.IsNullOrWhiteSpace(Scan?.StarType);
 
@@ -30,7 +28,7 @@ public partial class SystemBodyNodeViewModel : BaseViewModel
 		Scan is null ? "-" : $"{Scan.SurfaceTemperature:N0} K";
 
 	public string Gravity =>
-		Scan is null ? "-" : $"{Scan.SurfaceGravity:N2} g";
+		Scan is null ? "-" : $"{Scan.SurfaceGravity / 9.80665:N2} g";
 
 	public string Mass =>
 		Scan is null ? "-" :

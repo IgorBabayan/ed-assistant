@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialIcons="using:Material.Icons.Avalonia"
              xmlns:vm="using:ED.Assistant.Presentation.ViewModels.Evaluator"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ED.Assistant.Presentation.Views.Evaluator.EvaluatorView"
@@ -13,37 +14,81 @@
         <Style Selector="TextBlock.number">
             <Setter Property="HorizontalAlignment" Value="Right" />
         </Style>
+
+        <Style Selector="TextBlock.import-message">
+            <Setter Property="Foreground" Value="#66BB6A" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style Selector="TextBlock.import-message.error">
+            <Setter Property="Foreground" Value="#EF5350" />
+        </Style>
+        <Style Selector="materialIcons|MaterialIcon.import-icon">
+            <Setter Property="Width" Value="18" />
+            <Setter Property="Height" Value="18" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="#66BB6A" />
+        </Style>
+        <Style Selector="materialIcons|MaterialIcon.import-icon.error">
+            <Setter Property="Foreground" Value="#EF5350" />
+        </Style>
     </UserControl.Styles>
 
     <Grid RowDefinitions="Auto,*" RowSpacing="16">
-        <!-- Summary -->
-        <UniformGrid Columns="3" ColumnSpacing="8">
-            <Border Classes="dashboard-card">
-                <StackPanel Spacing="4">
-                    <TextBlock Text="Unsold samples" Classes="dashboard-label" />
-                    <TextBlock Text="{Binding UnsoldCount}" Classes="dashboard-value" />
-                </StackPanel>
+        <!-- StackPanel skips hidden children when spacing, so no gap while there's no message -->
+        <StackPanel Grid.Row="0" Spacing="8">
+
+            <!-- Import result -->
+            <Border Classes="dashboard-card" IsVisible="{Binding HasImportMessage}">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                    <materialIcons:MaterialIcon Grid.Column="0"
+                                                Kind="DatabaseImport"
+                                                Classes="import-icon"
+                                                Classes.error="{Binding IsImportError}" />
+
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding ImportMessage}"
+                               Classes="import-message"
+                               Classes.error="{Binding IsImportError}" />
+
+                    <Button Grid.Column="2"
+                            Classes="window-button"
+                            ToolTip.Tip="Dismiss"
+                            Command="{Binding DismissImportMessageCommand}">
+                        <materialIcons:MaterialIcon Kind="Close" Width="14" Height="14" />
+                    </Button>
+                </Grid>
             </Border>
-            <Border Classes="dashboard-card">
-                <StackPanel Spacing="4">
-                    <TextBlock Text="Unsold value" Classes="dashboard-label" />
-                    <TextBlock Text="{Binding UnsoldValue}" Classes="dashboard-value" />
-                </StackPanel>
-            </Border>
-            <Border Classes="dashboard-card">
-                <StackPanel Spacing="4">
-                    <TextBlock Text="First footfall (×5)" Classes="dashboard-label" />
-                    <TextBlock Text="{Binding FirstFootStepCount}" Classes="dashboard-value" />
-                </StackPanel>
-            </Border>
-        </UniformGrid>
+
+            <!-- Summary -->
+            <UniformGrid Columns="3" ColumnSpacing="8">
+                <Border Classes="dashboard-card">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Unsold samples" Classes="dashboard-label" />
+                        <TextBlock Text="{Binding UnsoldCount}" Classes="dashboard-value" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="dashboard-card">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Unsold value" Classes="dashboard-label" />
+                        <TextBlock Text="{Binding UnsoldValue}" Classes="dashboard-value" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="dashboard-card">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="First footfall (×5)" Classes="dashboard-label" />
+                        <TextBlock Text="{Binding FirstFootStepCount}" Classes="dashboard-value" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+        </StackPanel>
 
         <!-- List -->
         <Border Grid.Row="1" Classes="dashboard-card">
             <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
                 <TextBlock Text="UNSOLD EXOBIOLOGY DATA" Classes="dashboard-card-header" />
 
-                <Grid Grid.Row="1" ColumnDefinitions="2*,*,*,60,*" ColumnSpacing="12">
+                <Grid Grid.Row="1" ColumnDefinitions="2*,*,*,60,*" ColumnSpacing="12" Margin="0,0,20,0">
                     <TextBlock Grid.Column="0" Text="Species" Classes="dashboard-label" />
                     <TextBlock Grid.Column="1" Text="Sampled" Classes="dashboard-label" />
                     <TextBlock Grid.Column="2" Text="Base value" Classes="dashboard-label number" />
@@ -60,7 +105,7 @@
                            Foreground="{DynamicResource SecondaryTextBrush}" />
 
                 <ScrollViewer Grid.Row="2" IsVisible="{Binding HasItems}">
-                    <ItemsControl ItemsSource="{Binding Items}">
+                    <ItemsControl ItemsSource="{Binding Items}" Margin="0,0,20,0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="vm:EvaluatorItemViewModel">
                                 <Grid ColumnDefinitions="2*,*,*,60,*" ColumnSpacing="12" Margin="0,4">

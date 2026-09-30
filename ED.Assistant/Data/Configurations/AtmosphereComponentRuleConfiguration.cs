@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Configurations;
 
-class AtmosphereComponentRuleConfiguration : IEntityTypeConfiguration<AtmosphereComponentRule>
+internal class AtmosphereComponentRuleConfiguration : IEntityTypeConfiguration<AtmosphereComponentRule>
 {
     public void Configure(EntityTypeBuilder<AtmosphereComponentRule> builder)
     {

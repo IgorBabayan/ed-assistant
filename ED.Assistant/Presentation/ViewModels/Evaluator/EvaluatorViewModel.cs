@@ -3,7 +3,6 @@ using Avalonia.Threading;
 using ED.Assistant.Application.Evaluation;
 using ED.Assistant.Data.Repository;
 using ED.Assistant.Extensions;
-using ED.Assistant.Presentation.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using EvaluatorEntity = ED.Assistant.Data.Evaluator.Evaluator;
 
@@ -12,9 +11,10 @@ namespace ED.Assistant.Presentation.ViewModels.Evaluator;
 public sealed partial class EvaluatorViewModel : LoadableViewModel
 {
 	private readonly IServiceScopeFactory _scopeFactory;
-	private readonly IEvaluatorSyncService _evaluatorSync;
+	private readonly IEvaluatorImportService _importService;
+	private readonly IEvaluatorSyncService _syncService;
 
-	public BulkObservableCollection<EvaluatorItemViewModel> Items { get; } = new();
+	public ObservableCollection<EvaluatorItemViewModel> Items { get; } = [];
 
 	[ObservableProperty]
 	public partial int UnsoldCount { get; set; }
@@ -24,31 +24,67 @@ public sealed partial class EvaluatorViewModel : LoadableViewModel
 
 	[ObservableProperty]
 	public partial int FirstFootStepCount { get; set; }
+	
+	[ObservableProperty]
+	[NotifyPropertyChangedFor(nameof(HasImportMessage))]
+	public partial string? ImportMessage { get; set; }
+
+	[ObservableProperty]
+	public partial bool IsImportError { get; set; }
+
+	public bool HasImportMessage => ImportMessage is not null;
 
 	public bool HasItems => Items.Count > 0;
 
-	// The data lives in the database and only changes when the sync service writes to it,
-	// so ordinary journal lines must not trigger a reload.
 	protected override bool ReactsToJournalChanges => false;
 
 	public EvaluatorViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
-		IMemoryCache memoryCache, IServiceScopeFactory scopeFactory, IEvaluatorSyncService evaluatorSync)
+		IMemoryCache memoryCache, IServiceScopeFactory scopeFactory, IEvaluatorImportService importService,
+		IEvaluatorSyncService syncService)
 		: base(journalLoader, stateStore, memoryCache)
 	{
 		_scopeFactory = scopeFactory;
-		_evaluatorSync = evaluatorSync;
+		_importService = importService;
+		_syncService = syncService;
+		_syncService.DataChanged += OnDataChanged;
 
-		_evaluatorSync.DataChanged += OnEvaluatorDataChanged;
+		// An import writes to the DB without touching the journal state, so StateChanged won't fire
+		_importService.Imported += OnImported;
 	}
 
 	protected override void OnDispose()
 	{
-		_evaluatorSync.DataChanged -= OnEvaluatorDataChanged;
+		_importService.Imported -= OnImported;
+		_syncService.DataChanged -= OnDataChanged;
 		base.OnDispose();
 	}
 
-	protected override async Task UpdateFromStateAsync(JournalState state,
-		CancellationToken cancellationToken = default)
+	// The evaluator lives in the DB; the journal state is only the trigger
+	protected override Task UpdateFromStateAsync(JournalState state,
+		CancellationToken cancellationToken = default) => RefreshAsync(cancellationToken);
+	
+	[RelayCommand]
+	private void DismissImportMessage() => ImportMessage = null;
+
+	private void OnDataChanged(object? sender, EventArgs e) => Invalidate();
+
+	private void OnImported(object? sender, EvaluatorImportResult result)
+	{
+		RunOnUIThread(() =>
+		{
+			IsImportError = !result.IsSuccess;
+			ImportMessage = !result.IsSuccess
+				? $"Import failed: {result.Error}"
+				: result.Added > 0
+					? $"Imported {result.Added} new unsold samples from {result.Folder}"
+					: $"No new unsold samples in {result.Folder}";
+		});
+
+		if (result.IsSuccess)
+			Invalidate();
+	}
+
+	private async Task RefreshAsync(CancellationToken cancellationToken = default)
 	{
 		List<EvaluatorEntity> rows;
 
@@ -70,18 +106,17 @@ public sealed partial class EvaluatorViewModel : LoadableViewModel
 
 		await Dispatcher.UIThread.InvokeAsync(() =>
 		{
-			Items.ReplaceAll(items);
+			Items.Clear();
+			foreach (var item in items)
+				Items.Add(item);
 
 			UnsoldCount = items.Length;
-			UnsoldValue = total > 0 ? total.ToMillions() : "—";
+			UnsoldValue = total > 0 ? total.ToCompact() : "—";
 			FirstFootStepCount = firstFootSteps;
 
 			OnPropertyChanged(nameof(HasItems));
 		});
 	}
-
-	// Reload now if visible, otherwise on the next visit
-	private void OnEvaluatorDataChanged(object? sender, EventArgs e) => Invalidate();
 }
 
 public sealed class EvaluatorItemViewModel

@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.Assistant.Application.Catalog;
 
-sealed class GenusCatalog : IGenusCatalog, IDisposable
+internal sealed class GenusCatalog : IGenusCatalog, IDisposable
 {
 	private readonly IServiceScopeFactory _scopeFactory;
 	private readonly SemaphoreSlim _gate = new(1, 1);
@@ -50,6 +50,7 @@ sealed class GenusCatalog : IGenusCatalog, IDisposable
 				.Include(c => c.Rules).ThenInclude(r => r.Atmospheres)
 				.Include(c => c.Rules).ThenInclude(r => r.Volcanisms)
 				.Include(c => c.Rules).ThenInclude(r => r.SystemBodyClasses)
+				.Include(c => c.Rules).ThenInclude(r => r.ParentBodyClasses)
 				.Include(c => c.Rules).ThenInclude(r => r.AtmosphereComponents)
 					.ThenInclude(r => r.Atmosphere)
 				.Include(c => c.Rules).ThenInclude(r => r.Stars)

@@ -9,9 +9,9 @@ public partial class ShipLockerViewModel : LoadableViewModel
 	// Replaced only when a new ShipLocker line arrives; skip rebuilds for every other line
 	private volatile ShipLockerEvent? _lastShipLocker;
 
-	public BulkObservableCollection<MaterialItemViewModel> Materials { get; } = new();
-	public BulkObservableCollection<MaterialItemViewModel> FilteredMaterials { get; } = new();
-	public BulkObservableCollection<MaterialSummaryViewModel> MaterialSummaries { get; } = new();
+	private BulkObservableCollection<MaterialItemViewModel> Materials { get; } = [];
+	public BulkObservableCollection<MaterialItemViewModel> FilteredMaterials { get; } = [];
+	public BulkObservableCollection<MaterialSummaryViewModel> MaterialSummaries { get; } = [];
 
 	public IReadOnlyList<string> Categories { get; } =
 	[
@@ -38,9 +38,9 @@ public partial class ShipLockerViewModel : LoadableViewModel
 	[ObservableProperty]
 	public partial string SelectedSort { get; set; } = Options.Sort.Name;
 
-	private class Options
+	private static class Options
 	{
-		internal class Categories
+		internal static class Categories
 		{
 			internal const string All = "All";
 			internal const string Items = "Items";
@@ -49,7 +49,7 @@ public partial class ShipLockerViewModel : LoadableViewModel
 			internal const string Data = "Data";
 		}
 
-		internal class Sort
+		internal static class Sort
 		{
 			internal const string Name = "Name";
 			internal const string Category = "Category";
@@ -60,29 +60,27 @@ public partial class ShipLockerViewModel : LoadableViewModel
 	public ShipLockerViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
 		IMemoryCache memoryCache) : base(journalLoader, stateStore, memoryCache) { }
 
-	protected override async Task UpdateFromStateAsync(JournalState state, 
+	protected override async Task UpdateFromStateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
 	{
 		var shipLocker = state.ShipLocker;
-		if (shipLocker is null || ReferenceEquals(shipLocker, _lastShipLocker))
+		if (ReferenceEquals(shipLocker, _lastShipLocker))
 			return;
 
-		var materials = await Task.Run(() =>
-		{
-			var result = new List<MaterialItemViewModel>();
+		cancellationToken.ThrowIfCancellationRequested();
 
-			AddMaterials(result, shipLocker.Items, Options.Categories.Items);
-			AddMaterials(result, shipLocker.Components, Options.Categories.Components);
-			AddMaterials(result, shipLocker.Consumables, Options.Categories.Consumables);
-			AddMaterials(result, shipLocker.Data, Options.Categories.Data);
-
-			return result.OrderBy(x => x.Name).ToList();
-		}, cancellationToken);
-
-		// Bound collections: change them on the UI thread only
+		// Cached item view models are bound and raise PropertyChanged when updated,
+		// so they are created/updated on the UI thread
 		await Dispatcher.UIThread.InvokeAsync(() =>
 		{
-			Materials.ReplaceAll(materials);
+			var materials = new List<MaterialItemViewModel>();
+
+			AddMaterials(materials, shipLocker?.Items, Options.Categories.Items);
+			AddMaterials(materials, shipLocker?.Components, Options.Categories.Components);
+			AddMaterials(materials, shipLocker?.Consumables, Options.Categories.Consumables);
+			AddMaterials(materials, shipLocker?.Data, Options.Categories.Data);
+
+			Materials.ReplaceAll(materials.OrderBy(x => x.Name));
 
 			BuildSummaries();
 			ApplyFilters();
@@ -103,26 +101,21 @@ public partial class ShipLockerViewModel : LoadableViewModel
 		if (source is null)
 			return;
 
-		foreach (var material in source)
-		{
-			var viewModel = GetOrCreateCachedViewModel(
-				cacheKey: $"ship-locker:{category}:{material.Name}",
-				model: material,
-				create: x => new MaterialItemViewModel
-				{
-					Name = x.FullName,
-					Category = category,
-					Count = x.Count
-				},
-				update: (vm, x) =>
-				{
-					vm.Name = x.FullName;
-					vm.Category = category;
-					vm.Count = x.Count;
-				});
-
-			target.Add(viewModel);
-		}
+		target.AddRange(source.Select(material => GetOrCreateCachedViewModel(
+			cacheKey: $"ship-locker:{category}:{material.Name}",
+			model: material,
+			create: x => new MaterialItemViewModel
+			{
+				Name = x.FullName,
+				Category = category,
+				Count = x.Count
+			},
+			update: (vm, x) =>
+			{
+				vm.Name = x.FullName;
+				vm.Category = category;
+				vm.Count = x.Count;
+			})));
 	}
 
 	private void ApplyFilters()
@@ -145,7 +138,7 @@ public partial class ShipLockerViewModel : LoadableViewModel
 			_ => query.OrderBy(x => x.Name)
 		};
 
-		FilteredMaterials.ReplaceAll(query.ToList());
+		FilteredMaterials.ReplaceAll(query);
 	}
 
 	private void BuildSummaries()

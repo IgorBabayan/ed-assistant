@@ -3,20 +3,26 @@ using ED.Assistant.Extensions;
 
 namespace ED.Assistant.Application.Dialog;
 
-class FolderPickerService : IFolderPickerService
+internal class FolderPickerService : IFolderPickerService
 {
-	public async Task<string?> PickFolderAsync(string title)
+	public async Task<string?> PickFolderAsync(string title, Window? owner = null)
 	{
-		var owner = Utils.GetMainWindow();
-		var folders = await owner.StorageProvider.OpenFolderPickerAsync(
+		var windowOwner = owner ?? Utils.GetMainWindow();
+		var folders = await windowOwner.StorageProvider.OpenFolderPickerAsync(
 			new FolderPickerOpenOptions
 			{
 				Title = title,
 				AllowMultiple = false
 			});
 
-		return folders.Count > 0
-			? folders[0].Path.LocalPath
-			: null;
+		try
+		{
+			return folders.Count > 0 ? folders[0].TryGetLocalPath() : null;
+		}
+		finally
+		{
+			foreach (var folder in folders)
+				folder.Dispose();
+		}
 	}
 }

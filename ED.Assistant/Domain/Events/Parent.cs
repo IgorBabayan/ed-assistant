@@ -2,6 +2,6 @@
 
 public class Parent
 {
-	public string Type { get; set; } = null!;
+	public string Type { get; set; } = string.Empty;
 	public int BodyId { get; set; }
 }
