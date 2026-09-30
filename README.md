@@ -10,7 +10,7 @@ A modern desktop companion for **Elite Dangerous** focused on live journal monit
 > **ED Assistant is an unofficial community project and is not affiliated with Frontier Developments.**
 
 <p align="center">
-  <img src="docs/screenshots/dashboard.png" alt="ED Assistant dashboard" width="100%">
+  <img src="screenshots/dashboard.png" alt="ED Assistant dashboard" width="100%">
 </p>
 
 ## Contents
@@ -80,7 +80,7 @@ The repository's default branch is `development`. The release workflow runs from
 The dashboard combines commander and ship state with current-system information, rank progression, system signals, and recent exploration activity.
 
 <p align="center">
-  <img src="docs/screenshots/dashboard.png" alt="Dashboard" width="100%">
+  <img src="screenshots/dashboard.png" alt="Dashboard" width="100%">
 </p>
 
 ### Engineering materials
@@ -88,7 +88,7 @@ The dashboard combines commander and ship state with current-system information,
 Materials are grouped into **Raw**, **Manufactured**, and **Encoded** categories. Each card shows current stock against its category capacity, while the toolbar provides search, category filtering, and sorting.
 
 <p align="center">
-  <img src="docs/screenshots/materials.png" alt="Materials" width="100%">
+  <img src="screenshots/materials.png" alt="Materials" width="100%">
 </p>
 
 ### Odyssey ship locker
@@ -96,7 +96,7 @@ Materials are grouped into **Raw**, **Manufactured**, and **Encoded** categories
 The ship-locker page presents **Items**, **Components**, **Consumables**, and **Data** in the same compact inventory style. A low-stock summary highlights entries below 25% of capacity.
 
 <p align="center">
-  <img src="docs/screenshots/ship-locker.png" alt="Ship locker" width="100%">
+  <img src="screenshots/ship-locker.png" alt="Ship locker" width="100%">
 </p>
 
 ### System structure
@@ -104,7 +104,7 @@ The ship-locker page presents **Items**, **Components**, **Consumables**, and **
 The System page reconstructs the scanned hierarchy of stars, planets, rings, barycentres, and belt clusters. Selecting a body opens its scan data and known signals.
 
 <p align="center">
-  <img src="docs/screenshots/system.png" alt="System structure" width="100%">
+  <img src="screenshots/system.png" alt="System structure" width="100%">
 </p>
 
 ### Exobiology
@@ -126,7 +126,7 @@ It can show:
 - expandable spawn conditions and their current match state.
 
 <p align="center">
-  <img src="docs/screenshots/exobiology.png" alt="Exobiology predictions and spawn rules" width="100%">
+  <img src="screenshots/exobiology.png" alt="Exobiology predictions and spawn rules" width="100%">
 </p>
 
 ### Evaluator
@@ -134,7 +134,7 @@ It can show:
 Evaluator persists biological samples beyond the current system and shows the value of data that has not yet been sold.
 
 <p align="center">
-  <img src="docs/screenshots/evaluator.png" alt="Evaluator" width="100%">
+  <img src="screenshots/evaluator.png" alt="Evaluator" width="100%">
 </p>
 
 ### Raw journal
@@ -142,7 +142,7 @@ Evaluator persists biological samples beyond the current system and shows the va
 The Journal page is useful when debugging the game state or checking exactly what Elite Dangerous wrote. Search terms are space-separated and all terms must match the raw line.
 
 <p align="center">
-  <img src="docs/screenshots/journal.png" alt="Raw journal viewer" width="100%">
+  <img src="screenshots/journal.png" alt="Raw journal viewer" width="100%">
 </p>
 
 ## How it works
