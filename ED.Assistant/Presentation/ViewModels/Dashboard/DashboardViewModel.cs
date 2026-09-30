@@ -1,4 +1,5 @@
-﻿using ED.Assistant.Domain.DTO;
+﻿using System.Globalization;
+using ED.Assistant.Domain.DTO;
 using ED.Assistant.Domain.Enums;
 using ED.Assistant.Extensions;
 using ED.Assistant.Presentation.Collections;
@@ -85,7 +86,7 @@ public partial class DashboardViewModel : LoadableViewModel
 	}
 
 	private static ushort GetMaxRank<TEnum>()
-		where TEnum : struct, Enum => Enum.GetValues<TEnum>().Select(x => Convert.ToUInt16(x)).Max();
+		where TEnum : struct, Enum => Enum.GetValues<TEnum>().Select(x => Convert.ToUInt16(x, CultureInfo.InvariantCulture)).Max();
 
 	private static List<RankDTO> BuildRanks(RankEvent rank) =>
 	[

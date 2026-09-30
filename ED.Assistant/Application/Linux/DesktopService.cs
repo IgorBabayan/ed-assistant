@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO;
 using System.Text;
 using Avalonia.Platform;
@@ -21,8 +22,8 @@ internal class DesktopService : IDesktopService
             .AppendLine("Terminal=false")
             .AppendLine("Name=ED Assistant")
             .AppendLine("StartupWMClass=ed-assistant")
-            .AppendLine($"Exec={QuoteExecArgument(GetAppPath())}")
-            .AppendLine($"Icon={GetAppIcon()}");
+            .AppendLine(CultureInfo.InvariantCulture, $"Exec={QuoteExecArgument(GetAppPath())}")
+            .AppendLine(CultureInfo.InvariantCulture, $"Icon={GetAppIcon()}");
     }
 
     public async Task SaveDesktopFileAsync(CancellationToken cancellationToken)

@@ -1,3 +1,4 @@
+// ReSharper disable EntityFramework.ModelValidation.UnlimitedStringLength
 namespace ED.Assistant.Data.Biology;
 
 internal enum AtmosphereEnum

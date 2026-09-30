@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace ED.Assistant.Presentation.Helpers.Exobiology;
 
 internal static class BiologyRuleMatcher
@@ -210,7 +212,7 @@ internal static class BiologyRuleMatcher
         if (observed is null)
             return null;
 
-        return ids.Contains(Convert.ToInt32(observed.Value));
+        return ids.Contains(Convert.ToInt32(observed.Value, CultureInfo.InvariantCulture));
     }
 
     private static AtmosphereEnum? ParseAtmosphere(string value) =>

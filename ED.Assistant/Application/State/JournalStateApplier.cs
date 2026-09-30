@@ -28,8 +28,8 @@ internal class JournalStateApplier : IJournalStateApplier
 		CancellationToken cancellationToken = default)
 	{
 		// Used through their interfaces: the applier only depends on the dispatch/aggregate contracts
-		IJournalEventDispatcher dispatcher = new JournalEventDispatcher();
-		IJournalStateAggregator aggregator = new JournalStateAggregator(dispatcher);
+		var dispatcher = new JournalEventDispatcher();
+		var aggregator = new JournalStateAggregator(dispatcher);
 
 		dispatcher.OnAny(e =>
 		{
