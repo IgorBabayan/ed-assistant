@@ -46,7 +46,7 @@ public partial class MaterialViewModel : LoadableViewModel
 			internal const string Encoded = "Encoded";
 		}
 
-		internal class  Sort
+		internal class Sort
 		{
 			internal const string Name = "Name";
 			internal const string Category = "Category";
@@ -64,21 +64,19 @@ public partial class MaterialViewModel : LoadableViewModel
 		if (materialsEvent is null || ReferenceEquals(materialsEvent, _lastMaterials))
 			return;
 
-		var materials = await Task.Run(() =>
-		{
-			var result = new List<MaterialItemViewModel>();
+		cancellationToken.ThrowIfCancellationRequested();
 
-			AddMaterials(result, materialsEvent.Raw, Options.Category.Raw);
-			AddMaterials(result, materialsEvent.Manufactured, Options.Category.Manufactured);
-			AddMaterials(result, materialsEvent.Encoded, Options.Category.Encoded);
-
-			return result.OrderBy(x => x.Name).ToList();
-		}, cancellationToken);
-
-		// Bound collections: change them on the UI thread only
+		// Cached item view models are bound and raise PropertyChanged when updated,
+		// so they are created/updated on the UI thread (a few hundred items at most)
 		await Dispatcher.UIThread.InvokeAsync(() =>
 		{
-			Materials.ReplaceAll(materials);
+			var materials = new List<MaterialItemViewModel>();
+
+			AddMaterials(materials, materialsEvent.Raw, Options.Category.Raw);
+			AddMaterials(materials, materialsEvent.Manufactured, Options.Category.Manufactured);
+			AddMaterials(materials, materialsEvent.Encoded, Options.Category.Encoded);
+
+			Materials.ReplaceAll(materials.OrderBy(x => x.Name).ToList());
 
 			BuildSummaries();
 			ApplyFilters();
@@ -165,11 +163,18 @@ public partial class MaterialViewModel : LoadableViewModel
 
 public sealed partial class MaterialItemViewModel : BaseViewModel
 {
-	public string Name { get; set; } = string.Empty;
+	// Instances are cached and reused between reloads, so changes must be observable
+	[ObservableProperty]
+	public partial string Name { get; set; } = string.Empty;
 
-	public string Category { get; set; } = string.Empty;
+	[ObservableProperty]
+	[NotifyPropertyChangedFor(nameof(MaxCapacity))]
+	[NotifyPropertyChangedFor(nameof(StockText))]
+	public partial string Category { get; set; } = string.Empty;
 
-	public int Count { get; set; }
+	[ObservableProperty]
+	[NotifyPropertyChangedFor(nameof(StockText))]
+	public partial int Count { get; set; }
 
 	public int MaxCapacity => Category switch
 	{

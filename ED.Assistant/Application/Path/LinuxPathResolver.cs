@@ -3,12 +3,16 @@ using System.Text.RegularExpressions;
 
 namespace ED.Assistant.Application.Path;
 
-public class LinuxPathResolver : IPlatformPathResolver
+public partial class LinuxPathResolver : IPlatformPathResolver
 {
 	private const string APP_FOLDER = "ed-assistant";
 	private const string ELITE_APP_ID = "359320";
 	
 	private static readonly string Home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+	// Source-generated instead of Regex.Match(string, pattern) (SYSLIB1045)
+	[GeneratedRegex("^\\s*\"path\"\\s*\"(.+)\"")]
+	private static partial Regex LibraryPathRegex();
 	
     public string GetLogsPath()
     {
@@ -61,7 +65,7 @@ public class LinuxPathResolver : IPlatformPathResolver
 
 		foreach (var line in File.ReadLines(vdf))
 		{
-			var match = Regex.Match(line, "^\\s*\"path\"\\s*\"(.+)\"");
+			var match = LibraryPathRegex().Match(line);
 			if (match.Success)
 				yield return match.Groups[1].Value;
 		}

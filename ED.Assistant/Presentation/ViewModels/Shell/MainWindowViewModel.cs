@@ -10,6 +10,7 @@ using ED.Assistant.Presentation.ViewModels.Settings;
 using ED.Assistant.Presentation.ViewModels.ShipLocker;
 using ED.Assistant.Presentation.ViewModels.System;
 using System.ComponentModel;
+using System.Diagnostics;
 using ED.Assistant.Application.Evaluation;
 using ED.Assistant.Application.Linux;
 using ED.Assistant.Domain.Config;
@@ -297,8 +298,13 @@ public partial class MainWindowViewModel : LoadableViewModel
 			
 			DockPosition = settings.DockPosition;
 		}
-		catch (Exception)
+		catch (OperationCanceledException)
 		{
+		}
+		catch (Exception ex)
+		{
+			// Fire-and-forget from the constructor: never let it throw, but don't hide the reason
+			Debug.WriteLine($"MainWindow initialization failed: {ex}");
 		}
 	}
 

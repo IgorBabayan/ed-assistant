@@ -35,4 +35,4 @@ artifacts/
 *.app
 
 # Test results
-TestResults/
+TestResults/*.Backup.tmp

@@ -9,13 +9,23 @@ public class ParentConverter : JsonConverter<Parent>
 		using var doc = JsonDocument.ParseValue(ref reader);
 		var obj = doc.RootElement;
 
-		if (obj.EnumerateObject().FirstOrDefault() is var prop && prop.Name != null)
+		// Expected shape: { "Planet": 3 }. FirstOrDefault() on an empty object returned
+		// default(JsonProperty), whose Name throws, and "Name != null" was always true.
+		if (obj.ValueKind == JsonValueKind.Object)
 		{
-			return new Parent
+			foreach (var prop in obj.EnumerateObject())
 			{
-				Type = prop.Name,
-				BodyId = prop.Value.GetInt32()
-			};
+				if (prop.Value.ValueKind == JsonValueKind.Number && prop.Value.TryGetInt32(out var bodyId))
+				{
+					return new Parent
+					{
+						Type = prop.Name,
+						BodyId = bodyId
+					};
+				}
+
+				break;
+			}
 		}
 
 		throw new JsonException("Invalid Parent format");

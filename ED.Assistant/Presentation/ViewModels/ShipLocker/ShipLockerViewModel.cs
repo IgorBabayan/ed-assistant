@@ -60,29 +60,27 @@ public partial class ShipLockerViewModel : LoadableViewModel
 	public ShipLockerViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
 		IMemoryCache memoryCache) : base(journalLoader, stateStore, memoryCache) { }
 
-	protected override async Task UpdateFromStateAsync(JournalState state, 
+	protected override async Task UpdateFromStateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
 	{
 		var shipLocker = state.ShipLocker;
 		if (shipLocker is null || ReferenceEquals(shipLocker, _lastShipLocker))
 			return;
 
-		var materials = await Task.Run(() =>
-		{
-			var result = new List<MaterialItemViewModel>();
+		cancellationToken.ThrowIfCancellationRequested();
 
-			AddMaterials(result, shipLocker.Items, Options.Categories.Items);
-			AddMaterials(result, shipLocker.Components, Options.Categories.Components);
-			AddMaterials(result, shipLocker.Consumables, Options.Categories.Consumables);
-			AddMaterials(result, shipLocker.Data, Options.Categories.Data);
-
-			return result.OrderBy(x => x.Name).ToList();
-		}, cancellationToken);
-
-		// Bound collections: change them on the UI thread only
+		// Cached item view models are bound and raise PropertyChanged when updated,
+		// so they are created/updated on the UI thread
 		await Dispatcher.UIThread.InvokeAsync(() =>
 		{
-			Materials.ReplaceAll(materials);
+			var materials = new List<MaterialItemViewModel>();
+
+			AddMaterials(materials, shipLocker.Items, Options.Categories.Items);
+			AddMaterials(materials, shipLocker.Components, Options.Categories.Components);
+			AddMaterials(materials, shipLocker.Consumables, Options.Categories.Consumables);
+			AddMaterials(materials, shipLocker.Data, Options.Categories.Data);
+
+			Materials.ReplaceAll(materials.OrderBy(x => x.Name).ToList());
 
 			BuildSummaries();
 			ApplyFilters();

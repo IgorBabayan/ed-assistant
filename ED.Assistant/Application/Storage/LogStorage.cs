@@ -11,8 +11,7 @@ class LogStorage : ILogStorage
 
 	public async Task<JournalState> LoadLastLogsAsync(string logFolder, int days, CancellationToken cancellationToken = default)
 	{
-		if (string.IsNullOrWhiteSpace(logFolder))
-			throw new ArgumentNullException(nameof(logFolder));
+		ArgumentException.ThrowIfNullOrWhiteSpace(logFolder);
 
 		if (!Directory.Exists(logFolder))
 		{

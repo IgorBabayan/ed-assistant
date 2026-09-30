@@ -8,8 +8,12 @@ public sealed class OrganicSampleBrushConverter : IValueConverter
 {
 	public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
 	{
-		var step = int.Parse(parameter!.ToString()!);
-		var count = (int)value!;
+		// A null/unset value (e.g. while the DataContext is changing) must not throw
+		if (value is not int count
+			|| !int.TryParse(parameter?.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var step))
+		{
+			return Brushes.Gray;
+		}
 
 		if (count >= step)
 		{

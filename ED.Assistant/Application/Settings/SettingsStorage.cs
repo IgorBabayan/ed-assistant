@@ -17,29 +17,28 @@ class SettingsStorage : ISettingsStorage
 
 	public async Task SaveAsync(string filePath, AppSettings settings, CancellationToken cancellationToken = default)
 	{
-		if (string.IsNullOrWhiteSpace(filePath))
-			throw new ArgumentNullException(nameof(filePath));
+		ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
 
-		if (File.Exists(filePath))
-			File.Delete(filePath);
-
-		await using (var stream = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+		// Write to a temp file and swap it in, so a crash mid-write can't leave a broken/empty config
+		var tempPath = filePath + ".tmp";
+		await using (var stream = new FileStream(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
 		{
 			await JsonSerializer.SerializeAsync(stream, settings, _serializerOptions, cancellationToken);
 		}
-		
+
+		File.Move(tempPath, filePath, overwrite: true);
+
 		SettingsSaved?.Invoke(settings);
 	}
 
 	public async Task<AppSettings> LoadAsync(string filePath, CancellationToken cancellationToken = default)
 	{
-		if (string.IsNullOrWhiteSpace(filePath))
-			throw new ArgumentNullException(nameof(filePath));
+		ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
 
 		if (!File.Exists(filePath))
 			return new();
 
-		using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+		await using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 		return await JsonSerializer.DeserializeAsync<AppSettings>(stream, _serializerOptions, cancellationToken)
 			?? new();
 	}

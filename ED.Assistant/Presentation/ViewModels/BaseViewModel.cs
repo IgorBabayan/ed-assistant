@@ -21,8 +21,9 @@ public abstract class BaseViewModel : ObservableObject, IDisposable
 		if (_disposed)
 			return;
 
-		OnDispose();
 		_disposed = true;
+		OnDispose();
+		GC.SuppressFinalize(this);
 	}
 }
 

@@ -60,7 +60,6 @@ static class ServiceCollectionExtensions
 			.AddSingleton<SystemViewModel>()
 			.AddSingleton<ExobiologyViewModel>()
 			.AddSingleton<JournalViewModel>()
-			.AddSingleton<MaterialItemViewModel>()
 			.AddSingleton<MaterialViewModel>()
 			.AddSingleton<EvaluatorViewModel>()
 			.AddSingleton<ShipLockerViewModel>();

@@ -64,7 +64,7 @@ public partial class SettingsViewModel : BaseViewModel
 	[RelayCommand]
 	private async Task OpenFolder(Window? owner)
 	{
-		var folder = await _folderPickerService.PickFolderAsync("Select Elite Dangerous log folder");
+		var folder = await _folderPickerService.PickFolderAsync("Select Elite Dangerous log folder", owner);
 		if (folder is not null)
 		{
 			LogFolder = folder;

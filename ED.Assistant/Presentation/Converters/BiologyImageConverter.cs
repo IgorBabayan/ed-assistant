@@ -4,7 +4,6 @@ using System.Globalization;
 using Avalonia.Data.Converters;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using ED.Assistant.Presentation.ViewModels.System;
 
 namespace ED.Assistant.Presentation.Converters;
 
@@ -25,15 +24,11 @@ public sealed class BiologyImageConverter : IValueConverter
         var path = $"avares://ED.Assistant/Assets/Biology/{folder}/{id}.webp";
         var uri = new Uri(path);
 
-        Debug.WriteLine($"[BIO IMAGE] Trying: {uri}");
-
         if (!AssetLoader.Exists(uri))
         {
             Debug.WriteLine($"[BIO IMAGE] NOT FOUND: {uri}");
             return null;
         }
-
-        Debug.WriteLine($"[BIO IMAGE] FOUND: {uri}");
 
         return Cache.GetOrAdd(
             path,

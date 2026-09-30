@@ -13,7 +13,7 @@ public partial class App : Avalonia.Application
 {
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
-    public override async void OnFrameworkInitializationCompleted()
+    public override void OnFrameworkInitializationCompleted()
     {
         // Create service collection and register services from ED.Assistant.Data
         var services = new ServiceCollection();
@@ -22,9 +22,9 @@ public partial class App : Avalonia.Application
 			.RegisterViewModels()
             .RegisterWindows()
             .AddMemoryCache()
-            .AddDbContext<AppDbContext>((provider, options) =>
+            .AddDbContext<AppDbContext>((sp, options) =>
 			{
-				var dbPathProvider = provider.GetRequiredService<IDbPathProvider>();
+                var dbPathProvider = sp.GetRequiredService<IDbPathProvider>();
 				options.UseSqlite($"Data Source={dbPathProvider.GetDatabasePath()}");
 			})
 			.RegisterDbServices();
@@ -34,10 +34,13 @@ public partial class App : Avalonia.Application
 
 		if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            // Synchronous on purpose: MainWindow must be assigned before this method returns,
+            // otherwise the classic desktop lifetime starts without a window (async void also
+            // turned any migration exception into an unobserved crash).
 	        using (var scope = provider.CreateScope())
 	        {
 		        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-		        await dbContext.Database.MigrateAsync();
+                dbContext.Database.Migrate();
 	        }
 
 			// Resolve the MainWindowViewModel from DI and assign as DataContext
