@@ -1,4 +1,6 @@
-﻿namespace ED.Assistant.Domain.Events;
+﻿using ED.Assistant.Domain.Types;
+
+namespace ED.Assistant.Domain.Events;
 
 public sealed class JournalState
 {
@@ -18,6 +20,8 @@ public sealed class JournalState
 
     public List<ScanOrganicEvent> Organics { get; } = [];
     public List<EvaluatorChange> PendingEvaluatorChanges { get; } = [];
+    
+    public List<BioAlert> PendingAlerts { get; } = [];
 
     public Dictionary<int, ScanEvent> Scans { get; } = new();
     public Dictionary<int, SAASignalsFoundEvent> SAASignals { get; } = new();

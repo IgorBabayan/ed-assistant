@@ -42,6 +42,7 @@
 		<StyleInclude Source="avares://ED.Assistant/Presentation/Styles/TreeView.axaml" />
 		<StyleInclude Source="avares://ED.Assistant/Presentation/Styles/ComboBox.axaml" />
 		<StyleInclude Source="avares://ED.Assistant/Presentation/Styles/Dock.axaml"/>
+		<StyleInclude Source="avares://ED.Assistant/Presentation/Styles/Toast.axaml"/>
 	</Application.Styles>
 
 	<Application.DataTemplates>

@@ -5,6 +5,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:ED.Assistant.Presentation.ViewModels.Shell"
 		xmlns:conv="using:ED.Assistant.Presentation.Converters"
+		xmlns:notifVm="clr-namespace:ED.Assistant.Presentation.ViewModels.Notifications"
 		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 		x:Class="ED.Assistant.Presentation.Views.Shell.MainWindow"
 		x:DataType="vm:MainWindowViewModel"
@@ -13,10 +14,6 @@
 		Title="ED Assistant"
 		WindowDecorations="None"
 		WindowStartupLocation="CenterScreen">
-
-	<!-- No Design.DataContext: MainWindowViewModel is built by DI (see App.axaml.cs) and has no
-	     parameterless constructor. x:DataType above is enough for compiled bindings. -->
-
 	<Border Background="{StaticResource BackgroundBrush}">
 		<Grid RowDefinitions="36,*,36">
 
@@ -147,6 +144,51 @@
 				                Content="{Binding NavigationStore.CurrentViewModel}"/>
 			</DockPanel>
 
+			<!-- Notifications -->
+			<ItemsControl Grid.Row="1"
+			              ItemsSource="{Binding Notifications.Toasts}"
+			              HorizontalAlignment="Right"
+			              VerticalAlignment="Bottom"
+			              Width="340"
+			              Margin="16"
+			              ZIndex="100">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<StackPanel Spacing="8"/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+
+				<ItemsControl.ItemTemplate>
+					<DataTemplate x:DataType="notifVm:ToastViewModel">
+						<Border Classes="toast">
+							<Grid ColumnDefinitions="Auto,*,Auto">
+								<materialIcons:MaterialIcon Kind="{Binding Icon}"
+								                            Width="22" Height="22"
+								                            VerticalAlignment="Top"
+								                            Foreground="{StaticResource PrimaryAccentBrush}"/>
+
+								<StackPanel Grid.Column="1" Margin="10,0" Spacing="2">
+									<TextBlock Text="{Binding Title}"
+									           FontWeight="SemiBold"
+									           Foreground="{StaticResource PrimaryTextBrush}"/>
+									<TextBlock Text="{Binding Message}"
+									           FontSize="12"
+									           TextWrapping="Wrap"
+									           Foreground="#7D8DA6"/>
+								</StackPanel>
+
+								<Button Grid.Column="2"
+								        Classes="window-button"
+								        VerticalAlignment="Top"
+								        Command="{Binding CloseCommand}">
+									<materialIcons:MaterialIcon Kind="Close" Width="14" Height="14"/>
+								</Button>
+							</Grid>
+						</Border>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+			
 			<!-- Status bar -->
 			<Border Grid.Row="2">
 				<Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="{DynamicResource Spacing15}">
