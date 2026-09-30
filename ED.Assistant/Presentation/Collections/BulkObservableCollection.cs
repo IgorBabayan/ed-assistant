@@ -21,10 +21,6 @@ internal static class BulkObservableCollectionEventArgs
 /// </summary>
 public class BulkObservableCollection<T> : ObservableCollection<T>
 {
-    public BulkObservableCollection() { }
-
-    public BulkObservableCollection(IEnumerable<T> items) : base(items) { }
-
     public void ReplaceAll(IEnumerable<T> items)
     {
         ArgumentNullException.ThrowIfNull(items);

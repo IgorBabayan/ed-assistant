@@ -21,6 +21,15 @@ resharper_member_can_be_private_global_highlighting = none
 [Domain/Enums/**.cs]
 resharper_unused_member_global_highlighting = none
 
+# Journal/game vocabulary keeps the game's spelling (FSDJump, SAASignalsFound, USSType, MassEM,
+# CQC, EliteIII...): these names mirror the journal and are matched by the JSON attributes
+[Domain/{Events,DTO,Enums}/**.cs]
+resharper_inconsistent_naming_highlighting = none
+
+# Smart-enum value objects: every known value is declared, whether or not the app compares against it yet
+[Domain/Types/**.cs]
+resharper_unused_member_global_highlighting = none
+
 # EF Core entities and the JSON settings file: setters are used by EF / the serializer
 [{Data/Biology,Data/Evaluator,Domain/Config}/**.cs]
 resharper_property_can_be_made_init_only_global_highlighting = none

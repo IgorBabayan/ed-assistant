@@ -8,7 +8,7 @@ public partial class MaterialViewModel : LoadableViewModel
 	// The Materials event is only written on login, so most updates can be skipped
 	private volatile MaterialsEvent? _lastMaterials;
 
-	public BulkObservableCollection<MaterialItemViewModel> Materials { get; } = [];
+	private BulkObservableCollection<MaterialItemViewModel> Materials { get; } = [];
 	public BulkObservableCollection<MaterialItemViewModel> FilteredMaterials { get; } = [];
 	public BulkObservableCollection<MaterialSummaryViewModel> MaterialSummaries { get; } = [];
 

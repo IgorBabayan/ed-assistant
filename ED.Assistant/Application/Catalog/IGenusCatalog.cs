@@ -10,5 +10,7 @@ public interface IGenusCatalog
     Task<IReadOnlyList<Genus>> GetAllAsync(CancellationToken cancellationToken = default);
 
     /// <summary>Genera keyed by codex name (case-insensitive).</summary>
+    // Catalog API kept alongside GetAllAsync; no caller in the app yet
+    // ReSharper disable once UnusedMember.Global
     Task<IReadOnlyDictionary<string, Genus>> GetByCodexNameAsync(CancellationToken cancellationToken = default);
 }

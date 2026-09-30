@@ -9,7 +9,7 @@ internal static partial class DashboardSignalsBuilder
 
 	private static readonly string[] SystemTagOrder =
 	[
-		SignalTags.USS,
+		SignalTags.Uss,
 		SignalTags.Combat,
 		SignalTags.Resource,
 		SignalTags.Station,
@@ -127,7 +127,7 @@ internal static partial class DashboardSignalsBuilder
 			var tag = SystemTag(signal);
 			var name = Text(signal.SignalName, signal.SignalNameId);
 
-			if (tag == SignalTags.USS)
+			if (tag == SignalTags.Uss)
 			{
 				var ussType = Text(signal.USSType, signal.USSTypeId);
 				if (!string.IsNullOrWhiteSpace(ussType) &&
@@ -148,7 +148,7 @@ internal static partial class DashboardSignalsBuilder
 				Tag = tag,
 				Name = name,
 				Detail = string.Join(", ", details),
-				ThreatLevel = tag is SignalTags.USS or SignalTags.Combat ? signal.ThreatLevel : null
+				ThreatLevel = tag is SignalTags.Uss or SignalTags.Combat ? signal.ThreatLevel : null
 			});
 		}
 
@@ -190,7 +190,7 @@ internal static partial class DashboardSignalsBuilder
 
 		return kind switch
 		{
-			"USS" => SignalTags.USS,
+			"USS" => SignalTags.Uss,
 			"Combat" => SignalTags.Combat,
 			"ResourceExtraction" => SignalTags.Resource,
 			"FleetCarrier" or "SquadronCarrier" => SignalTags.Carrier,
@@ -203,7 +203,7 @@ internal static partial class DashboardSignalsBuilder
 
 			// Older journals have no SignalType, fall back to the name.
 			_ when signal.IsStation => SignalTags.Station,
-			_ when id.StartsWith("$USS", StringComparison.OrdinalIgnoreCase) => SignalTags.USS,
+			_ when id.StartsWith("$USS", StringComparison.OrdinalIgnoreCase) => SignalTags.Uss,
 			_ when id.StartsWith("$Warzone", StringComparison.OrdinalIgnoreCase) => SignalTags.Combat,
 			_ => SignalTags.Signal
 		};

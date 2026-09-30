@@ -17,7 +17,7 @@ internal sealed class DbPathProvider : IDbPathProvider
 		return IOPath.Combine(directory, DbFileName);
 	}
 
-	public string GetDatabaseDirectory()
+	private static string GetDatabaseDirectory()
 	{
 		if (OperatingSystem.IsWindows())
 		{

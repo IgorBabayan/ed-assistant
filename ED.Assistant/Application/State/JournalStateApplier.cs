@@ -27,8 +27,9 @@ internal class JournalStateApplier : IJournalStateApplier
 	public async Task ApplyFromLinesAsync(JournalState state, IAsyncEnumerable<string> lines,
 		CancellationToken cancellationToken = default)
 	{
-		var dispatcher = new JournalEventDispatcher();
-		var aggregator = new JournalStateAggregator(dispatcher);
+		// Used through their interfaces: the applier only depends on the dispatch/aggregate contracts
+		IJournalEventDispatcher dispatcher = new JournalEventDispatcher();
+		IJournalStateAggregator aggregator = new JournalStateAggregator(dispatcher);
 
 		dispatcher.OnAny(e =>
 		{

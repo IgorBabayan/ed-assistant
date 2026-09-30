@@ -70,7 +70,7 @@ internal sealed class JournalWatchService : IJournalWatchService, IAsyncDisposab
 		changes.Writer.TryWrite(true);
 	}
 
-	public void Stop()
+	private void Stop()
 	{
 		_watcher?.Dispose();
 		_watcher = null;
@@ -161,6 +161,8 @@ internal sealed class JournalWatchService : IJournalWatchService, IAsyncDisposab
 		return nextPosition;
 	}
 
+	// Internal (not private) so ED.Assistant.Tests can exercise partial-line handling directly
+	// ReSharper disable once MemberCanBePrivate.Global
 	internal static async Task<(List<string> Lines, long Position)> ReadCompleteLinesAsync(
 		string path, long position, CancellationToken cancellationToken = default)
 	{

@@ -140,6 +140,8 @@ internal enum ElectricaeRule
 public enum NebulaRuleType
 {
     All = 1,
+    // Part of the rule catalog's vocabulary even though no seeded rule uses it yet
+    // ReSharper disable once UnusedMember.Global
     Large = 2
 }
 

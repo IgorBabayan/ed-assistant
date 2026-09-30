@@ -14,8 +14,6 @@ public class SystemBodyNodeViewModel : BaseViewModel
 
 	public ObservableCollection<SystemBodyNodeViewModel> Children { get; } = [];
 
-	public bool HasScan => Scan is not null;
-
 	public bool IsStar => !string.IsNullOrWhiteSpace(Scan?.StarType);
 
 	public bool IsPlanet => !string.IsNullOrWhiteSpace(Scan?.PlanetClass);

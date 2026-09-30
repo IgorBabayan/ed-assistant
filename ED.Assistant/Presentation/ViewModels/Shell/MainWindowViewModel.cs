@@ -35,7 +35,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 
 	private static class DefaultState
 	{
-		public const string CMDR = "o7, Commander";
+		public const string Cmdr = "o7, Commander";
 		public const string Ship = "Ship not found";
 		public const string Status = "Ready";
 		public const string LogFile = "File not loaded";
@@ -44,7 +44,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	}
 
 	[ObservableProperty]
-	public partial string CMDR { get; set; } = DefaultState.CMDR;
+	public partial string Cmdr { get; set; } = DefaultState.Cmdr;
 
 	[ObservableProperty]
 	public partial string Ship { get; set; } = DefaultState.Ship;
@@ -140,7 +140,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 
 		RunOnUIThread(() =>
 		{
-			CMDR = cmdr;
+			Cmdr = cmdr;
 			Ship = ship;
 			LogFile = logFile;
 			LastEvent = lastEvent;

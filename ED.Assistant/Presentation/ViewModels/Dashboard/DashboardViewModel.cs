@@ -24,16 +24,16 @@ public partial class DashboardViewModel : LoadableViewModel
 	private RankEvent? _lastRanks;
 
 	[ObservableProperty]
-	public partial CommanderEvent? Commander { get; set; }
+	public partial CommanderEvent? Commander { get; private set; }
 
 	[ObservableProperty]
-	public partial LoadGameEvent? LoadGame { get; set; }
+	public partial LoadGameEvent? LoadGame { get; private set; }
 
 	[ObservableProperty]
 	public partial ObservableCollection<RankDTO>? Ranks { get; set; } = [];
 
 	[ObservableProperty]
-	public partial FSDJumpEvent? CurrentSystem { get; set; }
+	public partial FSDJumpEvent? CurrentSystem { get; private set; }
 
 	public BulkObservableCollection<DashboardSignalViewModel> Signals { get; } = [];
 

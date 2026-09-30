@@ -32,9 +32,6 @@ public sealed partial class JournalViewModel : LoadableViewModel
 	[ObservableProperty]
 	public partial bool IsFollowing { get; set; } = true;
 
-	[ObservableProperty]
-	public partial string? FileName { get; set; }
-
 	public bool HasSearchText => !string.IsNullOrEmpty(SearchText);
 
 	public bool HasEntries => Entries.Count > 0;
@@ -67,7 +64,7 @@ public sealed partial class JournalViewModel : LoadableViewModel
 		if (batch.Count > 0)
 			_lastSequence = batch[^1].Sequence;
 
-		await Dispatcher.UIThread.InvokeAsync(() => Apply(rows, isReset, state.FileName, log.Capacity));
+		await Dispatcher.UIThread.InvokeAsync(() => Apply(rows, isReset, log.Capacity));
 	}
 
 	[RelayCommand]
@@ -83,10 +80,8 @@ public sealed partial class JournalViewModel : LoadableViewModel
 
 	partial void OnEntriesChanged(ObservableCollection<JournalEntryViewModel> value) => RaiseCounters();
 
-	private void Apply(IReadOnlyList<JournalEntryViewModel> rows, bool isReset, string? fileName, int capacity)
+	private void Apply(IReadOnlyList<JournalEntryViewModel> rows, bool isReset, int capacity)
 	{
-		FileName = fileName;
-
 		if (isReset)
 		{
 			_allEntries.Clear();

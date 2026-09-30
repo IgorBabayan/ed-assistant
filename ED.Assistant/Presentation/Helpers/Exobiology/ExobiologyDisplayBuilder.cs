@@ -79,8 +79,6 @@ internal static class ExobiologyDisplayBuilder
                     Name = entry?.Name ??
                            Text(latest.Species, latest.SpeciesId),
 
-                    Variant = Text(latest.Variant, "—"),
-
                     CollectedCount = SampleCount(events),
 
                     BaseValue = entry is null

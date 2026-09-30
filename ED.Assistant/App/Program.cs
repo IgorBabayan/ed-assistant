@@ -21,7 +21,9 @@ internal static class Program
         }
     }
 
-    // Avalonia configuration, don't remove; also used by visual designer.
+    // Avalonia configuration, don't remove; also used by visual designer,
+    // which finds it by reflection, so it has to stay public.
+    // ReSharper disable once MemberCanBePrivate.Global
     public static AppBuilder BuildAvaloniaApp()
     {
         var builder = AppBuilder.Configure<App>()

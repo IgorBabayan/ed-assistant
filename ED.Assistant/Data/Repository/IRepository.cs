@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace ED.Assistant.Data.Repository;
 
+// Generic repository contract: not every operation has a caller yet
+// ReSharper disable UnusedMember.Global
 public interface IRepository<TEntity>
     where TEntity : class
 {
@@ -21,3 +23,4 @@ public interface IRepository<TEntity>
     
     ValueTask<EntityEntry<TEntity>> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
 }
+// ReSharper restore UnusedMember.Global

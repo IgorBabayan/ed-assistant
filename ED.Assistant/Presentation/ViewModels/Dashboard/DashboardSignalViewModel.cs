@@ -44,7 +44,7 @@ public static class SignalTags
     public const string Other = nameof(Other);
 
     // System signals
-    public const string USS = nameof(USS);
+    public const string Uss = "USS";
     public const string Combat = nameof(Combat);
     public const string Resource = nameof(Resource);
     public const string Station = nameof(Station);

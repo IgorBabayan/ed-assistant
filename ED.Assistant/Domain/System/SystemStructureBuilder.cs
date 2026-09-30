@@ -10,10 +10,8 @@ internal sealed class SystemStructureBuilder : ISystemStructureBuilder
 
 		if (state.CurrentSystemAddress is not { } currentSystemAddress)
 			return new SystemStructure();
-		var structure = new SystemStructure
-		{
-			Name = state.Location?.StarSystem ?? state.FSDJump?.StarSystem ?? string.Empty
-		};
+
+		var structure = new SystemStructure();
 
 		var scans = state.Scans.Values
 			.Where(x => x.SystemAddress == currentSystemAddress)

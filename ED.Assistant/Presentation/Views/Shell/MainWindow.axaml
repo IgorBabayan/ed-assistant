@@ -39,7 +39,7 @@
 								VerticalAlignment="Center"
 								HorizontalAlignment="Center"
 								Spacing="{DynamicResource Spacing5}">
-						<TextBlock Text="{Binding CMDR}" />
+						<TextBlock Text="{Binding Cmdr}" />
 						<TextBlock Text="/" />
 						<TextBlock Text="{Binding Ship}" />
 						<TextBlock Text="/" />

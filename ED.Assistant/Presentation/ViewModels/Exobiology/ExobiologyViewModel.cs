@@ -25,7 +25,7 @@ public sealed partial class ExobiologyViewModel : LoadableViewModel
 	public bool HasBiologicalSignals => Planets.Count > 0;
 	
 	[ObservableProperty]
-	public partial bool HideExcludedSignals { get; set; }
+	public partial bool HideExcludedSignals { get; private set; }
 
 	public ExobiologyViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
 		IMemoryCache memoryCache, IGenusCatalog genusCatalog, ISettingsStorage settingsStorage, IPathFinder pathFinder)

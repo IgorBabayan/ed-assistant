@@ -3,13 +3,6 @@ using Avalonia.Threading;
 
 namespace ED.Assistant.Presentation.ViewModels;
 
-public interface INavigationAware
-{
-	Task OnNavigatedToAsync(CancellationToken cancellationToken = default);
-
-	void OnNavigatedFrom();
-}
-
 public abstract class BaseViewModel : ObservableObject, IDisposable
 {
 	private bool _disposed;
@@ -35,7 +28,7 @@ public abstract class BaseViewModel : ObservableObject, IDisposable
 /// Updates are coalesced: while one runs, only the newest pending state is kept.
 /// </para>
 /// </summary>
-public abstract partial class LoadableViewModel : BaseViewModel, INavigationAware
+public abstract partial class LoadableViewModel : BaseViewModel
 {
 	protected IJournalLoaderService JournalLoader { get; }
 
@@ -50,7 +43,9 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 	private volatile bool _isDirty = true;
 
 	/// <summary>True while an update is running. Always changed on the UI thread.</summary>
+	/// <remarks>Not bound by any view yet; kept for a loading indicator and for tests.</remarks>
 	[ObservableProperty]
+	// ReSharper disable once UnusedMember.Global
 	public partial bool IsActivating { get; set; }
 
 	protected LoadableViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
@@ -74,9 +69,6 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 	/// return false and call <see cref="Invalidate"/> when their own source changes.
 	/// </summary>
 	protected virtual bool ReactsToJournalChanges => true;
-
-	/// <summary>True while this view model is the navigation target.</summary>
-	protected bool IsCurrent => _isCurrent;
 
 	protected virtual void UpdateFromState(JournalState state) { }
 
@@ -118,7 +110,7 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 	/// <summary>Refreshes now if visible, otherwise on the next navigation.</summary>
 	protected void Invalidate() => RequestUpdate(_stateStore.CurrentState);
 
-	protected async Task ActivateAsync(JournalState state,
+	private async Task ActivateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
 	{
 		lock (_activationLock)

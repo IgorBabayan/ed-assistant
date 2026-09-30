@@ -9,7 +9,7 @@ public partial class ShipLockerViewModel : LoadableViewModel
 	// Replaced only when a new ShipLocker line arrives; skip rebuilds for every other line
 	private volatile ShipLockerEvent? _lastShipLocker;
 
-	public BulkObservableCollection<MaterialItemViewModel> Materials { get; } = [];
+	private BulkObservableCollection<MaterialItemViewModel> Materials { get; } = [];
 	public BulkObservableCollection<MaterialItemViewModel> FilteredMaterials { get; } = [];
 	public BulkObservableCollection<MaterialSummaryViewModel> MaterialSummaries { get; } = [];
 
