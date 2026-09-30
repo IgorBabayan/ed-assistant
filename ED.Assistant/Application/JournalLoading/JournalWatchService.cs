@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Channels;
 using ED.Assistant.Application.Evaluation;
+using ED.Assistant.Application.Notifications;
 
 namespace ED.Assistant.Application.JournalLoading;
 
@@ -12,17 +13,21 @@ internal sealed class JournalWatchService : IJournalWatchService, IAsyncDisposab
 	private readonly IJournalStateStore _stateStore;
 	private readonly IJournalStateApplier _journalStateApplier;
 	private readonly IEvaluatorSyncService _evaluatorSync;
+	private readonly BioSignalAlerter _alertService;
+	
 	private FileSystemWatcher? _watcher;
 	private CancellationTokenSource? _cancellation;
 	private Task _worker = Task.CompletedTask;
+	
 	public bool IsRunning => _watcher is not null;
 
 	public JournalWatchService(IJournalStateStore stateStore, IJournalStateApplier journalStateApplier,
-		IEvaluatorSyncService evaluatorSync)
+		IEvaluatorSyncService evaluatorSync, BioSignalAlerter bioAlerter, BioSignalAlerter alertService)
 	{
 		_stateStore = stateStore;
 		_journalStateApplier = journalStateApplier;
 		_evaluatorSync = evaluatorSync;
+		_alertService = alertService;
 	}
 
 	public async Task StartAsync(string logFolder, CancellationToken cancellationToken = default)
@@ -144,6 +149,11 @@ internal sealed class JournalWatchService : IJournalWatchService, IAsyncDisposab
 		var state = _stateStore.CurrentState.CreateSnapshot();
 		state.FileName = IOPath.GetFileName(path);
 		await _journalStateApplier.ApplyFromLinesAsync(state, AsAsyncLines(lines, cancellationToken), cancellationToken);
+		
+		_alertService.Publish(state.PendingAlerts);
+		state.PendingAlerts.Clear();
+
+		
 		try
 		{
 			await _evaluatorSync.SyncAsync(state, cancellationToken);

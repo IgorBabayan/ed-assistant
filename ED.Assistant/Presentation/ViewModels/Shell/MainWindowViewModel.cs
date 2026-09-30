@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using ED.Assistant.Application.Evaluation;
 using ED.Assistant.Application.Linux;
+using ED.Assistant.Application.Notifications;
 using ED.Assistant.Domain.Config;
 using ED.Assistant.Presentation.ViewModels.Evaluator;
 using ED.Assistant.Presentation.ViewModels.Import;
@@ -70,6 +71,8 @@ public partial class MainWindowViewModel : LoadableViewModel
 	[NotifyPropertyChangedFor(nameof(IsDockBottom), nameof(IsDockLeft), nameof(IsDockRight))]
 	public partial DockPosition DockPosition { get; set; } = DockPosition.Bottom;
 
+	public InAppNotificationService Notifications { get; }
+
 	public bool IsDockBottom => DockPosition == DockPosition.Bottom;
 	public bool IsDockLeft => DockPosition == DockPosition.Left;
 	public bool IsDockRight => DockPosition == DockPosition.Right;
@@ -91,10 +94,11 @@ public partial class MainWindowViewModel : LoadableViewModel
 		INavigationService navigationService, IJournalLoaderService journalLoader,
 		ISettingsStorage settingsStorage, IPathFinder pathFinder,
 		IJournalWatchService journalWatchService, IDesktopService desktopService, IFolderPickerService folderPickerService,
-		IEvaluatorImportService evaluatorImportService) 
+		IEvaluatorImportService evaluatorImportService, InAppNotificationService notificationService) 
 			: base(journalLoader, stateStore, memoryCache)
 	{
 		NavigationStore = navigationStore;
+		Notifications = notificationService;
 
 		_journalWatchService = journalWatchService;
 		_desktopService = desktopService;
@@ -166,7 +170,6 @@ public partial class MainWindowViewModel : LoadableViewModel
 		foreach (var item in DockItems.OfType<DockItemViewModel>())
 			item.IsActive = item.TargetViewModel.IsInstanceOfType(current);
 	}
-
 
 	[RelayCommand]
 	private async Task NavigateToDashboardView(CancellationToken cancellationToken = default)

@@ -6,10 +6,8 @@ namespace ED.Assistant.Application.State;
 
 internal class JournalStateApplier : IJournalStateApplier
 {
-	/// <summary>
-	/// Snapshot-style or high-volume events that would only push
-	/// meaningful entries out of the recent events feed.
-	/// </summary>
+	private const string BIOLOGICAL_SIGNAL = "$SAA_SignalType_Biological;";
+	
 	private static readonly HashSet<string> NotRecentEvents = new(StringComparer.OrdinalIgnoreCase)
 	{
 		CommanderEvent.EventName,
@@ -23,6 +21,10 @@ internal class JournalStateApplier : IJournalStateApplier
 	public Task ApplyFromFilesAsync(JournalState state, IEnumerable<string> filePaths,
 		CancellationToken cancellationToken = default) => ApplyFromLinesAsync(state,
 			ReadLinesFromFilesAsync(filePaths, cancellationToken), cancellationToken);
+	
+	private static int BioCount(IEnumerable<SignalItem>? signals) =>
+		signals?.Where(s => string.Equals(s.TypeId, BIOLOGICAL_SIGNAL, StringComparison.OrdinalIgnoreCase))
+			.Sum(s => s.Count) ?? 0;
 
 	public async Task ApplyFromLinesAsync(JournalState state, IAsyncEnumerable<string> lines,
 		CancellationToken cancellationToken = default)
@@ -92,7 +94,14 @@ internal class JournalStateApplier : IJournalStateApplier
 
 		aggregator.RegisterByKey(
 			FSSBodySignalsEvent.EventName,
-			e => e.BodyId,
+			e =>
+			{
+				var bio = BioCount(e.Signals);
+				if (bio > 0)
+					state.PendingAlerts.Add(new BioAlert(e.SystemAddress, e.BodyId, e.BodyName, bio, null));
+				
+				return e.BodyId;
+			},
 			state.FSSSignals);
 
 		aggregator.RegisterByKey(
@@ -102,7 +111,21 @@ internal class JournalStateApplier : IJournalStateApplier
 
 		aggregator.RegisterByKey(
 			SAASignalsFoundEvent.EventName,
-			e => e.BodyId,
+			e =>
+			{
+				var bio = BioCount(e.Signals);
+				if (bio > 0)
+				{
+					var genera = e.Genuses?
+						.Select(g => string.IsNullOrWhiteSpace(g.Genus) ? g.GenusId : g.Genus)
+						.Distinct()
+						.ToArray();
+
+					state.PendingAlerts.Add(new BioAlert(e.SystemAddress, e.BodyId, e.BodyName, bio, genera));
+				}
+				
+				return e.BodyId;
+			},
 			state.SAASignals);
 
 		aggregator.RegisterByKey<FSSSignalDiscoveredEvent, string>(

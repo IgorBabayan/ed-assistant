@@ -3,6 +3,7 @@ using ED.Assistant.Application.Dialog;
 using ED.Assistant.Application.Evaluation;
 using ED.Assistant.Application.Linux;
 using ED.Assistant.Application.Navigation;
+using ED.Assistant.Application.Notifications;
 using ED.Assistant.Application.Path;
 using ED.Assistant.Application.Settings;
 using ED.Assistant.Application.Storage;
@@ -84,6 +85,10 @@ internal static class ServiceCollectionExtensions
 				.AddSingleton<IGenusCatalog, GenusCatalog>()
 				.AddSingleton<IEvaluatorSyncService, EvaluatorSyncService>()
 				.AddSingleton<IEvaluatorImportService, EvaluatorImportService>()
+				.AddSingleton<InAppNotificationService>()
+				.AddSingleton(DesktopNotifierFactory.Create())
+				.AddSingleton<AlertService>()
+				.AddSingleton<BioSignalAlerter>()
 				.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
 
 			if (OperatingSystem.IsLinux())
