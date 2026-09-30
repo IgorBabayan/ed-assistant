@@ -73,7 +73,7 @@ public sealed partial class EvaluatorViewModel : LoadableViewModel
 			Items.ReplaceAll(items);
 
 			UnsoldCount = items.Length;
-			UnsoldValue = total > 0 ? total.ToMillions() : "—";
+			UnsoldValue = total > 0 ? total.ToCompact() : "—";
 			FirstFootStepCount = firstFootSteps;
 
 			OnPropertyChanged(nameof(HasItems));
