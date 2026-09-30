@@ -11,15 +11,12 @@ permissions:
 env:
   PROJECT: ED.Assistant/ED.Assistant.csproj
   APP_EXE: ED.Assistant
-  APP_NAME: ED Assistant
   ICON_PNG: ED.Assistant/Assets/logo.png   # 256x256 PNG - add this to the repo
-  BUNDLE_ID: com.edassistant.app           # macOS bundle identifier - change if you like
-  VERSION: 0.1.${{ github.run_number }}
 
 jobs:
-  # ───────────────────────────── Linux (AppImage) ─────────────────────────────
-  linux:
+  build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,10 +26,35 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # Reads <VersionPrefix> (e.g. 1.0) from the .csproj and appends the run number -> 1.0.42
+      - name: Compute version
+        run: |
+          PREFIX=$(grep -oP '(?<=<VersionPrefix>)[^<]+' $PROJECT)
+          if [ -z "$PREFIX" ]; then
+            echo "::error::<VersionPrefix> not found in $PROJECT"
+            exit 1
+          fi
+          VERSION="$PREFIX.${{ github.run_number }}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Building version $VERSION"
+
+      - name: Publish Windows (win-x64)
+        run: >
+          dotnet publish $PROJECT -c Release -r win-x64 --self-contained true
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:Version=$VERSION
+          -o publish/win-x64
+
       - name: Publish Linux (linux-x64)
         run: >
           dotnet publish $PROJECT -c Release -r linux-x64 --self-contained true
+          -p:Version=$VERSION
           -o publish/linux-x64
+
+      - name: Package Windows zip
+        run: |
+          cd publish/win-x64
+          zip -r ../../ED.Assistant-$VERSION-win-x64.zip .
 
       - name: Build AppImage
         run: |
@@ -52,7 +74,7 @@ jobs:
           EOF
           sed -i 's/^ *//' $APPDIR/AppRun
 
-          cat > $APPDIR/ed-assistant.desktop << 'EOF'
+          cat > $APPDIR/ed-assistant.desktop << EOF
           [Desktop Entry]
           Type=Application
           Name=ED Assistant
@@ -60,6 +82,7 @@ jobs:
           Icon=ed-assistant
           Categories=Utility;Game;
           Terminal=false
+          X-AppImage-Version=$VERSION
           EOF
           sed -i 's/^ *//' $APPDIR/ed-assistant.desktop
 
@@ -67,164 +90,26 @@ jobs:
 
           wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool-x86_64.AppImage
-          ARCH=x86_64 ./appimagetool-x86_64.AppImage --appimage-extract-and-run \
-            $APPDIR ED.Assistant-x86_64.AppImage
+          ARCH=x86_64 VERSION=$VERSION ./appimagetool-x86_64.AppImage --appimage-extract-and-run \
+            $APPDIR ED.Assistant-$VERSION-x86_64.AppImage
 
-      - name: Upload artifact
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ED.Assistant-linux-${{ github.run_number }}
-          path: ED.Assistant-x86_64.AppImage
-
-  # ─────────────────────── Windows (portable zip + installer) ───────────────────────
-  windows:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Publish Windows (win-x64)
-        shell: bash
-        run: >
-          dotnet publish $PROJECT -c Release -r win-x64 --self-contained true
-          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
-          -o publish/win-x64
-
-      - name: Package portable zip
-        shell: pwsh
-        run: Compress-Archive -Path publish/win-x64/* -DestinationPath ED.Assistant-win-x64.zip
-
-      - name: Install Inno Setup
-        shell: pwsh
-        run: choco install innosetup --no-progress -y
-
-      - name: Build installer
-        shell: pwsh
-        run: |
-          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" `
-            "/DAppVersion=$env:VERSION" `
-            "/DPublishDir=$pwd\publish\win-x64" `
-            "/DOutputDir=$pwd" `
-            installer\ED.Assistant.iss
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ED.Assistant-windows-${{ github.run_number }}
+          name: ED.Assistant-${{ env.VERSION }}
           path: |
-            ED.Assistant-win-x64.zip
-            ED.Assistant-win-x64-setup.exe
-
-  # ─────────────────────────────── macOS (.dmg) ───────────────────────────────
-  macos:
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        rid: [osx-arm64, osx-x64]   # Apple Silicon + Intel
-    env:
-      RID: ${{ matrix.rid }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Publish macOS (${{ matrix.rid }})
-        run: >
-          dotnet publish $PROJECT -c Release -r $RID --self-contained true
-          -o publish/$RID
-
-      - name: Build .app bundle
-        run: |
-          APP="build/$APP_NAME.app"
-          mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-          cp -R "publish/$RID/." "$APP/Contents/MacOS/"
-          chmod +x "$APP/Contents/MacOS/$APP_EXE"
-
-          # Icon: PNG -> .icns
-          ICONSET=build/AppIcon.iconset
-          mkdir -p "$ICONSET"
-          for s in 16 32 128 256; do
-            sips -z $s $s "$ICON_PNG" --out "$ICONSET/icon_${s}x${s}.png" > /dev/null
-          done
-          sips -z 32 32   "$ICON_PNG" --out "$ICONSET/icon_16x16@2x.png"   > /dev/null
-          sips -z 64 64   "$ICON_PNG" --out "$ICONSET/icon_32x32@2x.png"   > /dev/null
-          sips -z 256 256 "$ICON_PNG" --out "$ICONSET/icon_128x128@2x.png" > /dev/null
-          iconutil -c icns "$ICONSET" -o "$APP/Contents/Resources/AppIcon.icns"
-
-          cat > "$APP/Contents/Info.plist" << EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>CFBundleName</key><string>${APP_NAME}</string>
-            <key>CFBundleDisplayName</key><string>${APP_NAME}</string>
-            <key>CFBundleIdentifier</key><string>${BUNDLE_ID}</string>
-            <key>CFBundleVersion</key><string>${VERSION}</string>
-            <key>CFBundleShortVersionString</key><string>${VERSION}</string>
-            <key>CFBundleExecutable</key><string>${APP_EXE}</string>
-            <key>CFBundleIconFile</key><string>AppIcon</string>
-            <key>CFBundlePackageType</key><string>APPL</string>
-            <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
-            <key>NSHighResolutionCapable</key><true/>
-            <key>NSPrincipalClass</key><string>NSApplication</string>
-          </dict>
-          </plist>
-          EOF
-
-          # Ad-hoc signature (no Apple Developer account needed; required on Apple Silicon)
-          codesign --force --deep --sign - "$APP"
-
-      - name: Create DMG
-        run: |
-          STAGING=build/dmg
-          mkdir -p "$STAGING"
-          cp -R "build/$APP_NAME.app" "$STAGING/"
-          ln -s /Applications "$STAGING/Applications"   # drag-to-install shortcut
-
-          DMG="ED.Assistant-$RID.dmg"
-          # hdiutil occasionally fails with "Resource busy" on CI, so retry
-          for i in 1 2 3; do
-            hdiutil create -volname "$APP_NAME" -srcfolder "$STAGING" -ov -format UDZO "$DMG" && break
-            echo "hdiutil failed, retrying ($i)..."
-            sleep 5
-          done
-          test -f "$DMG"
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ED.Assistant-${{ matrix.rid }}-${{ github.run_number }}
-          path: ED.Assistant-${{ matrix.rid }}.dmg
-
-  # ───────────────────────────── Release (all platforms) ─────────────────────────────
-  release:
-    needs: [linux, windows, macos]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: dist
-          merge-multiple: true
+            ED.Assistant-${{ env.VERSION }}-win-x64.zip
+            ED.Assistant-${{ env.VERSION }}-x86_64.AppImage
 
       - name: Update "latest" pre-release
         env:
           GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
         run: |
-          ls -la dist
           gh release delete latest --yes --cleanup-tag || true
-          gh release create latest dist/* \
+          gh release create latest \
+            ED.Assistant-$VERSION-win-x64.zip \
+            ED.Assistant-$VERSION-x86_64.AppImage \
             --target ${{ github.sha }} \
             --prerelease \
-            --title "Latest build (#${{ github.run_number }})" \
-            --notes "Automatic build from commit ${{ github.sha }}"
+            --title "Latest build v$VERSION" \
+            --notes "Automatic build v$VERSION from commit ${{ github.sha }}"
