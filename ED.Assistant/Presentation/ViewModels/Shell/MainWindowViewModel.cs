@@ -10,9 +10,11 @@ using ED.Assistant.Presentation.ViewModels.Settings;
 using ED.Assistant.Presentation.ViewModels.ShipLocker;
 using ED.Assistant.Presentation.ViewModels.System;
 using System.ComponentModel;
+using ED.Assistant.Application.Evaluation;
 using ED.Assistant.Application.Linux;
 using ED.Assistant.Domain.Config;
 using ED.Assistant.Presentation.ViewModels.Evaluator;
+using ED.Assistant.Presentation.ViewModels.Import;
 using Material.Icons;
 
 namespace ED.Assistant.Presentation.ViewModels.Shell;
@@ -25,6 +27,8 @@ public partial class MainWindowViewModel : LoadableViewModel
 	private readonly IPathFinder _pathFinder;
 	private readonly IJournalWatchService _journalWatchService;
 	private readonly IDesktopService _desktopService;
+	private readonly IFolderPickerService _folderPickerService;
+	private readonly IEvaluatorImportService _evaluatorImportService;
 	private readonly SettingsViewModel _settingsViewModel;
 
 	private class DefaultState
@@ -81,13 +85,16 @@ public partial class MainWindowViewModel : LoadableViewModel
 		INavigationStore navigationStore, IJournalStateStore stateStore, IMemoryCache memoryCache,
 		INavigationService navigationService, IJournalLoaderService journalLoader,
 		ISettingsStorage settingsStorage, IPathFinder pathFinder,
-		IJournalWatchService journalWatchService, IDesktopService desktopService) 
+		IJournalWatchService journalWatchService, IDesktopService desktopService, IFolderPickerService folderPickerService,
+		IEvaluatorImportService evaluatorImportService) 
 			: base(journalLoader, stateStore, memoryCache)
 	{
 		NavigationStore = navigationStore;
 
 		_journalWatchService = journalWatchService;
 		_desktopService = desktopService;
+		_folderPickerService = folderPickerService;
+		_evaluatorImportService = evaluatorImportService;
 		_dialogService = dialogService;
 		_settingsStorage = settingsStorage;
 		_pathFinder = pathFinder;
@@ -242,6 +249,40 @@ public partial class MainWindowViewModel : LoadableViewModel
 	{
 		_desktopService.BuildDesktopFile();
 		await _desktopService.SaveDesktopFileAsync(cancellationToken);
+	}
+	
+	[RelayCommand]
+	private async Task Import(CancellationToken cancellationToken = default)
+	{
+		var folder = await AskImportFolderAsync();
+		if (string.IsNullOrWhiteSpace(folder))
+			return;
+
+		Status = "Importing bio-samples…";
+		try
+		{
+			await _evaluatorImportService.ImportAsync(folder, cancellationToken);
+			await NavigateToEvaluatorView(cancellationToken);
+		}
+		catch (OperationCanceledException)
+		{
+			Status = DefaultState.Status;
+		}
+		catch (Exception ex)
+		{
+			Status = $"Import failed: {ex.Message}";
+		}
+	}
+	
+	private Task<string?> AskImportFolderAsync()
+	{
+		if (DesktopEnvironmentHelper.IsHyprland())
+		{
+			var dialog = new ImportFolderViewModel(_pathFinder.GetPathToLogs());
+			return _dialogService.ShowDialogAsync<ImportFolderViewModel, string>(dialog);
+		}
+
+		return _folderPickerService.PickFolderAsync("Select folder with Elite Dangerous journals");
 	}
 
 	private async Task InitializeAsync(CancellationToken cancellationToken = default)

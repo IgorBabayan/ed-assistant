@@ -74,6 +74,17 @@
 						        Command="{Binding LoadCommand}">
 							<materialIcons:MaterialIcon Kind="Reload"/>
 						</Button>
+						
+						<Button Classes="window-button"
+						        ToolTip.Tip="Import bio-samples"
+						        Command="{Binding ImportCommand}">
+							<Panel>
+								<materialIcons:MaterialIcon Kind="DatabaseImport"
+								                            IsVisible="{Binding !ImportCommand.IsRunning}"/>
+								<materialIcons:MaterialIcon Kind="ProgressClock"
+								                            IsVisible="{Binding ImportCommand.IsRunning}"/>
+							</Panel>
+						</Button>
 
 						<Button Classes="window-button"
 						        ToolTip.Tip="Settings"
@@ -108,7 +119,6 @@
 			<!-- Content -->
 			<DockPanel Grid.Row="1" LastChildFill="True">
 
-				<!-- Dock (must come before the content so DockPanel reserves its space) -->
 				<!-- Dock -->
 				<Panel Classes="dock"
 				       Classes.bottom="{Binding IsDockBottom}"
