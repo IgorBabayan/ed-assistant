@@ -7,13 +7,30 @@ using ED.Assistant.Presentation.ViewModels.Shell;
 using ED.Assistant.Presentation.Views.Shell;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ED.Assistant.App.App;
+namespace ED.Assistant.App;
 
-public partial class App : Avalonia.Application
+public class App : Avalonia.Application
 {
+    private ServiceProvider? _provider;
+    private MainWindowViewModel? _mainViewModel;
+
+    internal void DisposeServices()
+    {
+        if (_provider is null)
+            return;
+
+        _mainViewModel?.Dispose();
+        // Stop background database work before disposing its dependencies.
+        if (_mainViewModel is not null)
+            _provider.GetRequiredService<IJournalWatchService>().Dispose();
+        _provider.Dispose();
+        Presentation.Converters.BiologyImageConverter.ClearCache();
+        _provider = null;
+    }
+
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
-    public override async void OnFrameworkInitializationCompleted()
+    public override void OnFrameworkInitializationCompleted()
     {
         // Create service collection and register services from ED.Assistant.Data
         var services = new ServiceCollection();
@@ -22,28 +39,32 @@ public partial class App : Avalonia.Application
 			.RegisterViewModels()
             .RegisterWindows()
             .AddMemoryCache()
-            .AddDbContext<AppDbContext>((provider, options) =>
+            .AddDbContext<AppDbContext>((sp, options) =>
 			{
-				var dbPathProvider = provider.GetRequiredService<IDbPathProvider>();
-				options.UseSqlite($"Data Source={dbPathProvider.GetDatabasePath()}");
+                var dbPathProvider = sp.GetRequiredService<IDbPathProvider>();
+				options.UseSqlite(new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder
+                { DataSource = dbPathProvider.GetDatabasePath() }.ToString());
 			})
 			.RegisterDbServices();
 
 		// Build provider and keep a reference to it for later use.
-		var provider = services.BuildServiceProvider();
+		var provider = _provider = services.BuildServiceProvider();
 
 		if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            // Synchronous on purpose: MainWindow must be assigned before this method returns,
+            // otherwise the classic desktop lifetime starts without a window (async void also
+            // turned any migration exception into an unobserved crash).
 	        using (var scope = provider.CreateScope())
 	        {
 		        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-		        await dbContext.Database.MigrateAsync();
+                dbContext.Database.Migrate();
 	        }
 
 			// Resolve the MainWindowViewModel from DI and assign as DataContext
 			desktop.MainWindow = new MainWindow
             {
-                DataContext = provider.GetRequiredService<MainWindowViewModel>(),
+                DataContext = _mainViewModel = provider.GetRequiredService<MainWindowViewModel>()
             };
 		}
 

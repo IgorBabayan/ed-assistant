@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Biology;
 
-enum BodyClassEnum
+internal enum BodyClassEnum
 {
     RockyBody = 1,
     HighMetalContentBody,
@@ -18,6 +18,7 @@ enum BodyClassEnum
 public sealed class BodyClass
 {
     public int Id { get; set; }
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public required string Name { get; set; }
     
     public ICollection<Rule> Rules { get; set; } = [];

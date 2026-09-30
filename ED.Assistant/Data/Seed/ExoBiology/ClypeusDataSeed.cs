@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed.ExoBiology;
 
-static class ClypeusDataSeed
+internal static class ClypeusDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {
@@ -27,21 +27,21 @@ static class ClypeusDataSeed
                 MaxGravity = 0.276,
                 MinTemperature = 190.0,
                 MaxTemperature = 197.0,
-                MinPressure = 0.055,
+                MinPressure = 0.055
             },
             new Rule
             {
                 Id = (int)ClypeusRule.SpeculumiWaterNone,
                 GenusId = (int)ClypeusGenus.Speculumi,
                 MinGravity = 0.04,
-                MaxGravity = 0.276,
+                MaxGravity = 0.276
             },
             new Rule
             {
                 Id = (int)ClypeusRule.SpeculumiWaterVolcanism,
                 GenusId = (int)ClypeusGenus.Speculumi,
                 MinGravity = 0.04,
-                MaxGravity = 0.276,
+                MaxGravity = 0.276
             });
 
         SeedHelpers.Atmospheres(modelBuilder, ClypeusRule.SpeculumiCarbonDioxide, AtmosphereEnum.CarbonDioxide);

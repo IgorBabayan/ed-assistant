@@ -1,11 +1,11 @@
-using System.Diagnostics;
+using ED.Assistant.Data;
 using ED.Assistant.Data.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using EvaluatorEntity = ED.Assistant.Data.Evaluator.Evaluator;
 
 namespace ED.Assistant.Application.Evaluation;
 
-sealed class EvaluatorSyncService : IEvaluatorSyncService
+internal sealed class EvaluatorSyncService : IEvaluatorSyncService, IDisposable
 {
 	private const int FirstFootStepMultiplier = 5;
 
@@ -19,23 +19,21 @@ sealed class EvaluatorSyncService : IEvaluatorSyncService
 
 	public async Task SyncAsync(JournalState state, CancellationToken cancellationToken = default)
 	{
-		var changes = state.PendingEvaluatorChanges.ToArray();
-		state.PendingEvaluatorChanges.Clear();
-
-		if (changes.Length == 0)
-			return;
-
-		var saved = false;
-
 		await _gate.WaitAsync(cancellationToken);
 		try
 		{
+			var changes = state.PendingEvaluatorChanges.ToArray();
+			if (changes.Length == 0)
+				return;
+
 			using var scope = _scopeFactory.CreateScope();
 			var services = scope.ServiceProvider;
 
 			var genusRepository = services.GetRequiredService<IRepository<Genus>>();
 			var evaluatorRepository = services.GetRequiredService<IRepository<EvaluatorEntity>>();
 			var unitOfWork = services.GetRequiredService<IUnitOfWork>();
+			var context = services.GetRequiredService<AppDbContext>();
+			await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
 
 			var catalog = (await genusRepository.ListAsync(cancellationToken: cancellationToken))
 				.GroupBy(g => g.CodexName, StringComparer.OrdinalIgnoreCase)
@@ -58,12 +56,9 @@ sealed class EvaluatorSyncService : IEvaluatorSyncService
 				await unitOfWork.SaveChangesAsync(cancellationToken);
 			}
 
-			saved = true;
-		}
-		catch (Exception ex) when (ex is not OperationCanceledException)
-		{
-			// All operations are idempotent, so anything missed here is applied on the next full load
-			Debug.WriteLine($"Evaluator sync failed: {ex}");
+			await transaction.CommitAsync(cancellationToken);
+			// Keep the batch on failure/cancellation so a retry cannot silently lose samples.
+			state.PendingEvaluatorChanges.RemoveRange(0, changes.Length);
 		}
 		finally
 		{
@@ -71,12 +66,13 @@ sealed class EvaluatorSyncService : IEvaluatorSyncService
 		}
 
 		// Raised outside the gate so a subscriber that reads the DB can't deadlock on it
-		if (saved)
-			DataChanged?.Invoke(this, EventArgs.Empty);
+		DataChanged?.Invoke(this, EventArgs.Empty);
 	}
 
+	public void Dispose() => _gate.Dispose();
+
 	private static async Task ApplySampleAsync(OrganicSampled sampled,
-		IReadOnlyDictionary<string, Genus> catalog, IRepository<EvaluatorEntity> repository,
+		Dictionary<string, Genus> catalog, IRepository<EvaluatorEntity> repository,
 		CancellationToken cancellationToken)
 	{
 		if (!catalog.TryGetValue(sampled.SpeciesId, out var genus))
@@ -91,18 +87,18 @@ sealed class EvaluatorSyncService : IEvaluatorSyncService
 		//    IgnoreQueryFilters so sold rows count too.
 		var sameEvent = await repository.AsNoTracking()
 			.IgnoreQueryFilters()
-			.FirstOrDefaultAsync(x => x.GenusId == genusId && x.DateCreation == timestamp, cancellationToken);
+			.FirstOrDefaultAsync(x => x.GenusId == genusId && x.DateCreation == timestamp
+				&& (x.SystemAddress == null || (x.SystemAddress == systemAddress && x.BodyId == bodyId)), cancellationToken);
 
 		if (sameEvent is not null)
 		{
 			// Rows stored before the location columns existed: fill them in so check 2 can find them
-			if (sameEvent.SystemAddress is null)
-			{
-				sameEvent.SystemAddress = systemAddress;
-				sameEvent.BodyId = bodyId;
-				repository.Update(sameEvent);
-			}
+			if (sameEvent.SystemAddress is not null)
+				return;
 
+			sameEvent.SystemAddress = systemAddress;
+			sameEvent.BodyId = bodyId;
+			repository.Update(sameEvent);
 			return;
 		}
 
@@ -134,7 +130,7 @@ sealed class EvaluatorSyncService : IEvaluatorSyncService
 	}
 
 	private static async Task ApplySaleAsync(OrganicDataSold sold,
-		IReadOnlyDictionary<string, Genus> catalog, IRepository<EvaluatorEntity> repository,
+		Dictionary<string, Genus> catalog, IRepository<EvaluatorEntity> repository,
 		CancellationToken cancellationToken)
 	{
 		foreach (var group in sold.SpeciesIds.GroupBy(id => id, StringComparer.OrdinalIgnoreCase))

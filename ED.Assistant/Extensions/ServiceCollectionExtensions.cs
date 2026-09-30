@@ -26,90 +26,93 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.Assistant.Extensions;
 
-static class ServiceCollectionExtensions
+internal static class ServiceCollectionExtensions
 {
-	public static IServiceCollection RegisterDataServices(this IServiceCollection services)
+	extension(IServiceCollection services)
 	{
-		services.AddSingleton<WindowsPathResolver>();
-		services.AddSingleton<LinuxPathResolver>();
-		services.AddSingleton<MacPathResolver>();
-
-		services.AddSingleton<IPlatformPathResolver>(sp =>
+		public IServiceCollection RegisterDataServices()
 		{
-			if (OperatingSystem.IsWindows())
-				return sp.GetRequiredService<WindowsPathResolver>();
+			services.AddSingleton<WindowsPathResolver>();
+			services.AddSingleton<LinuxPathResolver>();
+			services.AddSingleton<MacPathResolver>();
+
+			services.AddSingleton<IPlatformPathResolver>(sp =>
+			{
+				if (OperatingSystem.IsWindows())
+					return sp.GetRequiredService<WindowsPathResolver>();
+
+				if (OperatingSystem.IsLinux())
+					return sp.GetRequiredService<LinuxPathResolver>();
+
+				return OperatingSystem.IsMacOS()
+					? sp.GetRequiredService<MacPathResolver>()
+					: throw new PlatformNotSupportedException("Unsupported OS");
+			});
+		
+			return services;
+		}
+
+		public IServiceCollection RegisterViewModels()
+		{
+			services.AddSingleton<MainWindowViewModel>()
+				.AddSingleton<ConfirmDialogViewModel>()
+				.AddSingleton<SettingsViewModel>()
+				.AddSingleton<DashboardViewModel>()
+				.AddSingleton<SystemViewModel>()
+				.AddSingleton<ExobiologyViewModel>()
+				.AddSingleton<JournalViewModel>()
+				.AddSingleton<MaterialViewModel>()
+				.AddSingleton<EvaluatorViewModel>()
+				.AddSingleton<ShipLockerViewModel>();
+			return services;
+		}
+
+		public IServiceCollection RegisterServices()
+		{
+			services.AddSingleton<IPathFinder, PathFinder>()
+				.AddSingleton<ISettingsStorage, SettingsStorage>()
+				.AddSingleton<ILogStorage, LogStorage>()
+				.AddSingleton<IDialogService, DialogService>()
+				.AddSingleton<IFolderPickerService, FolderPickerService>()
+				.AddSingleton<IJournalStateStore, JournalStateStore>()
+				.AddSingleton<IJournalLoaderService, JournalLoaderService>()
+				.AddSingleton<INavigationStore, NavigationStore>()
+				.AddSingleton<INavigationService, NavigationService>()
+				.AddSingleton<IJournalStateApplier, JournalStateApplier>()
+				.AddSingleton<IJournalWatchService, JournalWatchService>()
+				.AddSingleton<IDbPathProvider, DbPathProvider>()
+				.AddSingleton<IGenusCatalog, GenusCatalog>()
+				.AddSingleton<IEvaluatorSyncService, EvaluatorSyncService>()
+				.AddSingleton<IEvaluatorImportService, EvaluatorImportService>()
+				.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
 
 			if (OperatingSystem.IsLinux())
-				return sp.GetRequiredService<LinuxPathResolver>();
-
-			if (OperatingSystem.IsMacOS())
-				return sp.GetRequiredService<MacPathResolver>();
-
-			throw new PlatformNotSupportedException("Unsupported OS");
-		});
-		
-		return services;
-	}
-
-	public static IServiceCollection RegisterViewModels(this IServiceCollection services)
-	{
-		services.AddSingleton<MainWindowViewModel>()
-			.AddSingleton<ConfirmDialogViewModel>()
-			.AddSingleton<SettingsViewModel>()
-			.AddSingleton<DashboardViewModel>()
-			.AddSingleton<SystemViewModel>()
-			.AddSingleton<ExobiologyViewModel>()
-			.AddSingleton<JournalViewModel>()
-			.AddSingleton<MaterialItemViewModel>()
-			.AddSingleton<MaterialViewModel>()
-			.AddSingleton<EvaluatorViewModel>()
-			.AddSingleton<ShipLockerViewModel>();
-		return services;
-	}
-
-	public static IServiceCollection RegisterServices(this IServiceCollection services)
-	{
-		services.AddSingleton<IPathFinder, PathFinder>()
-			.AddSingleton<ISettingsStorage, SettingsStorage>()
-			.AddSingleton<ILogStorage, LogStorage>()
-			.AddSingleton<IDialogService, DialogService>()
-			.AddSingleton<IFolderPickerService, FolderPickerService>()
-			.AddSingleton<IJournalStateStore, JournalStateStore>()
-			.AddSingleton<IJournalLoaderService, JournalLoaderService>()
-			.AddSingleton<INavigationStore, NavigationStore>()
-			.AddSingleton<INavigationService, NavigationService>()
-			.AddSingleton<IJournalStateApplier, JournalStateApplier>()
-			.AddSingleton<IJournalWatchService, JournalWatchService>()
-			.AddSingleton<IDbPathProvider, DbPathProvider>()
-			.AddSingleton<IGenusCatalog, GenusCatalog>()
-			.AddSingleton<IEvaluatorSyncService, EvaluatorSyncService>()
-			.AddSingleton<IEvaluatorImportService, EvaluatorImportService>()
-			.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
-
-		if (OperatingSystem.IsLinux())
-		{
-			services.AddSingleton<IDesktopService, DesktopService>();
+			{
+				services.AddSingleton<IDesktopService, DesktopService>();
+			}
+			else
+			{
+				services.AddSingleton<IDesktopService, NullDesktopService>();
+			}
+			return services;
 		}
-		else
+
+		public IServiceCollection RegisterWindows()
 		{
-			services.AddSingleton<IDesktopService, NullDesktopService>();
+			services.AddTransient<ConfirmDialogWindow>()
+				.AddTransient<ImportFolderWindow>()
+				.AddTransient<SettingsWindow>();
+			return services;
 		}
-		return services;
-	}
 
-	public static IServiceCollection RegisterWindows(this IServiceCollection services)
-	{
-		services.AddTransient<ConfirmDialogWindow>()
-			.AddTransient<ImportFolderWindow>()
-			.AddTransient<SettingsWindow>();
-		return services;
-	}
-
-	public static IServiceCollection RegisterDbServices(this IServiceCollection services)
-	{
-		services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-		services.AddScoped<IUnitOfWork, UnitOfWork>();
+		// Last call of the registration chain; returns the collection for consistency with the others
+		// ReSharper disable once UnusedMethodReturnValue.Global
+		public IServiceCollection RegisterDbServices()
+		{
+			services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+			services.AddScoped<IUnitOfWork, UnitOfWork>();
 		
-		return services;
+			return services;
+		}
 	}
 }

@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Configurations;
 
-class EvaluatorConfiguration : IEntityTypeConfiguration<Evaluator.Evaluator>
+internal class EvaluatorConfiguration : IEntityTypeConfiguration<Evaluator.Evaluator>
 {
     public void Configure(EntityTypeBuilder<Evaluator.Evaluator> builder)
     {

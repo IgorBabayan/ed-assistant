@@ -9,16 +9,18 @@ public class MaterialItem
 	public string NameLocalised { get; set; } = string.Empty;
 
 	[JsonPropertyName("Count")]
-	public ushort Count { get; set; } = default;
+	public ushort Count { get; set; }
 
 	[JsonPropertyName("OwnerID")]
-	public ushort OwnerId { get; set; } = default;
+	public ushort OwnerId { get; set; }
 
 	[JsonPropertyName("MissionID")]
 	public long MissionId { get; set; }
 
-	[JsonInclude]
-	public string FullName => string.IsNullOrWhiteSpace(NameLocalised)
-		? $"{char.ToUpper(Name[0])}{Name[1..]}"
-		: NameLocalised;
+	[JsonIgnore]
+	public string FullName => !string.IsNullOrWhiteSpace(NameLocalised)
+		? NameLocalised
+		: string.IsNullOrEmpty(Name)
+			? string.Empty
+			: $"{char.ToUpperInvariant(Name[0])}{Name[1..]}";
 }

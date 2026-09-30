@@ -3,7 +3,7 @@ using ED.Assistant.Extensions;
 
 namespace ED.Assistant.Application.Dialog;
 
-class FolderPickerService : IFolderPickerService
+internal class FolderPickerService : IFolderPickerService
 {
 	public async Task<string?> PickFolderAsync(string title, Window? owner = null)
 	{
@@ -12,11 +12,17 @@ class FolderPickerService : IFolderPickerService
 			new FolderPickerOpenOptions
 			{
 				Title = title,
-				AllowMultiple = false,
+				AllowMultiple = false
 			});
 
-		return folders.Count > 0
-			? folders[0].Path.LocalPath
-			: null;
+		try
+		{
+			return folders.Count > 0 ? folders[0].TryGetLocalPath() : null;
+		}
+		finally
+		{
+			foreach (var folder in folders)
+				folder.Dispose();
+		}
 	}
 }

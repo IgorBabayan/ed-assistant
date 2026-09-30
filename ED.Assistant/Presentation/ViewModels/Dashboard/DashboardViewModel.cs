@@ -1,4 +1,5 @@
-﻿using ED.Assistant.Domain.DTO;
+﻿using System.Globalization;
+using ED.Assistant.Domain.DTO;
 using ED.Assistant.Domain.Enums;
 using ED.Assistant.Extensions;
 using ED.Assistant.Presentation.Collections;
@@ -16,7 +17,7 @@ public partial class DashboardViewModel : LoadableViewModel
 	private static readonly ushort MaxExplore = GetMaxRank<ExploreRankEnum>();
 	private static readonly ushort MaxSoldier = GetMaxRank<SoldierRankEnum>();
 	private static readonly ushort MaxExobiologist = GetMaxRank<ExobiologistRankEnum>();
-	private static readonly ushort MaxCQC = GetMaxRank<CQCRankEnum>();
+	private static readonly ushort MaxCqc = GetMaxRank<CQCRankEnum>();
 	private static readonly ushort MaxEmpire = GetMaxRank<EmpireRankEnum>();
 	private static readonly ushort MaxFederation = GetMaxRank<FederationRankEnum>();
 
@@ -24,20 +25,20 @@ public partial class DashboardViewModel : LoadableViewModel
 	private RankEvent? _lastRanks;
 
 	[ObservableProperty]
-	public partial CommanderEvent? Commander { get; set; } = default;
+	public partial CommanderEvent? Commander { get; private set; }
 
 	[ObservableProperty]
-	public partial LoadGameEvent? LoadGame { get; set; } = default;
+	public partial LoadGameEvent? LoadGame { get; private set; }
 
 	[ObservableProperty]
-	public partial ObservableCollection<RankDTO>? Ranks { get; set; } = new();
+	public partial ObservableCollection<RankDTO>? Ranks { get; set; } = [];
 
 	[ObservableProperty]
-	public partial FSDJumpEvent? CurrentSystem { get; set; } = default;
+	public partial FSDJumpEvent? CurrentSystem { get; private set; }
 
-	public BulkObservableCollection<DashboardSignalViewModel> Signals { get; } = new();
+	public BulkObservableCollection<DashboardSignalViewModel> Signals { get; } = [];
 
-	public BulkObservableCollection<RecentEventViewModel> RecentEvents { get; } = new();
+	public BulkObservableCollection<RecentEventViewModel> RecentEvents { get; } = [];
 
 	public bool HasSignals => Signals.Count > 0;
 
@@ -48,9 +49,6 @@ public partial class DashboardViewModel : LoadableViewModel
 
 	protected override void UpdateFromState(JournalState state)
 	{
-		if (state is null)
-			return;
-
 		// Build display rows here: the journal watcher calls this right after applying
 		// new lines, so the state is consistent now and may change later.
 		var signals = DashboardSignalsBuilder.Build(state, DateTime.UtcNow).ToList();
@@ -63,9 +61,9 @@ public partial class DashboardViewModel : LoadableViewModel
 		var ranks = state.Ranks;
 		List<RankDTO>? rankRows = null;
 
-		if (ranks is not null && !ReferenceEquals(ranks, _lastRanks))
+		if (!ReferenceEquals(ranks, _lastRanks))
 		{
-			rankRows = BuildRanks(ranks);
+			rankRows = ranks is null ? [] : BuildRanks(ranks);
 			_lastRanks = ranks;
 		}
 
@@ -88,7 +86,7 @@ public partial class DashboardViewModel : LoadableViewModel
 	}
 
 	private static ushort GetMaxRank<TEnum>()
-		where TEnum : struct, Enum => Enum.GetValues<TEnum>().Select(x => Convert.ToUInt16(x)).Max();
+		where TEnum : struct, Enum => Enum.GetValues<TEnum>().Select(x => Convert.ToUInt16(x, CultureInfo.InvariantCulture)).Max();
 
 	private static List<RankDTO> BuildRanks(RankEvent rank) =>
 	[
@@ -131,7 +129,7 @@ public partial class DashboardViewModel : LoadableViewModel
 		{
 			Name = "CQC",
 			Value = rank.CQC,
-			Maximum = MaxCQC,
+			Maximum = MaxCqc,
 			Level = ((CQCRankEnum)rank.CQC).GetDisplayName()
 		},
 		new()

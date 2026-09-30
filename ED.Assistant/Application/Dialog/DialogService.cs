@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.Assistant.Application.Dialog;
 
-class DialogService : IDialogService
+internal class DialogService : IDialogService
 {
     private readonly IServiceProvider _serviceProvider;
 

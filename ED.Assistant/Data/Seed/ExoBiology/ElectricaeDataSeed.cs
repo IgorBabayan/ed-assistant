@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed.ExoBiology;
 
-static class ElectricaeDataSeed
+internal static class ElectricaeDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {
@@ -140,7 +140,7 @@ static class ElectricaeDataSeed
             modelBuilder.Entity<RuleStar>().HasData(
                 new RuleStar
                 {
-                    Id = ((int)rule * 100) + index++,
+                    Id = (int)rule * 100 + index++,
                     RuleId = (int)rule,
                     StarClassId = (int)starClass,
                     LuminosityClass = null,

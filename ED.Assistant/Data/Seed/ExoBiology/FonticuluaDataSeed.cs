@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed.ExoBiology;
 
-static class FonticuluaDataSeed
+internal static class FonticuluaDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {

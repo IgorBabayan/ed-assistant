@@ -14,5 +14,5 @@ public class FSSBodySignalsEvent : BaseJournalEvent
 	public long SystemAddress { get; set; }
 
 	[JsonPropertyName("Signals")]
-	public IEnumerable<SignalItem>? Signals { get; set; } = default;
+	public IEnumerable<SignalItem>? Signals { get; set; }
 }

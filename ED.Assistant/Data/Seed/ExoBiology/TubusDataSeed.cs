@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed.ExoBiology;
 
-static class TubusDataSeed
+internal static class TubusDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {

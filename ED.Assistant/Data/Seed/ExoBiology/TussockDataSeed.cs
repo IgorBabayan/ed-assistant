@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed.ExoBiology;
 
-static class TussockDataSeed
+internal static class TussockDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {

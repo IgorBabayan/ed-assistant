@@ -1,9 +1,8 @@
 ﻿using System.IO;
-using System.Runtime.InteropServices;
 
 namespace ED.Assistant.Data.Storage;
 
-sealed class DbPathProvider : IDbPathProvider
+internal sealed class DbPathProvider : IDbPathProvider
 {
 	private const string AppFolder = "ED Assistant";
 	private const string DbFileName = "bio-samples.db";
@@ -12,17 +11,17 @@ sealed class DbPathProvider : IDbPathProvider
 	{
 		var directory = GetDatabaseDirectory();
 
-		if (!Directory.Exists(directory))
-			Directory.CreateDirectory(directory);
+		// CreateDirectory is a no-op when the folder already exists
+		Directory.CreateDirectory(directory);
 
-		return Path.Combine(directory, DbFileName);
+		return IOPath.Combine(directory, DbFileName);
 	}
 
-	public string GetDatabaseDirectory()
+	private static string GetDatabaseDirectory()
 	{
-		if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+		if (OperatingSystem.IsWindows())
 		{
-			return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+			return IOPath.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
 				AppFolder);
 		}
 

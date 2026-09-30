@@ -2,7 +2,7 @@
 
 public class AppSettings
 {
-	public const int DEFAULT_READ_LOGS_FOR_DAYS = 5;
+	public const int DefaultReadLogsForDays = 5;
 	
 	[JsonPropertyName(nameof(LogFolder))]
 	public string? LogFolder { get; set; }
@@ -14,7 +14,7 @@ public class AppSettings
 	public bool HideExcludedSignals { get; set; }
 	
 	[JsonPropertyName(nameof(ReadLogsForDays))]
-	public int ReadLogsForDays { get; set; } = DEFAULT_READ_LOGS_FOR_DAYS;
+	public int ReadLogsForDays { get; set; } = DefaultReadLogsForDays;
 	
 	[JsonPropertyName("DockPosition")]
 	[JsonConverter(typeof(JsonStringEnumConverter<DockPosition>))]

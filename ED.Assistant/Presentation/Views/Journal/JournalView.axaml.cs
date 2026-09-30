@@ -7,7 +7,7 @@ namespace ED.Assistant.Presentation.Views.Journal;
 
 public partial class JournalView : UserControl
 {
-    private const int MAX_ANCHOR_PASSES = 3;
+    private const int MaxAnchorPasses = 3;
     
     private JournalViewModel? _viewModel;
 
@@ -25,7 +25,7 @@ public partial class JournalView : UserControl
             || source.FindAncestorOfType<Button>(includeSelf: true) is not { } header
             || !header.Classes.Contains("journal-row-header")
             || header.DataContext is not JournalEntryViewModel entry
-            || LogItems.ContainerFromItem(entry) is not Control container
+            || LogItems.ContainerFromItem(entry) is not { } container
             || container.TranslatePoint(default, LogScroll) is not { } before)
             return;
 
@@ -34,18 +34,11 @@ public partial class JournalView : UserControl
     
     private void RestoreAnchor(JournalEntryViewModel entry, double targetY, int pass)
     {
-        void ScheduleNextPass()
-        {
-            if (pass + 1 < MAX_ANCHOR_PASSES)
-                Dispatcher.UIThread.Post(() => RestoreAnchor(entry, targetY, pass + 1),
-                    DispatcherPriority.Background);
-        }
-        
         var index = LogItems.Items.IndexOf(entry);
         if (index < 0)
             return;
 
-        if (LogItems.ContainerFromIndex(index) is not Control container)
+        if (LogItems.ContainerFromIndex(index) is not { } container)
         {
             // The jump pushed the row out of the realized range; bring it back, then fine-tune
             LogItems.ScrollIntoView(index);
@@ -64,6 +57,14 @@ public partial class JournalView : UserControl
 
         // Re-realizing rows can refine the estimate once more, so check again
         ScheduleNextPass();
+        return;
+
+        void ScheduleNextPass()
+        {
+            if (pass + 1 < MaxAnchorPasses)
+                Dispatcher.UIThread.Post(() => RestoreAnchor(entry, targetY, pass + 1),
+                    DispatcherPriority.Background);
+        }
     }
 
     protected override void OnDataContextChanged(EventArgs e)

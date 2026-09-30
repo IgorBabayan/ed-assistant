@@ -14,5 +14,5 @@ public class BaryCentreEvent : BaseJournalEvent
 	public long SystemAddress { get; set; }
 
 	[JsonPropertyName("Parents")]
-	public IEnumerable<Parent>? Parents { get; set; } = default;
+	public IEnumerable<Parent>? Parents { get; set; }
 }

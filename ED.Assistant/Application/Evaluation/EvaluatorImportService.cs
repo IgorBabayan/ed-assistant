@@ -5,7 +5,7 @@ using EvaluatorEntity = ED.Assistant.Data.Evaluator.Evaluator;
 
 namespace ED.Assistant.Application.Evaluation;
 
-sealed class EvaluatorImportService : IEvaluatorImportService
+internal sealed class EvaluatorImportService : IEvaluatorImportService
 {
 	// LogStorage treats 0 days as "every journal file in the folder"
 	private const int AllLogs = 0;

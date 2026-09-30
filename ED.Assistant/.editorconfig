@@ -2,3 +2,38 @@
 
 # IDE0290: Use primary constructor
 dotnet_diagnostic.IDE0290.severity = none
+# Same intent for Rider/ReSharper's own inspection
+resharper_convert_to_primary_constructor_highlighting = none
+# CommunityToolkit.Mvvm generates the On<Property>Changed(value) signatures; the parameter can't be dropped
+resharper_unused_parameter_in_partial_method_highlighting = none
+
+# Journal events and DTOs are populated by System.Text.Json through their public setters,
+# so "unused" setters/types and get-only/init-only/private suggestions don't apply.
+[Domain/{Events,DTO}/**.cs]
+resharper_unused_member_global_highlighting = none
+resharper_unused_auto_property_accessor_global_highlighting = none
+resharper_auto_property_can_be_made_get_only_global_highlighting = none
+resharper_property_can_be_made_init_only_global_highlighting = none
+resharper_class_never_instantiated_global_highlighting = none
+resharper_member_can_be_private_global_highlighting = none
+
+# Enum values mirror the game's journal ranks; unused ones are still valid input
+[Domain/Enums/**.cs]
+resharper_unused_member_global_highlighting = none
+# Keep the *RankEnum names (CA1711: identifiers should not have incorrect suffix)
+dotnet_diagnostic.CA1711.severity = none
+
+# Journal/game vocabulary keeps the game's spelling (FSDJump, SAASignalsFound, USSType, MassEM,
+# CQC, EliteIII...): these names mirror the journal and are matched by the JSON attributes
+[Domain/{Events,DTO,Enums}/**.cs]
+resharper_inconsistent_naming_highlighting = none
+# IJournalEvent.Event mirrors the journal's "event" field; VB keyword clashes don't matter for this app
+dotnet_diagnostic.CA1716.severity = none
+
+# Smart-enum value objects: every known value is declared, whether or not the app compares against it yet
+[Domain/Types/**.cs]
+resharper_unused_member_global_highlighting = none
+
+# EF Core entities and the JSON settings file: setters are used by EF / the serializer
+[{Data/Biology,Data/Evaluator,Domain/Config}/**.cs]
+resharper_property_can_be_made_init_only_global_highlighting = none

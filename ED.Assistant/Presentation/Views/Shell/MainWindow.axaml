@@ -14,30 +14,17 @@
 		WindowDecorations="None"
 		WindowStartupLocation="CenterScreen">
 
-	<Design.DataContext>
-		<!-- This only sets the DataContext for the previewer in an IDE,
-		to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-		<vm:MainWindowViewModel/>
-	</Design.DataContext>
+	<!-- No Design.DataContext: MainWindowViewModel is built by DI (see App.axaml.cs) and has no
+	     parameterless constructor. x:DataType above is enough for compiled bindings. -->
 
 	<Border Background="{StaticResource BackgroundBrush}">
-		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="36" />
-				<RowDefinition Height="*" />
-				<RowDefinition Height="36" />
-			</Grid.RowDefinitions>
+		<Grid RowDefinitions="36,*,36">
 
 			<!-- Title bar -->
 			<Border Grid.Row="0"
 					Background="Transparent"
 					PointerPressed="OnPointerPressed">
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto" />
-						<ColumnDefinition Width="*" />
-						<ColumnDefinition Width="Auto" />
-					</Grid.ColumnDefinitions>
+				<Grid ColumnDefinitions="Auto,*,Auto">
 
 					<TextBlock Grid.Column="0"
 							   Classes="primary"
@@ -52,7 +39,7 @@
 								VerticalAlignment="Center"
 								HorizontalAlignment="Center"
 								Spacing="{DynamicResource Spacing5}">
-						<TextBlock Text="{Binding CMDR}" />
+						<TextBlock Text="{Binding Cmdr}" />
 						<TextBlock Text="/" />
 						<TextBlock Text="{Binding Ship}" />
 						<TextBlock Text="/" />
@@ -162,12 +149,7 @@
 
 			<!-- Status bar -->
 			<Border Grid.Row="2">
-				<Grid ColumnSpacing="{DynamicResource Spacing15}">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="*" />
-						<ColumnDefinition Width="Auto" />
-						<ColumnDefinition Width="Auto" />
-					</Grid.ColumnDefinitions>
+				<Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="{DynamicResource Spacing15}">
 
 					<StackPanel Grid.Column="0"
 								Orientation="Horizontal"

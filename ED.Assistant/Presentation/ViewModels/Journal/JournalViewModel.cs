@@ -6,14 +6,12 @@ public sealed partial class JournalViewModel : LoadableViewModel
 {
 	private static readonly TimeSpan SearchDelay = TimeSpan.FromMilliseconds(250);
 
-	private readonly SemaphoreSlim _updateGate = new(1, 1);
-
 	// UI thread only
 	private readonly List<JournalEntryViewModel> _allEntries = [];
 	private SearchFilter _filter = SearchFilter.Empty;
 	private CancellationTokenSource? _searchCts;
 
-	// _updateGate only
+	// Serialized by LoadableViewModel
 	private JournalLog? _currentLog;
 	private long _lastSequence;
 
@@ -34,9 +32,6 @@ public sealed partial class JournalViewModel : LoadableViewModel
 	[ObservableProperty]
 	public partial bool IsFollowing { get; set; } = true;
 
-	[ObservableProperty]
-	public partial string? FileName { get; set; }
-
 	public bool HasSearchText => !string.IsNullOrEmpty(SearchText);
 
 	public bool HasEntries => Entries.Count > 0;
@@ -52,32 +47,24 @@ public sealed partial class JournalViewModel : LoadableViewModel
 	protected override async Task UpdateFromStateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
 	{
-		// StateChanged can fire from the watcher thread while a navigation update is running
-		await _updateGate.WaitAsync(cancellationToken);
-		try
-		{
-			var log = state.Log;
+		cancellationToken.ThrowIfCancellationRequested();
+		var log = state.Log;
 
-			// A full reload creates a new JournalState (and a new log) — start over
-			var isReset = !ReferenceEquals(log, _currentLog);
-			var batch = log.GetSince(isReset ? 0 : _lastSequence);
+		// A full reload creates a new JournalState (and a new log) — start over
+		var isReset = !ReferenceEquals(log, _currentLog);
+		var batch = log.GetSince(isReset ? 0 : _lastSequence);
 
-			if (!isReset && batch.Count == 0)
-				return;
+		if (!isReset && batch.Count == 0)
+			return;
 
-			// Header parsing happens here, off the UI thread
-			var rows = batch.Select(entry => new JournalEntryViewModel(entry)).ToArray();
+		// Header parsing happens here, off the UI thread
+		var rows = batch.Select(entry => new JournalEntryViewModel(entry)).ToArray();
 
-			_currentLog = log;
-			if (batch.Count > 0)
-				_lastSequence = batch[^1].Sequence;
+		_currentLog = log;
+		if (batch.Count > 0)
+			_lastSequence = batch[^1].Sequence;
 
-			await Dispatcher.UIThread.InvokeAsync(() => Apply(rows, isReset, state.FileName, log.Capacity));
-		}
-		finally
-		{
-			_updateGate.Release();
-		}
+		await Dispatcher.UIThread.InvokeAsync(() => Apply(rows, isReset, log.Capacity));
 	}
 
 	[RelayCommand]
@@ -93,10 +80,8 @@ public sealed partial class JournalViewModel : LoadableViewModel
 
 	partial void OnEntriesChanged(ObservableCollection<JournalEntryViewModel> value) => RaiseCounters();
 
-	private void Apply(IReadOnlyList<JournalEntryViewModel> rows, bool isReset, string? fileName, int capacity)
+	private void Apply(IReadOnlyList<JournalEntryViewModel> rows, bool isReset, int capacity)
 	{
-		FileName = fileName;
-
 		if (isReset)
 		{
 			_allEntries.Clear();
@@ -104,7 +89,7 @@ public sealed partial class JournalViewModel : LoadableViewModel
 			TrimAll(capacity);
 
 			// one Reset notification instead of thousands of Add notifications
-			Entries = new ObservableCollection<JournalEntryViewModel>(_allEntries.Where(_filter.IsMatch));
+			Entries = [.._allEntries.Where(_filter.IsMatch)];
 		}
 		else
 		{
@@ -141,10 +126,15 @@ public sealed partial class JournalViewModel : LoadableViewModel
 
 	private async Task ApplySearchDelayedAsync(string? text)
 	{
-		_searchCts?.Cancel();
-		_searchCts?.Dispose();
-
+		// Swap first so a keystroke arriving while we await the cancel sees the new source
+		var previous = _searchCts;
 		var cts = _searchCts = new CancellationTokenSource();
+
+		if (previous is not null)
+		{
+			await previous.CancelAsync();
+			previous.Dispose();
+		}
 
 		try
 		{
@@ -156,7 +146,7 @@ public sealed partial class JournalViewModel : LoadableViewModel
 		}
 
 		_filter = SearchFilter.Parse(text);
-		Entries = new ObservableCollection<JournalEntryViewModel>(_allEntries.Where(_filter.IsMatch));
+		Entries = [.._allEntries.Where(_filter.IsMatch)];
 
 		if (IsFollowing)
 			ScrollToEndRequested?.Invoke(this, EventArgs.Empty);
@@ -173,7 +163,6 @@ public sealed partial class JournalViewModel : LoadableViewModel
 	{
 		_searchCts?.Cancel();
 		_searchCts?.Dispose();
-		_updateGate.Dispose();
 
 		base.OnDispose();
 	}
@@ -198,13 +187,7 @@ public sealed partial class JournalViewModel : LoadableViewModel
 
 		public bool IsMatch(JournalEntryViewModel entry)
 		{
-			foreach (var term in _terms)
-			{
-				if (!entry.RawLine.Contains(term, StringComparison.OrdinalIgnoreCase))
-					return false;
-			}
-
-			return true;
+			return _terms.All(term => entry.RawLine.Contains(term, StringComparison.OrdinalIgnoreCase));
 		}
 	}
 }

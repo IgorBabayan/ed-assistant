@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed.ExoBiology;
 
-static class CrystallineShardsDataSeed
+internal static class CrystallineShardsDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {
@@ -33,7 +33,7 @@ static class CrystallineShardsDataSeed
                 Id = (int)ShardRule.CrystallineShards,
                 GenusId = (int)ShardGenus.CrystallineShards,
                 MaxGravity = 2.0,
-                MaxTemperature = 273.0,
+                MaxTemperature = 273.0
             });
     }
 
@@ -91,7 +91,7 @@ static class CrystallineShardsDataSeed
         modelBuilder.Entity<RuleStar>().HasData(
             starClasses.Select((starClass, index) => new RuleStar
             {
-                Id = ((int)ShardRule.CrystallineShards * 100) + index + 1,
+                Id = (int)ShardRule.CrystallineShards * 100 + index + 1,
                 RuleId = (int)ShardRule.CrystallineShards,
                 StarClassId = (int)starClass,
                 Type = RuleStarType.Star

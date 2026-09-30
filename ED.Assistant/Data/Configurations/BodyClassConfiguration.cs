@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Configurations;
 
-class BodyClassConfiguration : IEntityTypeConfiguration<BodyClass>
+internal class BodyClassConfiguration : IEntityTypeConfiguration<BodyClass>
 {
     public void Configure(EntityTypeBuilder<BodyClass> builder)
     {

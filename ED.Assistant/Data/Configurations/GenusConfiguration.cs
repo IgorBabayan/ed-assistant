@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Configurations;
 
-class GenusConfiguration : IEntityTypeConfiguration<Genus>
+internal class GenusConfiguration : IEntityTypeConfiguration<Genus>
 {
     public void Configure(EntityTypeBuilder<Genus> builder)
     {

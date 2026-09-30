@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Configurations;
 
-class VolcanismConfiguration : IEntityTypeConfiguration<Volcanism>
+internal class VolcanismConfiguration : IEntityTypeConfiguration<Volcanism>
 {
     public void Configure(EntityTypeBuilder<Volcanism> builder)
     {

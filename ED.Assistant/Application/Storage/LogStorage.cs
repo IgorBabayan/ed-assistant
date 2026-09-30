@@ -3,7 +3,7 @@ using System.IO;
 
 namespace ED.Assistant.Application.Storage;
 
-class LogStorage : ILogStorage
+internal class LogStorage : ILogStorage
 {
 	private readonly IJournalStateApplier _journalStateApplier;
 
@@ -11,8 +11,7 @@ class LogStorage : ILogStorage
 
 	public async Task<JournalState> LoadLastLogsAsync(string logFolder, int days, CancellationToken cancellationToken = default)
 	{
-		if (string.IsNullOrWhiteSpace(logFolder))
-			throw new ArgumentNullException(nameof(logFolder));
+		ArgumentException.ThrowIfNullOrWhiteSpace(logFolder);
 
 		if (!Directory.Exists(logFolder))
 		{
@@ -73,25 +72,25 @@ class LogStorage : ILogStorage
 			: null;
 	}
 	
-	private static string[] SelectWindow(IReadOnlyList<(string Path, DateTime Time)> files, int days)
+	private static string[] SelectWindow((string Path, DateTime Time)[] files, int days)
 	{
 		if (days <= 0)
-			return files.Select(f => f.Path).ToArray();
+			return [..files.Select(f => f.Path)];
 
 		// Journal file names use the game machine's local time
 		var cutoff = DateTime.Now.AddDays(-days);
 
-		var first = files.Count;
-		for (var i = 0; i < files.Count; i++)
+		var first = files.Length;
+		for (var i = 0; i < files.Length; i++)
 		{
-			if (files[i].Time >= cutoff)
-			{
-				first = i;
-				break;
-			}
+			if (files[i].Time < cutoff)
+				continue;
+
+			first = i;
+			break;
 		}
 
 		var start = Math.Max(0, first - 1);
-		return files.Skip(start).Select(f => f.Path).ToArray();
+		return [..files.Skip(start).Select(f => f.Path)];
 	}
 }

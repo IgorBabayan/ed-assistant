@@ -1,6 +1,6 @@
 ﻿namespace ED.Assistant.Application.State;
 
-interface IJournalStateAggregator
+internal interface IJournalStateAggregator
 {
 	void RegisterLast<TEvent>(string eventName, Action<TEvent> setter)
 		where TEvent : class, IJournalEvent;

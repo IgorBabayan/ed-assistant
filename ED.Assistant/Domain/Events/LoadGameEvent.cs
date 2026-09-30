@@ -14,10 +14,10 @@ public class LoadGameEvent : BaseJournalEvent
 	public string ShipIdent { get; set; } = string.Empty;
 
 	[JsonPropertyName("FuelLevel")]
-	public double FuelLevel { get; set; } = default;
+	public double FuelLevel { get; set; }
 
 	[JsonPropertyName("FuelCapacity")]
-	public double FuelCapacity { get; set; } = default;
+	public double FuelCapacity { get; set; }
 
 	[JsonPropertyName("Credits")]
 	public decimal Credits { get; set; }

@@ -4,21 +4,33 @@ namespace ED.Assistant.Presentation.Converters;
 
 public class ParentConverter : JsonConverter<Parent>
 {
+	private const string InvalidFormatMessage = "Invalid Parent format";
+
 	public override Parent Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		using var doc = JsonDocument.ParseValue(ref reader);
 		var obj = doc.RootElement;
 
-		if (obj.EnumerateObject().FirstOrDefault() is var prop && prop.Name != null)
+		// Expected shape: { "Planet": 3 }. FirstOrDefault() on an empty object returned
+		// default(JsonProperty), whose Name throws, and "Name != null" was always true.
+		if (obj.ValueKind != JsonValueKind.Object)
+			throw new JsonException(InvalidFormatMessage);
+
+		foreach (var prop in obj.EnumerateObject())
 		{
-			return new Parent
+			if (prop.Value.ValueKind == JsonValueKind.Number && prop.Value.TryGetInt32(out var bodyId))
 			{
-				Type = prop.Name,
-				BodyId = prop.Value.GetInt32()
-			};
+				return new Parent
+				{
+					Type = prop.Name,
+					BodyId = bodyId
+				};
+			}
+
+			break;
 		}
 
-		throw new JsonException("Invalid Parent format");
+		throw new JsonException(InvalidFormatMessage);
 	}
 
 	public override void Write(Utf8JsonWriter writer, Parent value, JsonSerializerOptions options)

@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Configurations;
 
-class RuleStarConfiguration : IEntityTypeConfiguration<RuleStar>
+internal class RuleStarConfiguration : IEntityTypeConfiguration<RuleStar>
 {
     public void Configure(EntityTypeBuilder<RuleStar> builder)
     {

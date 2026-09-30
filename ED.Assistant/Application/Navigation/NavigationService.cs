@@ -2,7 +2,7 @@
 
 namespace ED.Assistant.Application.Navigation;
 
-class NavigationService : INavigationService
+internal class NavigationService : INavigationService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly INavigationStore _navigationStore;

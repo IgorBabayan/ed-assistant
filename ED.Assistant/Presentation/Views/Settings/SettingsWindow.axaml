@@ -31,12 +31,7 @@
 					HorizontalAlignment="Center"
 					VerticalAlignment="Center">
 
-				<Grid RowSpacing="{DynamicResource Spacing5}">
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="*"/>
-						<RowDefinition Height="Auto"/>
-					</Grid.RowDefinitions>
+				<Grid RowDefinitions="Auto,*,Auto" RowSpacing="{DynamicResource Spacing5}">
 
 					<TextBlock Grid.Row="0"
 							   Classes="primary"
@@ -46,12 +41,7 @@
 
 					<StackPanel Grid.Row="1"
 								Spacing="{DynamicResource Spacing5}">
-						<Grid ColumnSpacing="{DynamicResource Spacing5}">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="Auto"/>
-								<ColumnDefinition Width="*"/>
-								<ColumnDefinition Width="Auto"/>
-							</Grid.ColumnDefinitions>
+						<Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{DynamicResource Spacing5}">
 
 							<TextBlock Grid.Column="0"
 									   Text="Log folder:"

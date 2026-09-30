@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed.ExoBiology;
 
-static class FumerolaDataSeed
+internal static class FumerolaDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {
