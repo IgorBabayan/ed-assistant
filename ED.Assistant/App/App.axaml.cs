@@ -1,8 +1,12 @@
+using System.IO;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using ED.Assistant.Application.Plugins;
 using ED.Assistant.Data;
 using ED.Assistant.Data.Storage;
 using ED.Assistant.Extensions;
+using ED.Assistant.Plugins;
+using ED.Assistant.Presentation.ViewModels.Plugin;
 using ED.Assistant.Presentation.ViewModels.Shell;
 using ED.Assistant.Presentation.Views.Shell;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,6 +50,17 @@ public class App : Avalonia.Application
                 { DataSource = dbPathProvider.GetDatabasePath() }.ToString());
 			})
 			.RegisterDbServices();
+        
+        var pluginsRoot = IOPath.Combine(
+	        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ed-assistant", "plugins");
+        
+        foreach (var loaded in PluginLoader.LoadAll(pluginsRoot))
+        {
+	        var dataDir = Directory.CreateDirectory(IOPath.Combine(pluginsRoot, "_data", loaded.Plugin.Id)).FullName;
+	        loaded.Plugin.ConfigureServices(services, new PluginContext(loaded.Directory, dataDir));
+	        services.AddSingleton(loaded);
+        }
+        services.AddSingleton<IPluginRegistry, PluginRegistry>();
 
 		// Build provider and keep a reference to it for later use.
 		var provider = _provider = services.BuildServiceProvider();

@@ -17,6 +17,7 @@
              xmlns:dashboardVm="using:ED.Assistant.Presentation.ViewModels.Dashboard"
              xmlns:evaluatorVm="clr-namespace:ED.Assistant.Presentation.ViewModels.Evaluator"
              xmlns:evaluator="clr-namespace:ED.Assistant.Presentation.Views.Evaluator"
+             xmlns:plugin="clr-namespace:ED.Assistant.Presentation.ViewModels.Plugin"
              RequestedThemeVariant="Default">
 	<!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
@@ -72,6 +73,10 @@
 
 		<DataTemplate DataType="{x:Type evaluatorVm:EvaluatorViewModel}">
 			<evaluator:EvaluatorView />
+		</DataTemplate>
+		
+		<DataTemplate DataType="plugin:PluginPageHostViewModel">
+			<ContentControl Content="{Binding View}"/>
 		</DataTemplate>
 	</Application.DataTemplates>
 </Application>

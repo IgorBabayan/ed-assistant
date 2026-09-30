@@ -17,6 +17,7 @@ using ED.Assistant.Application.Notifications;
 using ED.Assistant.Domain.Config;
 using ED.Assistant.Presentation.ViewModels.Evaluator;
 using ED.Assistant.Presentation.ViewModels.Import;
+using ED.Assistant.Presentation.ViewModels.Plugin;
 using Material.Icons;
 
 namespace ED.Assistant.Presentation.ViewModels.Shell;
@@ -32,6 +33,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	private readonly IDesktopService _desktopService;
 	private readonly IFolderPickerService _folderPickerService;
 	private readonly IEvaluatorImportService _evaluatorImportService;
+	private readonly IPluginRegistry _pluginRegistry;
 	private readonly SettingsViewModel _settingsViewModel;
 
 	private static class DefaultState
@@ -94,11 +96,12 @@ public partial class MainWindowViewModel : LoadableViewModel
 		INavigationService navigationService, IJournalLoaderService journalLoader,
 		ISettingsStorage settingsStorage, IPathFinder pathFinder,
 		IJournalWatchService journalWatchService, IDesktopService desktopService, IFolderPickerService folderPickerService,
-		IEvaluatorImportService evaluatorImportService, InAppNotificationService notificationService) 
+		IEvaluatorImportService evaluatorImportService, InAppNotificationService notificationService, IPluginRegistry pluginRegistry) 
 			: base(journalLoader, stateStore, memoryCache)
 	{
 		NavigationStore = navigationStore;
 		Notifications = notificationService;
+		_pluginRegistry = pluginRegistry;
 
 		_journalWatchService = journalWatchService;
 		_desktopService = desktopService;
@@ -162,13 +165,27 @@ public partial class MainWindowViewModel : LoadableViewModel
 		DockItems.Add(new DockItemViewModel("Evaluator", MaterialIconKind.CalculatorVariant, NavigateToEvaluatorViewCommand, typeof(EvaluatorViewModel)));
 		DockItems.Add(new DockSeparatorViewModel());
 		DockItems.Add(new DockItemViewModel("Journal", MaterialIconKind.BookOpenVariant, NavigateToJournalViewCommand, typeof(JournalViewModel)));
+		
+		if (_pluginRegistry.Pages.Count > 0)
+			DockItems.Add(new DockSeparatorViewModel());
+
+		foreach (var host in _pluginRegistry.Pages)
+		{
+			var cmd = new AsyncRelayCommand(ct => _navigationService.NavigateToAsync(host, ct));
+			DockItems.Add(new DockItemViewModel(host.Page.Title, host.Page.Icon, cmd,
+				typeof(PluginPageHostViewModel), host));
+		}
 	}
 
 	private void UpdateDockActiveState()
 	{
 		var current = NavigationStore.CurrentViewModel;
 		foreach (var item in DockItems.OfType<DockItemViewModel>())
-			item.IsActive = item.TargetViewModel.IsInstanceOfType(current);
+		{
+			item.IsActive = item.TargetInstance is not null
+				? ReferenceEquals(item.TargetInstance, current)
+				: item.TargetViewModel.IsInstanceOfType(current);
+		}
 	}
 
 	[RelayCommand]
