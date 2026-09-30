@@ -37,12 +37,12 @@ public abstract class BaseViewModel : ObservableObject, IDisposable
 /// </summary>
 public abstract partial class LoadableViewModel : BaseViewModel, INavigationAware
 {
-	protected readonly IJournalLoaderService _journalLoader;
+	protected IJournalLoaderService JournalLoader { get; }
 
 	private readonly IJournalStateStore _stateStore;
 	private readonly IMemoryCache _memoryCache;
 
-	private readonly object _activationLock = new();
+	private readonly Lock _activationLock = new();
 	private JournalState? _pendingState;
 	private bool _isRunning;
 
@@ -56,7 +56,7 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 	protected LoadableViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
 		IMemoryCache memoryCache)
 	{
-		_journalLoader = journalLoader;
+		JournalLoader = journalLoader;
 		_stateStore = stateStore;
 		_memoryCache = memoryCache;
 
@@ -210,8 +210,9 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 			RequestUpdate(state);
 	}
 
-	// async void is required for event-style fire-and-forget; it must never throw
-	private async void RequestUpdate(JournalState state)
+	// Fire-and-forget from an event handler: the returned task is intentionally not awaited
+	// and RunUpdateAsync handles every exception itself, so nothing can go unobserved.
+	private void RequestUpdate(JournalState state)
 	{
 		if (!_isCurrent && !IsAlwaysVisible)
 		{
@@ -219,12 +220,18 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 			return;
 		}
 
+		_ = RunUpdateAsync(state);
+	}
+
+	private async Task RunUpdateAsync(JournalState state)
+	{
 		try
 		{
 			await ActivateAsync(state);
 		}
 		catch (OperationCanceledException)
 		{
+			// Cancelled update: nothing to report
 		}
 		catch (Exception ex)
 		{
@@ -238,5 +245,5 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 
 	[RelayCommand]
 	private async Task Load(CancellationToken cancellationToken = default) 
-		=> await _journalLoader.LoadLastLogsAsync(cancellationToken);
+		=> await JournalLoader.LoadLastLogsAsync(cancellationToken);
 }

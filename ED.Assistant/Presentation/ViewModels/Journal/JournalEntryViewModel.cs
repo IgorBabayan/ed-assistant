@@ -12,8 +12,6 @@ public sealed partial class JournalEntryViewModel : ObservableObject
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
-    private string? _formattedJson;
-
     public JournalEntryViewModel(JournalLogEntry entry)
     {
         Sequence = entry.Sequence;
@@ -29,7 +27,7 @@ public sealed partial class JournalEntryViewModel : ObservableObject
 
     /// <summary>Formatted only when the row is expanded, and only once.</summary>
     public string? FormattedJson => IsExpanded
-        ? _formattedJson ??= Format(RawLine)
+        ? field ??= Format(RawLine)
         : null;
 
     [ObservableProperty]

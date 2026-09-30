@@ -5,8 +5,8 @@ namespace ED.Assistant.Application.Path;
 
 public partial class LinuxPathResolver : IPlatformPathResolver
 {
-	private const string APP_FOLDER = "ed-assistant";
-	private const string ELITE_APP_ID = "359320";
+	private const string AppFolder = "ed-assistant";
+	private const string EliteAppId = "359320";
 	
 	private static readonly string Home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
@@ -32,14 +32,14 @@ public partial class LinuxPathResolver : IPlatformPathResolver
     public string GetConfigPath()
 	{
 		var configHome = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-		var configFolder = IOPath.Combine(configHome, APP_FOLDER);
+		var configFolder = IOPath.Combine(configHome, AppFolder);
 		Directory.CreateDirectory(configFolder);
 
 		return IOPath.Combine(configFolder, "config.json");
 	}
     
 	private static string BuildJournalPath(string steamLibrary) =>
-		IOPath.Combine(steamLibrary, "steamapps", "compatdata", ELITE_APP_ID, "pfx", "drive_c",
+		IOPath.Combine(steamLibrary, "steamapps", "compatdata", EliteAppId, "pfx", "drive_c",
 			"users", "steamuser", "Saved Games", "Frontier Developments", "Elite Dangerous");
 	
 	private static IEnumerable<string> GetSteamRoots()
@@ -49,7 +49,7 @@ public partial class LinuxPathResolver : IPlatformPathResolver
 			IOPath.Combine(Home, ".steam", "steam"),
 			IOPath.Combine(Home, ".local", "share", "Steam"),
 			IOPath.Combine(Home, ".var", "app", "com.valvesoftware.Steam", ".local", "share", "Steam"),
-			IOPath.Combine(Home, "snap", "steam", "common", ".local", "share", "Steam"),
+			IOPath.Combine(Home, "snap", "steam", "common", ".local", "share", "Steam")
 		];
 
 		return candidates.Where(Directory.Exists);

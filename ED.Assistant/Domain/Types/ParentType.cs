@@ -47,10 +47,7 @@ public sealed class ParentType : IEquatable<ParentType>, IEquatable<string>
 		if (other is null)
 			return false;
 
-		if (ReferenceEquals(this, other))
-			return true;
-
-		return string.Equals(_value, other._value, StringComparison.Ordinal);
+		return ReferenceEquals(this, other) || string.Equals(_value, other._value, StringComparison.Ordinal);
 	}
 
 	public bool Equals(string? other) => string.Equals(_value, other, StringComparison.Ordinal);

@@ -49,10 +49,7 @@ public sealed class ScanType : IEquatable<ScanType>, IEquatable<string>
 		if (other is null)
 			return false;
 
-		if (ReferenceEquals(this, other))
-			return true;
-
-		return string.Equals(_value, other._value, StringComparison.Ordinal);
+		return ReferenceEquals(this, other) || string.Equals(_value, other._value, StringComparison.Ordinal);
 	}
 
 	public bool Equals(string? other) => string.Equals(_value, other, StringComparison.Ordinal);

@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.Assistant.Application.Catalog;
 
-sealed class GenusCatalog : IGenusCatalog, IDisposable
+internal sealed class GenusCatalog : IGenusCatalog, IDisposable
 {
 	private readonly IServiceScopeFactory _scopeFactory;
 	private readonly SemaphoreSlim _gate = new(1, 1);

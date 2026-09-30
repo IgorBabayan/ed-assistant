@@ -2,3 +2,25 @@
 
 # IDE0290: Use primary constructor
 dotnet_diagnostic.IDE0290.severity = none
+# Same intent for Rider/ReSharper's own inspection
+resharper_convert_to_primary_constructor_highlighting = none
+# CommunityToolkit.Mvvm generates the On<Property>Changed(value) signatures; the parameter can't be dropped
+resharper_unused_parameter_in_partial_method_highlighting = none
+
+# Journal events and DTOs are populated by System.Text.Json through their public setters,
+# so "unused" setters/types and get-only/init-only/private suggestions don't apply.
+[Domain/{Events,DTO}/**.cs]
+resharper_unused_member_global_highlighting = none
+resharper_unused_auto_property_accessor_global_highlighting = none
+resharper_auto_property_can_be_made_get_only_global_highlighting = none
+resharper_property_can_be_made_init_only_global_highlighting = none
+resharper_class_never_instantiated_global_highlighting = none
+resharper_member_can_be_private_global_highlighting = none
+
+# Enum values mirror the game's journal ranks; unused ones are still valid input
+[Domain/Enums/**.cs]
+resharper_unused_member_global_highlighting = none
+
+# EF Core entities and the JSON settings file: setters are used by EF / the serializer
+[{Data/Biology,Data/Evaluator,Domain/Config}/**.cs]
+resharper_property_can_be_made_init_only_global_highlighting = none

@@ -2,7 +2,7 @@
 
 namespace ED.Assistant.Presentation.ViewModels.System;
 
-public partial class SystemBodyNodeViewModel : BaseViewModel
+public class SystemBodyNodeViewModel : BaseViewModel
 {
 	public string Name { get; }
 

@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed.ExoBiology;
 
-static class FrutexaDataSeed
+internal static class FrutexaDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {

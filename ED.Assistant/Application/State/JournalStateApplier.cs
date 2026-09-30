@@ -4,7 +4,7 @@ using ED.Assistant.Domain.Types;
 
 namespace ED.Assistant.Application.State;
 
-class JournalStateApplier : IJournalStateApplier
+internal class JournalStateApplier : IJournalStateApplier
 {
 	/// <summary>
 	/// Snapshot-style or high-volume events that would only push
@@ -27,17 +27,6 @@ class JournalStateApplier : IJournalStateApplier
 	public async Task ApplyFromLinesAsync(JournalState state, IAsyncEnumerable<string> lines,
 		CancellationToken cancellationToken = default)
 	{
-		void ApplyLocation(LocationEvent e)
-		{
-			if (state.CurrentSystemAddress != e.SystemAddress)
-			{
-				ClearSystemData(state);
-				state.FSDJump = null;
-			}
-
-			state.Location = e;
-		}
-
 		var dispatcher = new JournalEventDispatcher();
 		var aggregator = new JournalStateAggregator(dispatcher);
 
@@ -63,7 +52,7 @@ class JournalStateApplier : IJournalStateApplier
 		dispatcher.On<SellOrganicDataEvent>(SellOrganicDataEvent.EventName, e =>
 			state.PendingEvaluatorChanges.Add(new OrganicDataSold(
 				e.Timestamp,
-				(e.BioData ?? []).Select(b => b.SpeciesId).ToArray())));
+				[..(e.BioData ?? []).Select(b => b.SpeciesId)])));
 
 		aggregator.RegisterLast<CommanderEvent>(
 			CommanderEvent.EventName,
@@ -95,22 +84,22 @@ class JournalStateApplier : IJournalStateApplier
 				state.FSDJump = e;
 			});
 
-		aggregator.RegisterByKey<ScanEvent, int>(
+		aggregator.RegisterByKey(
 			ScanEvent.EventName,
 			e => e.BodyId,
 			state.Scans);
 
-		aggregator.RegisterByKey<FSSBodySignalsEvent, int>(
+		aggregator.RegisterByKey(
 			FSSBodySignalsEvent.EventName,
 			e => e.BodyId,
 			state.FSSSignals);
 
-		aggregator.RegisterByKey<BaryCentreEvent, int>(
+		aggregator.RegisterByKey(
 			BaryCentreEvent.EventName,
 			e => e.BodyId,
 			state.BaryCentres);
 
-		aggregator.RegisterByKey<SAASignalsFoundEvent, int>(
+		aggregator.RegisterByKey(
 			SAASignalsFoundEvent.EventName,
 			e => e.BodyId,
 			state.SAASignals);
@@ -129,6 +118,18 @@ class JournalStateApplier : IJournalStateApplier
 			ApplyLocation);
 
 		await dispatcher.DispatchAsync(CaptureAsync(state.Log, lines, cancellationToken), cancellationToken);
+		return;
+
+		void ApplyLocation(LocationEvent e)
+		{
+			if (state.CurrentSystemAddress != e.SystemAddress)
+			{
+				ClearSystemData(state);
+				state.FSDJump = null;
+			}
+
+			state.Location = e;
+		}
 	}
 	
 	private static async IAsyncEnumerable<string> CaptureAsync(JournalLog log, IAsyncEnumerable<string> lines,

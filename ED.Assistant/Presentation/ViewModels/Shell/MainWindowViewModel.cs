@@ -33,7 +33,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	private readonly IEvaluatorImportService _evaluatorImportService;
 	private readonly SettingsViewModel _settingsViewModel;
 
-	private class DefaultState
+	private static class DefaultState
 	{
 		public const string CMDR = "o7, Commander";
 		public const string Ship = "Ship not found";
@@ -76,9 +76,12 @@ public partial class MainWindowViewModel : LoadableViewModel
 	
 	public ObservableCollection<object> DockItems { get; } = [];
 
+	// Instance properties on purpose: compiled XAML bindings can't target static members
+#pragma warning disable CA1822
 	public bool IsNotHyprland => !DesktopEnvironmentHelper.IsHyprland();
-	
+
 	public bool IsLinux => OperatingSystem.IsLinux();
+#pragma warning restore CA1822
 
 	// The shell header is always on screen and is never a navigation target
 	protected override bool IsAlwaysVisible => true;
@@ -245,7 +248,7 @@ public partial class MainWindowViewModel : LoadableViewModel
             {
                 if (settings.ReadLogsForDays != previous.ReadLogsForDays ||
                     !string.Equals(settings.LogFolder, previous.LogFolder, StringComparison.Ordinal))
-                    await _journalLoader.LoadLastLogsAsync(cancellationToken);
+                    await JournalLoader.LoadLastLogsAsync(cancellationToken);
             }
             finally
             {
@@ -289,13 +292,11 @@ public partial class MainWindowViewModel : LoadableViewModel
 	
 	private async Task<string?> AskImportFolderAsync()
 	{
-		if (DesktopEnvironmentHelper.IsHyprland())
-		{
-			using var dialog = new ImportFolderViewModel(_folderPickerService, _pathFinder.GetPathToLogs());
-			return await _dialogService.ShowDialogAsync<ImportFolderViewModel, string>(dialog);
-		}
+		if (!DesktopEnvironmentHelper.IsHyprland())
+			return await _folderPickerService.PickFolderAsync("Select folder with Elite Dangerous journals");
 
-		return await _folderPickerService.PickFolderAsync("Select folder with Elite Dangerous journals");
+		using var dialog = new ImportFolderViewModel(_folderPickerService, _pathFinder.GetPathToLogs());
+		return await _dialogService.ShowDialogAsync<ImportFolderViewModel, string>(dialog);
 	}
 
 	private async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -307,7 +308,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 			DockPosition = settings.DockPosition;
             try
             {
-                await _journalLoader.LoadLastLogsAsync(cancellationToken);
+                await JournalLoader.LoadLastLogsAsync(cancellationToken);
             }
             finally
             {

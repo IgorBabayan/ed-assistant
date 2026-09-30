@@ -6,7 +6,7 @@ using ED.Assistant.Application.Evaluation;
 
 namespace ED.Assistant.Application.JournalLoading;
 
-sealed class JournalWatchService : IJournalWatchService, IAsyncDisposable
+internal sealed class JournalWatchService : IJournalWatchService, IAsyncDisposable
 {
 	private static readonly TimeSpan ReadDelay = TimeSpan.FromMilliseconds(150);
 	private readonly IJournalStateStore _stateStore;
@@ -100,7 +100,9 @@ sealed class JournalWatchService : IJournalWatchService, IAsyncDisposable
 	private async Task WatchAsync(string folder, string? currentFile, long position,
 		ChannelReader<bool> changes, CancellationToken cancellationToken)
 	{
-		await foreach (var changed in changes.ReadAllAsync(cancellationToken))
+		// Only "something changed" matters, not the values: wait for a signal, let the writes
+		// settle, then drain every signal queued meanwhile (including the one that woke us)
+		while (await changes.WaitToReadAsync(cancellationToken))
 		{
 			await Task.Delay(ReadDelay, cancellationToken);
 			while (changes.TryRead(out _)) { }

@@ -3,7 +3,7 @@ using ED.Assistant.Presentation.ViewModels.Dashboard;
 
 namespace ED.Assistant.Presentation.Helpers.Dashboard;
 
-static partial class DashboardSignalsBuilder
+internal static partial class DashboardSignalsBuilder
 {
 	private const string SaaPrefix = "$SAA_SignalType_";
 
@@ -111,7 +111,7 @@ static partial class DashboardSignalsBuilder
 		{
 			var details = new List<string>();
 
-			if (signal.TimeRemaining is { } remaining && remaining > 0)
+			if (signal.TimeRemaining is { } remaining and > 0)
 			{
 				var left = signal.Timestamp.ToUniversalTime().AddSeconds(remaining) - utcNow;
 

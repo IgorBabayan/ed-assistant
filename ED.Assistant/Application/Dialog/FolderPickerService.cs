@@ -3,7 +3,7 @@ using ED.Assistant.Extensions;
 
 namespace ED.Assistant.Application.Dialog;
 
-class FolderPickerService : IFolderPickerService
+internal class FolderPickerService : IFolderPickerService
 {
 	public async Task<string?> PickFolderAsync(string title, Window? owner = null)
 	{
@@ -12,7 +12,7 @@ class FolderPickerService : IFolderPickerService
 			new FolderPickerOpenOptions
 			{
 				Title = title,
-				AllowMultiple = false,
+				AllowMultiple = false
 			});
 
 		try

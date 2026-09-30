@@ -24,19 +24,19 @@ public sealed class BiologyImageConverter : IValueConverter
         var path = $"avares://ED.Assistant/Assets/Biology/{folder}/{id}.webp";
         var uri = new Uri(path);
 
-        if (!AssetLoader.Exists(uri))
+        if (AssetLoader.Exists(uri))
         {
-            Debug.WriteLine($"[BIO IMAGE] NOT FOUND: {uri}");
-            return null;
+            return Cache.GetOrAdd(
+                path,
+                _ => new Lazy<Bitmap>(() =>
+                {
+                    using var stream = AssetLoader.Open(uri);
+                    return new Bitmap(stream);
+                })).Value;
         }
 
-        return Cache.GetOrAdd(
-            path,
-            _ => new Lazy<Bitmap>(() =>
-            {
-                using var stream = AssetLoader.Open(uri);
-                return new Bitmap(stream);
-            })).Value;
+        Debug.WriteLine($"[BIO IMAGE] NOT FOUND: {uri}");
+        return null;
     }
 
     internal static void ClearCache()

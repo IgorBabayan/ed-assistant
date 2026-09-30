@@ -1,6 +1,6 @@
 ﻿namespace ED.Assistant.Application.Path;
 
-class PathFinder : IPathFinder
+internal class PathFinder : IPathFinder
 {
     private readonly IPlatformPathResolver _resolver;
 

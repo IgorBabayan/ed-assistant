@@ -11,7 +11,7 @@ public sealed class JournalLog
 {
     public const int DefaultCapacity = 5000;
 
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
     private readonly Queue<JournalLogEntry> _entries;
 
     private long _lastSequence;
@@ -48,7 +48,7 @@ public sealed class JournalLog
             var firstSequence = _entries.Peek().Sequence;
             var skip = (int)Math.Max(0, afterSequence - firstSequence + 1);
 
-            return _entries.Skip(skip).ToArray();
+            return [.._entries.Skip(skip)];
         }
     }
 }

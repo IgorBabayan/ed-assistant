@@ -1,5 +1,4 @@
 ﻿using Avalonia.Data.Converters;
-using Avalonia.Media;
 using ED.Assistant.Domain.Types;
 using System.Globalization;
 

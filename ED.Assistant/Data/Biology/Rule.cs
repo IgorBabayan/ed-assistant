@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Biology;
 
-enum AleoidaRule
+internal enum AleoidaRule
 {
     Arcus = 1000,
     Coronamus = 1001,
@@ -9,7 +9,7 @@ enum AleoidaRule
     Gravis = 1004
 }
 
-enum AnemoneRule
+internal enum AnemoneRule
 {
     Luteolum = 1100,
     Croceum = 1101,
@@ -22,7 +22,7 @@ enum AnemoneRule
     BlatteumBioluminescent = 1108
 }
 
-enum BacteriumRule
+internal enum BacteriumRule
 {
     Aurasus = 1200,
     NebulusIcy = 1201,
@@ -82,7 +82,7 @@ enum BacteriumRule
     VerrataWater = 1255
 }
 
-enum BrainTreeRule
+internal enum BrainTreeRule
 {
     Roseum = 1300,
     Gypseeum = 1301,
@@ -94,7 +94,7 @@ enum BrainTreeRule
     Lividum = 1307
 }
 
-enum CactoidaRule
+internal enum CactoidaRule
 {
     Cortexum = 1400,
     Lapis = 1401,
@@ -105,7 +105,7 @@ enum CactoidaRule
     Peperatis = 1406
 }
 
-enum ClypeusRule
+internal enum ClypeusRule
 {
     LacrimamCarbonDioxide = 1500,
     LacrimamWaterNone = 1501,
@@ -117,7 +117,7 @@ enum ClypeusRule
     SpeculumiWaterVolcanism = 1507
 }
 
-enum ConchaRule
+internal enum ConchaRule
 {
     RenibusAmmonia = 1600,
     RenibusCarbonDioxide = 1601,
@@ -129,7 +129,7 @@ enum ConchaRule
     Biconcavis = 1607
 }
 
-enum ElectricaeRule
+internal enum ElectricaeRule
 {
     PlumaArgon = 1700,
     PlumaNeon = 1701,
@@ -143,7 +143,7 @@ public enum NebulaRuleType
     Large = 2
 }
 
-enum FrutexaRule
+internal enum FrutexaRule
 {
     Flabellum = 1900,
     Acus = 1901,
@@ -159,7 +159,7 @@ enum FrutexaRule
     CollumHighMetalContent = 1911
 }
 
-enum FumerolaRule
+internal enum FumerolaRule
 {
     CarbosisArgon = 2000,
     CarbosisMethane = 2001,
@@ -190,7 +190,7 @@ enum FumerolaRule
     AquatisWater = 2026
 }
 
-enum FungoidaRule
+internal enum FungoidaRule
 {
     SetisisAmmonia = 2100,
     SetisisMethaneRockyIce = 2101,
@@ -211,7 +211,7 @@ enum FungoidaRule
     GelataWater = 2116
 }
 
-enum OsseusRule
+internal enum OsseusRule
 {
     Fractus = 2200,
     DiscusAmmonia = 2201,
@@ -229,7 +229,7 @@ enum OsseusRule
     Pellebantus = 2213
 }
 
-enum ReceptaRule
+internal enum ReceptaRule
 {
     UmbruxCarbonDioxide = 2300,
     UmbruxOxygenNone = 2301,
@@ -244,12 +244,12 @@ enum ReceptaRule
     ConditivusSulphurDioxide = 2310
 }
 
-enum ShardRule
+internal enum ShardRule
 {
     CrystallineShards = 2400
 }
 
-enum StratumRule
+internal enum StratumRule
 {
     ExcutitusCarbonDioxide = 2500,
     ExcutitusSulphurDioxide = 2501,
@@ -279,7 +279,7 @@ enum StratumRule
     FrigusSulphurDioxide = 2525
 }
 
-enum FonticuluaRule
+internal enum FonticuluaRule
 {
     Segmentatus = 1800,
     Campestris = 1801,
@@ -289,7 +289,7 @@ enum FonticuluaRule
     Digitos = 1805
 }
 
-enum TubersRule
+internal enum TubersRule
 {
     Roseum = 2600,
     PrasinumAny = 2601,
@@ -305,7 +305,7 @@ enum TubersRule
     Blatteum = 2611
 }
 
-enum TubusRule
+internal enum TubusRule
 {
     Conifer = 2700,
     SororibusAmmonia = 2701,
@@ -315,7 +315,7 @@ enum TubusRule
     Compagibus = 2705
 }
 
-enum TussockRule
+internal enum TussockRule
 {
     Pennata = 2800,
     Ventusa = 2801,

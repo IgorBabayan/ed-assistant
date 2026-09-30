@@ -10,17 +10,13 @@
 	<Style Selector="ComboBox">
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate>
+				<ControlTemplate TargetType="ComboBox">
 					<Grid>
 						<Border Background="{TemplateBinding Background}"
 								BorderBrush="{TemplateBinding BorderBrush}"
 								BorderThickness="{TemplateBinding BorderThickness}"
 								CornerRadius="8">
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="*"/>
-									<ColumnDefinition Width="Auto"/>
-								</Grid.ColumnDefinitions>
+							<Grid ColumnDefinitions="*,Auto">
 
 								<ContentPresenter Margin="10,4"
 												  VerticalAlignment="Center"

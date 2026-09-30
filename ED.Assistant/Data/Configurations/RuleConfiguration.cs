@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Configurations;
 
-class RuleConfiguration : IEntityTypeConfiguration<Rule>
+internal class RuleConfiguration : IEntityTypeConfiguration<Rule>
 {
     public void Configure(EntityTypeBuilder<Rule> builder)
     {

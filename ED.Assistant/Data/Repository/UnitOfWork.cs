@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Repository;
 
-sealed class UnitOfWork : IUnitOfWork
+internal sealed class UnitOfWork : IUnitOfWork
 {
     private readonly AppDbContext _context;
 

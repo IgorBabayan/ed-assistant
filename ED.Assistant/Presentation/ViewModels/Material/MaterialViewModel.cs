@@ -8,9 +8,9 @@ public partial class MaterialViewModel : LoadableViewModel
 	// The Materials event is only written on login, so most updates can be skipped
 	private volatile MaterialsEvent? _lastMaterials;
 
-	public BulkObservableCollection<MaterialItemViewModel> Materials { get; } = new();
-	public BulkObservableCollection<MaterialItemViewModel> FilteredMaterials { get; } = new();
-	public BulkObservableCollection<MaterialSummaryViewModel> MaterialSummaries { get; } = new();
+	public BulkObservableCollection<MaterialItemViewModel> Materials { get; } = [];
+	public BulkObservableCollection<MaterialItemViewModel> FilteredMaterials { get; } = [];
+	public BulkObservableCollection<MaterialSummaryViewModel> MaterialSummaries { get; } = [];
 
 	public IReadOnlyList<string> Categories { get; } =
 	[
@@ -22,9 +22,9 @@ public partial class MaterialViewModel : LoadableViewModel
 
 	public IReadOnlyList<string> SortOptions { get; } =
 	[
-		Options.Sort.Name,
-		Options.Sort.Category,
-		Options.Sort.Count
+		Options.Sort.ByName,
+		Options.Sort.ByCategory,
+		Options.Sort.ByCount
 	];
 
 	[ObservableProperty]
@@ -34,11 +34,11 @@ public partial class MaterialViewModel : LoadableViewModel
 	public partial string SelectedCategory { get; set; } = Options.Category.All;
 
 	[ObservableProperty]
-	public partial string SelectedSort { get; set; } = Options.Sort.Name;
+	public partial string SelectedSort { get; set; } = Options.Sort.ByName;
 
-	private class Options
+	private static class Options
 	{
-		internal class Category
+		internal static class Category
 		{
 			internal const string All = "All";
 			internal const string Raw = "Raw";
@@ -46,11 +46,11 @@ public partial class MaterialViewModel : LoadableViewModel
 			internal const string Encoded = "Encoded";
 		}
 
-		internal class Sort
+		internal static class Sort
 		{
-			internal const string Name = "Name";
-			internal const string Category = "Category";
-			internal const string Count = "Count";
+			internal const string ByName = "Name";
+			internal const string ByCategory = "Category";
+			internal const string ByCount = "Count";
 		}
 	}
 
@@ -76,7 +76,7 @@ public partial class MaterialViewModel : LoadableViewModel
 			AddMaterials(materials, materialsEvent?.Manufactured, Options.Category.Manufactured);
 			AddMaterials(materials, materialsEvent?.Encoded, Options.Category.Encoded);
 
-			Materials.ReplaceAll(materials.OrderBy(x => x.Name).ToList());
+			Materials.ReplaceAll(materials.OrderBy(x => x.Name));
 
 			BuildSummaries();
 			ApplyFilters();
@@ -97,26 +97,21 @@ public partial class MaterialViewModel : LoadableViewModel
 		if (source is null)
 			return;
 
-		foreach (var material in source)
-		{
-			var viewModel = GetOrCreateCachedViewModel(
-				cacheKey: $"material:{category}:{material.Name}",
-				model: material,
-				create: x => new MaterialItemViewModel
-				{
-					Name = x.FullName,
-					Category = category,
-					Count = x.Count
-				},
-				update: (vm, x) =>
-				{
-					vm.Name = x.FullName;
-					vm.Category = category;
-					vm.Count = x.Count;
-				});
-
-			target.Add(viewModel);
-		}
+		target.AddRange(source.Select(material => GetOrCreateCachedViewModel(
+			cacheKey: $"material:{category}:{material.Name}",
+			model: material,
+			create: x => new MaterialItemViewModel
+			{
+				Name = x.FullName,
+				Category = category,
+				Count = x.Count
+			},
+			update: (vm, x) =>
+			{
+				vm.Name = x.FullName;
+				vm.Category = category;
+				vm.Count = x.Count;
+			})));
 	}
 
 	private void ApplyFilters()
@@ -130,29 +125,29 @@ public partial class MaterialViewModel : LoadableViewModel
 
 		query = SelectedSort switch
 		{
-			Options.Sort.Category => query.OrderBy(x => x.Category).ThenBy(x => x.Name),
-			Options.Sort.Count => query.OrderByDescending(x => x.Count),
+			Options.Sort.ByCategory => query.OrderBy(x => x.Category).ThenBy(x => x.Name),
+			Options.Sort.ByCount => query.OrderByDescending(x => x.Count),
 			_ => query.OrderBy(x => x.Name)
 		};
 
-		FilteredMaterials.ReplaceAll(query.ToList());
+		FilteredMaterials.ReplaceAll(query);
 	}
 
 	private void BuildSummaries()
 	{
 		MaterialSummaries.ReplaceAll(
 		[
-			new()
+			new MaterialSummaryViewModel
 			{
 				Title = Options.Category.Raw,
 				Value = Materials.Where(x => x.Category == Options.Category.Raw).Sum(x => x.Count)
 			},
-			new()
+			new MaterialSummaryViewModel
 			{
 				Title = Options.Category.Manufactured,
 				Value = Materials.Where(x => x.Category == Options.Category.Manufactured).Sum(x => x.Count)
 			},
-			new()
+			new MaterialSummaryViewModel
 			{
 				Title = Options.Category.Encoded,
 				Value = Materials.Where(x => x.Category == Options.Category.Encoded).Sum(x => x.Count)

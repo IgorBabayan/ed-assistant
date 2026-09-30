@@ -2,7 +2,7 @@
 
 namespace ED.Assistant.Data.Storage;
 
-sealed class DbPathProvider : IDbPathProvider
+internal sealed class DbPathProvider : IDbPathProvider
 {
 	private const string AppFolder = "ED Assistant";
 	private const string DbFileName = "bio-samples.db";

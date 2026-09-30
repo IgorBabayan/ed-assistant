@@ -4,10 +4,10 @@ using Avalonia.Platform;
 
 namespace ED.Assistant.Application.Linux;
 
-class DesktopService : IDesktopService
+internal class DesktopService : IDesktopService
 {
-    const string ICON_NAME = "ed-assistant";
-    const string DESKTOP_FILE_NAME = "ed-assistant.desktop";
+    private const string IconName = "ed-assistant";
+    private const string DesktopFileName = "ed-assistant.desktop";
     
     private readonly StringBuilder _builder = new();
     
@@ -32,7 +32,7 @@ class DesktopService : IDesktopService
         var directory = GetApplicationsDirectory();
         Directory.CreateDirectory(directory);
 
-        var path = IOPath.Combine(directory, DESKTOP_FILE_NAME);
+        var path = IOPath.Combine(directory, DesktopFileName);
         var tempPath = path + ".tmp";
 
         await File.WriteAllTextAsync(tempPath, _builder.ToString(), new UTF8Encoding(false), cancellationToken);
@@ -53,13 +53,13 @@ class DesktopService : IDesktopService
         var targetDir = IOPath.Combine(dataHome, "icons", "hicolor", "256x256", "apps");
         Directory.CreateDirectory(targetDir);
 
-        var targetPath = IOPath.Combine(targetDir, ICON_NAME + ".png");
+        var targetPath = IOPath.Combine(targetDir, IconName + ".png");
 
         using var source = AssetLoader.Open(new Uri("avares://ED.Assistant/Assets/logo.png"));
         using var target = File.Create(targetPath);
         source.CopyTo(target);
 
-        return ICON_NAME;
+        return IconName;
     }
 
     private static string GetAppPath() => Environment.GetEnvironmentVariable("APPIMAGE") ?? Environment.ProcessPath

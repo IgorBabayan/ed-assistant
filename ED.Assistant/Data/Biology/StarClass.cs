@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Biology;
 
-enum StarClassEnum
+internal enum StarClassEnum
 {
     A = 1,
     B,

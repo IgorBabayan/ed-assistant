@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Biology;
 
-enum AtmosphereEnum
+internal enum AtmosphereEnum
 {
     None = 1,
     CarbonDioxide,

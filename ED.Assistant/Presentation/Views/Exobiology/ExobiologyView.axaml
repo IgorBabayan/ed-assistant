@@ -73,19 +73,12 @@
                                                     <!-- ============================= -->
                                                     <Expander.Header>
                                                         <Border Padding="0,6">
-                                                            <Grid
+                                                            <Grid ColumnDefinitions="180,*,100,100,120"
                                                                 ColumnSpacing="12"
                                                                 Cursor="Hand"
                                                                 Classes.medium-value="{Binding IsMediumValue}"
                                                                 Classes.high-value="{Binding IsHighValue}"
                                                                 Classes.excluded="{Binding IsExcluded}">
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="180" />
-                                                                    <ColumnDefinition Width="*" />
-                                                                    <ColumnDefinition Width="100" />
-                                                                    <ColumnDefinition Width="100" />
-                                                                    <ColumnDefinition Width="120" />
-                                                                </Grid.ColumnDefinitions>
 
                                                                 <TextBlock
                                                                     Grid.Column="0"

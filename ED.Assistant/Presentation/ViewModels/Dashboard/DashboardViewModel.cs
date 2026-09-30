@@ -16,7 +16,7 @@ public partial class DashboardViewModel : LoadableViewModel
 	private static readonly ushort MaxExplore = GetMaxRank<ExploreRankEnum>();
 	private static readonly ushort MaxSoldier = GetMaxRank<SoldierRankEnum>();
 	private static readonly ushort MaxExobiologist = GetMaxRank<ExobiologistRankEnum>();
-	private static readonly ushort MaxCQC = GetMaxRank<CQCRankEnum>();
+	private static readonly ushort MaxCqc = GetMaxRank<CQCRankEnum>();
 	private static readonly ushort MaxEmpire = GetMaxRank<EmpireRankEnum>();
 	private static readonly ushort MaxFederation = GetMaxRank<FederationRankEnum>();
 
@@ -24,20 +24,20 @@ public partial class DashboardViewModel : LoadableViewModel
 	private RankEvent? _lastRanks;
 
 	[ObservableProperty]
-	public partial CommanderEvent? Commander { get; set; } = default;
+	public partial CommanderEvent? Commander { get; set; }
 
 	[ObservableProperty]
-	public partial LoadGameEvent? LoadGame { get; set; } = default;
+	public partial LoadGameEvent? LoadGame { get; set; }
 
 	[ObservableProperty]
-	public partial ObservableCollection<RankDTO>? Ranks { get; set; } = new();
+	public partial ObservableCollection<RankDTO>? Ranks { get; set; } = [];
 
 	[ObservableProperty]
-	public partial FSDJumpEvent? CurrentSystem { get; set; } = default;
+	public partial FSDJumpEvent? CurrentSystem { get; set; }
 
-	public BulkObservableCollection<DashboardSignalViewModel> Signals { get; } = new();
+	public BulkObservableCollection<DashboardSignalViewModel> Signals { get; } = [];
 
-	public BulkObservableCollection<RecentEventViewModel> RecentEvents { get; } = new();
+	public BulkObservableCollection<RecentEventViewModel> RecentEvents { get; } = [];
 
 	public bool HasSignals => Signals.Count > 0;
 
@@ -128,7 +128,7 @@ public partial class DashboardViewModel : LoadableViewModel
 		{
 			Name = "CQC",
 			Value = rank.CQC,
-			Maximum = MaxCQC,
+			Maximum = MaxCqc,
 			Level = ((CQCRankEnum)rank.CQC).GetDisplayName()
 		},
 		new()

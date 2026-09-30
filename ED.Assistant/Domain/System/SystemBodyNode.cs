@@ -7,7 +7,7 @@ public sealed class SystemBodyNode
 	public string Type { get; set; } = string.Empty;
 
 	public SystemBodyNode? Parent { get; set; }
-	public List<SystemBodyNode> Children { get; } = new();
+	public List<SystemBodyNode> Children { get; } = [];
 
 	public ScanEvent? Scan { get; set; }
 

@@ -6,12 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ED.Assistant.Presentation.Views.ShipLocker.ShipLockerView"
 			 x:DataType="vm:ShipLockerViewModel">
-  <Grid RowSpacing="16">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
+  <Grid RowDefinitions="Auto,Auto,*" RowSpacing="16">
 
 		<ItemsControl Grid.Row="0"
 					  ItemsSource="{Binding MaterialSummaries}">
@@ -40,12 +35,7 @@
 
 		<Border Grid.Row="1"
 				Classes="dashboard-card">
-			<Grid ColumnSpacing="12">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="180"/>
-					<ColumnDefinition Width="160"/>
-				</Grid.ColumnDefinitions>
+			<Grid ColumnDefinitions="*,180,160" ColumnSpacing="12">
 
 				<TextBox PlaceholderText="Search material..."
 						 Text="{Binding SearchText}"/>
@@ -71,18 +61,9 @@
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
 						<Border Classes="material-card">
-							<Grid RowSpacing="8">
-								<Grid.RowDefinitions>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-								</Grid.RowDefinitions>
+							<Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="8">
 
-								<Grid>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="*"/>
-										<ColumnDefinition Width="Auto"/>
-									</Grid.ColumnDefinitions>
+								<Grid ColumnDefinitions="*,Auto">
 
 									<TextBlock Text="{Binding Name}"
 											   Classes="dashboard-value"

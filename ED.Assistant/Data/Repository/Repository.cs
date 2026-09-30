@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace ED.Assistant.Data.Repository;
 
-class Repository<TEntity> : IRepository<TEntity>
+internal class Repository<TEntity> : IRepository<TEntity>
     where TEntity : class
 {
     private readonly DbSet<TEntity> _set;

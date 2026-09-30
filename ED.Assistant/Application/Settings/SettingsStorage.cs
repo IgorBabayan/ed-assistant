@@ -4,16 +4,14 @@ using System.Text.Json;
 
 namespace ED.Assistant.Application.Settings;
 
-class SettingsStorage : ISettingsStorage
+internal class SettingsStorage : ISettingsStorage
 {
-	private readonly JsonSerializerOptions _serializerOptions;
-	
-	public event Action<AppSettings>? SettingsSaved;
-
-	public SettingsStorage() => _serializerOptions = new()
+	private readonly JsonSerializerOptions _serializerOptions = new()
 	{
 		WriteIndented = true
 	};
+
+	public event Action<AppSettings>? SettingsSaved;
 
 	public async Task SaveAsync(string filePath, AppSettings settings, CancellationToken cancellationToken = default)
 	{
@@ -36,10 +34,10 @@ class SettingsStorage : ISettingsStorage
 		ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
 
 		if (!File.Exists(filePath))
-			return new();
+			return new AppSettings();
 
 		await using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 		return await JsonSerializer.DeserializeAsync<AppSettings>(stream, _serializerOptions, cancellationToken)
-			?? new();
+			?? new AppSettings();
 	}
 }

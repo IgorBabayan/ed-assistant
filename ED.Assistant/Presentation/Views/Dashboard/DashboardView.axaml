@@ -6,29 +6,15 @@
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:Class="ED.Assistant.Presentation.Views.Dashboard.DashboardView"
 			 x:DataType="vm:DashboardViewModel">
-	<Grid RowSpacing="16"
+	<Grid ColumnDefinitions="2*,*" RowDefinitions="Auto,*,Auto" RowSpacing="16"
 		  ColumnSpacing="16">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
 
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="2*"/>
-			<ColumnDefinition Width="*"/>
-		</Grid.ColumnDefinitions>
 
 		<!-- Current System -->
 		<Border Grid.Row="0"
 				Grid.Column="0"
 				Classes="dashboard-card">
-			<Grid RowSpacing="14">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="*"/>
-				</Grid.RowDefinitions>
+			<Grid RowDefinitions="Auto,Auto,*" RowSpacing="14">
 
 				<DockPanel>
 					<TextBlock Text="CURRENT SYSTEM"

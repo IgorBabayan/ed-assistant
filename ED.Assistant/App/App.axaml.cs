@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.Assistant.App;
 
-public partial class App : Avalonia.Application
+public class App : Avalonia.Application
 {
     private ServiceProvider? _provider;
     private MainWindowViewModel? _mainViewModel;
@@ -24,7 +24,7 @@ public partial class App : Avalonia.Application
         if (_mainViewModel is not null)
             _provider.GetRequiredService<IJournalWatchService>().Dispose();
         _provider.Dispose();
-        ED.Assistant.Presentation.Converters.BiologyImageConverter.ClearCache();
+        Presentation.Converters.BiologyImageConverter.ClearCache();
         _provider = null;
     }
 
@@ -64,7 +64,7 @@ public partial class App : Avalonia.Application
 			// Resolve the MainWindowViewModel from DI and assign as DataContext
 			desktop.MainWindow = new MainWindow
             {
-                DataContext = _mainViewModel = provider.GetRequiredService<MainWindowViewModel>(),
+                DataContext = _mainViewModel = provider.GetRequiredService<MainWindowViewModel>()
             };
 		}
 

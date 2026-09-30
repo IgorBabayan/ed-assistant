@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Avalonia.Threading;
 using ED.Assistant.Application.Catalog;
 using ED.Assistant.Application.Path;
@@ -19,7 +20,7 @@ public sealed partial class ExobiologyViewModel : LoadableViewModel
 	
 	private IReadOnlyList<OrganicPlanetViewModel> _previousPlanets = [];
 
-	public BulkObservableCollection<OrganicPlanetViewModel> Planets { get; } = new();
+	public BulkObservableCollection<OrganicPlanetViewModel> Planets { get; } = [];
 	
 	public bool HasBiologicalSignals => Planets.Count > 0;
 	
@@ -104,8 +105,10 @@ public sealed partial class ExobiologyViewModel : LoadableViewModel
 			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
 			HideExcludedSignals = settings.HideExcludedSignals;
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
+			// Settings are optional here: keep the default and carry on
+			Debug.WriteLine($"Failed to load settings for Exobiology: {ex}");
 		}
 	}
 }

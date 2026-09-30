@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Biology;
 
-enum BodyClassEnum
+internal enum BodyClassEnum
 {
     RockyBody = 1,
     HighMetalContentBody,

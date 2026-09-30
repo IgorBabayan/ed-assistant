@@ -5,8 +5,8 @@ public class CommanderEvent : BaseJournalEvent
 	internal const string EventName = "Commander";
 
 	[JsonPropertyName("Name")]
-	public string? Name { get; set; } = default;
+	public string? Name { get; set; }
 
 	[JsonPropertyName("FID")]
-	public string? FID { get; set; } = default;
+	public string? FID { get; set; }
 }

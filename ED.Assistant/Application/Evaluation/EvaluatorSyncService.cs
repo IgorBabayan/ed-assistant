@@ -5,7 +5,7 @@ using EvaluatorEntity = ED.Assistant.Data.Evaluator.Evaluator;
 
 namespace ED.Assistant.Application.Evaluation;
 
-sealed class EvaluatorSyncService : IEvaluatorSyncService, IDisposable
+internal sealed class EvaluatorSyncService : IEvaluatorSyncService, IDisposable
 {
 	private const int FirstFootStepMultiplier = 5;
 
@@ -72,7 +72,7 @@ sealed class EvaluatorSyncService : IEvaluatorSyncService, IDisposable
 	public void Dispose() => _gate.Dispose();
 
 	private static async Task ApplySampleAsync(OrganicSampled sampled,
-		IReadOnlyDictionary<string, Genus> catalog, IRepository<EvaluatorEntity> repository,
+		Dictionary<string, Genus> catalog, IRepository<EvaluatorEntity> repository,
 		CancellationToken cancellationToken)
 	{
 		if (!catalog.TryGetValue(sampled.SpeciesId, out var genus))
@@ -93,13 +93,12 @@ sealed class EvaluatorSyncService : IEvaluatorSyncService, IDisposable
 		if (sameEvent is not null)
 		{
 			// Rows stored before the location columns existed: fill them in so check 2 can find them
-			if (sameEvent.SystemAddress is null)
-			{
-				sameEvent.SystemAddress = systemAddress;
-				sameEvent.BodyId = bodyId;
-				repository.Update(sameEvent);
-			}
+			if (sameEvent.SystemAddress is not null)
+				return;
 
+			sameEvent.SystemAddress = systemAddress;
+			sameEvent.BodyId = bodyId;
+			repository.Update(sameEvent);
 			return;
 		}
 
@@ -131,7 +130,7 @@ sealed class EvaluatorSyncService : IEvaluatorSyncService, IDisposable
 	}
 
 	private static async Task ApplySaleAsync(OrganicDataSold sold,
-		IReadOnlyDictionary<string, Genus> catalog, IRepository<EvaluatorEntity> repository,
+		Dictionary<string, Genus> catalog, IRepository<EvaluatorEntity> repository,
 		CancellationToken cancellationToken)
 	{
 		foreach (var group in sold.SpeciesIds.GroupBy(id => id, StringComparer.OrdinalIgnoreCase))

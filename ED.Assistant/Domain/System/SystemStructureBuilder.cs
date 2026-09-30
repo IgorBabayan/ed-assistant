@@ -2,7 +2,7 @@
 
 namespace ED.Assistant.Domain.System;
 
-sealed class SystemStructureBuilder : ISystemStructureBuilder
+internal sealed class SystemStructureBuilder : ISystemStructureBuilder
 {
 	public SystemStructure Build(JournalState state)
 	{
@@ -101,9 +101,6 @@ sealed class SystemStructureBuilder : ISystemStructureBuilder
 		if (!string.IsNullOrEmpty(scan.PlanetClass))
 			return "Planet";
 
-		if (scan.BodyName.Contains("Belt Cluster"))
-			return "Belt Cluster";
-
-		return "Unknown";
+		return scan.BodyName.Contains("Belt Cluster") ? "Belt Cluster" : "Unknown";
 	}
 }

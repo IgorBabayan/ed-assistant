@@ -10,5 +10,5 @@ public class SellOrganicDataEvent : BaseJournalEvent
     public long MarketId { get; set; }
 
     [JsonPropertyName("BioData")]
-    public IEnumerable<BioDataItem>? BioData { get; set; } = default;
+    public IEnumerable<BioDataItem>? BioData { get; set; }
 }

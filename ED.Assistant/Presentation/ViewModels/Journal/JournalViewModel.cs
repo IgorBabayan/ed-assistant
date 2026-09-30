@@ -94,7 +94,7 @@ public sealed partial class JournalViewModel : LoadableViewModel
 			TrimAll(capacity);
 
 			// one Reset notification instead of thousands of Add notifications
-			Entries = new ObservableCollection<JournalEntryViewModel>(_allEntries.Where(_filter.IsMatch));
+			Entries = [.._allEntries.Where(_filter.IsMatch)];
 		}
 		else
 		{
@@ -131,10 +131,15 @@ public sealed partial class JournalViewModel : LoadableViewModel
 
 	private async Task ApplySearchDelayedAsync(string? text)
 	{
-		_searchCts?.Cancel();
-		_searchCts?.Dispose();
-
+		// Swap first so a keystroke arriving while we await the cancel sees the new source
+		var previous = _searchCts;
 		var cts = _searchCts = new CancellationTokenSource();
+
+		if (previous is not null)
+		{
+			await previous.CancelAsync();
+			previous.Dispose();
+		}
 
 		try
 		{
@@ -146,7 +151,7 @@ public sealed partial class JournalViewModel : LoadableViewModel
 		}
 
 		_filter = SearchFilter.Parse(text);
-		Entries = new ObservableCollection<JournalEntryViewModel>(_allEntries.Where(_filter.IsMatch));
+		Entries = [.._allEntries.Where(_filter.IsMatch)];
 
 		if (IsFollowing)
 			ScrollToEndRequested?.Invoke(this, EventArgs.Empty);
@@ -187,13 +192,7 @@ public sealed partial class JournalViewModel : LoadableViewModel
 
 		public bool IsMatch(JournalEntryViewModel entry)
 		{
-			foreach (var term in _terms)
-			{
-				if (!entry.RawLine.Contains(term, StringComparison.OrdinalIgnoreCase))
-					return false;
-			}
-
-			return true;
+			return _terms.All(term => entry.RawLine.Contains(term, StringComparison.OrdinalIgnoreCase));
 		}
 	}
 }

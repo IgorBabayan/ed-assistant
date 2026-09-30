@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed;
 
-static class SeedHelpers
+internal static class SeedHelpers
 {
     public static void Atmospheres<TRule>(ModelBuilder mb, TRule rule, params AtmosphereEnum[] items) where TRule : struct, Enum =>
         mb.Entity("RuleAtmosphere").HasData(items.Select(x => new { RuleId = Convert.ToInt32(rule), AtmosphereId = (int)x }));

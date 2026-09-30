@@ -5,7 +5,7 @@ using ED.Assistant.Application.Storage;
 
 namespace ED.Assistant.Application.JournalLoading;
 
-sealed class JournalLoaderService : IJournalLoaderService, IDisposable
+internal sealed class JournalLoaderService : IJournalLoaderService, IDisposable
 {
 	private readonly IPathFinder _pathFinder;
 	private readonly IJournalWatchService _watcher;

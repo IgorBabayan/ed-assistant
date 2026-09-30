@@ -1,13 +1,13 @@
 ﻿namespace ED.Assistant.Application.State;
 
-class JournalStateAggregator : IJournalStateAggregator
+internal class JournalStateAggregator : IJournalStateAggregator
 {
 	private readonly IJournalEventDispatcher _dispatcher;
 
 	public JournalStateAggregator(IJournalEventDispatcher dispatcher) => _dispatcher = dispatcher;
 
 	public void RegisterLast<TEvent>(string eventName, Action<TEvent> setter) 
-		where TEvent : class, IJournalEvent => _dispatcher.On<TEvent>(eventName, setter);
+		where TEvent : class, IJournalEvent => _dispatcher.On(eventName, setter);
 
 	public void RegisterByKey<TEvent, TKey>(string eventName, Func<TEvent, TKey> keySelector,
 		IDictionary<TKey, TEvent> target)

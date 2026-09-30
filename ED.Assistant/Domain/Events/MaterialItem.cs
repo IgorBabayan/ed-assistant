@@ -9,10 +9,10 @@ public class MaterialItem
 	public string NameLocalised { get; set; } = string.Empty;
 
 	[JsonPropertyName("Count")]
-	public ushort Count { get; set; } = default;
+	public ushort Count { get; set; }
 
 	[JsonPropertyName("OwnerID")]
-	public ushort OwnerId { get; set; } = default;
+	public ushort OwnerId { get; set; }
 
 	[JsonPropertyName("MissionID")]
 	public long MissionId { get; set; }

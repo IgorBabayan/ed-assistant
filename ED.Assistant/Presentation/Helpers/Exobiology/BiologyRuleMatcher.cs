@@ -1,6 +1,6 @@
 namespace ED.Assistant.Presentation.Helpers.Exobiology;
 
-static class BiologyRuleMatcher
+internal static class BiologyRuleMatcher
 {
     private const double MetresPerSecondSquaredPerG = 9.80665;
     private const double PascalsPerAtmosphere = 101325;
@@ -57,16 +57,12 @@ static class BiologyRuleMatcher
                 rule.Volcanisms,
                 body.Volcanism));
 
-            foreach (var component in rule.AtmosphereComponents)
-            {
-                checks.Add(
-                    body.AtmosphereCompositions is null
-                        ? null
-                        : body.AtmosphereCompositions.Any(c =>
-                            ParseAtmosphere(c.Name) is { } type &&
-                            (int)type == component.AtmosphereId &&
-                            c.Percent >= component.MinPercentage));
-            }
+            var compositions = body.AtmosphereCompositions;
+            checks.AddRange(rule.AtmosphereComponents.Select(component =>
+                compositions?.Any(c =>
+                    ParseAtmosphere(c.Name) is { } type &&
+                    (int)type == component.AtmosphereId &&
+                    c.Percent >= component.MinPercentage)));
         }
 
         if (rule.SystemBodyClasses.Count > 0)
@@ -79,10 +75,9 @@ static class BiologyRuleMatcher
                     : null);
         }
 
-        foreach (var group in rule.Stars.GroupBy(s => s.Type))
-        {
-            checks.Add(MatchesStars(group, body, systemScans));
-        }
+        checks.AddRange(rule.Stars
+            .GroupBy(s => s.Type)
+            .Select(group => MatchesStars(group, body, systemScans)));
 
         // JournalState does not contain the information needed for these.
         if (rule.Guardian is not null || rule.Nebula is not null || rule.ParentBodyClasses.Count > 0)
@@ -124,9 +119,7 @@ static class BiologyRuleMatcher
             if (ids.Count == 0)
                 return null;
 
-            stars = stars
-                .Where(s => ids.Contains(s.BodyId))
-                .ToList();
+            stars = [..stars.Where(s => ids.Contains(s.BodyId))];
 
             complete = ids.All(id =>
                 stars.Any(s => s.BodyId == id));

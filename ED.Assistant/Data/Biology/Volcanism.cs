@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Biology;
 
-enum VolcanismEnum
+internal enum VolcanismEnum
 {
     None = 1,
     Any,

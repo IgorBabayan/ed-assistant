@@ -14,10 +14,10 @@ public class SAASignalsFoundEvent : BaseJournalEvent
 	public long SystemAddress { get; set; }
 
 	[JsonPropertyName("Genuses")]
-	public IEnumerable<GenusItem>? Genuses { get; set; } = default;
+	public IEnumerable<GenusItem>? Genuses { get; set; }
 
 	[JsonPropertyName("Signals")]
-	public IEnumerable<SignalItem>? Signals { get; set; } = default;
+	public IEnumerable<SignalItem>? Signals { get; set; }
 }
 
 public class GenusItem

@@ -21,7 +21,7 @@ public partial class SettingsViewModel : BaseViewModel
 	public partial bool HideExcludedSignals { get; set; }
 	
 	[ObservableProperty]
-	public partial decimal? ReadLogsForDays { get; set; } = AppSettings.DEFAULT_READ_LOGS_FOR_DAYS;
+	public partial decimal? ReadLogsForDays { get; set; } = AppSettings.DefaultReadLogsForDays;
 
 	[ObservableProperty]
 	public partial DockPosition DockPosition { get; set; }
@@ -43,14 +43,14 @@ public partial class SettingsViewModel : BaseViewModel
 	private async Task Save(CancellationToken cancellationToken = default)
 	{
 		var path = _pathFinder.GetConfigPath();
-		await _settingsStorage.SaveAsync(path, new()
+		await _settingsStorage.SaveAsync(path, new AppSettings
 		{ 
 			LogFolder = LogFolder,
 			IsAutoWatchEnable = EnableAutoWatch,
 			HideExcludedSignals = HideExcludedSignals,
 			ReadLogsForDays = ReadLogsForDays is { } days
 				? (int)Math.Clamp(days, 0, int.MaxValue)
-				: AppSettings.DEFAULT_READ_LOGS_FOR_DAYS,
+				: AppSettings.DefaultReadLogsForDays,
 			DockPosition = DockPosition
 		}, cancellationToken);
 

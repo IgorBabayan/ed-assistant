@@ -33,7 +33,7 @@ public partial class ImportFolderViewModel : BaseViewModel
     [RelayCommand]
     private void Import()
     {
-        var path = ExpandHome(FolderPath?.Trim() ?? string.Empty);
+        var path = ExpandHome(FolderPath.Trim());
 
         if (string.IsNullOrEmpty(path))
         {

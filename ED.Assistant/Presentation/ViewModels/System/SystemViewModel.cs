@@ -14,7 +14,7 @@ public partial class SystemViewModel : LoadableViewModel
     [ObservableProperty]
     public partial SystemBodyNodeViewModel? SelectedBody { get; set; }
 	
-    public BulkObservableCollection<SystemBodyNodeViewModel> Bodies { get; } = new();
+    public BulkObservableCollection<SystemBodyNodeViewModel> Bodies { get; } = [];
 
     public SystemViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
         ISystemStructureBuilder structureBuilder, IMemoryCache memoryCache)

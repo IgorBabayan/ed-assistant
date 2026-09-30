@@ -20,7 +20,7 @@ public class FSDJumpEvent : BaseJournalEvent
 	public long SystemAddress { get; set; }
 
 	[JsonPropertyName("StarPos")]
-	public IEnumerable<float>? StarPos { get; set; } = default;
+	public IEnumerable<float>? StarPos { get; set; }
 
 	[JsonPropertyName("SystemAllegiance")]
 	public string Allegiance { get; set; } = string.Empty;

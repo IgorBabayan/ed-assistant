@@ -5,9 +5,9 @@ using ED.Assistant.Presentation.ViewModels.System;
 
 namespace ED.Assistant.Presentation.Helpers.Exobiology;
 
-static class ExobiologyDisplayBuilder
+internal static class ExobiologyDisplayBuilder
 {
-    private const decimal FIRST_FOOT_FALL_MULTIPLIER = 5m;
+    private const decimal FirstFootFallMultiplier = 5m;
     
     public static IReadOnlyList<OrganicPlanetViewModel> Build(
         JournalState state,
@@ -105,7 +105,7 @@ static class ExobiologyDisplayBuilder
                             entry,
                             scan,
                             scans,
-                            isConfirmed: true),
+                            isConfirmed: true)
                 });
             }
 
@@ -153,8 +153,7 @@ static class ExobiologyDisplayBuilder
                         g.Any(o => Same(o.GenusId, genus.GenusId)));
 
                     var hasPossiblePrediction = planet.Signals.Any(s =>
-                        s.IsPrediction &&
-                        !s.IsExcluded &&
+                        s is { IsPrediction: true, IsExcluded: false } &&
                         Same(s.GenusId, genus.GenusId));
 
                     if (hasConfirmedSpecies || hasPossiblePrediction)
@@ -187,12 +186,10 @@ static class ExobiologyDisplayBuilder
                 });
             }
 
-            var allSignals = signalCount;
-
             var collectedSignals = confirmed
                 .Count(group => group.Any(e => e.ScanType == ScanType.Analyse));
 
-            var isComplete = allSignals > 0 && collectedSignals >= allSignals;
+            var isComplete = signalCount > 0 && collectedSignals >= signalCount;
 
             string valueText;
 
@@ -203,7 +200,7 @@ static class ExobiologyDisplayBuilder
                 var hasFirstFootfall = scan is { WasFootfalled: false };
 
                 var total = CollectedValue(planet.Signals) *
-                            (hasFirstFootfall ? FIRST_FOOT_FALL_MULTIPLIER : 1);
+                            (hasFirstFootfall ? FirstFootFallMultiplier : 1);
 
                 valueText = FormatValue(total);
             }
@@ -216,7 +213,7 @@ static class ExobiologyDisplayBuilder
             var displayPlanet = new OrganicPlanetViewModel
             {
                 BodyId = planet.BodyId,
-                BodyName = $"{body.BodyName} ({collectedSignals}/{allSignals} signals) ({valueText})"
+                BodyName = $"{body.BodyName} ({collectedSignals}/{signalCount} signals) ({valueText})"
             };
 
             foreach (var signal in planet.Signals)
@@ -231,7 +228,7 @@ static class ExobiologyDisplayBuilder
     private static decimal CollectedValue(
         IEnumerable<OrganicSignalViewModel> signals) =>
         signals
-            .Where(s => !s.IsPrediction && s.CollectedCount >= 3)
+            .Where(s => s is { IsPrediction: false, CollectedCount: >= 3 })
             .Sum(s => s.Value);
 
     private static void AddPredictions(
@@ -296,7 +293,7 @@ static class ExobiologyDisplayBuilder
                     BiologyRuleDisplayBuilder.Build(
                         entry,
                         scan,
-                        scans),
+                        scans)
             };
         }
 
@@ -364,7 +361,7 @@ static class ExobiologyDisplayBuilder
                 Value = row.Value,
                 BiologyId = row.BiologyId,
                 SpawnRules = row.SpawnRules,
-                BiologyType = row.BiologyType,
+                BiologyType = row.BiologyType
             });
         }
     }
@@ -455,14 +452,14 @@ static class ExobiologyDisplayBuilder
         // One signal per genus: several candidate species of the same
         // genus are alternatives for a single signal, not extra signals.
         var genera = signals
-            .Where(s => !s.IsExcluded && s.Value > 0)
+            .Where(s => s is { IsExcluded: false, Value: > 0 })
             .GroupBy(GenusKey, StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
         var min = genera.Sum(g => g.Min(s => s.Value));
 
         var max = genera.Sum(g => g.Max(s => s.Value)) *
-                  FIRST_FOOT_FALL_MULTIPLIER;
+                  FirstFootFallMultiplier;
 
         return (min, max);
     }

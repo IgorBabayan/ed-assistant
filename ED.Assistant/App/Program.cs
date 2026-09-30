@@ -1,10 +1,9 @@
-﻿using Avalonia;
-using Avalonia.Dialogs;
+﻿using Avalonia.Dialogs;
 using ED.Assistant.Application.Path;
 
 namespace ED.Assistant.App;
 
-internal sealed class Program
+internal static class Program
 {
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
@@ -33,12 +32,13 @@ internal sealed class Program
             .WithInterFont()
             .LogToTrace();
 
-        if (OperatingSystem.IsLinux())
-        {
-            builder = builder.With(new X11PlatformOptions { WmClass = "ed-assistant" });
-            if (DesktopEnvironmentHelper.IsHyprland())
-                builder = builder.UseManagedSystemDialogs();
-        }
+        if (!OperatingSystem.IsLinux())
+            return builder;
+
+        builder = builder.With(new X11PlatformOptions { WmClass = "ed-assistant" });
+        if (DesktopEnvironmentHelper.IsHyprland())
+            builder = builder.UseManagedSystemDialogs();
+
         return builder;
     }
 }

@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Configurations;
 
-class StarClassConfiguration : IEntityTypeConfiguration<StarClass>
+internal class StarClassConfiguration : IEntityTypeConfiguration<StarClass>
 {
     public void Configure(EntityTypeBuilder<StarClass> builder)
     {

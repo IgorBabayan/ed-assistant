@@ -1,6 +1,6 @@
 namespace ED.Assistant.Data.Seed.ExoBiology;
 
-static class AnemoneDataSeed
+internal static class AnemoneDataSeed
 {
     public static void Seed(ModelBuilder modelBuilder)
     {
@@ -312,7 +312,7 @@ static class AnemoneDataSeed
             modelBuilder.Entity<RuleStar>().HasData(
                 new RuleStar
                 {
-                    Id = ((int)rule * 100) + index++,
+                    Id = (int)rule * 100 + index++,
                     RuleId = (int)rule,
                     StarClassId = (int)star.StarClass,
                     LuminosityClass = star.LuminosityClass,

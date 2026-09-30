@@ -1,5 +1,4 @@
 ﻿using Avalonia.Data.Converters;
-using Avalonia.Media;
 using System.Globalization;
 
 namespace ED.Assistant.Presentation.Converters;
@@ -29,6 +28,6 @@ public sealed class OrganicSampleBrushConverter : IValueConverter
 		return Brushes.Gray;
 	}
 
-	public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+	public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
 		=> throw new NotSupportedException();
 }
