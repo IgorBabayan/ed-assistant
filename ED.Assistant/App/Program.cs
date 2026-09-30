@@ -2,7 +2,7 @@
 using Avalonia.Dialogs;
 using ED.Assistant.Application.Path;
 
-namespace ED.Assistant.App.App;
+namespace ED.Assistant.App;
 
 internal sealed class Program
 {
@@ -10,8 +10,17 @@ internal sealed class Program
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
     [STAThread]
-    public static void Main(string[] args) => BuildAvaloniaApp()
-        .StartWithClassicDesktopLifetime(args);
+    public static void Main(string[] args)
+    {
+        try
+        {
+            BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        }
+        finally
+        {
+            (Avalonia.Application.Current as App)?.DisposeServices();
+        }
+    }
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()

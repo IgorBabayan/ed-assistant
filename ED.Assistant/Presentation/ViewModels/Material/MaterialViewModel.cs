@@ -61,7 +61,7 @@ public partial class MaterialViewModel : LoadableViewModel
 		CancellationToken cancellationToken = default)
 	{
 		var materialsEvent = state.Materials;
-		if (materialsEvent is null || ReferenceEquals(materialsEvent, _lastMaterials))
+		if (ReferenceEquals(materialsEvent, _lastMaterials))
 			return;
 
 		cancellationToken.ThrowIfCancellationRequested();
@@ -72,9 +72,9 @@ public partial class MaterialViewModel : LoadableViewModel
 		{
 			var materials = new List<MaterialItemViewModel>();
 
-			AddMaterials(materials, materialsEvent.Raw, Options.Category.Raw);
-			AddMaterials(materials, materialsEvent.Manufactured, Options.Category.Manufactured);
-			AddMaterials(materials, materialsEvent.Encoded, Options.Category.Encoded);
+			AddMaterials(materials, materialsEvent?.Raw, Options.Category.Raw);
+			AddMaterials(materials, materialsEvent?.Manufactured, Options.Category.Manufactured);
+			AddMaterials(materials, materialsEvent?.Encoded, Options.Category.Encoded);
 
 			Materials.ReplaceAll(materials.OrderBy(x => x.Name).ToList());
 

@@ -48,9 +48,6 @@ public partial class DashboardViewModel : LoadableViewModel
 
 	protected override void UpdateFromState(JournalState state)
 	{
-		if (state is null)
-			return;
-
 		// Build display rows here: the journal watcher calls this right after applying
 		// new lines, so the state is consistent now and may change later.
 		var signals = DashboardSignalsBuilder.Build(state, DateTime.UtcNow).ToList();
@@ -63,9 +60,9 @@ public partial class DashboardViewModel : LoadableViewModel
 		var ranks = state.Ranks;
 		List<RankDTO>? rankRows = null;
 
-		if (ranks is not null && !ReferenceEquals(ranks, _lastRanks))
+		if (!ReferenceEquals(ranks, _lastRanks))
 		{
-			rankRows = BuildRanks(ranks);
+			rankRows = ranks is null ? [] : BuildRanks(ranks);
 			_lastRanks = ranks;
 		}
 

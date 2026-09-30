@@ -17,8 +17,10 @@ public class MaterialItem
 	[JsonPropertyName("MissionID")]
 	public long MissionId { get; set; }
 
-	[JsonInclude]
-	public string FullName => string.IsNullOrWhiteSpace(NameLocalised)
-		? $"{char.ToUpper(Name[0])}{Name[1..]}"
-		: NameLocalised;
+	[JsonIgnore]
+	public string FullName => !string.IsNullOrWhiteSpace(NameLocalised)
+		? NameLocalised
+		: string.IsNullOrEmpty(Name)
+			? string.Empty
+			: $"{char.ToUpperInvariant(Name[0])}{Name[1..]}";
 }

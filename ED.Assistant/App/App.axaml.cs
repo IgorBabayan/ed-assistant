@@ -7,10 +7,27 @@ using ED.Assistant.Presentation.ViewModels.Shell;
 using ED.Assistant.Presentation.Views.Shell;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ED.Assistant.App.App;
+namespace ED.Assistant.App;
 
 public partial class App : Avalonia.Application
 {
+    private ServiceProvider? _provider;
+    private MainWindowViewModel? _mainViewModel;
+
+    internal void DisposeServices()
+    {
+        if (_provider is null)
+            return;
+
+        _mainViewModel?.Dispose();
+        // Stop background database work before disposing its dependencies.
+        if (_mainViewModel is not null)
+            _provider.GetRequiredService<IJournalWatchService>().Dispose();
+        _provider.Dispose();
+        ED.Assistant.Presentation.Converters.BiologyImageConverter.ClearCache();
+        _provider = null;
+    }
+
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
     public override void OnFrameworkInitializationCompleted()
@@ -25,12 +42,13 @@ public partial class App : Avalonia.Application
             .AddDbContext<AppDbContext>((sp, options) =>
 			{
                 var dbPathProvider = sp.GetRequiredService<IDbPathProvider>();
-				options.UseSqlite($"Data Source={dbPathProvider.GetDatabasePath()}");
+				options.UseSqlite(new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder
+                { DataSource = dbPathProvider.GetDatabasePath() }.ToString());
 			})
 			.RegisterDbServices();
 
 		// Build provider and keep a reference to it for later use.
-		var provider = services.BuildServiceProvider();
+		var provider = _provider = services.BuildServiceProvider();
 
 		if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -46,7 +64,7 @@ public partial class App : Avalonia.Application
 			// Resolve the MainWindowViewModel from DI and assign as DataContext
 			desktop.MainWindow = new MainWindow
             {
-                DataContext = provider.GetRequiredService<MainWindowViewModel>(),
+                DataContext = _mainViewModel = provider.GetRequiredService<MainWindowViewModel>(),
             };
 		}
 

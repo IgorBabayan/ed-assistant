@@ -6,9 +6,8 @@ public sealed class ParentType : IEquatable<ParentType>, IEquatable<string>
 	public static readonly ParentType Star = new("Star");
 	public static readonly ParentType BaryCentre = new("BaryCentre");
 
-	private readonly string? _value;
+	private readonly string _value;
 
-	private ParentType() { }
 
 	private ParentType(string value) => _value = value;
 
@@ -30,11 +29,11 @@ public sealed class ParentType : IEquatable<ParentType>, IEquatable<string>
 
 	public static bool operator !=(string? left, ParentType? right) => !(left == right);
 
-	public static explicit operator string(ParentType parentType) => parentType._value!;
+	public static explicit operator string(ParentType parentType) => parentType._value;
 
-	public override string ToString() => _value!;
+	public override string ToString() => _value;
 
-	public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_value!);
+	public override int GetHashCode() => StringComparer.Ordinal.GetHashCode(_value);
 
 	public override bool Equals(object? obj) => obj switch
 	{
@@ -51,7 +50,7 @@ public sealed class ParentType : IEquatable<ParentType>, IEquatable<string>
 		if (ReferenceEquals(this, other))
 			return true;
 
-		return string.Equals(_value, other._value, StringComparison.OrdinalIgnoreCase);
+		return string.Equals(_value, other._value, StringComparison.Ordinal);
 	}
 
 	public bool Equals(string? other) => string.Equals(_value, other, StringComparison.Ordinal);

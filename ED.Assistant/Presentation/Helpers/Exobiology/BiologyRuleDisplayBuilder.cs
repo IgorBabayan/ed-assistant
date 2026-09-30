@@ -88,6 +88,8 @@ static class BiologyRuleDisplayBuilder
             "System body",
             rule.SystemBodyClasses.Select(x => x.Name));
 
+        AddList(rows, "Parent body", rule.ParentBodyClasses.Select(x => x.Name));
+
         foreach (var group in rule.Stars.GroupBy(x => x.Type))
         {
             var title = group.Key == RuleStarType.ParentStar

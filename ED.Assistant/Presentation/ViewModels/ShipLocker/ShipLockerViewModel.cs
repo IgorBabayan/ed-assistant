@@ -64,7 +64,7 @@ public partial class ShipLockerViewModel : LoadableViewModel
 		CancellationToken cancellationToken = default)
 	{
 		var shipLocker = state.ShipLocker;
-		if (shipLocker is null || ReferenceEquals(shipLocker, _lastShipLocker))
+		if (ReferenceEquals(shipLocker, _lastShipLocker))
 			return;
 
 		cancellationToken.ThrowIfCancellationRequested();
@@ -75,10 +75,10 @@ public partial class ShipLockerViewModel : LoadableViewModel
 		{
 			var materials = new List<MaterialItemViewModel>();
 
-			AddMaterials(materials, shipLocker.Items, Options.Categories.Items);
-			AddMaterials(materials, shipLocker.Components, Options.Categories.Components);
-			AddMaterials(materials, shipLocker.Consumables, Options.Categories.Consumables);
-			AddMaterials(materials, shipLocker.Data, Options.Categories.Data);
+			AddMaterials(materials, shipLocker?.Items, Options.Categories.Items);
+			AddMaterials(materials, shipLocker?.Components, Options.Categories.Components);
+			AddMaterials(materials, shipLocker?.Consumables, Options.Categories.Consumables);
+			AddMaterials(materials, shipLocker?.Data, Options.Categories.Data);
 
 			Materials.ReplaceAll(materials.OrderBy(x => x.Name).ToList());
 

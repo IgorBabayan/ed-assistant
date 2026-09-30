@@ -12,6 +12,7 @@ public sealed partial class EvaluatorViewModel : LoadableViewModel
 {
 	private readonly IServiceScopeFactory _scopeFactory;
 	private readonly IEvaluatorImportService _importService;
+	private readonly IEvaluatorSyncService _syncService;
 
 	public ObservableCollection<EvaluatorItemViewModel> Items { get; } = [];
 
@@ -38,11 +39,14 @@ public sealed partial class EvaluatorViewModel : LoadableViewModel
 	protected override bool ReactsToJournalChanges => false;
 
 	public EvaluatorViewModel(IJournalLoaderService journalLoader, IJournalStateStore stateStore,
-		IMemoryCache memoryCache, IServiceScopeFactory scopeFactory, IEvaluatorImportService importService)
+		IMemoryCache memoryCache, IServiceScopeFactory scopeFactory, IEvaluatorImportService importService,
+		IEvaluatorSyncService syncService)
 		: base(journalLoader, stateStore, memoryCache)
 	{
 		_scopeFactory = scopeFactory;
 		_importService = importService;
+		_syncService = syncService;
+		_syncService.DataChanged += OnDataChanged;
 
 		// An import writes to the DB without touching the journal state, so StateChanged won't fire
 		_importService.Imported += OnImported;
@@ -51,6 +55,7 @@ public sealed partial class EvaluatorViewModel : LoadableViewModel
 	protected override void OnDispose()
 	{
 		_importService.Imported -= OnImported;
+		_syncService.DataChanged -= OnDataChanged;
 		base.OnDispose();
 	}
 
@@ -61,26 +66,22 @@ public sealed partial class EvaluatorViewModel : LoadableViewModel
 	[RelayCommand]
 	private void DismissImportMessage() => ImportMessage = null;
 
-	private async void OnImported(object? sender, EvaluatorImportResult result)
-	{
-		try
-		{
-			await Dispatcher.UIThread.InvokeAsync(() =>
-			{
-				IsImportError = !result.IsSuccess;
-				ImportMessage = !result.IsSuccess
-					? $"Import failed: {result.Error}"
-					: result.Added > 0
-						? $"Imported {result.Added} new unsold samples from {result.Folder}"
-						: $"No new unsold samples in {result.Folder}";
-			});
+	private void OnDataChanged(object? sender, EventArgs e) => Invalidate();
 
-			if (result.IsSuccess)
-				await RefreshAsync();
-		}
-		catch (Exception)
+	private void OnImported(object? sender, EvaluatorImportResult result)
+	{
+		RunOnUIThread(() =>
 		{
-		}
+			IsImportError = !result.IsSuccess;
+			ImportMessage = !result.IsSuccess
+				? $"Import failed: {result.Error}"
+				: result.Added > 0
+					? $"Imported {result.Added} new unsold samples from {result.Folder}"
+					: $"No new unsold samples in {result.Folder}";
+		});
+
+		if (result.IsSuccess)
+			Invalidate();
 	}
 
 	private async Task RefreshAsync(CancellationToken cancellationToken = default)

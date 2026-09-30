@@ -7,7 +7,7 @@
              xmlns:journal="using:ED.Assistant.Presentation.Views.Journal"
              xmlns:materialVm="using:ED.Assistant.Presentation.ViewModels.Material"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 x:Class="ED.Assistant.App.App.App"
+			 x:Class="ED.Assistant.App.App"
 			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:shiplockerVm="using:ED.Assistant.Presentation.ViewModels.ShipLocker"
              xmlns:shiplocker="using:ED.Assistant.Presentation.Views.ShipLocker"
@@ -29,7 +29,6 @@
 			<converters:ScanTypeForegroundConverter x:Key="ScanTypeForegroundConverter"/>
 			<converters:AutoWatchForegroundConverter x:Key="AutoWatchForegroundConverter"/>
 			<converters:OrganicSampleBrushConverter x:Key="OrganicSampleBrushConverter"/>
-			<converters:BioCostToBrushConverter x:Key="BioCostToBrushConverter" />
 			<converters:BiologyImageConverter x:Key="BiologyImageConverter" />
 		</ResourceDictionary>
 	</Application.Resources>

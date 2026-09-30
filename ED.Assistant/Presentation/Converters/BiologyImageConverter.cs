@@ -9,7 +9,7 @@ namespace ED.Assistant.Presentation.Converters;
 
 public sealed class BiologyImageConverter : IValueConverter
 {
-    private static readonly ConcurrentDictionary<string, Bitmap> Cache = new();
+    private static readonly ConcurrentDictionary<string, Lazy<Bitmap>> Cache = new();
 
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
@@ -32,11 +32,19 @@ public sealed class BiologyImageConverter : IValueConverter
 
         return Cache.GetOrAdd(
             path,
-            _ =>
+            _ => new Lazy<Bitmap>(() =>
             {
                 using var stream = AssetLoader.Open(uri);
                 return new Bitmap(stream);
-            });
+            })).Value;
+    }
+
+    internal static void ClearCache()
+    {
+        foreach (var bitmap in Cache.Values)
+            if (bitmap.IsValueCreated)
+                bitmap.Value.Dispose();
+        Cache.Clear();
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter,

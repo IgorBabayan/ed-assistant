@@ -25,8 +25,10 @@ public class BulkObservableCollection<T> : ObservableCollection<T>
 
         CheckReentrancy();
 
+        // Materialize before clearing: callers may pass this collection or a query over it.
+        var replacement = items.ToArray();
         Items.Clear();
-        foreach (var item in items)
+        foreach (var item in replacement)
             Items.Add(item);
 
         OnPropertyChanged(CountChanged);

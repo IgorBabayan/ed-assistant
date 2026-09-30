@@ -37,7 +37,6 @@ public partial class SettingsViewModel : BaseViewModel
 		_folderPickerService = folderPickerService;
 		_settingsStorage = settingsStorage;
 
-		_ = InitializeAsync();
 	}
 
 	[RelayCommand]
@@ -50,7 +49,7 @@ public partial class SettingsViewModel : BaseViewModel
 			IsAutoWatchEnable = EnableAutoWatch,
 			HideExcludedSignals = HideExcludedSignals,
 			ReadLogsForDays = ReadLogsForDays is { } days
-				? (int)Math.Max(0, days)
+				? (int)Math.Clamp(days, 0, int.MaxValue)
 				: AppSettings.DEFAULT_READ_LOGS_FOR_DAYS,
 			DockPosition = DockPosition
 		}, cancellationToken);
@@ -71,19 +70,13 @@ public partial class SettingsViewModel : BaseViewModel
 		}
 	}
 
-	private async Task InitializeAsync(CancellationToken cancellationToken = default)
+	public async Task InitializeAsync(CancellationToken cancellationToken = default)
 	{
-		try
-		{
-			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
-			LogFolder = settings.LogFolder ?? _pathFinder.GetPathToLogs();
-			EnableAutoWatch = settings.IsAutoWatchEnable;
-			HideExcludedSignals = settings.HideExcludedSignals;
-			ReadLogsForDays = settings.ReadLogsForDays;
-			DockPosition = settings.DockPosition;
-		}
-		catch (Exception)
-		{
-		}
+		var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
+		LogFolder = string.IsNullOrWhiteSpace(settings.LogFolder) ? _pathFinder.GetPathToLogs() : settings.LogFolder;
+		EnableAutoWatch = settings.IsAutoWatchEnable;
+		HideExcludedSignals = settings.HideExcludedSignals;
+		ReadLogsForDays = settings.ReadLogsForDays;
+		DockPosition = settings.DockPosition;
 	}
 }

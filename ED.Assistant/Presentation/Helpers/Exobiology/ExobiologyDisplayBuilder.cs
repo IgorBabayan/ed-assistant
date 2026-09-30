@@ -74,6 +74,7 @@ static class ExobiologyDisplayBuilder
                     Type = Text(latest.Genus, latest.GenusId),
                     
                     GenusId = latest.GenusId,
+                    SpeciesId = latest.SpeciesId,
 
                     Name = entry?.Name ??
                            Text(latest.Species, latest.SpeciesId),
@@ -186,16 +187,7 @@ static class ExobiologyDisplayBuilder
                 });
             }
 
-            var allSignals = mapped?.Signals?
-                                 .Where(s => s.TypeId == SignalType.Biological)
-                                 .Sum(s => s.Count)
-                             ?? state.FSSSignals.Values
-                                 .Where(s =>
-                                     s.SystemAddress == address &&
-                                     s.BodyId == body.BodyId)
-                                 .SelectMany(s => s.Signals ?? [])
-                                 .Where(s => s.TypeId == SignalType.Biological)
-                                 .Sum(s => s.Count);
+            var allSignals = signalCount;
 
             var collectedSignals = confirmed
                 .Count(group => group.Any(e => e.ScanType == ScanType.Analyse));
@@ -411,12 +403,7 @@ static class ExobiologyDisplayBuilder
 
         return string.Join(
             " / ",
-            values.Select(v =>
-                v is { } value
-                    ? value.ToString(
-                        "#,0.##",
-                        CultureInfo.InvariantCulture) + " m"
-                    : "—"));
+            values.Select(value => value.ToString("#,0.##", CultureInfo.InvariantCulture) + " m"));
     }
 
     private static int SampleCount(IEnumerable<ScanOrganicEvent> events)

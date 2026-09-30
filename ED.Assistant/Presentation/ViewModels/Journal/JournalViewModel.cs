@@ -6,14 +6,12 @@ public sealed partial class JournalViewModel : LoadableViewModel
 {
 	private static readonly TimeSpan SearchDelay = TimeSpan.FromMilliseconds(250);
 
-	private readonly SemaphoreSlim _updateGate = new(1, 1);
-
 	// UI thread only
 	private readonly List<JournalEntryViewModel> _allEntries = [];
 	private SearchFilter _filter = SearchFilter.Empty;
 	private CancellationTokenSource? _searchCts;
 
-	// _updateGate only
+	// Serialized by LoadableViewModel
 	private JournalLog? _currentLog;
 	private long _lastSequence;
 
@@ -52,32 +50,24 @@ public sealed partial class JournalViewModel : LoadableViewModel
 	protected override async Task UpdateFromStateAsync(JournalState state,
 		CancellationToken cancellationToken = default)
 	{
-		// StateChanged can fire from the watcher thread while a navigation update is running
-		await _updateGate.WaitAsync(cancellationToken);
-		try
-		{
-			var log = state.Log;
+		cancellationToken.ThrowIfCancellationRequested();
+		var log = state.Log;
 
-			// A full reload creates a new JournalState (and a new log) — start over
-			var isReset = !ReferenceEquals(log, _currentLog);
-			var batch = log.GetSince(isReset ? 0 : _lastSequence);
+		// A full reload creates a new JournalState (and a new log) — start over
+		var isReset = !ReferenceEquals(log, _currentLog);
+		var batch = log.GetSince(isReset ? 0 : _lastSequence);
 
-			if (!isReset && batch.Count == 0)
-				return;
+		if (!isReset && batch.Count == 0)
+			return;
 
-			// Header parsing happens here, off the UI thread
-			var rows = batch.Select(entry => new JournalEntryViewModel(entry)).ToArray();
+		// Header parsing happens here, off the UI thread
+		var rows = batch.Select(entry => new JournalEntryViewModel(entry)).ToArray();
 
-			_currentLog = log;
-			if (batch.Count > 0)
-				_lastSequence = batch[^1].Sequence;
+		_currentLog = log;
+		if (batch.Count > 0)
+			_lastSequence = batch[^1].Sequence;
 
-			await Dispatcher.UIThread.InvokeAsync(() => Apply(rows, isReset, state.FileName, log.Capacity));
-		}
-		finally
-		{
-			_updateGate.Release();
-		}
+		await Dispatcher.UIThread.InvokeAsync(() => Apply(rows, isReset, state.FileName, log.Capacity));
 	}
 
 	[RelayCommand]
@@ -173,7 +163,6 @@ public sealed partial class JournalViewModel : LoadableViewModel
 	{
 		_searchCts?.Cancel();
 		_searchCts?.Dispose();
-		_updateGate.Dispose();
 
 		base.OnDispose();
 	}

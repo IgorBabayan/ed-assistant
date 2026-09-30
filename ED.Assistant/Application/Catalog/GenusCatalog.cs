@@ -50,6 +50,7 @@ sealed class GenusCatalog : IGenusCatalog, IDisposable
 				.Include(c => c.Rules).ThenInclude(r => r.Atmospheres)
 				.Include(c => c.Rules).ThenInclude(r => r.Volcanisms)
 				.Include(c => c.Rules).ThenInclude(r => r.SystemBodyClasses)
+				.Include(c => c.Rules).ThenInclude(r => r.ParentBodyClasses)
 				.Include(c => c.Rules).ThenInclude(r => r.AtmosphereComponents)
 					.ThenInclude(r => r.Atmosphere)
 				.Include(c => c.Rules).ThenInclude(r => r.Stars)

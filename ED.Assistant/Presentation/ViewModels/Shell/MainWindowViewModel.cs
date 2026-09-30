@@ -22,6 +22,7 @@ namespace ED.Assistant.Presentation.ViewModels.Shell;
 
 public partial class MainWindowViewModel : LoadableViewModel
 {
+	private readonly CancellationTokenSource _lifetimeCancellation = new();
 	private readonly IDialogService _dialogService;
 	private readonly INavigationService _navigationService;
 	private readonly ISettingsStorage _settingsStorage;
@@ -102,7 +103,6 @@ public partial class MainWindowViewModel : LoadableViewModel
 		_settingsViewModel = settingsViewModel;
 		_navigationService = navigationService;
 
-		_ = InitializeAsync();
 
 		if (NavigationStore is INotifyPropertyChanged notify)
 		{
@@ -110,10 +110,13 @@ public partial class MainWindowViewModel : LoadableViewModel
 		}
 		
 		BuildDockItems();
+		_ = InitializeAsync(_lifetimeCancellation.Token);
 	}
 
 	protected override void OnDispose()
 	{
+		_lifetimeCancellation.Cancel();
+		_lifetimeCancellation.Dispose();
 		if (NavigationStore is INotifyPropertyChanged notify)
 		{
 			notify.PropertyChanged -= OnPropertyChanged;
@@ -161,7 +164,6 @@ public partial class MainWindowViewModel : LoadableViewModel
 			item.IsActive = item.TargetViewModel.IsInstanceOfType(current);
 	}
 
-	partial void OnIsAutoWatchEnabledChanged(bool value) => _ = UpdateWatchStatus(value);
 
 	[RelayCommand]
 	private async Task NavigateToDashboardView(CancellationToken cancellationToken = default)
@@ -230,18 +232,25 @@ public partial class MainWindowViewModel : LoadableViewModel
 	private async Task Settings(CancellationToken cancellationToken = default)
 	{
 		var configPath = _pathFinder.GetConfigPath();
-		var previousDays = (await _settingsStorage.LoadAsync(configPath, cancellationToken)).ReadLogsForDays;
+		var previous = await _settingsStorage.LoadAsync(configPath, cancellationToken);
+        await _settingsViewModel.InitializeAsync(cancellationToken);
 
 		var result = await _dialogService.ShowDialogAsync<SettingsViewModel, bool>(_settingsViewModel);
 		if (result)
 		{
 			var settings = await _settingsStorage.LoadAsync(configPath, cancellationToken);
-			IsAutoWatchEnabled = settings.IsAutoWatchEnable;
-
-			if (settings.ReadLogsForDays != previousDays)
-				await _journalLoader.LoadLastLogsAsync(cancellationToken);
-			
 			DockPosition = settings.DockPosition;
+            await _journalWatchService.StopAsync();
+            try
+            {
+                if (settings.ReadLogsForDays != previous.ReadLogsForDays ||
+                    !string.Equals(settings.LogFolder, previous.LogFolder, StringComparison.Ordinal))
+                    await _journalLoader.LoadLastLogsAsync(cancellationToken);
+            }
+            finally
+            {
+                await UpdateWatchStatus(settings, cancellationToken);
+            }
 		}
 	}
 
@@ -262,7 +271,10 @@ public partial class MainWindowViewModel : LoadableViewModel
 		Status = "Importing bio-samples…";
 		try
 		{
-			await _evaluatorImportService.ImportAsync(folder, cancellationToken);
+			// Resolve before importing so the first import result has a subscriber.
+            await NavigateToEvaluatorView(cancellationToken);
+            var result = await _evaluatorImportService.ImportAsync(folder, cancellationToken);
+            Status = result.IsSuccess ? DefaultState.Status : $"Import failed: {result.Error}";
 			await NavigateToEvaluatorView(cancellationToken);
 		}
 		catch (OperationCanceledException)
@@ -275,15 +287,15 @@ public partial class MainWindowViewModel : LoadableViewModel
 		}
 	}
 	
-	private Task<string?> AskImportFolderAsync()
+	private async Task<string?> AskImportFolderAsync()
 	{
 		if (DesktopEnvironmentHelper.IsHyprland())
 		{
-			var dialog = new ImportFolderViewModel(_folderPickerService, _pathFinder.GetPathToLogs());
-			return _dialogService.ShowDialogAsync<ImportFolderViewModel, string>(dialog);
+			using var dialog = new ImportFolderViewModel(_folderPickerService, _pathFinder.GetPathToLogs());
+			return await _dialogService.ShowDialogAsync<ImportFolderViewModel, string>(dialog);
 		}
 
-		return _folderPickerService.PickFolderAsync("Select folder with Elite Dangerous journals");
+		return await _folderPickerService.PickFolderAsync("Select folder with Elite Dangerous journals");
 	}
 
 	private async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -291,12 +303,16 @@ public partial class MainWindowViewModel : LoadableViewModel
 		try
 		{
 			await _navigationService.NavigateToAsync<DashboardViewModel>(cancellationToken);
-			await _journalLoader.LoadLastLogsAsync(cancellationToken);
-
 			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
-			IsAutoWatchEnabled = settings.IsAutoWatchEnable;
-			
 			DockPosition = settings.DockPosition;
+            try
+            {
+                await _journalLoader.LoadLastLogsAsync(cancellationToken);
+            }
+            finally
+            {
+                await UpdateWatchStatus(settings, cancellationToken);
+            }
 		}
 		catch (OperationCanceledException)
 		{
@@ -304,6 +320,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 		catch (Exception ex)
 		{
 			// Fire-and-forget from the constructor: never let it throw, but don't hide the reason
+			Status = $"Initialization failed: {ex.Message}";
 			Debug.WriteLine($"MainWindow initialization failed: {ex}");
 		}
 	}
@@ -316,18 +333,28 @@ public partial class MainWindowViewModel : LoadableViewModel
 		UpdateDockActiveState();
 	}
 
-	private async Task UpdateWatchStatus(bool isAutoWatchEnabled, CancellationToken cancellationToken = default)
+	private async Task UpdateWatchStatus(AppSettings settings, CancellationToken cancellationToken = default)
 	{
-		WatchStatus = isAutoWatchEnabled ? "Auto watch enabled" : DefaultState.WatchStatus;
-		
-		if (isAutoWatchEnabled)
-		{
-			var logFolder = _pathFinder.GetPathToLogs();
-			await _journalWatchService.StartAsync(logFolder, cancellationToken);
-		}
-		else
-		{
-			_journalWatchService.Stop();
-		}
+        try
+        {
+            if (settings.IsAutoWatchEnable)
+            {
+                var folder = string.IsNullOrWhiteSpace(settings.LogFolder)
+                    ? _pathFinder.GetPathToLogs()
+                    : settings.LogFolder;
+                await _journalWatchService.StartAsync(folder, cancellationToken);
+            }
+            else
+            {
+                await _journalWatchService.StopAsync();
+            }
+            IsAutoWatchEnabled = settings.IsAutoWatchEnable;
+            WatchStatus = IsAutoWatchEnabled ? "Auto watch enabled" : DefaultState.WatchStatus;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            IsAutoWatchEnabled = false;
+            WatchStatus = $"Auto watch failed: {ex.Message}";
+        }
 	}
 }

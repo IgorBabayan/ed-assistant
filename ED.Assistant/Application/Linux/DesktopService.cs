@@ -20,7 +20,7 @@ class DesktopService : IDesktopService
             .AppendLine("Comment=Exobiological and mining assistant for Elite Dangerous")
             .AppendLine("Terminal=false")
             .AppendLine("Name=ED Assistant")
-            .AppendLine("StartupWMClass=ED.Assistant")
+            .AppendLine("StartupWMClass=ed-assistant")
             .AppendLine($"Exec={QuoteExecArgument(GetAppPath())}")
             .AppendLine($"Icon={GetAppIcon()}");
     }
@@ -47,7 +47,7 @@ class DesktopService : IDesktopService
         }
     }
 
-    private string GetAppIcon()
+    private static string GetAppIcon()
     {
         var dataHome = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         var targetDir = IOPath.Combine(dataHome, "icons", "hicolor", "256x256", "apps");
@@ -62,7 +62,8 @@ class DesktopService : IDesktopService
         return ICON_NAME;
     }
 
-    private static string GetAppPath() => Environment.GetEnvironmentVariable("APPIMAGE") ?? Environment.ProcessPath!;
+    private static string GetAppPath() => Environment.GetEnvironmentVariable("APPIMAGE") ?? Environment.ProcessPath
+        ?? throw new InvalidOperationException("Cannot determine the application executable path.");
     
     private static string GetApplicationsDirectory()
     {

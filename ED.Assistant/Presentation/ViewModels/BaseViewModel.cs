@@ -101,9 +101,6 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 		_isDirty = false;
 
 		var state = _stateStore.CurrentState;
-		if (state is null)
-			return;
-
 		try
 		{
 			await ActivateAsync(state, cancellationToken);
@@ -214,11 +211,8 @@ public abstract partial class LoadableViewModel : BaseViewModel, INavigationAwar
 	}
 
 	// async void is required for event-style fire-and-forget; it must never throw
-	private async void RequestUpdate(JournalState? state)
+	private async void RequestUpdate(JournalState state)
 	{
-		if (state is null)
-			return;
-
 		if (!_isCurrent && !IsAlwaysVisible)
 		{
 			_isDirty = true;

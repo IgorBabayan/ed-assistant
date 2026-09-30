@@ -85,7 +85,7 @@ static class BiologyRuleMatcher
         }
 
         // JournalState does not contain the information needed for these.
-        if (rule.Guardian is not null || rule.Nebula is not null)
+        if (rule.Guardian is not null || rule.Nebula is not null || rule.ParentBodyClasses.Count > 0)
         {
             checks.Add(null);
         }

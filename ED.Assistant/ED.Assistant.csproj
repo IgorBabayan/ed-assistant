@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
+    <VersionPrefix>1.0</VersionPrefix>
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
@@ -12,10 +13,6 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
   
-  <ItemGroup>
-    <None Update="Data\Seed\Catalog\EDMC-BioScan-LICENSE.txt" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
   <ItemGroup>
     <AvaloniaXaml Remove="Presentation\Styles\Border.axaml" />
     <AvaloniaXaml Remove="Presentation\Styles\ComboBox.axaml" />
@@ -49,6 +46,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.7" />
+    <!-- Override EF Core's transitive SQLite bundle to resolve NU1903. -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.13" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="11.0.0-rc.1.26425.128" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-rc.1.26425.128" />
   </ItemGroup>

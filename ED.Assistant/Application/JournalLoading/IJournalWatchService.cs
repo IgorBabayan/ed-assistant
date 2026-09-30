@@ -2,6 +2,8 @@
 
 public interface IJournalWatchService : IDisposable
 {
+	bool IsRunning { get; }
 	Task StartAsync(string logFolder, CancellationToken cancellationToken = default);
 	void Stop();
+	Task StopAsync();
 }

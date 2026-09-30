@@ -10,7 +10,8 @@ internal sealed class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbCon
 	{
 		var dbPathProvider = new DbPathProvider();
 		var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-		optionsBuilder.UseSqlite($"Data Source={dbPathProvider.GetDatabasePath()}");
+		optionsBuilder.UseSqlite(new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder
+                { DataSource = dbPathProvider.GetDatabasePath() }.ToString());
 		return new(optionsBuilder.Options);
 	}
 }

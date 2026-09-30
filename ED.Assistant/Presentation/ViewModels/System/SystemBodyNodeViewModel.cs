@@ -30,7 +30,7 @@ public partial class SystemBodyNodeViewModel : BaseViewModel
 		Scan is null ? "-" : $"{Scan.SurfaceTemperature:N0} K";
 
 	public string Gravity =>
-		Scan is null ? "-" : $"{Scan.SurfaceGravity:N2} g";
+		Scan is null ? "-" : $"{Scan.SurfaceGravity / 9.80665:N2} g";
 
 	public string Mass =>
 		Scan is null ? "-" :

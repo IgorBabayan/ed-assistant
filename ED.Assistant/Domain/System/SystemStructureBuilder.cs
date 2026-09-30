@@ -8,18 +8,16 @@ sealed class SystemStructureBuilder : ISystemStructureBuilder
 	{
 		ArgumentNullException.ThrowIfNull(state);
 
-		if (state.FSDJump is null)
-			throw new ArgumentException("FSDJump is required");
-
-		var currentSystemAddress = state.FSDJump.SystemAddress;
+		if (state.CurrentSystemAddress is not { } currentSystemAddress)
+			return new SystemStructure();
 		var structure = new SystemStructure
 		{
-			Name = state.FSDJump.StarSystem
+			Name = state.Location?.StarSystem ?? state.FSDJump?.StarSystem ?? string.Empty
 		};
 
-		var scans = state.Scans?.Values
+		var scans = state.Scans.Values
 			.Where(x => x.SystemAddress == currentSystemAddress)
-			.ToList() ?? [];
+			.ToList();
 
 		var nodes = new Dictionary<int, SystemBodyNode>();
 		foreach (var scan in scans)
@@ -40,9 +38,11 @@ sealed class SystemStructureBuilder : ISystemStructureBuilder
 				continue;
 
 			var parentId = GetParentId(scan);
-			if (parentId is not null && nodes.TryGetValue(parentId.Value, out var parent))
+			if (parentId is not null && nodes.TryGetValue(parentId.Value, out var parent)
+			    && !CreatesCycle(node, parent))
 			{
 				parent.Children.Add(node);
+				node.Parent = parent;
 			}
 			else
 			{
@@ -51,6 +51,14 @@ sealed class SystemStructureBuilder : ISystemStructureBuilder
 		}
 
 		return structure;
+	}
+
+	private static bool CreatesCycle(SystemBodyNode node, SystemBodyNode? parent)
+	{
+		for (; parent is not null; parent = parent.Parent)
+			if (ReferenceEquals(parent, node))
+				return true;
+		return false;
 	}
 
 	private static SystemBodyNode GetOrCreateNode(Dictionary<int, SystemBodyNode> nodes, ScanEvent scan)
