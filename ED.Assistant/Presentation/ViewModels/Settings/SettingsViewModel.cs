@@ -23,8 +23,6 @@ public partial class SettingsViewModel : BaseViewModel
 	[ObservableProperty]
 	public partial decimal? ReadLogsForDays { get; set; } = AppSettings.DEFAULT_READ_LOGS_FOR_DAYS;
 
-	public bool CanUseFolderPicker => !DesktopEnvironmentHelper.IsHyprland();
-	
 	[ObservableProperty]
 	public partial DockPosition DockPosition { get; set; }
 
@@ -64,7 +62,7 @@ public partial class SettingsViewModel : BaseViewModel
 	private void Cancel() => CloseRequested?.Invoke(false);
 
 	[RelayCommand]
-	private async Task OpenFolder()
+	private async Task OpenFolder(Window? owner)
 	{
 		var folder = await _folderPickerService.PickFolderAsync("Select Elite Dangerous log folder");
 		if (folder is not null)
