@@ -4,7 +4,8 @@
 		xmlns:materialIcons="using:Material.Icons.Avalonia"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:ED.Assistant.Presentation.ViewModels.Settings"
-		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:local="clr-namespace:ED.Assistant.Presentation.Views.Settings"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 		x:Class="ED.Assistant.Presentation.Views.Settings.SettingsWindow"
 		x:DataType="vm:SettingsViewModel"
 		WindowDecorations="None"
@@ -60,7 +61,7 @@
 									 Text="{Binding LogFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
 							<Button Grid.Column="2"
-							        IsVisible="{Binding CanUseFolderPicker}"
+							        CommandParameter="{Binding $parent[local:SettingsWindow]}"
 									Command="{Binding OpenFolderCommand}"
 									Classes="app-button">
 								<materialIcons:MaterialIcon Kind="FolderOpen"/>

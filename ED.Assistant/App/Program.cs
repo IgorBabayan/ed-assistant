@@ -1,4 +1,6 @@
 ﻿using Avalonia;
+using Avalonia.Dialogs;
+using ED.Assistant.Application.Path;
 
 namespace ED.Assistant.App.App;
 
@@ -25,6 +27,8 @@ internal sealed class Program
         if (OperatingSystem.IsLinux())
         {
             builder = builder.With(new X11PlatformOptions { WmClass = "ed-assistant" });
+            if (DesktopEnvironmentHelper.IsHyprland())
+                builder = builder.UseManagedSystemDialogs();
         }
         return builder;
     }

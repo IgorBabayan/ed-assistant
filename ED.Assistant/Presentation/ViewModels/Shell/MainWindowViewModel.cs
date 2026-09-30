@@ -278,7 +278,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	{
 		if (DesktopEnvironmentHelper.IsHyprland())
 		{
-			var dialog = new ImportFolderViewModel(_pathFinder.GetPathToLogs());
+			var dialog = new ImportFolderViewModel(_folderPickerService, _pathFinder.GetPathToLogs());
 			return _dialogService.ShowDialogAsync<ImportFolderViewModel, string>(dialog);
 		}
 

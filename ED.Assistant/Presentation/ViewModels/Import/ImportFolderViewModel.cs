@@ -1,4 +1,5 @@
 using System.IO;
+using ED.Assistant.Application.Dialog;
 
 namespace ED.Assistant.Presentation.ViewModels.Import;
 
@@ -8,6 +9,8 @@ namespace ED.Assistant.Presentation.ViewModels.Import;
 /// </summary>
 public partial class ImportFolderViewModel : BaseViewModel
 {
+    private readonly IFolderPickerService _folderPickerService;
+    
     [ObservableProperty]
     public partial string FolderPath { get; set; }
 
@@ -19,7 +22,11 @@ public partial class ImportFolderViewModel : BaseViewModel
 
     public event Action<string?>? CloseRequested;
 
-    public ImportFolderViewModel(string? initialPath = null) => FolderPath = initialPath ?? string.Empty;
+    public ImportFolderViewModel(IFolderPickerService folderPickerService, string? initialPath = null)
+    {
+        _folderPickerService = folderPickerService;
+        FolderPath = initialPath ?? string.Empty;
+    }
 
     partial void OnFolderPathChanged(string value) => ErrorMessage = null;
 
@@ -60,5 +67,15 @@ public partial class ImportFolderViewModel : BaseViewModel
 
         var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         return IOPath.Join(home, path.TrimStart('~').TrimStart('/'));
+    }
+    
+    [RelayCommand]
+    private async Task OpenFolder(Window? owner)
+    {
+        var folder = await _folderPickerService.PickFolderAsync("Select Elite Dangerous log folder");
+        if (folder is not null)
+        {
+            FolderPath = folder;
+        }
     }
 }

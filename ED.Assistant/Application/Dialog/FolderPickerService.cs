@@ -5,14 +5,14 @@ namespace ED.Assistant.Application.Dialog;
 
 class FolderPickerService : IFolderPickerService
 {
-	public async Task<string?> PickFolderAsync(string title)
+	public async Task<string?> PickFolderAsync(string title, Window? owner = null)
 	{
-		var owner = Utils.GetMainWindow();
-		var folders = await owner.StorageProvider.OpenFolderPickerAsync(
+		var windowOwner = owner ?? Utils.GetMainWindow();
+		var folders = await windowOwner.StorageProvider.OpenFolderPickerAsync(
 			new FolderPickerOpenOptions
 			{
 				Title = title,
-				AllowMultiple = false
+				AllowMultiple = false,
 			});
 
 		return folders.Count > 0
