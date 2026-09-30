@@ -53,8 +53,8 @@ class JournalStateApplier : IJournalStateApplier
 		{
 			if (IsFirstSample(state, e))
 			{
-				state.PendingEvaluatorChanges.Add(
-					new OrganicSampled(e.Timestamp, e.SpeciesId, HasFirstFootStep(state, e)));
+				state.PendingEvaluatorChanges.Add(new OrganicSampled(
+					e.Timestamp, e.SystemAddress, e.BodyId, e.SpeciesId, HasFirstFootStep(state, e)));
 			}
 
 			state.Organics.Add(e);

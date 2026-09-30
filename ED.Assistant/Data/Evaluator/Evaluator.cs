@@ -8,6 +8,9 @@ public sealed class Evaluator
     public bool HasFirstFootStep { get; set; }
     public bool IsActive { get; set; } = true;
     public decimal Total { get; set; }
+    
+    public long? SystemAddress { get; set; }
+    public int? BodyId { get; set; }
 
     public int GenusId { get; set; }
     public Genus Genus { get; set; } = null!;

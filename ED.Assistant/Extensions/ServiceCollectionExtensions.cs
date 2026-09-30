@@ -20,6 +20,7 @@ using ED.Assistant.Presentation.ViewModels.Shell;
 using ED.Assistant.Presentation.ViewModels.ShipLocker;
 using ED.Assistant.Presentation.ViewModels.System;
 using ED.Assistant.Presentation.Views.ConfirmDialog;
+using ED.Assistant.Presentation.Views.Import;
 using ED.Assistant.Presentation.Views.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -82,6 +83,7 @@ static class ServiceCollectionExtensions
 			.AddSingleton<IDbPathProvider, DbPathProvider>()
 			.AddSingleton<IGenusCatalog, GenusCatalog>()
 			.AddSingleton<IEvaluatorSyncService, EvaluatorSyncService>()
+			.AddSingleton<IEvaluatorImportService, EvaluatorImportService>()
 			.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
 
 		if (OperatingSystem.IsLinux())
@@ -98,6 +100,7 @@ static class ServiceCollectionExtensions
 	public static IServiceCollection RegisterWindows(this IServiceCollection services)
 	{
 		services.AddTransient<ConfirmDialogWindow>()
+			.AddTransient<ImportFolderWindow>()
 			.AddTransient<SettingsWindow>();
 		return services;
 	}
