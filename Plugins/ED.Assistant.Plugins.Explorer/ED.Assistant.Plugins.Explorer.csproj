@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+
+        <!-- Shown in Settings > Addons (read without loading the assembly) -->
+        <AssemblyTitle>Explorer</AssemblyTitle>
+        <Description>Tracks unsold exploration data (FSS / DSS scans) and estimates its value.</Description>
+        <Version>1.0.0</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\ED.Assistant.Plugins.Abstractions\ED.Assistant.Plugins.Abstractions.csproj">
+            <Private>false</Private>
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </ProjectReference>
+    </ItemGroup>
+
+    <!-- Same versions as the host. ExcludeAssets="runtime": at runtime these come from the host
+         (see SharedPrefixes in PluginLoadContext), compile-time + XAML/MVVM generators still work. -->
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="12.1.3" ExcludeAssets="runtime"/>
+        <PackageReference Include="Material.Icons.Avalonia" Version="3.0.3-nightly.0.2" ExcludeAssets="runtime"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" ExcludeAssets="runtime"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.7" ExcludeAssets="runtime"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0-rc.1.26425.128" ExcludeAssets="runtime"/>
+    </ItemGroup>
+
+    <!-- Only for `dotnet ef migrations add` during development -->
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <!-- Debug builds copy themselves into the app's plugins folder:
+         <AppData>/ed-assistant/plugins/ED.Assistant.Plugins.Explorer/
+         Override with: dotnet build -p:EdPluginsRoot=/some/path -->
+    <PropertyGroup>
+        <EdPluginsRoot Condition="'$(EdPluginsRoot)' == ''">$([System.Environment]::GetFolderPath(SpecialFolder.ApplicationData))/ed-assistant/plugins</EdPluginsRoot>
+    </PropertyGroup>
+
+    <Target Name="DeployPluginLocally" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+        <ItemGroup>
+            <_PluginOutput Include="$(OutDir)**/*.*"/>
+        </ItemGroup>
+        <Copy SourceFiles="@(_PluginOutput)"
+              DestinationFiles="@(_PluginOutput->'$(EdPluginsRoot)/$(AssemblyName)/%(RecursiveDir)%(Filename)%(Extension)')"
+              SkipUnchangedFiles="true"/>
+        <Message Importance="high" Text="Explorer plugin deployed to $(EdPluginsRoot)/$(AssemblyName)"/>
+    </Target>
+</Project>

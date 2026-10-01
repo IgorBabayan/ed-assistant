@@ -40,4 +40,15 @@ internal class SettingsStorage : ISettingsStorage
 		return await JsonSerializer.DeserializeAsync<AppSettings>(stream, _serializerOptions, cancellationToken)
 			?? new AppSettings();
 	}
+	
+	public AppSettings Load(string filePath)
+	{
+		ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
+
+		if (!File.Exists(filePath))
+			return new AppSettings();
+
+		using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+		return JsonSerializer.Deserialize<AppSettings>(stream, _serializerOptions) ?? new AppSettings();
+	}
 }

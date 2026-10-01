@@ -1,3 +1,7 @@
 <Solution>
   <Project Path="ED.Assistant.csproj" />
+  <Project Path="../ED.Assistant.Plugins.Abstractions/ED.Assistant.Plugins.Abstractions.csproj" />
+  <Folder Name="/Plugins/">
+    <Project Path="../Plugins/ED.Assistant.Plugins.Explorer/ED.Assistant.Plugins.Explorer.csproj" />
+  </Folder>
 </Solution>

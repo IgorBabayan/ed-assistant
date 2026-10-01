@@ -1,0 +1,151 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialIcons="using:Material.Icons.Avalonia"
+             xmlns:vm="using:ED.Assistant.Plugins.Explorer.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ED.Assistant.Plugins.Explorer.Views.ExplorerView"
+             x:DataType="vm:ExplorerViewModel">
+    <!-- Same layout and styles as the host's EvaluatorView; dashboard-* classes come from the host theme -->
+    <UserControl.Styles>
+        <Style Selector="TextBlock.bonus">
+            <Setter Property="Foreground" Value="#66BB6A" />
+        </Style>
+        <Style Selector="TextBlock.number">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+
+        <Style Selector="TextBlock.import-message">
+            <Setter Property="Foreground" Value="#66BB6A" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style Selector="TextBlock.import-message.error">
+            <Setter Property="Foreground" Value="#EF5350" />
+        </Style>
+        <Style Selector="materialIcons|MaterialIcon.import-icon">
+            <Setter Property="Width" Value="18" />
+            <Setter Property="Height" Value="18" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="#66BB6A" />
+        </Style>
+        <Style Selector="materialIcons|MaterialIcon.import-icon.error">
+            <Setter Property="Foreground" Value="#EF5350" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*" RowSpacing="16">
+        <!-- StackPanel skips hidden children when spacing, so no gap while there's no message -->
+        <StackPanel Grid.Row="0" Spacing="8">
+
+            <!-- Import progress / result -->
+            <Border Classes="dashboard-card" IsVisible="{Binding HasImportMessage}">
+                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="8">
+                    <materialIcons:MaterialIcon Grid.Column="0"
+                                                Kind="DatabaseImport"
+                                                Classes="import-icon"
+                                                Classes.error="{Binding IsImportError}" />
+
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding ImportMessage}"
+                               Classes="import-message"
+                               Classes.error="{Binding IsImportError}" />
+
+                    <Button Grid.Column="2"
+                            Classes="window-button"
+                            ToolTip.Tip="Dismiss"
+                            IsVisible="{Binding !IsImporting}"
+                            Command="{Binding DismissImportMessageCommand}">
+                        <materialIcons:MaterialIcon Kind="Close" Width="14" Height="14" />
+                    </Button>
+
+                    <ProgressBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                                 Minimum="0"
+                                 Maximum="{Binding ImportTotal}"
+                                 Value="{Binding ImportProgress}"
+                                 IsVisible="{Binding IsImporting}" />
+                </Grid>
+            </Border>
+
+            <!-- Summary -->
+            <UniformGrid Columns="3" ColumnSpacing="8">
+                <Border Classes="dashboard-card">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Unsold bodies" Classes="dashboard-label" />
+                        <TextBlock Text="{Binding UnsoldCount}" Classes="dashboard-value" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="dashboard-card">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Unsold value" Classes="dashboard-label" />
+                        <TextBlock Text="{Binding UnsoldValue}" Classes="dashboard-value" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="dashboard-card">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="First discoveries" Classes="dashboard-label" />
+                        <TextBlock Text="{Binding FirstDiscoveryCount}" Classes="dashboard-value" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+        </StackPanel>
+
+        <!-- List -->
+        <Border Grid.Row="1" Classes="dashboard-card">
+            <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
+                <TextBlock Text="UNSOLD EXPLORATION DATA" Classes="dashboard-card-header" />
+
+                <Grid Grid.Row="1" ColumnDefinitions="2*,*,2*,100,*" ColumnSpacing="12" Margin="0,0,20,0">
+                    <TextBlock Grid.Column="0" Text="Body" Classes="dashboard-label" />
+                    <TextBlock Grid.Column="1" Text="Scanned" Classes="dashboard-label" />
+                    <TextBlock Grid.Column="2" Text="Type" Classes="dashboard-label" />
+                    <TextBlock Grid.Column="3" Text="Scan" Classes="dashboard-label number" />
+                    <TextBlock Grid.Column="4" Text="Value" Classes="dashboard-label number" />
+                </Grid>
+
+                <TextBlock Grid.Row="2"
+                           Text="No unsold exploration data"
+                           IsVisible="{Binding !HasItems}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="18"
+                           Foreground="{DynamicResource SecondaryTextBrush}" />
+
+                <!-- Virtualized: a long trip can leave thousands of unsold bodies -->
+                <ItemsControl Grid.Row="2" ItemsSource="{Binding Items}" IsVisible="{Binding HasItems}">
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <ScrollViewer>
+                                <ItemsPresenter Margin="0,0,20,0" />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ExplorerItemViewModel">
+                            <Grid ColumnDefinitions="2*,*,2*,100,*" ColumnSpacing="12" Margin="0,4">
+                                <TextBlock Grid.Column="0" Text="{Binding Body}"
+                                           Classes="dashboard-value" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Grid.Column="1" Text="{Binding Scanned}" Classes="dashboard-label" />
+                                <TextBlock Grid.Column="2" Text="{Binding Type}"
+                                           Classes="dashboard-label" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Grid.Column="3" Text="{Binding Scan}"
+                                           ToolTip.Tip="{Binding ScanTip}"
+                                           Classes="dashboard-value number"
+                                           Classes.bonus="{Binding IsFirstDiscovery}" />
+                                <TextBlock Grid.Column="4" Text="{Binding Value}"
+                                           Classes="dashboard-value number"
+                                           Classes.bonus="{Binding IsFirstDiscovery}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
