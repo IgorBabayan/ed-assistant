@@ -2,6 +2,8 @@
 
 public sealed class OrganicSignalViewModel
 {
+	public bool IsFirstUncollected { get; set; }
+	
 	public string Type { get; init; } = string.Empty;
 	public string Name { get; init; } = "—";
 

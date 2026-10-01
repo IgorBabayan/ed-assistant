@@ -32,6 +32,38 @@
         <Style Selector="materialIcons|MaterialIcon.import-icon.error">
             <Setter Property="Foreground" Value="#EF5350" />
         </Style>
+
+        <!-- ============================= -->
+        <!-- Data table                    -->
+        <!-- ============================= -->
+
+        <!-- Header: same horizontal padding as rows (+20 for the scrollbar margin) -->
+        <Style Selector="Border.table-header">
+            <Setter Property="BorderBrush" Value="#22FFFFFF" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="Padding" Value="10,0,30,6" />
+        </Style>
+
+        <!-- Every row container -->
+        <Style Selector="ItemsControl.data-table > ContentPresenter">
+            <Setter Property="Padding" Value="10,7" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <!-- Zebra striping: keeps the eye on one row across wide columns -->
+        <Style Selector="ItemsControl.data-table > ContentPresenter:nth-child(2n)">
+            <Setter Property="Background" Value="#0AFFFFFF" />
+        </Style>
+
+        <!-- Hover highlight -->
+        <Style Selector="ItemsControl.data-table > ContentPresenter:pointerover">
+            <Setter Property="Background" Value="#18FFFFFF" />
+        </Style>
+
+        <Style Selector="ItemsControl.data-table TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
     </UserControl.Styles>
 
     <Grid RowDefinitions="Auto,*" RowSpacing="16">
@@ -88,13 +120,16 @@
             <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
                 <TextBlock Text="UNSOLD EXOBIOLOGY DATA" Classes="dashboard-card-header" />
 
-                <Grid Grid.Row="1" ColumnDefinitions="2*,*,*,60,*" ColumnSpacing="12" Margin="0,0,20,0">
-                    <TextBlock Grid.Column="0" Text="Species" Classes="dashboard-label" />
-                    <TextBlock Grid.Column="1" Text="Sampled" Classes="dashboard-label" />
-                    <TextBlock Grid.Column="2" Text="Base value" Classes="dashboard-label number" />
-                    <TextBlock Grid.Column="3" Text="Bonus" Classes="dashboard-label number" />
-                    <TextBlock Grid.Column="4" Text="Total" Classes="dashboard-label number" />
-                </Grid>
+                <!-- Fixed-width numeric columns keep values close together -->
+                <Border Grid.Row="1" Classes="table-header">
+                    <Grid ColumnDefinitions="*,150,110,60,120" ColumnSpacing="12">
+                        <TextBlock Grid.Column="0" Text="Species" Classes="dashboard-label" />
+                        <TextBlock Grid.Column="1" Text="Sampled" Classes="dashboard-label" />
+                        <TextBlock Grid.Column="2" Text="Base value" Classes="dashboard-label number" />
+                        <TextBlock Grid.Column="3" Text="Bonus" Classes="dashboard-label number" />
+                        <TextBlock Grid.Column="4" Text="Total" Classes="dashboard-label number" />
+                    </Grid>
+                </Border>
 
                 <TextBlock Grid.Row="2"
                            Text="No unsold exobiology data"
@@ -105,17 +140,22 @@
                            Foreground="{DynamicResource SecondaryTextBrush}" />
 
                 <ScrollViewer Grid.Row="2" IsVisible="{Binding HasItems}">
-                    <ItemsControl ItemsSource="{Binding Items}" Margin="0,0,20,0">
+                    <ItemsControl ItemsSource="{Binding Items}"
+                                  Classes="data-table"
+                                  Margin="0,0,20,0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="vm:EvaluatorItemViewModel">
-                                <Grid ColumnDefinitions="2*,*,*,60,*" ColumnSpacing="12" Margin="0,4">
-                                    <TextBlock Grid.Column="0" Text="{Binding Name}" Classes="dashboard-value" />
+                                <Grid ColumnDefinitions="*,150,110,60,120" ColumnSpacing="12">
+                                    <TextBlock Grid.Column="0" Text="{Binding Name}"
+                                               Classes="dashboard-value"
+                                               TextTrimming="CharacterEllipsis" />
                                     <TextBlock Grid.Column="1" Text="{Binding Sampled}" Classes="dashboard-label" />
                                     <TextBlock Grid.Column="2" Text="{Binding BaseValue}" Classes="dashboard-value number" />
                                     <TextBlock Grid.Column="3" Text="{Binding Multiplier}"
                                                Classes="dashboard-value number"
                                                Classes.bonus="{Binding HasFirstFootStep}" />
                                     <TextBlock Grid.Column="4" Text="{Binding Total}"
+                                               FontWeight="SemiBold"
                                                Classes="dashboard-value number"
                                                Classes.bonus="{Binding HasFirstFootStep}" />
                                 </Grid>
