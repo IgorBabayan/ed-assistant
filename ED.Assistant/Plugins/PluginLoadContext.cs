@@ -6,10 +6,13 @@ namespace ED.Assistant.Plugins;
 sealed class PluginLoadContext(string mainAssemblyPath)
     : AssemblyLoadContext(isCollectible: false)
 {
+    // Shared with the host (resolved from the Default context). EF Core and SQLite are shared
+    // so plugins use the host's provider and native e_sqlite3 instead of loading a second copy.
     private static readonly string[] SharedPrefixes =
     [
         "ED.Assistant.Plugins.Abstractions", "Avalonia", "CommunityToolkit.Mvvm",
-        "Material.Icons", "Microsoft.Extensions.", "System."
+        "Material.Icons", "Microsoft.Extensions.", "System.",
+        "Microsoft.EntityFrameworkCore", "Microsoft.Data.Sqlite", "SQLitePCLRaw"
     ];
 
     private readonly AssemblyDependencyResolver _resolver = new(mainAssemblyPath);

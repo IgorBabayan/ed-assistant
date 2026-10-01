@@ -4,7 +4,7 @@ A modern desktop companion for **Elite Dangerous** focused on live journal monit
 
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
 [![Avalonia](https://img.shields.io/badge/Avalonia-12.1.3-8B44AC)](https://avaloniaui.net/)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-4c8bf5)](#platform-support)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-4c8bf5)](#platform-support)
 [![Build](https://github.com/IgorBabayan/ed-assistant/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/IgorBabayan/ed-assistant/actions/workflows/build.yml)
 
 > **ED Assistant is an unofficial community project and is not affiliated with Frontier Developments.**

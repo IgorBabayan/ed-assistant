@@ -5,6 +5,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:ED.Assistant.Presentation.ViewModels.Settings"
         xmlns:local="clr-namespace:ED.Assistant.Presentation.Views.Settings"
+        xmlns:global="clr-namespace:"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 		x:Class="ED.Assistant.Presentation.Views.Settings.SettingsWindow"
 		x:DataType="vm:SettingsViewModel"
@@ -15,6 +16,31 @@
 		SizeToContent="Manual"
 		CanResize="False"
 		ShowInTaskbar="False">
+	<Window.Styles>
+		<Style Selector="TabItem">
+			<Setter Property="FontSize" Value="16"/>
+			<Setter Property="MinHeight" Value="36"/>
+		</Style>
+		<Style Selector="TextBlock.addon-hint">
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="Opacity" Value="0.6"/>
+			<Setter Property="TextWrapping" Value="Wrap"/>
+		</Style>
+		<Style Selector="TextBlock.addon-status">
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="Opacity" Value="0.6"/>
+			<Setter Property="TextWrapping" Value="Wrap"/>
+		</Style>
+		<Style Selector="TextBlock.addon-status.pending">
+			<Setter Property="Foreground" Value="Orange"/>
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+		<Style Selector="TextBlock.addon-status.error">
+			<Setter Property="Foreground" Value="#EF5350"/>
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+	</Window.Styles>
+
 	<Grid Background="Transparent">
 		<!-- Overlay background -->
 		<Border Background="{DynamicResource TransparentBackgroundBrush}" />
@@ -27,7 +53,7 @@
 					CornerRadius="12"
 					Padding="20"
 					Width="600"
-					Height="400"
+					Height="460"
 					HorizontalAlignment="Center"
 					VerticalAlignment="Center">
 
@@ -39,64 +65,164 @@
 							   FontSize="20"
 							   FontWeight="Bold" />
 
-					<StackPanel Grid.Row="1"
-								Spacing="{DynamicResource Spacing5}">
-						<Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{DynamicResource Spacing5}">
+					<TabControl Grid.Row="1" Padding="0">
 
-							<TextBlock Grid.Column="0"
-									   Text="Log folder:"
-									   VerticalAlignment="Center"/>
+						<!-- ============ General ============ -->
+						<TabItem Header="General">
+							<StackPanel Spacing="{DynamicResource Spacing5}" Margin="0,8,0,0">
+								<Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{DynamicResource Spacing5}">
 
-							<TextBox Grid.Column="1"
-									 Text="{Binding LogFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+									<TextBlock Grid.Column="0"
+											   Text="Log folder:"
+											   VerticalAlignment="Center"/>
 
-							<Button Grid.Column="2"
-							        CommandParameter="{Binding $parent[local:SettingsWindow]}"
-									Command="{Binding OpenFolderCommand}"
-									Classes="app-button">
-								<materialIcons:MaterialIcon Kind="FolderOpen"/>
-							</Button>
-						</Grid>
-						
-						<Grid ColumnDefinitions="Auto,*" ColumnSpacing="{DynamicResource Spacing5}">
-							<TextBlock Text="Dock position:" VerticalAlignment="Center"/>
-							<ComboBox Grid.Column="1"
-							          MinWidth="160"
-							          ItemsSource="{Binding DockPositions}"
-							          SelectedItem="{Binding DockPosition, Mode=TwoWay}"/>
-						</Grid>
-						
-						<Grid ColumnDefinitions="Auto,Auto,*"
-						      ColumnSpacing="{DynamicResource Spacing5}">
-							<TextBlock Grid.Column="0"
-							           Text="Read logs from the last days:"
-							           VerticalAlignment="Center"/>
-							<NumericUpDown Grid.Column="1"
-							               Width="140"
-							               Value="{Binding ReadLogsForDays, Mode=TwoWay}"
-							               Minimum="0"
-							               Maximum="3650"
-							               Increment="1"
-							               FormatString="0"
-							               ParsingNumberStyle="Integer"/>
+									<TextBox Grid.Column="1"
+											 Text="{Binding LogFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-							<TextBlock Grid.Column="2"
-							           Text="0 = all logs"
-							           Opacity="0.6"
-							           VerticalAlignment="Center"/>
-						</Grid>
+									<Button Grid.Column="2"
+									        CommandParameter="{Binding $parent[local:SettingsWindow]}"
+											Command="{Binding OpenFolderCommand}"
+											Classes="app-button">
+										<materialIcons:MaterialIcon Kind="FolderOpen"/>
+									</Button>
+								</Grid>
 
-						<StackPanel VerticalAlignment="Stretch"
-						            Spacing="8">
-							<CheckBox Content="Enable auto watch log files?"
-							          Foreground="Orange"
-							          IsChecked="{Binding EnableAutoWatch, Mode=TwoWay}"/>	
-							<CheckBox Content="Hide excluded signals?"
-							          Foreground="Orange"
-							          IsChecked="{Binding HideExcludedSignals, Mode=TwoWay}"/>	
-						</StackPanel>
-						
-					</StackPanel>
+								<Grid ColumnDefinitions="Auto,*" ColumnSpacing="{DynamicResource Spacing5}">
+									<TextBlock Text="Dock position:" VerticalAlignment="Center"/>
+									<ComboBox Grid.Column="1"
+									          MinWidth="160"
+									          ItemsSource="{Binding DockPositions}"
+									          SelectedItem="{Binding DockPosition, Mode=TwoWay}"/>
+								</Grid>
+
+								<Grid ColumnDefinitions="Auto,Auto,*"
+								      ColumnSpacing="{DynamicResource Spacing5}">
+									<TextBlock Grid.Column="0"
+									           Text="Read logs from the last days:"
+									           VerticalAlignment="Center"/>
+									<NumericUpDown Grid.Column="1"
+									               Width="140"
+									               Value="{Binding ReadLogsForDays, Mode=TwoWay}"
+									               Minimum="0"
+									               Maximum="3650"
+									               Increment="1"
+									               FormatString="0"
+									               ParsingNumberStyle="Integer"/>
+
+									<TextBlock Grid.Column="2"
+									           Text="0 = all logs"
+									           Opacity="0.6"
+									           VerticalAlignment="Center"/>
+								</Grid>
+
+								<StackPanel VerticalAlignment="Stretch"
+								            Spacing="8">
+									<CheckBox Content="Enable auto watch log files?"
+									          Foreground="Orange"
+									          IsChecked="{Binding EnableAutoWatch, Mode=TwoWay}"/>	
+									<CheckBox Content="Hide excluded signals?"
+									          Foreground="Orange"
+									          IsChecked="{Binding HideExcludedSignals, Mode=TwoWay}"/>	
+								</StackPanel>
+								
+								<CheckBox Content="Automatically install updates on startup"
+								          Foreground="Orange"
+								          IsEnabled="{Binding IsUpdateSupported}"
+								          IsChecked="{Binding AutoUpdate, Mode=TwoWay}"/>
+								<TextBlock Classes="addon-hint" Text="{Binding VersionInfo}"/>
+							</StackPanel>
+						</TabItem>
+
+						<!-- ============ Addons ============ -->
+						<TabItem Header="Addons">
+							<Grid RowDefinitions="Auto,*,Auto" RowSpacing="8" Margin="0,8,0,0">
+
+								<Grid ColumnDefinitions="*,Auto" ColumnSpacing="{DynamicResource Spacing5}">
+									<TextBlock Classes="addon-hint"
+									           VerticalAlignment="Center"
+									           TextWrapping="NoWrap"
+									           TextTrimming="CharacterEllipsis"
+									           ToolTip.Tip="{Binding AddonsFolder}"
+									           Text="{Binding AddonsFolder, StringFormat='Installed in: {0}'}"/>
+
+									<Button Grid.Column="1"
+									        Classes="app-button"
+									        ToolTip.Tip="Open addons folder"
+									        CommandParameter="{Binding $parent[local:SettingsWindow]}"
+									        Command="{Binding OpenAddonsFolderCommand}">
+										<materialIcons:MaterialIcon Kind="FolderOpen"/>
+									</Button>
+								</Grid>
+
+								<TextBlock Grid.Row="1"
+								           Text="No addons installed"
+								           IsVisible="{Binding !HasAddons}"
+								           Opacity="0.6"
+								           HorizontalAlignment="Center"
+								           VerticalAlignment="Center"/>
+
+								<ScrollViewer Grid.Row="1" IsVisible="{Binding HasAddons}">
+									<ItemsControl ItemsSource="{Binding Addons}" Margin="0,0,12,0">
+										<ItemsControl.ItemTemplate>
+											<DataTemplate x:DataType="global:AddonItemViewModel">
+												<Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10" Margin="0,6">
+													<CheckBox Grid.Column="0"
+													          VerticalAlignment="Top"
+													          ToolTip.Tip="Enabled"
+													          IsEnabled="{Binding CanRemove}"
+													          IsChecked="{Binding IsEnabled, Mode=TwoWay}"/>
+
+													<StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+														<TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+														<TextBlock Text="{Binding Description}"
+														           IsVisible="{Binding HasDescription}"
+														           Classes="addon-hint"/>
+														<TextBlock Text="{Binding Status}"
+														           Classes="addon-status"
+														           Classes.pending="{Binding RequiresRestart}"
+														           Classes.error="{Binding HasError}"/>
+													</StackPanel>
+
+													<TextBlock Grid.Column="2"
+													           Text="{Binding Version, StringFormat='v{0}'}"
+													           Opacity="0.6"
+													           VerticalAlignment="Top"/>
+
+													<Panel Grid.Column="3" VerticalAlignment="Top" IsVisible="{Binding CanRemove}">
+														<Button Classes="app-button"
+														        ToolTip.Tip="Remove addon and its data"
+														        IsVisible="{Binding !IsConfirmingRemove}"
+														        Command="{Binding RequestRemoveCommand}">
+															<materialIcons:MaterialIcon Kind="TrashCanOutline"/>
+														</Button>
+
+														<StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsConfirmingRemove}">
+															<TextBlock Text="Delete with data?"
+															           Classes="addon-hint"
+															           TextWrapping="NoWrap"
+															           VerticalAlignment="Center"/>
+															<Button Classes="app-button"
+															        Foreground="#EF5350"
+															        Content="Remove"
+															        Command="{Binding ConfirmRemoveCommand}"/>
+															<Button Classes="app-button"
+															        Content="Cancel"
+															        Command="{Binding CancelRemoveCommand}"/>
+														</StackPanel>
+													</Panel>
+												</Grid>
+											</DataTemplate>
+										</ItemsControl.ItemTemplate>
+									</ItemsControl>
+								</ScrollViewer>
+
+								<TextBlock Grid.Row="2"
+								           Text="Restart ED Assistant to apply addon changes."
+								           Foreground="Orange"
+								           IsVisible="{Binding HasPendingAddonChanges}"/>
+							</Grid>
+						</TabItem>
+					</TabControl>
 
 					<StackPanel Grid.Row="2"
 								Spacing="{DynamicResource Spacing5}"

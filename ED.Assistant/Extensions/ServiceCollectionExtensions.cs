@@ -7,6 +7,7 @@ using ED.Assistant.Application.Notifications;
 using ED.Assistant.Application.Path;
 using ED.Assistant.Application.Settings;
 using ED.Assistant.Application.Storage;
+using ED.Assistant.Application.Updates;
 using ED.Assistant.Data.Repository;
 using ED.Assistant.Data.Storage;
 using ED.Assistant.Domain.System;
@@ -33,23 +34,10 @@ internal static class ServiceCollectionExtensions
 	{
 		public IServiceCollection RegisterDataServices()
 		{
-			services.AddSingleton<WindowsPathResolver>();
-			services.AddSingleton<LinuxPathResolver>();
-			services.AddSingleton<MacPathResolver>();
-
-			services.AddSingleton<IPlatformPathResolver>(sp =>
-			{
-				if (OperatingSystem.IsWindows())
-					return sp.GetRequiredService<WindowsPathResolver>();
-
-				if (OperatingSystem.IsLinux())
-					return sp.GetRequiredService<LinuxPathResolver>();
-
-				return OperatingSystem.IsMacOS()
-					? sp.GetRequiredService<MacPathResolver>()
-					: throw new PlatformNotSupportedException("Unsupported OS");
-			});
-		
+			services.AddSingleton<WindowsPathResolver>()
+				.AddSingleton<LinuxPathResolver>()
+				.AddSingleton<MacPathResolver>()
+				.AddSingleton<IPlatformPathResolver>(_ => PlatformPathResolverFactory.Create());
 			return services;
 		}
 
@@ -89,15 +77,22 @@ internal static class ServiceCollectionExtensions
 				.AddSingleton(DesktopNotifierFactory.Create())
 				.AddSingleton<AlertService>()
 				.AddSingleton<BioSignalAlerter>()
+				.AddSingleton<IUpdateService, UpdateService>()
 				.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
-
-			if (OperatingSystem.IsLinux())
+			
+			if (OperatingSystem.IsWindows())
+				services.AddSingleton<IUpdateInstaller, WindowsUpdateInstaller>();
+			else if (OperatingSystem.IsMacOS())
+				services.AddSingleton<IUpdateInstaller, MacUpdateInstaller>();
+			else if (OperatingSystem.IsLinux())
 			{
-				services.AddSingleton<IDesktopService, DesktopService>();
+				services.AddSingleton<IDesktopService, DesktopService>()
+					.AddSingleton<IUpdateInstaller, LinuxUpdateInstaller>();
 			}
 			else
 			{
-				services.AddSingleton<IDesktopService, NullDesktopService>();
+				services.AddSingleton<IDesktopService, NullDesktopService>()
+					.AddSingleton<IUpdateInstaller, NullUpdateInstaller>();
 			}
 			return services;
 		}

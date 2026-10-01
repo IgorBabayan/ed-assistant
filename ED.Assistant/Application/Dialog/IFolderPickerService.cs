@@ -2,5 +2,5 @@
 
 public interface IFolderPickerService
 {
-	Task<string?> PickFolderAsync(string title, Window? owner = null);
+	Task<string?> PickFolderAsync(string title, Window? owner = null, string? startFolder = null);
 }

@@ -14,6 +14,7 @@ using System.Diagnostics;
 using ED.Assistant.Application.Evaluation;
 using ED.Assistant.Application.Linux;
 using ED.Assistant.Application.Notifications;
+using ED.Assistant.Application.Updates;
 using ED.Assistant.Domain.Config;
 using ED.Assistant.Presentation.ViewModels.Evaluator;
 using ED.Assistant.Presentation.ViewModels.Import;
@@ -34,6 +35,7 @@ public partial class MainWindowViewModel : LoadableViewModel
 	private readonly IFolderPickerService _folderPickerService;
 	private readonly IEvaluatorImportService _evaluatorImportService;
 	private readonly IPluginRegistry _pluginRegistry;
+	private readonly IUpdateService _updateService;
 	private readonly SettingsViewModel _settingsViewModel;
 
 	private static class DefaultState
@@ -96,12 +98,14 @@ public partial class MainWindowViewModel : LoadableViewModel
 		INavigationService navigationService, IJournalLoaderService journalLoader,
 		ISettingsStorage settingsStorage, IPathFinder pathFinder,
 		IJournalWatchService journalWatchService, IDesktopService desktopService, IFolderPickerService folderPickerService,
-		IEvaluatorImportService evaluatorImportService, InAppNotificationService notificationService, IPluginRegistry pluginRegistry) 
+		IEvaluatorImportService evaluatorImportService, InAppNotificationService notificationService, IPluginRegistry pluginRegistry,
+		IUpdateService updateService) 
 			: base(journalLoader, stateStore, memoryCache)
 	{
 		NavigationStore = navigationStore;
 		Notifications = notificationService;
 		_pluginRegistry = pluginRegistry;
+		_updateService = updateService;
 
 		_journalWatchService = journalWatchService;
 		_desktopService = desktopService;
@@ -326,6 +330,10 @@ public partial class MainWindowViewModel : LoadableViewModel
 			await _navigationService.NavigateToAsync<DashboardViewModel>(cancellationToken);
 			var settings = await _settingsStorage.LoadAsync(_pathFinder.GetConfigPath(), cancellationToken);
 			DockPosition = settings.DockPosition;
+			
+			if (settings.AutoUpdate)
+				_ = _updateService.CheckAndInstallAsync(cancellationToken);
+			
             try
             {
                 await JournalLoader.LoadLastLogsAsync(cancellationToken);
