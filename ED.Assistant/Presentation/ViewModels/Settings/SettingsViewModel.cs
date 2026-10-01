@@ -7,16 +7,19 @@ using ED.Assistant.Application.Settings;
 using ED.Assistant.Application.Updates;
 using ED.Assistant.Domain.Config;
 using ED.Assistant.Plugins;
+using ED.Assistant.Presentation.ViewModels.Plugin;
 
 namespace ED.Assistant.Presentation.ViewModels.Settings;
 
 public partial class SettingsViewModel : BaseViewModel
 {
 	private readonly IFolderPickerService _folderPickerService;
+	private readonly IDialogService _dialogService;
 	private readonly ISettingsStorage _settingsStorage;
 	private readonly IPathFinder _pathFinder;
 	private readonly IPluginCatalog _pluginCatalog;
 	private readonly IPluginUninstaller _pluginUninstaller;
+	private readonly IPluginRegistry _pluginRegistry;
 	private readonly IUpdateService _updateService;
 	
 	private Dictionary<string, bool> _savedAddonStates = new();
@@ -58,13 +61,16 @@ public partial class SettingsViewModel : BaseViewModel
 	public event Action<bool?>? CloseRequested;
 
 	public SettingsViewModel(IPathFinder pathFinder, IFolderPickerService folderPickerService,
-		ISettingsStorage settingsStorage, IPluginCatalog pluginCatalog, IPluginUninstaller pluginUninstaller, IUpdateService updateService)
+		ISettingsStorage settingsStorage, IPluginCatalog pluginCatalog, IPluginUninstaller pluginUninstaller,
+		IPluginRegistry pluginRegistry, IDialogService dialogService, IUpdateService updateService)
 	{
 		_pathFinder = pathFinder;
 		_folderPickerService = folderPickerService;
 		_settingsStorage = settingsStorage;
 		_pluginCatalog = pluginCatalog;
 		_pluginUninstaller = pluginUninstaller;
+		_pluginRegistry = pluginRegistry;
+		_dialogService = dialogService;
 		_updateService = updateService;
 	}
 
@@ -140,7 +146,8 @@ public partial class SettingsViewModel : BaseViewModel
 
 		foreach (var plugin in _pluginCatalog.Installed)
 		{
-			var item = new AddonItemViewModel(plugin, settings.IsAddonEnabled(plugin.Descriptor.Key), RemoveAddonAsync);
+			var item = new AddonItemViewModel(plugin, settings.IsAddonEnabled(plugin.Descriptor.Key),
+				_pluginRegistry.HasSettings(plugin.Descriptor.Directory), RemoveAddonAsync, OpenAddonSettingsAsync);
 			item.PropertyChanged += OnAddonChanged;
 			Addons.Add(item);
 		}
@@ -149,6 +156,21 @@ public partial class SettingsViewModel : BaseViewModel
 		OnPropertyChanged(nameof(HasPendingAddonChanges));
 	}
 	
+	// Saves on its own, independent of this dialog's Save / Cancel
+	private async Task OpenAddonSettingsAsync(AddonItemViewModel item)
+	{
+		using var dialog = new PluginSettingsDialogViewModel(_pluginRegistry);
+		try
+		{
+			await dialog.InitializeAsync(item.Plugin);
+			await _dialogService.ShowDialogAsync<PluginSettingsDialogViewModel, bool>(dialog);
+		}
+		catch (Exception ex)
+		{
+			Trace.WriteLine($"Opening settings of addon '{item.Key}' failed: {ex}");
+		}
+	}
+
 	private async Task RemoveAddonAsync(AddonItemViewModel item)
 	{
 		try

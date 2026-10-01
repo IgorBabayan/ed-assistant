@@ -13,6 +13,12 @@ public interface IPlugin
     void ConfigureServices(IServiceCollection services, IPluginContext context);
 
     IEnumerable<PluginPage> GetPages();
+
+    /// <summary>
+    /// Tabs this plugin adds to the Settings window. Default: none.
+    /// A default member, so plugins built against an older Abstractions still load.
+    /// </summary>
+    IEnumerable<PluginSettingsPage> GetSettingsPages() => [];
 }
 
 public sealed record PluginPage(
@@ -39,6 +45,13 @@ public interface IPluginContext
     /// their own migrations history table so they never touch the host's migrations.
     /// </summary>
     string DatabasePath { get; }
+
+    /// <summary>
+    /// Settings of type <typeparamref name="T"/>, stored as JSON in <see cref="DataDirectory"/>
+    /// (so they are deleted together with the addon's data). Returns the same instance for the same type.
+    /// The host does not register it: call <c>services.AddSingleton(context.GetSettings&lt;MySettings&gt;())</c>.
+    /// </summary>
+    IPluginSettings<T> GetSettings<T>() where T : class, new();
 }
 
 public sealed record PluginJournalSnapshot(

@@ -23,6 +23,7 @@ using ED.Assistant.Presentation.ViewModels.ShipLocker;
 using ED.Assistant.Presentation.ViewModels.System;
 using ED.Assistant.Presentation.Views.ConfirmDialog;
 using ED.Assistant.Presentation.Views.Import;
+using ED.Assistant.Presentation.Views.Plugin;
 using ED.Assistant.Presentation.Views.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -101,7 +102,8 @@ internal static class ServiceCollectionExtensions
 		{
 			services.AddTransient<ConfirmDialogWindow>()
 				.AddTransient<ImportFolderWindow>()
-				.AddTransient<SettingsWindow>();
+				.AddTransient<SettingsWindow>()
+				.AddTransient<PluginSettingsDialogWindow>();
 			return services;
 		}
 

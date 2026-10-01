@@ -162,7 +162,7 @@
 								           VerticalAlignment="Center"/>
 
 								<ScrollViewer Grid.Row="1" IsVisible="{Binding HasAddons}">
-									<ItemsControl ItemsSource="{Binding Addons}" Margin="0,0,12,0">
+									<ItemsControl ItemsSource="{Binding Addons}">
 										<ItemsControl.ItemTemplate>
 											<DataTemplate x:DataType="global:AddonItemViewModel">
 												<Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10" Margin="0,6">
@@ -188,28 +188,38 @@
 													           Opacity="0.6"
 													           VerticalAlignment="Top"/>
 
-													<Panel Grid.Column="3" VerticalAlignment="Top" IsVisible="{Binding CanRemove}">
+													<!-- One panel: StackPanel spacing skips hidden children, a grid column would not -->
+													<StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="6" VerticalAlignment="Top">
 														<Button Classes="app-button"
-														        ToolTip.Tip="Remove addon and its data"
-														        IsVisible="{Binding !IsConfirmingRemove}"
-														        Command="{Binding RequestRemoveCommand}">
-															<materialIcons:MaterialIcon Kind="TrashCanOutline"/>
+														        ToolTip.Tip="Addon settings"
+														        IsVisible="{Binding IsSettingsButtonVisible}"
+														        Command="{Binding OpenSettingsCommand}">
+															<materialIcons:MaterialIcon Kind="CogOutline"/>
 														</Button>
 
-														<StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsConfirmingRemove}">
-															<TextBlock Text="Delete with data?"
-															           Classes="addon-hint"
-															           TextWrapping="NoWrap"
-															           VerticalAlignment="Center"/>
+														<Panel IsVisible="{Binding CanRemove}">
 															<Button Classes="app-button"
-															        Foreground="#EF5350"
-															        Content="Remove"
-															        Command="{Binding ConfirmRemoveCommand}"/>
-															<Button Classes="app-button"
-															        Content="Cancel"
-															        Command="{Binding CancelRemoveCommand}"/>
-														</StackPanel>
-													</Panel>
+															        ToolTip.Tip="Remove addon and its data"
+															        IsVisible="{Binding !IsConfirmingRemove}"
+															        Command="{Binding RequestRemoveCommand}">
+																<materialIcons:MaterialIcon Kind="TrashCanOutline"/>
+															</Button>
+
+															<StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsConfirmingRemove}">
+																<TextBlock Text="Delete with data?"
+																           Classes="addon-hint"
+																           TextWrapping="NoWrap"
+																           VerticalAlignment="Center"/>
+																<Button Classes="app-button"
+																        Foreground="#EF5350"
+																        Content="Remove"
+																        Command="{Binding ConfirmRemoveCommand}"/>
+																<Button Classes="app-button"
+																        Content="Cancel"
+																        Command="{Binding CancelRemoveCommand}"/>
+															</StackPanel>
+														</Panel>
+													</StackPanel>
 												</Grid>
 											</DataTemplate>
 										</ItemsControl.ItemTemplate>

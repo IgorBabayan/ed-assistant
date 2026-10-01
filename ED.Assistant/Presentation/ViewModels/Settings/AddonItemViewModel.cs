@@ -5,6 +5,8 @@ public sealed partial class AddonItemViewModel : ObservableObject
 	private readonly PluginLoadStatus _loadStatus;
 	private readonly string? _error;
 	private readonly Func<AddonItemViewModel, Task> _remove;
+	private readonly Func<AddonItemViewModel, Task> _openSettings;
+	private readonly bool _hasSettings;
 
 	public InstalledPlugin Plugin { get; }
 	public string Key { get; }
@@ -18,10 +20,12 @@ public sealed partial class AddonItemViewModel : ObservableObject
 	public partial bool IsEnabled { get; set; }
 
 	[ObservableProperty]
-	[NotifyPropertyChangedFor(nameof(Status), nameof(RequiresRestart), nameof(HasError), nameof(CanRemove))]
+	[NotifyPropertyChangedFor(nameof(Status), nameof(RequiresRestart), nameof(HasError), nameof(CanRemove),
+		nameof(CanOpenSettings), nameof(IsSettingsButtonVisible))]
 	public partial bool IsRemovalPending { get; set; }
 
 	[ObservableProperty]
+	[NotifyPropertyChangedFor(nameof(IsSettingsButtonVisible))]
 	public partial bool IsConfirmingRemove { get; set; }
 
 	[ObservableProperty]
@@ -29,6 +33,12 @@ public sealed partial class AddonItemViewModel : ObservableObject
 	public partial string? RemoveError { get; set; }
 
 	public bool CanRemove => !IsRemovalPending;
+
+	/// <summary>Only a loaded addon can show its settings pages.</summary>
+	public bool CanOpenSettings => _hasSettings && !IsRemovalPending;
+
+	// Hidden while "Delete with data?" is shown, to leave room for it
+	public bool IsSettingsButtonVisible => CanOpenSettings && !IsConfirmingRemove;
 
 	/// <summary>The saved choice differs from what is running right now.</summary>
 	public bool RequiresRestart => IsRemovalPending ||
@@ -49,7 +59,8 @@ public sealed partial class AddonItemViewModel : ObservableObject
 			_ => "Disabled"
 		};
 
-	public AddonItemViewModel(InstalledPlugin plugin, bool isEnabled, Func<AddonItemViewModel, Task> remove)
+	public AddonItemViewModel(InstalledPlugin plugin, bool isEnabled, bool hasSettings,
+		Func<AddonItemViewModel, Task> remove, Func<AddonItemViewModel, Task> openSettings)
 	{
 		Plugin = plugin;
 		Key = plugin.Descriptor.Key;
@@ -59,9 +70,14 @@ public sealed partial class AddonItemViewModel : ObservableObject
 		_loadStatus = plugin.Status;
 		_error = plugin.Error;
 		_remove = remove;
+		_openSettings = openSettings;
+		_hasSettings = hasSettings;
 		IsEnabled = isEnabled;
 		IsRemovalPending = plugin.IsRemovalPending;
 	}
+
+	[RelayCommand]
+	private Task OpenSettings() => _openSettings(this);
 
 	[RelayCommand]
 	private void RequestRemove()

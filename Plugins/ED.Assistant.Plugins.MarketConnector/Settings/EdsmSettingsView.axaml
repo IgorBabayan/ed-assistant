@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:s="using:ED.Assistant.Plugins.MarketConnector.Settings"
+             x:Class="ED.Assistant.Plugins.MarketConnector.Settings.EdsmSettingsView"
+             x:DataType="s:EdsmSettingsViewModel">
+    <StackPanel Spacing="8">
+        <CheckBox Content="Send flight log and commander status to EDSM"
+                  IsChecked="{Binding Enabled}"/>
+
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto"
+              ColumnSpacing="10" RowSpacing="8"
+              IsEnabled="{Binding Enabled}">
+            <TextBlock Text="Commander name:" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Text="{Binding CommanderName}"/>
+
+            <TextBlock Grid.Row="1" Text="API key:" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ApiKey}" PasswordChar="•"/>
+        </Grid>
+    </StackPanel>
+</UserControl>
