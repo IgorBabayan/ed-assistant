@@ -1,9 +1,11 @@
 ﻿using ED.Assistant.Extensions;
 using ED.Assistant.Presentation.ViewModels.ConfirmDialog;
 using ED.Assistant.Presentation.ViewModels.Import;
+using ED.Assistant.Presentation.ViewModels.Plugin;
 using ED.Assistant.Presentation.ViewModels.Settings;
 using ED.Assistant.Presentation.Views.ConfirmDialog;
 using ED.Assistant.Presentation.Views.Import;
+using ED.Assistant.Presentation.Views.Plugin;
 using ED.Assistant.Presentation.Views.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,12 +20,14 @@ internal class DialogService : IDialogService
     public async Task<TResult?> ShowDialogAsync<TViewModel, TResult>(TViewModel viewModel)
         where TViewModel : BaseViewModel
     {
-        var owner = Utils.GetMainWindow();
+        // The topmost window, so a dialog opened from another dialog shows above it
+        var owner = Utils.GetTopWindow();
         Window dialog = viewModel switch
         {
             ConfirmDialogViewModel => _serviceProvider.GetRequiredService<ConfirmDialogWindow>(),
             SettingsViewModel => _serviceProvider.GetRequiredService<SettingsWindow>(),
             ImportFolderViewModel => _serviceProvider.GetRequiredService<ImportFolderWindow>(),
+            PluginSettingsDialogViewModel => _serviceProvider.GetRequiredService<PluginSettingsDialogWindow>(),
 
             _ => throw new InvalidOperationException($"No dialog registered for {typeof(TViewModel).Name}")
         };

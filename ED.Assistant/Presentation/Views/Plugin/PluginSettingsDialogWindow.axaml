@@ -1,0 +1,101 @@
+<Window xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:ED.Assistant.Presentation.ViewModels.Plugin"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		x:Class="ED.Assistant.Presentation.Views.Plugin.PluginSettingsDialogWindow"
+		x:DataType="vm:PluginSettingsDialogViewModel"
+		WindowDecorations="None"
+		WindowStartupLocation="Manual"
+		TransparencyLevelHint="Transparent"
+		Background="Transparent"
+		SizeToContent="Manual"
+		CanResize="False"
+		ShowInTaskbar="False">
+	<Window.Styles>
+		<Style Selector="TabItem">
+			<Setter Property="FontSize" Value="16"/>
+			<Setter Property="MinHeight" Value="36"/>
+		</Style>
+		<Style Selector="TextBlock.plugin-error">
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="Foreground" Value="#EF5350"/>
+			<Setter Property="TextWrapping" Value="Wrap"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid Background="Transparent">
+		<!-- Overlay background -->
+		<Border Background="{DynamicResource TransparentBackgroundBrush}" />
+
+		<Border Background="{DynamicResource CardBackgroundBrush}"
+				CornerRadius="12"
+				Padding="20"
+				Width="600"
+				Height="460"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center">
+
+			<Grid RowDefinitions="Auto,*,Auto" RowSpacing="{DynamicResource Spacing5}">
+
+				<TextBlock Grid.Row="0"
+						   Classes="primary"
+						   Text="{Binding Title}"
+						   FontSize="20"
+						   FontWeight="Bold" />
+
+				<TabControl Grid.Row="1"
+				            Padding="0"
+				            IsVisible="{Binding HasTabs}"
+				            ItemsSource="{Binding Tabs}"
+				            SelectedItem="{Binding SelectedTab, Mode=TwoWay}">
+					<TabControl.ItemTemplate>
+						<DataTemplate x:DataType="vm:PluginSettingsTabViewModel">
+							<TextBlock Text="{Binding Title}" ToolTip.Tip="{Binding PluginName}"/>
+						</DataTemplate>
+					</TabControl.ItemTemplate>
+					<TabControl.ContentTemplate>
+						<DataTemplate x:DataType="vm:PluginSettingsTabViewModel">
+							<Grid RowDefinitions="Auto,*" RowSpacing="8" Margin="0,8,0,0">
+								<TextBlock Text="{Binding Error}"
+								           IsVisible="{Binding HasError}"
+								           Classes="plugin-error"/>
+								<!-- Disabled when loading failed: such a page is never saved -->
+								<ScrollViewer Grid.Row="1" IsEnabled="{Binding IsLoaded}">
+									<ContentControl Content="{Binding View}"/>
+								</ScrollViewer>
+							</Grid>
+						</DataTemplate>
+					</TabControl.ContentTemplate>
+				</TabControl>
+
+				<TextBlock Grid.Row="1"
+				           Text="This addon has no settings"
+				           IsVisible="{Binding !HasTabs}"
+				           Opacity="0.6"
+				           HorizontalAlignment="Center"
+				           VerticalAlignment="Center"/>
+
+				<Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="{DynamicResource Spacing5}">
+					<TextBlock Text="{Binding SaveError}"
+					           IsVisible="{Binding HasSaveError}"
+					           Classes="plugin-error"
+					           VerticalAlignment="Center"/>
+
+					<StackPanel Grid.Column="1"
+								Spacing="{DynamicResource Spacing5}"
+								Orientation="Horizontal">
+						<Button Content="Save"
+								Command="{Binding SaveCommand}"
+								Classes="app-button"/>
+
+						<Button Content="Cancel"
+								Classes="app-button-default"
+								Command="{Binding CancelCommand}"/>
+					</StackPanel>
+				</Grid>
+			</Grid>
+		</Border>
+	</Grid>
+</Window>

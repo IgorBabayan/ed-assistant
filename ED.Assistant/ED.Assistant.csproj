@@ -93,4 +93,10 @@
     <ItemGroup>
       <ProjectReference Include="..\ED.Assistant.Plugins.Abstractions\ED.Assistant.Plugins.Abstractions.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Presentation\Views\Plugin\PluginSettingsDialogWindow.axaml.cs">
+        <DependentUpon>PluginSettingsDialogWindow.axaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>
