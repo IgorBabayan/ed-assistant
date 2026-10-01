@@ -6,7 +6,7 @@ on:
   workflow_dispatch:        # lets you also run it manually from the Actions tab
 
 permissions:
-  contents: write           # needed to create/update the "latest" release
+  contents: write           # needed to create releases
 
 env:
   PROJECT: ED.Assistant/ED.Assistant.csproj
@@ -14,6 +14,7 @@ env:
   APP_NAME: ED Assistant
   ICON_PNG: ED.Assistant/Assets/logo.png   # 256x256 PNG
   BUNDLE_ID: com.edassistant.app           # macOS bundle identifier
+  UPDATE_REPO: ${{ github.repository }}    # baked into release builds for the auto-updater
 
 jobs:
   # ───────────────────────────── Version (computed once) ─────────────────────────────
@@ -57,6 +58,7 @@ jobs:
         run: >
           dotnet publish $PROJECT -c Release -r linux-x64 --self-contained true
           -p:Version=$VERSION
+          -p:UpdateRepository=$UPDATE_REPO
           -o publish/linux-x64
 
       - name: Build AppImage
@@ -123,6 +125,7 @@ jobs:
           dotnet publish $PROJECT -c Release -r win-x64 --self-contained true
           -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
           -p:Version=$VERSION
+          -p:UpdateRepository=$UPDATE_REPO
           -o publish/win-x64
 
       - name: Package portable zip
@@ -174,6 +177,7 @@ jobs:
         run: >
           dotnet publish $PROJECT -c Release -r $RID --self-contained true
           -p:Version=$VERSION
+          -p:UpdateRepository=$UPDATE_REPO
           -o publish/$RID
 
       - name: Build .app bundle
@@ -245,6 +249,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.version.outputs.version }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -252,15 +258,24 @@ jobs:
           path: dist
           merge-multiple: true
 
-      - name: Update "latest" pre-release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
+      # A real (non-pre) release marked as Latest: shows up in the repo sidebar
+      # and is what the app's auto-updater reads via /releases/latest
+      - name: Publish release v${{ env.VERSION }}
         run: |
           ls -la dist
-          gh release delete latest --yes --cleanup-tag || true
-          gh release create latest dist/* \
+          gh release create "v$VERSION" dist/* \
             --target ${{ github.sha }} \
-            --prerelease \
-            --title "Latest build v$VERSION" \
-            --notes "Automatic build v$VERSION from commit ${{ github.sha }}"
+            --title "ED Assistant v$VERSION" \
+            --generate-notes \
+            --latest
+
+      - name: Remove old rolling "latest" pre-release
+        run: gh release delete latest --yes --cleanup-tag || true
+
+      - name: Keep only the 10 newest releases
+        run: |
+          gh release list --limit 100 --json tagName,createdAt \
+            --jq 'sort_by(.createdAt) | reverse | .[10:] | .[].tagName' |
+          while read -r tag; do
+            gh release delete "$tag" --yes --cleanup-tag
+          done

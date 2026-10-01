@@ -22,6 +22,9 @@ public class AppSettings
 	
 	[JsonPropertyName(nameof(Addons))]
 	public Dictionary<string, bool> Addons { get; set; } = new();
+	
+	[JsonPropertyName(nameof(AutoUpdate))]
+	public bool AutoUpdate { get; set; }
 
 	public bool IsAddonEnabled(string key) => !Addons.TryGetValue(key, out var enabled) || enabled;
 }

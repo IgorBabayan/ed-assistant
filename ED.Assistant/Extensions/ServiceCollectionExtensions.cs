@@ -7,6 +7,7 @@ using ED.Assistant.Application.Notifications;
 using ED.Assistant.Application.Path;
 using ED.Assistant.Application.Settings;
 using ED.Assistant.Application.Storage;
+using ED.Assistant.Application.Updates;
 using ED.Assistant.Data.Repository;
 using ED.Assistant.Data.Storage;
 using ED.Assistant.Domain.System;
@@ -76,15 +77,22 @@ internal static class ServiceCollectionExtensions
 				.AddSingleton(DesktopNotifierFactory.Create())
 				.AddSingleton<AlertService>()
 				.AddSingleton<BioSignalAlerter>()
+				.AddSingleton<IUpdateService, UpdateService>()
 				.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
-
-			if (OperatingSystem.IsLinux())
+			
+			if (OperatingSystem.IsWindows())
+				services.AddSingleton<IUpdateInstaller, WindowsUpdateInstaller>();
+			else if (OperatingSystem.IsMacOS())
+				services.AddSingleton<IUpdateInstaller, MacUpdateInstaller>();
+			else if (OperatingSystem.IsLinux())
 			{
-				services.AddSingleton<IDesktopService, DesktopService>();
+				services.AddSingleton<IDesktopService, DesktopService>()
+					.AddSingleton<IUpdateInstaller, LinuxUpdateInstaller>();
 			}
 			else
 			{
-				services.AddSingleton<IDesktopService, NullDesktopService>();
+				services.AddSingleton<IDesktopService, NullDesktopService>()
+					.AddSingleton<IUpdateInstaller, NullUpdateInstaller>();
 			}
 			return services;
 		}

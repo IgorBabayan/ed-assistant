@@ -124,6 +124,12 @@
 									          Foreground="Orange"
 									          IsChecked="{Binding HideExcludedSignals, Mode=TwoWay}"/>	
 								</StackPanel>
+								
+								<CheckBox Content="Automatically install updates on startup"
+								          Foreground="Orange"
+								          IsEnabled="{Binding IsUpdateSupported}"
+								          IsChecked="{Binding AutoUpdate, Mode=TwoWay}"/>
+								<TextBlock Classes="addon-hint" Text="{Binding VersionInfo}"/>
 							</StackPanel>
 						</TabItem>
 
