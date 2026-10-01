@@ -243,9 +243,62 @@ jobs:
           name: ED.Assistant-${{ env.VERSION }}-${{ matrix.rid }}
           path: ED.Assistant-${{ env.VERSION }}-${{ matrix.rid }}.dmg
 
+  # ─────────────────────────── Plugins (one zip per plugin) ───────────────────────────
+  # Plugins are plain managed assemblies (Avalonia, EF Core etc. come from the host at runtime),
+  # so a single framework-dependent build works on every platform.
+  # Every project in Plugins/*/ is picked up automatically.
+  plugins:
+    needs: version
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publish and package plugins
+        run: |
+          mkdir -p dist build/plugins
+          shopt -s nullglob
+          projects=(Plugins/*/*.csproj)
+          if [ ${#projects[@]} -eq 0 ]; then
+            echo "::error::No plugin projects found in Plugins/"
+            exit 1
+          fi
+
+          for csproj in "${projects[@]}"; do
+            NAME=$(basename "$csproj" .csproj)
+            OUT="build/plugins/$NAME"
+
+            dotnet publish "$csproj" -c Release -o "$OUT"
+
+            # The app only discovers <plugins>/<Name>/<Name>.dll
+            if [ ! -f "$OUT/$NAME.dll" ]; then
+              echo "::error::$OUT/$NAME.dll not found"
+              exit 1
+            fi
+
+            # Zip with the folder inside, so it can be extracted straight into the plugins folder
+            ZIP="$NAME-$VERSION.zip"   # e.g. ED.Assistant.Plugins.Explorer-1.0.42.zip
+            (cd build/plugins && zip -qr "../../dist/$ZIP" "$NAME")
+            echo "Packaged $ZIP:"
+            unzip -l "dist/$ZIP"
+          done
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ED.Assistant-${{ env.VERSION }}-plugins
+          path: dist/*.zip
+
   # ───────────────────────────── Release (all platforms) ─────────────────────────────
   release:
-    needs: [version, linux, windows, macos]
+    needs: [version, linux, windows, macos, plugins]
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.version.outputs.version }}
@@ -263,9 +316,20 @@ jobs:
       - name: Publish release v${{ env.VERSION }}
         run: |
           ls -la dist
+          cat > notes.md << 'EOF'
+          ### Addons
+          Extract an `ED.Assistant.Plugins.*.zip` into the plugins folder and restart ED Assistant
+          (Settings → Addons → folder button shows the exact location):
+          - Windows: `%APPDATA%\ed-assistant\plugins`
+          - Linux: `~/.config/ed-assistant/plugins`
+          - macOS: `~/Library/Application Support/ed-assistant/plugins`
+          EOF
+          sed -i 's/^ *//' notes.md
+
           gh release create "v$VERSION" dist/* \
             --target ${{ github.sha }} \
             --title "ED Assistant v$VERSION" \
+            --notes-file notes.md \
             --generate-notes \
             --latest
 
