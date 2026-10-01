@@ -207,6 +207,15 @@ internal static class ExobiologyDisplayBuilder
                 var (minValue, maxValue) = EstimateValue(planet.Signals);
                 valueText = $"{FormatValue(minValue)}/{FormatValue(maxValue)}";
             }
+            
+            if (planet.Signals.Any(s => s.CollectedCount > 0))
+            {
+                var firstUncollected = planet.Signals
+                    .FirstOrDefault(s => s.CollectedCount == 0);
+
+                if (firstUncollected is not null)
+                    firstUncollected.IsFirstUncollected = true;
+            }
 
             var displayPlanet = new OrganicPlanetViewModel
             {
@@ -214,7 +223,19 @@ internal static class ExobiologyDisplayBuilder
                 BodyName = $"{body.BodyName} ({collectedSignals}/{signalCount} signals) ({valueText})"
             };
 
-            foreach (var signal in planet.Signals)
+            var ordered = planet.Signals
+                .OrderBy(s => s.CollectedCount > 0 ? 0 : s.IsExcluded ? 2 : 1)
+                .ToList();
+
+            if (ordered.Any(s => s.CollectedCount > 0))
+            {
+                var firstUncollected = ordered.FirstOrDefault(s => s.CollectedCount == 0);
+
+                if (firstUncollected is not null)
+                    firstUncollected.IsFirstUncollected = true;
+            }
+
+            foreach (var signal in ordered)
                 displayPlanet.Signals.Add(signal);
 
             planets.Add(displayPlanet);

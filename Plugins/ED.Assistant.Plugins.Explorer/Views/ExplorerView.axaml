@@ -33,6 +33,38 @@
         <Style Selector="materialIcons|MaterialIcon.import-icon.error">
             <Setter Property="Foreground" Value="#EF5350" />
         </Style>
+
+        <!-- ============================= -->
+        <!-- Data table                    -->
+        <!-- ============================= -->
+
+        <!-- Header: same horizontal padding as rows (+20 for the scrollbar margin) -->
+        <Style Selector="Border.table-header">
+            <Setter Property="BorderBrush" Value="#22FFFFFF" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="Padding" Value="10,0,30,6" />
+        </Style>
+
+        <!-- Every row container -->
+        <Style Selector="ItemsControl.data-table > ContentPresenter">
+            <Setter Property="Padding" Value="10,7" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <!-- Zebra striping; VirtualizingStackPanel reports real indices, so it stays correct while scrolling -->
+        <Style Selector="ItemsControl.data-table > ContentPresenter:nth-child(2n)">
+            <Setter Property="Background" Value="#0AFFFFFF" />
+        </Style>
+
+        <!-- Hover highlight -->
+        <Style Selector="ItemsControl.data-table > ContentPresenter:pointerover">
+            <Setter Property="Background" Value="#18FFFFFF" />
+        </Style>
+
+        <Style Selector="ItemsControl.data-table TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
     </UserControl.Styles>
 
     <Grid RowDefinitions="Auto,*" RowSpacing="16">
@@ -96,13 +128,16 @@
             <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
                 <TextBlock Text="UNSOLD EXPLORATION DATA" Classes="dashboard-card-header" />
 
-                <Grid Grid.Row="1" ColumnDefinitions="2*,*,2*,100,*" ColumnSpacing="12" Margin="0,0,20,0">
-                    <TextBlock Grid.Column="0" Text="Body" Classes="dashboard-label" />
-                    <TextBlock Grid.Column="1" Text="Scanned" Classes="dashboard-label" />
-                    <TextBlock Grid.Column="2" Text="Type" Classes="dashboard-label" />
-                    <TextBlock Grid.Column="3" Text="Scan" Classes="dashboard-label number" />
-                    <TextBlock Grid.Column="4" Text="Value" Classes="dashboard-label number" />
-                </Grid>
+                <!-- Fixed-width date/numeric columns keep values close together -->
+                <Border Grid.Row="1" Classes="table-header">
+                    <Grid ColumnDefinitions="2*,150,2*,110,120" ColumnSpacing="12">
+                        <TextBlock Grid.Column="0" Text="Body" Classes="dashboard-label" />
+                        <TextBlock Grid.Column="1" Text="Scanned" Classes="dashboard-label" />
+                        <TextBlock Grid.Column="2" Text="Type" Classes="dashboard-label" />
+                        <TextBlock Grid.Column="3" Text="Scan" Classes="dashboard-label number" />
+                        <TextBlock Grid.Column="4" Text="Value" Classes="dashboard-label number" />
+                    </Grid>
+                </Border>
 
                 <TextBlock Grid.Row="2"
                            Text="No unsold exploration data"
@@ -113,7 +148,10 @@
                            Foreground="{DynamicResource SecondaryTextBrush}" />
 
                 <!-- Virtualized: a long trip can leave thousands of unsold bodies -->
-                <ItemsControl Grid.Row="2" ItemsSource="{Binding Items}" IsVisible="{Binding HasItems}">
+                <ItemsControl Grid.Row="2"
+                              ItemsSource="{Binding Items}"
+                              IsVisible="{Binding HasItems}"
+                              Classes="data-table">
                     <ItemsControl.Template>
                         <ControlTemplate>
                             <ScrollViewer>
@@ -128,7 +166,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="vm:ExplorerItemViewModel">
-                            <Grid ColumnDefinitions="2*,*,2*,100,*" ColumnSpacing="12" Margin="0,4">
+                            <Grid ColumnDefinitions="2*,150,2*,110,120" ColumnSpacing="12">
                                 <TextBlock Grid.Column="0" Text="{Binding Body}"
                                            Classes="dashboard-value" TextTrimming="CharacterEllipsis" />
                                 <TextBlock Grid.Column="1" Text="{Binding Scanned}" Classes="dashboard-label" />
@@ -139,6 +177,7 @@
                                            Classes="dashboard-value number"
                                            Classes.bonus="{Binding IsFirstDiscovery}" />
                                 <TextBlock Grid.Column="4" Text="{Binding Value}"
+                                           FontWeight="SemiBold"
                                            Classes="dashboard-value number"
                                            Classes.bonus="{Binding IsFirstDiscovery}" />
                             </Grid>
