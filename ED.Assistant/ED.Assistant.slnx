@@ -3,5 +3,6 @@
   <Project Path="../ED.Assistant.Plugins.Abstractions/ED.Assistant.Plugins.Abstractions.csproj" />
   <Folder Name="/Plugins/">
     <Project Path="../Plugins/ED.Assistant.Plugins.Explorer/ED.Assistant.Plugins.Explorer.csproj" />
+    <Project Path="../Plugins/ED.Assistant.Plugins.MarketConnector/ED.Assistant.Plugins.MarketConnector.csproj" />
   </Folder>
 </Solution>

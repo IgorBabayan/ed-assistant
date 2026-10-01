@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:s="using:ED.Assistant.Plugins.MarketConnector.Settings"
+             x:Class="ED.Assistant.Plugins.MarketConnector.Settings.EddnSettingsView"
+             x:DataType="s:EddnSettingsViewModel">
+    <StackPanel Spacing="8">
+        <CheckBox Content="Send station data (market, outfitting, shipyard) to EDDN"
+                  IsChecked="{Binding SendStationData}"/>
+        <CheckBox Content="Send system and scan data to EDDN"
+                  IsChecked="{Binding SendSystemData}"/>
+        <CheckBox Content="Delay sending until docked"
+                  IsChecked="{Binding DelayUntilDocked}"/>
+    </StackPanel>
+</UserControl>

@@ -9,6 +9,25 @@ sealed class HyprlandDesktopNotifier : IDesktopNotifier
     public static bool IsRunning =>
         !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HYPRLAND_INSTANCE_SIGNATURE"));
 
-    public void Show(string title, string message) =>
-        CommandRunner.Run("hyprctl", "notify", Icon, DurationMs, Color, $"{title}: {message}");
+    public void Show(string title, string message)
+    {
+        var text = EscapeLuaString($"{title}\n{message}");
+
+        var lua =
+            $"hl.notification.create({{ " +
+            $"text = \"{text}\", " +
+            $"timeout = {DurationMs}, " +
+            $"icon = \"{Icon}\", " +
+            $"color = \"{Color}\" " +
+            $"}})";
+
+        CommandRunner.Run("hyprctl", "eval", lua);
+    }
+
+    private static string EscapeLuaString(string value) =>
+        value
+            .Replace("\\", "\\\\")
+            .Replace("\"", "\\\"")
+            .Replace("\r", "\\r")
+            .Replace("\n", "\\n");
 }
