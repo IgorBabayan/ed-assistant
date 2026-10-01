@@ -15,6 +15,8 @@ public sealed record PluginDescriptor(string Key, string Directory, string Assem
 
 public static class PluginLoader
 {
+    public const string REMOVAL_MARKER = ".remove-pending";
+    
     public static IReadOnlyList<PluginDescriptor> Discover(string root)
     {
         if (!Directory.Exists(root))
@@ -23,6 +25,9 @@ public static class PluginLoader
         var result = new List<PluginDescriptor>();
         foreach (var dir in Directory.GetDirectories(root).Order(StringComparer.OrdinalIgnoreCase))
         {
+            if (File.Exists(IOPath.Combine(dir, REMOVAL_MARKER)))
+                continue;
+
             var key = IOPath.GetFileName(dir);
             var dll = IOPath.Combine(dir, key + ".dll");
             if (File.Exists(dll))

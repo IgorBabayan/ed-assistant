@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using ED.Assistant.Application.Dialog;
 using ED.Assistant.Application.Path;
@@ -14,6 +15,7 @@ public partial class SettingsViewModel : BaseViewModel
 	private readonly ISettingsStorage _settingsStorage;
 	private readonly IPathFinder _pathFinder;
 	private readonly IPluginCatalog _pluginCatalog;
+	private readonly IPluginUninstaller _pluginUninstaller;
 	
 	private Dictionary<string, bool> _savedAddonStates = new();
 
@@ -45,12 +47,13 @@ public partial class SettingsViewModel : BaseViewModel
 	public event Action<bool?>? CloseRequested;
 
 	public SettingsViewModel(IPathFinder pathFinder, IFolderPickerService folderPickerService,
-		ISettingsStorage settingsStorage, IPluginCatalog pluginCatalog)
+		ISettingsStorage settingsStorage, IPluginCatalog pluginCatalog, IPluginUninstaller pluginUninstaller)
 	{
 		_pathFinder = pathFinder;
 		_folderPickerService = folderPickerService;
 		_settingsStorage = settingsStorage;
 		_pluginCatalog = pluginCatalog;
+		_pluginUninstaller = pluginUninstaller;
 	}
 
 	public async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -123,7 +126,7 @@ public partial class SettingsViewModel : BaseViewModel
 
 		foreach (var plugin in _pluginCatalog.Installed)
 		{
-			var item = new AddonItemViewModel(plugin, settings.IsAddonEnabled(plugin.Descriptor.Key));
+			var item = new AddonItemViewModel(plugin, settings.IsAddonEnabled(plugin.Descriptor.Key), RemoveAddonAsync);
 			item.PropertyChanged += OnAddonChanged;
 			Addons.Add(item);
 		}
@@ -131,10 +134,39 @@ public partial class SettingsViewModel : BaseViewModel
 		OnPropertyChanged(nameof(HasAddons));
 		OnPropertyChanged(nameof(HasPendingAddonChanges));
 	}
+	
+	private async Task RemoveAddonAsync(AddonItemViewModel item)
+	{
+		try
+		{
+			var result = await _pluginUninstaller.RemoveAsync(item.Plugin);
+
+			// The addon is gone (or will be), so its enabled flag shouldn't stay in settings
+			_savedAddonStates.Remove(item.Key);
+
+			if (result == PluginRemovalResult.Removed)
+			{
+				item.PropertyChanged -= OnAddonChanged;
+				Addons.Remove(item);
+				OnPropertyChanged(nameof(HasAddons));
+			}
+			else
+			{
+				item.IsRemovalPending = true;
+			}
+		}
+		catch (Exception ex)
+		{
+			Trace.WriteLine($"Removing addon '{item.Key}' failed: {ex}");
+			item.RemoveError = ex.Message;
+		}
+
+		OnPropertyChanged(nameof(HasPendingAddonChanges));
+	}
 
 	private void OnAddonChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		if (e.PropertyName == nameof(AddonItemViewModel.IsEnabled))
+		if (e.PropertyName is nameof(AddonItemViewModel.IsEnabled) or nameof(AddonItemViewModel.IsRemovalPending))
 			OnPropertyChanged(nameof(HasPendingAddonChanges));
 	}
 	
@@ -142,7 +174,12 @@ public partial class SettingsViewModel : BaseViewModel
 	{
 		var states = new Dictionary<string, bool>(_savedAddonStates);
 		foreach (var addon in Addons)
-			states[addon.Key] = addon.IsEnabled;
+		{
+			if (addon.IsRemovalPending)
+				states.Remove(addon.Key);
+			else
+				states[addon.Key] = addon.IsEnabled;
+		}
 
 		return states;
 	}

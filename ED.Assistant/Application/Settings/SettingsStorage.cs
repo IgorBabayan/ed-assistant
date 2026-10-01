@@ -31,24 +31,35 @@ internal class SettingsStorage : ISettingsStorage
 
 	public async Task<AppSettings> LoadAsync(string filePath, CancellationToken cancellationToken = default)
 	{
-		ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
-
-		if (!File.Exists(filePath))
+		await using var stream = OpenForRead(filePath, useAsync: true);
+		if (stream is null)
 			return new AppSettings();
 
-		await using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 		return await JsonSerializer.DeserializeAsync<AppSettings>(stream, _serializerOptions, cancellationToken)
-			?? new AppSettings();
+		       ?? new AppSettings();
 	}
 	
 	public AppSettings Load(string filePath)
 	{
-		ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
-
-		if (!File.Exists(filePath))
+		using var stream = OpenForRead(filePath, useAsync: false);
+		if (stream is null)
 			return new AppSettings();
 
-		using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 		return JsonSerializer.Deserialize<AppSettings>(stream, _serializerOptions) ?? new AppSettings();
+	}
+	
+	private static FileStream? OpenForRead(string filePath, bool useAsync)
+	{
+		ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
+
+		try
+		{
+			return new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read,
+				bufferSize: 4096, useAsync);
+		}
+		catch (Exception ex) when (ex is FileNotFoundException or DirectoryNotFoundException)
+		{
+			return null;
+		}
 	}
 }

@@ -37,6 +37,10 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Update="addon.json" CopyToOutputDirectory="PreserveNewest"/>
+    </ItemGroup>
+
     <!-- Debug builds copy themselves into the app's plugins folder:
          <AppData>/ed-assistant/plugins/ED.Assistant.Plugins.Explorer/
          Override with: dotnet build -p:EdPluginsRoot=/some/path -->
