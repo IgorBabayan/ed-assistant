@@ -57,7 +57,7 @@ jobs:
       - name: Publish Linux (linux-x64)
         run: >
           dotnet publish $PROJECT -c Release -r linux-x64 --self-contained true
-          -p:Version=$VERSION
+          -p:AppVersion=$VERSION
           -p:UpdateRepository=$UPDATE_REPO
           -o publish/linux-x64
 
@@ -130,7 +130,7 @@ jobs:
         run: >
           dotnet publish $PROJECT -c Release -r win-x64 --self-contained true
           -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
-          -p:Version=$VERSION
+          -p:AppVersion=$VERSION
           -p:UpdateRepository=$UPDATE_REPO
           -o publish/win-x64
 
@@ -182,7 +182,7 @@ jobs:
       - name: Publish macOS (${{ matrix.rid }})
         run: >
           dotnet publish $PROJECT -c Release -r $RID --self-contained true
-          -p:Version=$VERSION
+          -p:AppVersion=$VERSION
           -p:UpdateRepository=$UPDATE_REPO
           -o publish/$RID
 
