@@ -63,6 +63,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\ED.Assistant.Plugins.Abstractions\ED.Assistant.Plugins.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Folder Include="Assets\Biology\Bacterium\"/>
         <Folder Include="Assets\Biology\BrainTree\"/>
         <Folder Include="Assets\Biology\Cactoida\"/>
@@ -80,5 +84,9 @@
         <Folder Include="Assets\Biology\Tuber\"/>
         <Folder Include="Assets\Biology\Tubus\"/>
         <Folder Include="Assets\Biology\Tussock\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ED.Assistant.Plugins.Abstractions\ED.Assistant.Plugins.Abstractions.csproj" />
     </ItemGroup>
 </Project>

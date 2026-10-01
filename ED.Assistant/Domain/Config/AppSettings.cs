@@ -19,4 +19,9 @@ public class AppSettings
 	[JsonPropertyName("DockPosition")]
 	[JsonConverter(typeof(JsonStringEnumConverter<DockPosition>))]
 	public DockPosition DockPosition { get; set; } = DockPosition.Bottom;
+	
+	[JsonPropertyName(nameof(Addons))]
+	public Dictionary<string, bool> Addons { get; set; } = new();
+
+	public bool IsAddonEnabled(string key) => !Addons.TryGetValue(key, out var enabled) || enabled;
 }

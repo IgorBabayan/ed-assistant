@@ -33,23 +33,10 @@ internal static class ServiceCollectionExtensions
 	{
 		public IServiceCollection RegisterDataServices()
 		{
-			services.AddSingleton<WindowsPathResolver>();
-			services.AddSingleton<LinuxPathResolver>();
-			services.AddSingleton<MacPathResolver>();
-
-			services.AddSingleton<IPlatformPathResolver>(sp =>
-			{
-				if (OperatingSystem.IsWindows())
-					return sp.GetRequiredService<WindowsPathResolver>();
-
-				if (OperatingSystem.IsLinux())
-					return sp.GetRequiredService<LinuxPathResolver>();
-
-				return OperatingSystem.IsMacOS()
-					? sp.GetRequiredService<MacPathResolver>()
-					: throw new PlatformNotSupportedException("Unsupported OS");
-			});
-		
+			services.AddSingleton<WindowsPathResolver>()
+				.AddSingleton<LinuxPathResolver>()
+				.AddSingleton<MacPathResolver>()
+				.AddSingleton<IPlatformPathResolver>(_ => PlatformPathResolverFactory.Create());
 			return services;
 		}
 
