@@ -1,3 +1,5 @@
+using ED.Assistant.Plugins;
+
 namespace ED.Assistant.Application.Notifications;
 
 sealed class LinuxDesktopNotifier : IDesktopNotifier
