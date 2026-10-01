@@ -1,4 +1,5 @@
 #if WINDOWS
+using ED.Assistant.Plugins;
 using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace ED.Assistant.Application.Notifications;

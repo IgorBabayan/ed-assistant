@@ -1,5 +1,6 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
+using ED.Assistant.Plugins;
 using Material.Icons;
 
 namespace ED.Assistant.Application.Notifications;
