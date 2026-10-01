@@ -4,6 +4,7 @@ using System.IO;
 using ED.Assistant.Application.Dialog;
 using ED.Assistant.Application.Path;
 using ED.Assistant.Application.Settings;
+using ED.Assistant.Application.Updates;
 using ED.Assistant.Domain.Config;
 using ED.Assistant.Plugins;
 
@@ -16,6 +17,7 @@ public partial class SettingsViewModel : BaseViewModel
 	private readonly IPathFinder _pathFinder;
 	private readonly IPluginCatalog _pluginCatalog;
 	private readonly IPluginUninstaller _pluginUninstaller;
+	private readonly IUpdateService _updateService;
 	
 	private Dictionary<string, bool> _savedAddonStates = new();
 
@@ -33,6 +35,15 @@ public partial class SettingsViewModel : BaseViewModel
 
 	[ObservableProperty]
 	public partial DockPosition DockPosition { get; set; }
+	
+	[ObservableProperty]
+	public partial bool AutoUpdate { get; set; }
+
+	public bool IsUpdateSupported => _updateService.IsSupported;
+
+	public string VersionInfo => _updateService.IsSupported
+		? $"Current version: v{_updateService.CurrentVersion}"
+		: "Auto-update is only available in release builds";
 
 	public IReadOnlyList<DockPosition> DockPositions { get; } = Enum.GetValues<DockPosition>();
 
@@ -47,13 +58,14 @@ public partial class SettingsViewModel : BaseViewModel
 	public event Action<bool?>? CloseRequested;
 
 	public SettingsViewModel(IPathFinder pathFinder, IFolderPickerService folderPickerService,
-		ISettingsStorage settingsStorage, IPluginCatalog pluginCatalog, IPluginUninstaller pluginUninstaller)
+		ISettingsStorage settingsStorage, IPluginCatalog pluginCatalog, IPluginUninstaller pluginUninstaller, IUpdateService updateService)
 	{
 		_pathFinder = pathFinder;
 		_folderPickerService = folderPickerService;
 		_settingsStorage = settingsStorage;
 		_pluginCatalog = pluginCatalog;
 		_pluginUninstaller = pluginUninstaller;
+		_updateService = updateService;
 	}
 
 	public async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -64,6 +76,7 @@ public partial class SettingsViewModel : BaseViewModel
 		HideExcludedSignals = settings.HideExcludedSignals;
 		ReadLogsForDays = settings.ReadLogsForDays;
 		DockPosition = settings.DockPosition;
+		AutoUpdate = settings.AutoUpdate;
 
 		_savedAddonStates = new Dictionary<string, bool>(settings.Addons);
 		LoadAddons(settings);
@@ -90,6 +103,7 @@ public partial class SettingsViewModel : BaseViewModel
 				? (int)Math.Clamp(days, 0, int.MaxValue)
 				: AppSettings.DefaultReadLogsForDays,
 			DockPosition = DockPosition,
+			AutoUpdate = AutoUpdate,
 			Addons = BuildAddonStates()
 		}, cancellationToken);
 
