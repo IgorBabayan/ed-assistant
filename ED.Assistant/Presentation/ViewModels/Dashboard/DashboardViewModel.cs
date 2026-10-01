@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using ED.Assistant.Domain.DTO;
 using ED.Assistant.Domain.Enums;
 using ED.Assistant.Extensions;
