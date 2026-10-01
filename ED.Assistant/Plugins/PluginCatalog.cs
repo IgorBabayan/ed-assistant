@@ -17,6 +17,9 @@ public sealed class InstalledPlugin(PluginDescriptor descriptor)
     public PluginLoadStatus Status { get; internal set; } = PluginLoadStatus.Disabled;
 
     public string? Error { get; internal set; }
+
+    /// <summary>Removal was requested but has to finish on the next start.</summary>
+    public bool IsRemovalPending { get; internal set; }
 }
 
 public interface IPluginCatalog
@@ -29,14 +32,19 @@ public interface IPluginCatalog
 
 internal sealed class PluginCatalog : IPluginCatalog
 {
+    private readonly List<InstalledPlugin> _installed;
+
     public string Root { get; }
-    public IReadOnlyList<InstalledPlugin> Installed { get; }
+    public IReadOnlyList<InstalledPlugin> Installed => _installed;
 
     private PluginCatalog(string root)
     {
         Root = root;
-        Installed = PluginLoader.Discover(root).Select(d => new InstalledPlugin(d)).ToList();
+        _installed = PluginLoader.Discover(root).Select(d => new InstalledPlugin(d)).ToList();
     }
+
+    /// <summary>Called after an addon has been removed from disk.</summary>
+    internal void Forget(InstalledPlugin plugin) => _installed.Remove(plugin);
 
     public static PluginCatalog Create(string root) => new(root);
 

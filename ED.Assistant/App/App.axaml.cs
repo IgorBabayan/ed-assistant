@@ -74,6 +74,15 @@ public class App : Avalonia.Application
 		        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 dbContext.Database.Migrate();
 	        }
+	        
+	        try
+	        {
+		        provider.GetRequiredService<IPluginUninstaller>().CompletePendingRemovals();
+	        }
+	        catch (Exception ex)
+	        {
+		        Trace.WriteLine($"Completing pending addon removals failed: {ex}");
+	        }
 
 			// Resolve the MainWindowViewModel from DI and assign as DataContext
 			desktop.MainWindow = new MainWindow
@@ -137,10 +146,12 @@ public class App : Avalonia.Application
 		        Trace.WriteLine($"Plugin in '{loaded.Directory}' failed to register services: {ex}");
 	        }
         }
-
-        services.AddSingleton<IPluginCatalog>(catalog);
-        services.AddSingleton<IPluginHost, PluginHost>();
-        services.AddSingleton<IPluginRegistry, PluginRegistry>();
+        
+        services.AddSingleton(catalog)
+	        .AddSingleton<IPluginCatalog>(catalog)
+	        .AddSingleton<IPluginUninstaller, PluginUninstaller>()
+	        .AddSingleton<IPluginHost, PluginHost>()
+	        .AddSingleton<IPluginRegistry, PluginRegistry>();
     }
 
     private void StartPluginServices(IServiceProvider provider)

@@ -5,6 +5,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:ED.Assistant.Presentation.ViewModels.Settings"
         xmlns:local="clr-namespace:ED.Assistant.Presentation.Views.Settings"
+        xmlns:global="clr-namespace:"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 		x:Class="ED.Assistant.Presentation.Views.Settings.SettingsWindow"
 		x:DataType="vm:SettingsViewModel"
@@ -157,11 +158,12 @@
 								<ScrollViewer Grid.Row="1" IsVisible="{Binding HasAddons}">
 									<ItemsControl ItemsSource="{Binding Addons}" Margin="0,0,12,0">
 										<ItemsControl.ItemTemplate>
-											<DataTemplate x:DataType="vm:AddonItemViewModel">
-												<Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Margin="0,6">
+											<DataTemplate x:DataType="global:AddonItemViewModel">
+												<Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10" Margin="0,6">
 													<CheckBox Grid.Column="0"
 													          VerticalAlignment="Top"
 													          ToolTip.Tip="Enabled"
+													          IsEnabled="{Binding CanRemove}"
 													          IsChecked="{Binding IsEnabled, Mode=TwoWay}"/>
 
 													<StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
@@ -179,6 +181,29 @@
 													           Text="{Binding Version, StringFormat='v{0}'}"
 													           Opacity="0.6"
 													           VerticalAlignment="Top"/>
+
+													<Panel Grid.Column="3" VerticalAlignment="Top" IsVisible="{Binding CanRemove}">
+														<Button Classes="app-button"
+														        ToolTip.Tip="Remove addon and its data"
+														        IsVisible="{Binding !IsConfirmingRemove}"
+														        Command="{Binding RequestRemoveCommand}">
+															<materialIcons:MaterialIcon Kind="TrashCanOutline"/>
+														</Button>
+
+														<StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsConfirmingRemove}">
+															<TextBlock Text="Delete with data?"
+															           Classes="addon-hint"
+															           TextWrapping="NoWrap"
+															           VerticalAlignment="Center"/>
+															<Button Classes="app-button"
+															        Foreground="#EF5350"
+															        Content="Remove"
+															        Command="{Binding ConfirmRemoveCommand}"/>
+															<Button Classes="app-button"
+															        Content="Cancel"
+															        Command="{Binding CancelRemoveCommand}"/>
+														</StackPanel>
+													</Panel>
 												</Grid>
 											</DataTemplate>
 										</ItemsControl.ItemTemplate>

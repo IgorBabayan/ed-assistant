@@ -1,0 +1,8 @@
+{
+  "id": "explorer",
+  "tables": [
+    "ExplorerBody",
+    "ExplorerJournalCursor",
+    "__ExplorerMigrationsHistory"
+  ]
+}
