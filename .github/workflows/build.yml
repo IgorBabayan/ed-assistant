@@ -93,6 +93,12 @@ jobs:
 
           chmod +x $APPDIR/AppRun $APPDIR/usr/bin/$APP_EXE
 
+          # Plugins resolve their contract from the host (see PluginLoadContext.SharedPrefixes)
+          if [ ! -f "$APPDIR/usr/bin/ED.Assistant.Plugins.Abstractions.dll" ]; then
+            echo "::error::ED.Assistant.Plugins.Abstractions.dll is missing from the AppImage"
+            exit 1
+          fi
+
           wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool-x86_64.AppImage
           ARCH=x86_64 VERSION=$VERSION ./appimagetool-x86_64.AppImage --appimage-extract-and-run \
@@ -186,6 +192,12 @@ jobs:
           mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
           cp -R "publish/$RID/." "$APP/Contents/MacOS/"
           chmod +x "$APP/Contents/MacOS/$APP_EXE"
+
+          # Plugins resolve their contract from the host (see PluginLoadContext.SharedPrefixes)
+          if [ ! -f "$APP/Contents/MacOS/ED.Assistant.Plugins.Abstractions.dll" ]; then
+            echo "::error::ED.Assistant.Plugins.Abstractions.dll is missing from the app bundle"
+            exit 1
+          fi
 
           # Icon: PNG -> .icns
           ICONSET=build/AppIcon.iconset

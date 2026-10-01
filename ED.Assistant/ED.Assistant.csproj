@@ -89,8 +89,4 @@
         <Folder Include="Assets\Biology\Tubus\"/>
         <Folder Include="Assets\Biology\Tussock\"/>
     </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\ED.Assistant.Plugins.Abstractions\ED.Assistant.Plugins.Abstractions.csproj" />
-    </ItemGroup>
 </Project>
