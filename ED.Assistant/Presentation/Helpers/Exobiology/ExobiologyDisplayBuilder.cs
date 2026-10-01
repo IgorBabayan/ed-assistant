@@ -205,7 +205,7 @@ internal static class ExobiologyDisplayBuilder
             else
             {
                 var (minValue, maxValue) = EstimateValue(planet.Signals);
-                valueText = $"{FormatValue(minValue)}/{FormatValue(maxValue)}";
+                valueText = $"{FormatValue(minValue)} - {FormatValue(maxValue)}";
             }
             
             if (planet.Signals.Any(s => s.CollectedCount > 0))
