@@ -139,30 +139,42 @@
                            FontSize="18"
                            Foreground="{DynamicResource SecondaryTextBrush}" />
 
-                <ScrollViewer Grid.Row="2" IsVisible="{Binding HasItems}">
-                    <ItemsControl ItemsSource="{Binding Items}"
-                                  Classes="data-table"
-                                  Margin="0,0,20,0">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="vm:EvaluatorItemViewModel">
-                                <Grid ColumnDefinitions="*,150,110,60,120" ColumnSpacing="12">
-                                    <TextBlock Grid.Column="0" Text="{Binding Name}"
-                                               Classes="dashboard-value"
-                                               TextTrimming="CharacterEllipsis" />
-                                    <TextBlock Grid.Column="1" Text="{Binding Sampled}" Classes="dashboard-label" />
-                                    <TextBlock Grid.Column="2" Text="{Binding BaseValue}" Classes="dashboard-value number" />
-                                    <TextBlock Grid.Column="3" Text="{Binding Multiplier}"
-                                               Classes="dashboard-value number"
-                                               Classes.bonus="{Binding HasFirstFootStep}" />
-                                    <TextBlock Grid.Column="4" Text="{Binding Total}"
-                                               FontWeight="SemiBold"
-                                               Classes="dashboard-value number"
-                                               Classes.bonus="{Binding HasFirstFootStep}" />
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                <!-- Virtualized: only the visible rows get controls; older pages load as you scroll -->
+                <ItemsControl Grid.Row="2"
+                              ItemsSource="{Binding Items}"
+                              IsVisible="{Binding HasItems}"
+                              Classes="data-table">
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <ScrollViewer>
+                                <ItemsPresenter Margin="0,0,20,0" />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:EvaluatorItemViewModel">
+                            <Grid ColumnDefinitions="*,150,110,60,120" ColumnSpacing="12">
+                                <TextBlock Grid.Column="0" Text="{Binding Name}"
+                                           Classes="dashboard-value"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Grid.Column="1" Text="{Binding Sampled}" Classes="dashboard-label" />
+                                <TextBlock Grid.Column="2" Text="{Binding BaseValue}" Classes="dashboard-value number" />
+                                <TextBlock Grid.Column="3" Text="{Binding Multiplier}"
+                                           Classes="dashboard-value number"
+                                           Classes.bonus="{Binding HasFirstFootStep}" />
+                                <TextBlock Grid.Column="4" Text="{Binding Total}"
+                                           FontWeight="SemiBold"
+                                           Classes="dashboard-value number"
+                                           Classes.bonus="{Binding HasFirstFootStep}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Grid>
         </Border>
     </Grid>
