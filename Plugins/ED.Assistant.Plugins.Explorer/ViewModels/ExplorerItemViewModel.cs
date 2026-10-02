@@ -6,6 +6,10 @@ namespace ED.Assistant.Plugins.Explorer.ViewModels;
 
 public sealed class ExplorerItemViewModel
 {
+    // Journal PlanetClass values
+    private const string EarthlikeClass = "Earthlike body";
+    private const string WaterWorldClass = "Water world";
+
     public string Body { get; init; } = string.Empty;
     public string Scanned { get; init; } = string.Empty;
     public string Type { get; init; } = string.Empty;
@@ -13,6 +17,8 @@ public sealed class ExplorerItemViewModel
     public string ScanTip { get; init; } = string.Empty;
     public string Value { get; init; } = "—";
     public bool IsFirstDiscovery { get; init; }
+    public bool IsEarthlike { get; init; }
+    public bool IsWaterWorld { get; init; }
 
     public static ExplorerItemViewModel From(ExplorerBody body)
     {
@@ -32,7 +38,9 @@ public sealed class ExplorerItemViewModel
                 ? BodyValueCatalog.Describe(kind) + " (mapped without the efficiency bonus)"
                 : BodyValueCatalog.Describe(kind),
             Value = Formatting.Credits(body.Value),
-            IsFirstDiscovery = !body.WasDiscovered
+            IsFirstDiscovery = !body.WasDiscovered,
+            IsEarthlike = string.Equals(body.PlanetClass, EarthlikeClass, StringComparison.OrdinalIgnoreCase),
+            IsWaterWorld = string.Equals(body.PlanetClass, WaterWorldClass, StringComparison.OrdinalIgnoreCase)
         };
     }
 }

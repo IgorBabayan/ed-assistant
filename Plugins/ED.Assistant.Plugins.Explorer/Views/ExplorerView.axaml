@@ -65,6 +65,14 @@
         <Style Selector="ItemsControl.data-table TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
+        
+        <!-- Highlighted planet classes: must stay after TextBlock.bonus to override it -->
+        <Style Selector="TextBlock.waterworld">
+            <Setter Property="Foreground" Value="#FFD54F" />
+        </Style>
+        <Style Selector="TextBlock.earthlike">
+            <Setter Property="Foreground" Value="#66BB6A" />
+        </Style>
     </UserControl.Styles>
 
     <Grid RowDefinitions="Auto,*" RowSpacing="16">
@@ -168,18 +176,28 @@
                         <DataTemplate x:DataType="vm:ExplorerItemViewModel">
                             <Grid ColumnDefinitions="2*,150,2*,110,120" ColumnSpacing="12">
                                 <TextBlock Grid.Column="0" Text="{Binding Body}"
-                                           Classes="dashboard-value" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Grid.Column="1" Text="{Binding Scanned}" Classes="dashboard-label" />
+                                           Classes="dashboard-value" TextTrimming="CharacterEllipsis"
+                                           Classes.waterworld="{Binding IsWaterWorld}"
+                                           Classes.earthlike="{Binding IsEarthlike}" />
+                                <TextBlock Grid.Column="1" Text="{Binding Scanned}" Classes="dashboard-label"
+                                           Classes.waterworld="{Binding IsWaterWorld}"
+                                           Classes.earthlike="{Binding IsEarthlike}" />
                                 <TextBlock Grid.Column="2" Text="{Binding Type}"
-                                           Classes="dashboard-label" TextTrimming="CharacterEllipsis" />
+                                           Classes="dashboard-label" TextTrimming="CharacterEllipsis"
+                                           Classes.waterworld="{Binding IsWaterWorld}"
+                                           Classes.earthlike="{Binding IsEarthlike}" />
                                 <TextBlock Grid.Column="3" Text="{Binding Scan}"
                                            ToolTip.Tip="{Binding ScanTip}"
                                            Classes="dashboard-value number"
-                                           Classes.bonus="{Binding IsFirstDiscovery}" />
+                                           Classes.bonus="{Binding IsFirstDiscovery}"
+                                           Classes.waterworld="{Binding IsWaterWorld}"
+                                           Classes.earthlike="{Binding IsEarthlike}" />
                                 <TextBlock Grid.Column="4" Text="{Binding Value}"
                                            FontWeight="SemiBold"
                                            Classes="dashboard-value number"
-                                           Classes.bonus="{Binding IsFirstDiscovery}" />
+                                           Classes.bonus="{Binding IsFirstDiscovery}"
+                                           Classes.waterworld="{Binding IsWaterWorld}"
+                                           Classes.earthlike="{Binding IsEarthlike}" />
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
