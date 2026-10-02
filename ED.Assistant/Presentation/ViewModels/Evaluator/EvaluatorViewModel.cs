@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Globalization;
 using Avalonia.Threading;
 using ED.Assistant.Application.Evaluation;
@@ -13,6 +14,19 @@ public sealed partial class EvaluatorViewModel : LoadableViewModel
 	private readonly IServiceScopeFactory _scopeFactory;
 	private readonly IEvaluatorImportService _importService;
 	private readonly IEvaluatorSyncService _syncService;
+
+	// Only the newest samples are loaded up front; older ones are fetched as the list scrolls
+	private const int PageSize = 100;
+
+	// RefreshAsync is serialized by LoadableViewModel, but LoadMore comes from the view: this keeps them apart
+	private readonly SemaphoreSlim _pageGate = new(1, 1);
+
+	// Paging state, only touched while holding _pageGate.
+	// Keyset cursor = last loaded row in (DateCreation desc, Id desc) order: unlike Skip(),
+	// it doesn't shift or duplicate rows when new samples arrive between pages.
+	private (DateTime DateCreation, int Id)? _cursor;
+	private int _loadedCount;
+	private volatile bool _hasMore;
 
 	public ObservableCollection<EvaluatorItemViewModel> Items { get; } = [];
 
@@ -56,6 +70,7 @@ public sealed partial class EvaluatorViewModel : LoadableViewModel
 	{
 		_importService.Imported -= OnImported;
 		_syncService.DataChanged -= OnDataChanged;
+		_pageGate.Dispose();
 		base.OnDispose();
 	}
 
@@ -86,36 +101,125 @@ public sealed partial class EvaluatorViewModel : LoadableViewModel
 
 	private async Task RefreshAsync(CancellationToken cancellationToken = default)
 	{
-		List<EvaluatorEntity> rows;
-
-		using (var scope = _scopeFactory.CreateScope())
+		await _pageGate.WaitAsync(cancellationToken);
+		try
 		{
-			var repository = scope.ServiceProvider.GetRequiredService<IRepository<EvaluatorEntity>>();
+			// Re-read as many rows as are already shown, so a new sample doesn't snap the list back to page 1
+			var take = Math.Max(PageSize, _loadedCount);
 
-			// The IsActive query filter already hides sold rows
-			rows = await repository.AsNoTracking()
-				.Include(x => x.Genus)
-				.OrderByDescending(x => x.DateCreation)
-				.ToListAsync(cancellationToken);
+			// Runs on the UI thread when navigating here, and Microsoft.Data.Sqlite executes
+			// "async" queries synchronously: keep the DB work off the UI thread
+			var (totals, firstFootSteps, rows) = await Task.Run(async () =>
+			{
+				using var scope = _scopeFactory.CreateScope();
+				var repository = scope.ServiceProvider.GetRequiredService<IRepository<EvaluatorEntity>>();
+
+				// The IsActive query filter already hides sold rows
+				var active = repository.AsNoTracking();
+
+				// SQLite can't SUM decimals server-side: fetch only the Total column and add it up in memory
+				var allTotals = await active.Select(x => x.Total).ToListAsync(cancellationToken);
+				var footSteps = await active.CountAsync(x => x.HasFirstFootStep, cancellationToken);
+				var page = await NextPage(active, null, take + 1).ToListAsync(cancellationToken);
+
+				return (allTotals, footSteps, page);
+			}, cancellationToken);
+
+			var hasMore = TrimPage(rows, take);
+			var items = rows.Select(EvaluatorItemViewModel.From).ToArray();
+			var total = totals.Sum();
+
+			await Dispatcher.UIThread.InvokeAsync(() =>
+			{
+				Items.Clear();
+				foreach (var item in items)
+					Items.Add(item);
+
+				UnsoldCount = totals.Count;
+				UnsoldValue = total > 0 ? total.ToCompact() : "—";
+				FirstFootStepCount = firstFootSteps;
+
+				OnPropertyChanged(nameof(HasItems));
+			});
+
+			_loadedCount = items.Length;
+			_cursor = rows.Count > 0 ? (rows[^1].DateCreation, rows[^1].Id) : null;
+			_hasMore = hasMore;
 		}
-
-		// SQLite can't SUM decimals server-side, so aggregate in memory
-		var items = rows.Select(EvaluatorItemViewModel.From).ToArray();
-		var total = rows.Sum(x => x.Total);
-		var firstFootSteps = rows.Count(x => x.HasFirstFootStep);
-
-		await Dispatcher.UIThread.InvokeAsync(() =>
+		finally
 		{
-			Items.Clear();
-			foreach (var item in items)
-				Items.Add(item);
+			_pageGate.Release();
+		}
+	}
 
-			UnsoldCount = items.Length;
-			UnsoldValue = total > 0 ? total.ToCompact() : "—";
-			FirstFootStepCount = firstFootSteps;
+	/// <summary>Appends the next page of older samples. Called by the view when scrolled near the bottom.</summary>
+	[RelayCommand]
+	private async Task LoadMoreAsync()
+	{
+		if (!_hasMore)
+			return;
 
-			OnPropertyChanged(nameof(HasItems));
-		});
+		await _pageGate.WaitAsync();
+		try
+		{
+			// A refresh may have run while we waited
+			if (!_hasMore || _cursor is not { } cursor)
+				return;
+
+			var rows = await Task.Run(async () =>
+			{
+				using var scope = _scopeFactory.CreateScope();
+				var repository = scope.ServiceProvider.GetRequiredService<IRepository<EvaluatorEntity>>();
+				return await NextPage(repository.AsNoTracking(), cursor, PageSize + 1).ToListAsync();
+			});
+
+			var hasMore = TrimPage(rows, PageSize);
+			var items = rows.Select(EvaluatorItemViewModel.From).ToArray();
+
+			await Dispatcher.UIThread.InvokeAsync(() =>
+			{
+				foreach (var item in items)
+					Items.Add(item);
+			});
+
+			_loadedCount += items.Length;
+			if (rows.Count > 0)
+				_cursor = (rows[^1].DateCreation, rows[^1].Id);
+			_hasMore = hasMore;
+		}
+		catch (Exception ex)
+		{
+			Debug.WriteLine($"{nameof(EvaluatorViewModel)} load more failed: {ex}");
+		}
+		finally
+		{
+			_pageGate.Release();
+		}
+	}
+
+	// Newest first; Id breaks ties between samples recorded at the same moment
+	private static IQueryable<EvaluatorEntity> NextPage(IQueryable<EvaluatorEntity> active,
+		(DateTime DateCreation, int Id)? after, int take)
+	{
+		if (after is { } c)
+			active = active.Where(x => x.DateCreation < c.DateCreation
+			                           || (x.DateCreation == c.DateCreation && x.Id < c.Id));
+
+		return active
+			.Include(x => x.Genus)
+			.OrderByDescending(x => x.DateCreation)
+			.ThenByDescending(x => x.Id)
+			.Take(take);
+	}
+
+	// Pages are queried with one extra row to know whether more exist without a COUNT
+	private static bool TrimPage(List<EvaluatorEntity> rows, int pageSize)
+	{
+		if (rows.Count <= pageSize)
+			return false;
+
+		rows.RemoveRange(pageSize, rows.Count - pageSize);
+		return true;
 	}
 }
 
