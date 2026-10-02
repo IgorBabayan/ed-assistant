@@ -99,4 +99,12 @@
         <DependentUpon>PluginSettingsDialogWindow.axaml</DependentUpon>
       </Compile>
     </ItemGroup>
+
+    <!-- Debug: building/running the host also builds the plugins, whose DeployPluginLocally
+     target copies them into <AppData>/ed-assistant/plugins. The host never references them. -->
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\Plugins\*\*.csproj"
+                          ReferenceOutputAssembly="false"
+                          Private="false" />
+    </ItemGroup>
 </Project>
