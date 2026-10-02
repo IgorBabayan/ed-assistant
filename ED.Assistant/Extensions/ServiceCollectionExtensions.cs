@@ -82,9 +82,15 @@ internal static class ServiceCollectionExtensions
 				.AddSingleton<ISystemStructureBuilder, SystemStructureBuilder>();
 			
 			if (OperatingSystem.IsWindows())
-				services.AddSingleton<IUpdateInstaller, WindowsUpdateInstaller>();
+			{
+				services.AddSingleton<IDesktopService, NullDesktopService>()
+					.AddSingleton<IUpdateInstaller, WindowsUpdateInstaller>();
+			}
 			else if (OperatingSystem.IsMacOS())
-				services.AddSingleton<IUpdateInstaller, MacUpdateInstaller>();
+			{
+				services.AddSingleton<IDesktopService, NullDesktopService>()
+					.AddSingleton<IUpdateInstaller, MacUpdateInstaller>();
+			}
 			else if (OperatingSystem.IsLinux())
 			{
 				services.AddSingleton<IDesktopService, DesktopService>()
