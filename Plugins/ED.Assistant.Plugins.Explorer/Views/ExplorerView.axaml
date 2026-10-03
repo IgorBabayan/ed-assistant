@@ -175,10 +175,16 @@
                                   Classes.waterworld="{Binding IsWaterWorld}"
                                   Classes.earthlike="{Binding IsEarthlike}">
                                 <TextBlock Grid.Column="0" Text="{Binding Body}"
-                                           Classes="dashboard-value" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Grid.Column="1" Text="{Binding Scanned}" Classes="dashboard-label" />
+                                           Classes="dashboard-value" TextTrimming="CharacterEllipsis"
+                                           Classes.waterworld="{Binding IsWaterWorld}"
+                                           Classes.earthlike="{Binding IsEarthlike}" />
+                                <TextBlock Grid.Column="1" Text="{Binding Scanned}" Classes="dashboard-label"
+                                           Classes.waterworld="{Binding IsWaterWorld}"
+                                           Classes.earthlike="{Binding IsEarthlike}" />
                                 <TextBlock Grid.Column="2" Text="{Binding Type}"
-                                           Classes="dashboard-label" TextTrimming="CharacterEllipsis" />
+                                           Classes="dashboard-label" TextTrimming="CharacterEllipsis"
+                                           Classes.waterworld="{Binding IsWaterWorld}"
+                                           Classes.earthlike="{Binding IsEarthlike}" />
                                 <TextBlock Grid.Column="3" Text="{Binding Scan}"
                                            ToolTip.Tip="{Binding ScanTip}"
                                            Classes="dashboard-value number" />
